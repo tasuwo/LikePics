@@ -39,7 +39,7 @@ private extension SceneRootViewController {
     }
 }
 
-// MARK: - ClipPreviewPresentableViewController
+// MARK: - ClipPreviewPresentable
 
 extension SceneRootViewController where Self: UIViewController {
     func animatingCell(_ animator: ClipPreviewAnimator, id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool) -> ClipPreviewPresentableCell? {

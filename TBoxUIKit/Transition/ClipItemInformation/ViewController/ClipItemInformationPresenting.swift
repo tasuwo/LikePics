@@ -4,7 +4,7 @@
 
 import UIKit
 
-public protocol ClipItemInformationPresentedAnimatorDataSource {
-    func animatingInformationView(_ animator: ClipItemInformationAnimator) -> ClipItemInformationView?
+public protocol ClipItemInformationPresenting {
+    func clipInformationView(_ animator: ClipItemInformationAnimator) -> ClipItemInformationView?
     func clipInformationAnimator(_ animator: ClipItemInformationAnimator, imageFrameOnContainerView containerView: UIView) -> CGRect
 }

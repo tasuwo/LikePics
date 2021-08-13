@@ -31,10 +31,10 @@ extension ClipItemInformationPresentationAnimator: UIViewControllerAnimatedTrans
         let containerView = transitionContext.containerView
 
         guard
-            let from = transitionContext.viewController(forKey: .from) as? (ClipItemInformationPresentingAnimatorDataSource & UIViewController),
-            let to = transitionContext.viewController(forKey: .to) as? (ClipItemInformationPresentedAnimatorDataSource & UIViewController),
-            let targetInformationView = to.animatingInformationView(self),
-            let selectedPreviewView = from.animatingPreviewView(self),
+            let from = transitionContext.viewController(forKey: .from) as? (ClipItemInformationPresentable & UIViewController),
+            let to = transitionContext.viewController(forKey: .to) as? (ClipItemInformationPresenting & UIViewController),
+            let targetInformationView = to.clipInformationView(self),
+            let selectedPreviewView = from.previewView(self),
             let selectedImageView = selectedPreviewView.imageView,
             let selectedImage = selectedImageView.image,
             let fromViewBaseView = from.baseView(self)

@@ -23,8 +23,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         let dismissalType: DismissalType
         let currentCornerRadius: CGFloat
         let finalCornerRadius: CGFloat
-        let from: ClipPreviewViewController & UIViewController
-        let to: ClipPreviewPresentableViewController & UIViewController
+        let from: ClipPreviewPresenting & UIViewController
+        let to: ClipPreviewPresentable & UIViewController
         let innerContext: InnerContext
     }
 
@@ -96,8 +96,8 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         let fromViewBackgroundView = innerContext.fromViewBackgroundView
 
         guard
-            let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewViewController & UIViewController),
-            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentableViewController & UIViewController),
+            let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresenting & UIViewController),
+            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentable & UIViewController),
             let previewingClipItem = from.previewingClipItem(self)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
@@ -279,9 +279,9 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
         let containerView = transitionContext.containerView
 
         guard
-            let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewViewController & UIViewController),
-            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentableViewController & UIViewController),
-            let fromPreviewView = from.animatingPreviewView(self),
+            let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresenting & UIViewController),
+            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentable & UIViewController),
+            let fromPreviewView = from.previewView(self),
             let fromImageView = fromPreviewView.imageView,
             let fromImage = fromImageView.image,
             let previewingClipItem = from.previewingClipItem(self),
@@ -335,7 +335,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
         fromViewBackgroundView.frame = toViewBaseView.frame
         fromViewBackgroundView.backgroundColor = from.view.backgroundColor
 
-        let initialImageFrame = from.clipPreviewAnimator(self, frameOnContainerView: containerView)
+        let initialImageFrame = from.clipPreviewAnimator(self, imageFrameOnContainerView: containerView)
         let animatingImageView = UIImageView(image: fromImage)
         animatingImageView.contentMode = .scaleAspectFill
         animatingImageView.clipsToBounds = true

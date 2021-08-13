@@ -15,8 +15,8 @@ class ClipItemInformationInteractivePresentationAnimator: NSObject {
     }
 
     struct FinishAnimationParameters {
-        let from: ClipItemInformationPresentingAnimatorDataSource & UIViewController
-        let to: ClipItemInformationPresentedAnimatorDataSource & UIViewController
+        let from: ClipItemInformationPresentable & UIViewController
+        let to: ClipItemInformationPresenting & UIViewController
         let innerContext: InnerContext
     }
 
@@ -86,8 +86,8 @@ class ClipItemInformationInteractivePresentationAnimator: NSObject {
         let animatingImageView = innerContext.animatingImageView
 
         guard
-            let from = transitionContext.viewController(forKey: .from) as? (ClipItemInformationPresentingAnimatorDataSource & UIViewController),
-            let to = transitionContext.viewController(forKey: .to) as? (ClipItemInformationPresentedAnimatorDataSource & UIViewController)
+            let from = transitionContext.viewController(forKey: .from) as? (ClipItemInformationPresentable & UIViewController),
+            let to = transitionContext.viewController(forKey: .to) as? (ClipItemInformationPresenting & UIViewController)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
             return
@@ -236,10 +236,10 @@ extension ClipItemInformationInteractivePresentationAnimator: UIViewControllerIn
         let containerView = transitionContext.containerView
 
         guard
-            let from = transitionContext.viewController(forKey: .from) as? (ClipItemInformationPresentingAnimatorDataSource & UIViewController),
-            let to = transitionContext.viewController(forKey: .to) as? (ClipItemInformationPresentedAnimatorDataSource & UIViewController),
-            let targetInformationView = to.animatingInformationView(self),
-            let selectedPreviewView = from.animatingPreviewView(self),
+            let from = transitionContext.viewController(forKey: .from) as? (ClipItemInformationPresentable & UIViewController),
+            let to = transitionContext.viewController(forKey: .to) as? (ClipItemInformationPresenting & UIViewController),
+            let targetInformationView = to.clipInformationView(self),
+            let selectedPreviewView = from.previewView(self),
             let selectedImageView = selectedPreviewView.imageView,
             let selectedImage = selectedImageView.image,
             let fromViewBaseView = from.baseView(self)

@@ -363,10 +363,10 @@ extension ClipItemInformationViewController: UIGestureRecognizerDelegate {
     }
 }
 
-extension ClipItemInformationViewController: ClipItemInformationPresentedAnimatorDataSource {
-    // MARK: - ClipItemInformationPresentedAnimatorDataSource
+extension ClipItemInformationViewController: ClipItemInformationPresenting {
+    // MARK: - ClipItemInformationPresenting
 
-    func animatingInformationView(_ animator: ClipItemInformationAnimator) -> ClipItemInformationView? {
+    func clipInformationView(_ animator: ClipItemInformationAnimator) -> ClipItemInformationView? {
         return informationView
     }
 

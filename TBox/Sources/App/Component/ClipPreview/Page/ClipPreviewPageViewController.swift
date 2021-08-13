@@ -364,8 +364,8 @@ extension ClipPreviewPageViewController: UIPageViewControllerDataSource {
     }
 }
 
-extension ClipPreviewPageViewController: TBoxUIKit.ClipPreviewViewController {
-    // MARK: - ClipPreviewViewController
+extension ClipPreviewPageViewController: ClipPreviewPresenting {
+    // MARK: - ClipPreviewPresenting
 
     func previewingClipItem(_ animator: ClipPreviewAnimator) -> PreviewingClipItem? {
         guard let itemId = store.stateValue.currentItem?.id ?? store.stateValue.initialItemId else { return nil }
@@ -382,24 +382,24 @@ extension ClipPreviewPageViewController: TBoxUIKit.ClipPreviewViewController {
         store.stateValue.currentItem?.id ?? store.stateValue.initialItemId
     }
 
-    func animatingPreviewView(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
+    func previewView(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
         view.layoutIfNeeded()
         return currentViewController?.previewView
     }
 
-    func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView) -> CGRect {
+    func clipPreviewAnimator(_ animator: ClipPreviewAnimator, imageFrameOnContainerView containerView: UIView) -> CGRect {
         view.layoutIfNeeded()
-        guard let pageView = currentViewController?.previewView else { return .zero }
+        guard let previewView = currentViewController?.previewView else { return .zero }
         // HACK: SplitMode 時にサイズが合わない問題を修正
-        pageView.frame = containerView.frame
-        return pageView.convert(pageView.initialImageFrame, to: containerView)
+        previewView.frame = containerView.frame
+        return previewView.convert(previewView.initialImageFrame, to: containerView)
     }
 }
 
-extension ClipPreviewPageViewController: ClipItemInformationPresentingAnimatorDataSource {
-    // MARK: - ClipItemInformationPresentingAnimatorDataSource
+extension ClipPreviewPageViewController: ClipItemInformationPresentable {
+    // MARK: - ClipItemInformationPresentable
 
-    func animatingPreviewView(_ animator: ClipItemInformationAnimator) -> ClipPreviewView? {
+    func previewView(_ animator: ClipItemInformationAnimator) -> ClipPreviewView? {
         view.layoutIfNeeded()
         return currentViewController?.previewView
     }

@@ -4,8 +4,8 @@
 
 import UIKit
 
-public protocol ClipItemInformationPresentingAnimatorDataSource {
-    func animatingPreviewView(_ animator: ClipItemInformationAnimator) -> ClipPreviewView?
+public protocol ClipItemInformationPresentable {
+    func previewView(_ animator: ClipItemInformationAnimator) -> ClipPreviewView?
     func baseView(_ animator: ClipItemInformationAnimator) -> UIView?
     func componentsOverBaseView(_ animator: ClipItemInformationAnimator) -> [UIView]
     func clipItemInformationAnimator(_ animator: ClipItemInformationAnimator, imageFrameOnContainerView containerView: UIView) -> CGRect

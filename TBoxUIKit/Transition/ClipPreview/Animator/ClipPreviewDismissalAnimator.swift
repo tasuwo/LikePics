@@ -32,9 +32,9 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         let containerView = transitionContext.containerView
 
         guard
-            let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewViewController & UIViewController),
-            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentableViewController & UIViewController),
-            let fromPreviewView = from.animatingPreviewView(self),
+            let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresenting & UIViewController),
+            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresentable & UIViewController),
+            let fromPreviewView = from.previewView(self),
             let fromImageView = fromPreviewView.imageView,
             let fromImage = fromImageView.image,
             let previewingClipItem = from.previewingClipItem(self),
@@ -58,7 +58,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         animatingImageView.layer.cornerRadius = to.animatingCellCornerRadius(self)
         animatingImageView.contentMode = .scaleAspectFill
         animatingImageView.clipsToBounds = true
-        animatingImageView.frame = from.clipPreviewAnimator(self, frameOnContainerView: containerView)
+        animatingImageView.frame = from.clipPreviewAnimator(self, imageFrameOnContainerView: containerView)
         animatingImageView.layer.cornerCurve = .continuous
         animatingImageView.layer.masksToBounds = true
 

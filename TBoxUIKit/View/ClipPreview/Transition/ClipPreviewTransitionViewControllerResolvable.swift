@@ -4,11 +4,11 @@
 
 import UIKit
 
-public typealias ClipPreviewPresentingViewController = ClipPreviewPresentableViewController & UIViewController
-public typealias ClipPreviewPresentedViewController = ClipPreviewViewController & UIViewController
+public typealias ClipPreviewPresentingViewController = ClipPreviewPresentable & UIViewController
+public typealias ClipPreviewPresentedViewController = ClipPreviewPresenting & UIViewController
 
 public protocol ClipPreviewTransitionViewControllerResolvable: AnyObject {
-    func resolvePresentingViewController(from baseViewController: UIViewController) -> ClipPreviewPresentableViewController?
+    func resolvePresentingViewController(from baseViewController: UIViewController) -> ClipPreviewPresentable?
 
-    func resolvePresentedViewController(from baseViewController: UIViewController) -> ClipPreviewViewController?
+    func resolvePresentedViewController(from baseViewController: UIViewController) -> ClipPreviewPresenting?
 }

@@ -15,8 +15,8 @@ class ClipItemInformationInteractiveDismissalAnimator: NSObject {
     }
 
     struct FinishAnimationParameters {
-        let from: ClipItemInformationPresentedAnimatorDataSource & UIViewController
-        let to: ClipItemInformationPresentingAnimatorDataSource & UIViewController
+        let from: ClipItemInformationPresenting & UIViewController
+        let to: ClipItemInformationPresentable & UIViewController
         let innerContext: InnerContext
     }
 
@@ -86,8 +86,8 @@ class ClipItemInformationInteractiveDismissalAnimator: NSObject {
         let animatingImageView = innerContext.animatingImageView
 
         guard
-            let from = transitionContext.viewController(forKey: .from) as? (ClipItemInformationPresentedAnimatorDataSource & UIViewController),
-            let to = transitionContext.viewController(forKey: .to) as? (ClipItemInformationPresentingAnimatorDataSource & UIViewController)
+            let from = transitionContext.viewController(forKey: .from) as? (ClipItemInformationPresenting & UIViewController),
+            let to = transitionContext.viewController(forKey: .to) as? (ClipItemInformationPresentable & UIViewController)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
             return
@@ -240,12 +240,12 @@ extension ClipItemInformationInteractiveDismissalAnimator: UIViewControllerInter
         let containerView = transitionContext.containerView
 
         guard
-            let from = transitionContext.viewController(forKey: .from) as? (ClipItemInformationPresentedAnimatorDataSource & UIViewController),
-            let to = transitionContext.viewController(forKey: .to) as? (ClipItemInformationPresentingAnimatorDataSource & UIViewController),
-            let fromInformationView = from.animatingInformationView(self),
+            let from = transitionContext.viewController(forKey: .from) as? (ClipItemInformationPresenting & UIViewController),
+            let to = transitionContext.viewController(forKey: .to) as? (ClipItemInformationPresentable & UIViewController),
+            let fromInformationView = from.clipInformationView(self),
             let fromImageView = fromInformationView.imageView,
             let fromImage = fromImageView.image,
-            let targetPreviewView = to.animatingPreviewView(self),
+            let targetPreviewView = to.previewView(self),
             let toViewBaseView = to.baseView(self)
         else {
             logger.write(ConsoleLog(level: .debug, message: "Start fallback transition for ClipItemInformationView dismissal", scope: .transition))

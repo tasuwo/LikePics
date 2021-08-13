@@ -39,27 +39,27 @@ class ClipPreviewNavigationController: UINavigationController {
     }
 }
 
-extension ClipPreviewNavigationController: TBoxUIKit.ClipPreviewViewController {
-    // MARK: - ClipPreviewViewController
+extension ClipPreviewNavigationController: ClipPreviewPresenting {
+    // MARK: - ClipPreviewPresenting
 
     func previewingClipItem(_ animator: ClipPreviewAnimator) -> PreviewingClipItem? {
         return pageViewController?.previewingClipItem(animator)
     }
 
-    func animatingPreviewView(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
-        return pageViewController?.animatingPreviewView(animator)
+    func previewView(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
+        return pageViewController?.previewView(animator)
     }
 
-    func clipPreviewAnimator(_ animator: ClipPreviewAnimator, frameOnContainerView containerView: UIView) -> CGRect {
-        return pageViewController?.clipPreviewAnimator(animator, frameOnContainerView: containerView) ?? .zero
+    func clipPreviewAnimator(_ animator: ClipPreviewAnimator, imageFrameOnContainerView containerView: UIView) -> CGRect {
+        return pageViewController?.clipPreviewAnimator(animator, imageFrameOnContainerView: containerView) ?? .zero
     }
 }
 
-extension ClipPreviewNavigationController: ClipItemInformationPresentingAnimatorDataSource {
-    // MARK: - ClipItemInformationPresentingAnimatorDataSource
+extension ClipPreviewNavigationController: ClipItemInformationPresentable {
+    // MARK: - ClipItemInformationPresentable
 
-    func animatingPreviewView(_ animator: ClipItemInformationAnimator) -> ClipPreviewView? {
-        return pageViewController?.animatingPreviewView(animator)
+    func previewView(_ animator: ClipItemInformationAnimator) -> ClipPreviewView? {
+        return pageViewController?.previewView(animator)
     }
 
     func baseView(_ animator: ClipItemInformationAnimator) -> UIView? {

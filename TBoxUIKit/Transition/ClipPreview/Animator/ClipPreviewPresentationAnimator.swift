@@ -31,10 +31,10 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         let containerView = transitionContext.containerView
 
         guard
-            let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentableViewController & UIViewController),
-            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewViewController & UIViewController),
+            let from = transitionContext.viewController(forKey: .from) as? (ClipPreviewPresentable & UIViewController),
+            let to = transitionContext.viewController(forKey: .to) as? (ClipPreviewPresenting & UIViewController),
             let previewingClipItem = to.previewingClipItem(self),
-            let targetPreviewView = to.animatingPreviewView(self),
+            let targetPreviewView = to.previewView(self),
             let selectedCell = from.animatingCell(self, id: previewingClipItem.cellIdentity, needsScroll: false)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
@@ -152,7 +152,7 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             delay: 0,
             options: [.curveEaseInOut]
         ) {
-            animatingImageView.frame = to.clipPreviewAnimator(self, frameOnContainerView: containerView)
+            animatingImageView.frame = to.clipPreviewAnimator(self, imageFrameOnContainerView: containerView)
 
             to.view.alpha = 1.0
             toViewBackgroundView.alpha = 1.0

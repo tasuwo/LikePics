@@ -5,11 +5,7 @@
 import Domain
 import UIKit
 
-public protocol ClipPreviewPresentableCell: UICollectionViewCell {
-    func thumbnail() -> UIImageView
-}
-
-public protocol ClipPreviewPresentableViewController {
+public protocol ClipPreviewPresentable {
     func animatingCell(_ animator: ClipPreviewAnimator, id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool) -> ClipPreviewPresentableCell?
     func animatingCellFrame(_ animator: ClipPreviewAnimator, id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool, on containerView: UIView) -> CGRect
     func animatingCellCornerRadius(_ animator: ClipPreviewAnimator) -> CGFloat
