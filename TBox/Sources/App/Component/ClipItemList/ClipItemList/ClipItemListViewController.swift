@@ -94,7 +94,7 @@ extension ClipItemListViewController {
         var snapshot = Layout.Snapshot()
 
         snapshot.appendSections([.main])
-        snapshot.appendItems(zip(items.indices, items).map { Layout.Item($1, at: $0 + 1) })
+        snapshot.appendItems(zip(items.indices, items).map { Layout.Item($1, at: $0 + 1, of: items.count) })
 
         return snapshot
     }
@@ -123,7 +123,7 @@ extension ClipItemListViewController {
     }
 
     private func presentDeletionAlert(for item: ClipItem) {
-        guard let indexPath = dataSource.indexPath(for: .init(item, at: 0)), // index は比較に利用されないので適当な値で埋める
+        guard let indexPath = dataSource.indexPath(for: .init(item, at: 0, of: 0)), // index は比較に利用されないので適当な値で埋める
               let cell = collectionView.cellForItem(at: indexPath)
         else {
             store.execute(.alertDismissed)
@@ -320,7 +320,7 @@ extension ClipItemListViewController: ClipItemListPresenting {
 
     func animatingCell(_ animator: ClipItemListAnimator, id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool) -> ClipItemListPresentingCell? {
         guard let item = store.stateValue.items._entities[id.itemId],
-              let indexPath = dataSource.indexPath(for: .init(item.value, at: item.index + 1)) else { return nil }
+              let indexPath = dataSource.indexPath(for: .init(item.value, at: 0, of: 0)) else { return nil }
 
         if needsScroll {
             // セルが画面外だとインスタンスを取り出せないので、表示する
@@ -343,7 +343,7 @@ extension ClipItemListViewController: ClipItemListPresenting {
 
     func displayAnimatingCell(_ animator: ClipItemListAnimator, id: ClipPreviewPresentableCellIdentifier) {
         guard let item = store.stateValue.items._entities[id.itemId],
-              let indexPath = dataSource.indexPath(for: .init(item.value, at: item.index + 1)) else { return }
+              let indexPath = dataSource.indexPath(for: .init(item.value, at: 0, of: 0)) else { return }
 
         // collectionViewのみでなくviewも再描画しないとセルの座標系がおかしくなる
         // また、scrollToItem呼び出し前に一度再描画しておかないと、正常にスクロールができないケースがある

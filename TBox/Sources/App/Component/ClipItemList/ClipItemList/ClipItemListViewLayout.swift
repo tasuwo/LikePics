@@ -18,11 +18,13 @@ enum ClipItemListViewLayout {
 
     struct Item: Equatable, Hashable {
         let itemId: UUID
-        let order: Int
         let imageId: UUID
         let imageFileName: String
         let imageSize: CGSize
         let imageDataSize: Int
+
+        let order: Int
+        let numberOfItems: Int
 
         static func == (lhs: Self, rhs: Self) -> Bool {
             return lhs.itemId == rhs.itemId
@@ -43,13 +45,15 @@ enum ClipItemListViewLayout {
 }
 
 extension ClipItemListViewLayout.Item {
-    init(_ item: ClipItem, at index: Int) {
+    init(_ item: ClipItem, at index: Int, of numberOfItems: Int) {
         itemId = item.id
-        order = index
         imageId = item.imageId
         imageFileName = item.imageFileName
         imageSize = item.imageSize.cgSize
         imageDataSize = item.imageDataSize
+
+        order = index
+        self.numberOfItems = numberOfItems
     }
 }
 
@@ -111,6 +115,7 @@ extension ClipItemListViewLayout {
             configuration.fileName = item.imageFileName
             configuration.dataSize = item.imageDataSize
             configuration.page = item.order
+            configuration.numberOfPage = item.numberOfItems
             cell.contentConfiguration = configuration
 
             var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
