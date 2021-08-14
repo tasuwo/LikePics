@@ -289,6 +289,7 @@ extension ClipPreviewPageViewController {
 
         let succeeded = router.showClipItemListView(id: id,
                                                     clipId: store.stateValue.clipId,
+                                                    clipItems: store.stateValue.items,
                                                     transitioningController: itemListTransitionController)
         if !succeeded {
             modalSubscription?.cancel()

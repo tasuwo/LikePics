@@ -164,10 +164,12 @@ extension SceneDependencyContainer: Router {
 
     func showClipItemListView(id: UUID,
                               clipId: Clip.Identity,
+                              clipItems: [ClipItem],
                               transitioningController: ClipItemListTransitionControllable) -> Bool
     {
         let state = ClipItemListState(id: id,
                                       clipId: clipId,
+                                      clipItems: clipItems,
                                       isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         let viewController = ClipItemListViewController(state: state,
                                                         dependency: self,

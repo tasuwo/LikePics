@@ -29,12 +29,12 @@ struct ClipItemListState: Equatable {
 }
 
 extension ClipItemListState {
-    init(id: UUID, clipId: Clip.Identity, isSomeItemsHidden: Bool) {
+    init(id: UUID, clipId: Clip.Identity, clipItems: [ClipItem], isSomeItemsHidden: Bool) {
         self.id = id
         // 初回は適当な値で埋めておく
         self.clip = .init(id: clipId, dataSize: 0, isHidden: false)
         self.tags = .init()
-        self.items = .init()
+        self.items = .init(entities: clipItems.indexed())
         self.isSomeItemsHidden = isSomeItemsHidden
         self.isDismissed = false
     }

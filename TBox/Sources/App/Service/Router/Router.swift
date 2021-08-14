@@ -33,6 +33,7 @@ protocol Router {
     @discardableResult
     func showClipItemListView(id: UUID,
                               clipId: Clip.Identity,
+                              clipItems: [ClipItem],
                               transitioningController: ClipItemListTransitionControllable) -> Bool
 
     @discardableResult
