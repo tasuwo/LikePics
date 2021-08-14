@@ -68,7 +68,6 @@ extension ClipItemListViewController {
             .removeDuplicates(by: {
                 $0.items.filteredOrderedEntities() == $1.items.filteredOrderedEntities()
             })
-            .receive(on: RunLoop.main)
             .sink { [weak self] state in
                 let snapshot = Self.createSnapshot(items: state.items.orderedFilteredEntities())
                 self?.dataSource.apply(snapshot, animatingDifferences: true)
@@ -86,6 +85,11 @@ extension ClipItemListViewController {
                 self?.dismiss(animated: true, completion: nil)
             }
             .store(in: &subscriptions)
+
+        // アニメーションを崩さないよう、`items` のロードを待たずに初回の更新を行う
+        let snapshot = Self.createSnapshot(items: store.stateValue.items.orderedFilteredEntities())
+        dataSource.apply(snapshot, animatingDifferences: true)
+        updateCellAppearance()
     }
 
     // MARK: Snapshot
