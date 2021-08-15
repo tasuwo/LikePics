@@ -83,18 +83,4 @@ extension SceneRootViewController where Self: UIViewController {
         guard let viewController = self.resolvePresentingViewController() else { return false }
         return viewController.isDisplayablePrimaryThumbnailOnly
     }
-
-    private func calcCenteredFrame(for size: CGSize, on frame: CGRect) -> CGRect {
-        let widthScale = frame.width / size.width
-        let heightScale = frame.height / size.height
-        let scale = min(widthScale, heightScale)
-
-        let originX = (frame.width - (size.width * scale)) / 2
-        let originY = (frame.height - (size.height * scale)) / 2
-
-        return .init(x: originX + frame.origin.x,
-                     y: originY + frame.origin.y,
-                     width: size.width * scale,
-                     height: size.height * scale)
-    }
 }
