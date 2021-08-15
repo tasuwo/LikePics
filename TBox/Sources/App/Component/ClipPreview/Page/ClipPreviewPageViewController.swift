@@ -30,7 +30,7 @@ class ClipPreviewPageViewController: UIPageViewController {
         return store.stateValue.index(of: viewController.itemId)
     }
 
-    private let transitionController: ClipPreviewPageTransitionControllerType
+    private let transitionDispatcher: ClipPreviewPageTransitionDispatcherType
     private var tapGestureRecognizer: UITapGestureRecognizer!
 
     override var prefersStatusBarHidden: Bool { barController.store.stateValue.isFullscreen }
@@ -55,7 +55,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     private var cacheStore: CacheStore
     private var cacheSubscriptions: Set<AnyCancellable> = .init()
 
-    private var previewVieSubscriptions: Set<AnyCancellable> = .init()
+    private var previewViewSubscriptions: Set<AnyCancellable> = .init()
     private var modalSubscription: Cancellable?
 
     private let itemListTransitionController: ClipItemListTransitioningControllable
@@ -66,7 +66,7 @@ class ClipPreviewPageViewController: UIPageViewController {
          cacheController: ClipItemInformationViewCacheController,
          dependency: ClipPreviewPageViewRootDependency,
          factory: ViewControllerFactory,
-         transitionController: ClipPreviewPageTransitionControllerType,
+         transitionDispatcher: ClipPreviewPageTransitionDispatcherType,
          itemListTransitionController: ClipItemListTransitioningControllable)
     {
         struct CacheDependency: ClipPreviewPageViewCacheDependency {
@@ -88,7 +88,7 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.barController = ClipPreviewPageBarController(store: barStore, imageQueryService: dependency.imageQueryService)
 
         self.cacheController = cacheController
-        self.transitionController = transitionController
+        self.transitionDispatcher = transitionDispatcher
         self.factory = factory
 
         self.router = dependency.router
@@ -199,7 +199,7 @@ extension ClipPreviewPageViewController {
             }
             .store(in: &subscriptions)
 
-        transitionController.outputs.presentInformation
+        transitionDispatcher.outputs.presentInformation
             .sink { [weak self] in self?.store.execute(.clipInformationViewPresented) }
             .store(in: &subscriptions)
     }
@@ -223,18 +223,18 @@ extension ClipPreviewPageViewController {
         tapGestureRecognizer.require(toFail: viewController.previewView.zoomGestureRecognizer)
         viewController.previewView.delegate = self
 
-        previewVieSubscriptions.forEach { $0.cancel() }
+        previewViewSubscriptions.forEach { $0.cancel() }
         viewController.previewView.isInitialZoomScale
             .sink { [weak self] isInitialZoomScale in
-                self?.transitionController.inputs.isInitialPreviewZoomScale.send(isInitialZoomScale)
+                self?.transitionDispatcher.inputs.isInitialPreviewZoomScale.send(isInitialZoomScale)
             }
-            .store(in: &previewVieSubscriptions)
+            .store(in: &previewViewSubscriptions)
         viewController.previewView.contentOffset
             .sink { [weak self] offset in
-                self?.transitionController.inputs.previewContentOffset.send(offset)
+                self?.transitionDispatcher.inputs.previewContentOffset.send(offset)
             }
-            .store(in: &previewVieSubscriptions)
-        transitionController.inputs.previewPanGestureRecognizer.send(viewController.previewView.panGestureRecognizer)
+            .store(in: &previewViewSubscriptions)
+        transitionDispatcher.inputs.previewPanGestureRecognizer.send(viewController.previewView.panGestureRecognizer)
 
         cacheStore.execute(.pageChanged(store.stateValue.clipId, viewController.itemId))
     }

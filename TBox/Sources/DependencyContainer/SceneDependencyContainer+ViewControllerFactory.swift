@@ -134,7 +134,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
         let previewTransitioningController = ClipPreviewTransitioningController(lock: container.transitionLock, logger: container.logger)
         let informationTransitionController = ClipItemInformationTransitioningController(lock: container.transitionLock, logger: container.logger)
         let itemListTransitionController = ClipItemListTransitioningController(lock: container.transitionLock, logger: container.logger)
-        let transitionController = ClipPreviewPageTransitionController(previewTransitioningController: previewTransitioningController,
+        let transitionDispatcher = ClipPreviewPageTransitionController(previewTransitioningController: previewTransitioningController,
                                                                        informationTransitionController: informationTransitionController)
 
         let dependency = Dependency(router: self,
@@ -151,10 +151,10 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                                            cacheController: informationViewCacheController,
                                                            dependency: dependency,
                                                            factory: self,
-                                                           transitionController: transitionController,
+                                                           transitionDispatcher: transitionDispatcher,
                                                            itemListTransitionController: itemListTransitionController)
 
-        transitionController.setup(baseViewController: viewController)
+        transitionDispatcher.setup(baseViewController: viewController)
 
         let navigationController = ClipPreviewNavigationController(pageViewController: viewController)
         navigationController.transitioningDelegate = previewTransitioningController

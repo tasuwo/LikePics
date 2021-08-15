@@ -6,12 +6,12 @@ import Combine
 import TBoxUIKit
 import UIKit
 
-protocol ClipPreviewPageTransitionControllerType {
-    var inputs: ClipPreviewPageTransitionControllerInputs { get }
-    var outputs: ClipPreviewPageTransitionControllerOutputs { get }
+protocol ClipPreviewPageTransitionDispatcherType {
+    var inputs: ClipPreviewPageTransitionDispatcherInputs { get }
+    var outputs: ClipPreviewPageTransitionDispatcherOutputs { get }
 }
 
-protocol ClipPreviewPageTransitionControllerInputs {
+protocol ClipPreviewPageTransitionDispatcherInputs {
     var isInitialPreviewZoomScale: CurrentValueSubject<Bool?, Never> { get }
     var previewContentOffset: CurrentValueSubject<CGPoint?, Never> { get }
     var previewPanGestureRecognizer: CurrentValueSubject<UIPanGestureRecognizer?, Never> { get }
@@ -20,15 +20,15 @@ protocol ClipPreviewPageTransitionControllerInputs {
     var beginDismissal: PassthroughSubject<Void, Never> { get }
 }
 
-protocol ClipPreviewPageTransitionControllerOutputs {
+protocol ClipPreviewPageTransitionDispatcherOutputs {
     var isPreviewScrollEnabled: CurrentValueSubject<Bool, Never> { get }
     var presentInformation: PassthroughSubject<Void, Never> { get }
 }
 
 class ClipPreviewPageTransitionController: NSObject,
-    ClipPreviewPageTransitionControllerType,
-    ClipPreviewPageTransitionControllerInputs,
-    ClipPreviewPageTransitionControllerOutputs
+    ClipPreviewPageTransitionDispatcherType,
+    ClipPreviewPageTransitionDispatcherInputs,
+    ClipPreviewPageTransitionDispatcherOutputs
 {
     enum TransitionDestination {
         case back
@@ -42,12 +42,12 @@ class ClipPreviewPageTransitionController: NSObject,
 
     // MARK: - Properties
 
-    // MARK: ClipPreviewPageTransitionControllerType
+    // MARK: ClipPreviewPageTransitionDispatcherType
 
-    var inputs: ClipPreviewPageTransitionControllerInputs { self }
-    var outputs: ClipPreviewPageTransitionControllerOutputs { self }
+    var inputs: ClipPreviewPageTransitionDispatcherInputs { self }
+    var outputs: ClipPreviewPageTransitionDispatcherOutputs { self }
 
-    // MARK: ClipPreviewPageTransitionControllerInputs
+    // MARK: ClipPreviewPageTransitionDispatcherInputs
 
     let isInitialPreviewZoomScale: CurrentValueSubject<Bool?, Never> = .init(nil)
     let previewContentOffset: CurrentValueSubject<CGPoint?, Never> = .init(nil)
@@ -74,7 +74,7 @@ class ClipPreviewPageTransitionController: NSObject,
     private var context: Context?
     private var subscriptions: Set<AnyCancellable> = .init()
 
-    // MARK: - Lifecycle
+    // MARK: - Initializers
 
     init(previewTransitioningController: ClipPreviewTransitioningControllable,
          informationTransitionController: ClipItemInformationTransitioningControllable)
