@@ -34,7 +34,8 @@ extension ClipItemListState {
         // 初回は適当な値で埋めておく
         self.clip = .init(id: clipId, dataSize: 0, isHidden: false)
         self.tags = .init()
-        self.items = .init(entities: clipItems.indexed())
+        self.items = .init(entities: clipItems.indexed(),
+                           filteredIds: Set(clipItems.map(\.id)))
         self.isSomeItemsHidden = isSomeItemsHidden
         self.isDismissed = false
     }
