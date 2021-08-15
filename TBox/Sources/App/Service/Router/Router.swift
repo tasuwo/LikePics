@@ -28,13 +28,13 @@ protocol Router {
     func showClipInformationView(clipId: Clip.Identity,
                                  itemId: ClipItem.Identity,
                                  clipInformationViewCache: ClipItemInformationViewCaching,
-                                 transitioningController: ClipItemInformationTransitioningControllerProtocol) -> Bool
+                                 transitioningController: ClipItemInformationTransitioningControllable) -> Bool
 
     @discardableResult
     func showClipItemListView(id: UUID,
                               clipId: Clip.Identity,
                               clipItems: [ClipItem],
-                              transitioningController: ClipItemListTransitionControllable) -> Bool
+                              transitioningController: ClipItemListTransitioningControllable) -> Bool
 
     @discardableResult
     func showTagSelectionModal(id: UUID, selections: Set<Tag.Identity>) -> Bool

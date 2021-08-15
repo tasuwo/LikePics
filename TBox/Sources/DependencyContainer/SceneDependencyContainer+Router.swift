@@ -140,7 +140,7 @@ extension SceneDependencyContainer: Router {
     func showClipInformationView(clipId: Clip.Identity,
                                  itemId: ClipItem.Identity,
                                  clipInformationViewCache: ClipItemInformationViewCaching,
-                                 transitioningController: ClipItemInformationTransitioningControllerProtocol) -> Bool
+                                 transitioningController: ClipItemInformationTransitioningControllable) -> Bool
     {
         let state = ClipItemInformationViewState(clipId: clipId,
                                                  itemId: itemId,
@@ -165,7 +165,7 @@ extension SceneDependencyContainer: Router {
     func showClipItemListView(id: UUID,
                               clipId: Clip.Identity,
                               clipItems: [ClipItem],
-                              transitioningController: ClipItemListTransitionControllable) -> Bool
+                              transitioningController: ClipItemListTransitioningControllable) -> Bool
     {
         let state = ClipItemListState(id: id,
                                       clipId: clipId,

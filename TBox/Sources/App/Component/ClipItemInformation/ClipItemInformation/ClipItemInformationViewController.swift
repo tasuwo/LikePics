@@ -19,7 +19,7 @@ class ClipItemInformationViewController: UIViewController {
     override var prefersStatusBarHidden: Bool { store.stateValue.isHiddenStatusBar }
 
     private let informationView: ClipItemInformationView
-    private let transitioningController: ClipItemInformationTransitioningControllerProtocol
+    private let transitioningController: ClipItemInformationTransitioningControllable
     private var panGestureRecognizer: UIPanGestureRecognizer!
 
     // MARK: Component
@@ -47,7 +47,7 @@ class ClipItemInformationViewController: UIViewController {
          siteUrlEditAlertState: TextEditAlertState,
          dependency: ClipItemInformationViewDependency,
          clipInformationViewCache: ClipItemInformationViewCaching,
-         transitioningController: ClipItemInformationTransitioningControllerProtocol)
+         transitioningController: ClipItemInformationTransitioningControllable)
     {
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipItemInformationViewReducer())
         self.siteUrlEditAlert = .init(state: siteUrlEditAlertState)

@@ -5,28 +5,10 @@
 import Common
 import UIKit
 
-public enum ClipItemInformationTransitionMode {
-    case custom(interactive: Bool)
-    case `default`
-
-    static let initialValue: Self = .custom(interactive: false)
-}
-
-public protocol ClipItemInformationTransitioningControllerProtocol: UIViewControllerTransitioningDelegate {
-    var isInteractive: Bool { get }
-    func isLocked(by id: UUID) -> Bool
-    @discardableResult
-    func beginTransition(id: UUID, mode: ClipItemInformationTransitionMode) -> Bool
-    @discardableResult
-    func didPanForPresentation(id: UUID, sender: UIPanGestureRecognizer) -> Bool
-    @discardableResult
-    func didPanForDismissal(id: UUID, sender: UIPanGestureRecognizer) -> Bool
-}
-
 public class ClipItemInformationTransitioningController: NSObject {
     private var presentationInteractiveAnimator: ClipItemInformationInteractivePresentationAnimator?
     private var dismissalInteractiveAnimator: ClipItemInformationInteractiveDismissalAnimator?
-    private var transitionMode: ClipItemInformationTransitionMode = .initialValue
+    private var transitionMode: ClipItemInformationTransitionType = .initialValue
     private let lock: TransitionLock
     private let logger: Loggable
 
@@ -38,8 +20,8 @@ public class ClipItemInformationTransitioningController: NSObject {
     }
 }
 
-extension ClipItemInformationTransitioningController: ClipItemInformationTransitioningControllerProtocol {
-    // MARK: - ClipItemInformationTransitioningControllerProtocol
+extension ClipItemInformationTransitioningController: ClipItemInformationTransitioningControllable {
+    // MARK: - ClipItemInformationTransitioningControllable
 
     public var isInteractive: Bool {
         guard case .custom(interactive: true) = self.transitionMode else { return false }
@@ -51,7 +33,7 @@ extension ClipItemInformationTransitioningController: ClipItemInformationTransit
     }
 
     @discardableResult
-    public func beginTransition(id: UUID, mode: ClipItemInformationTransitionMode) -> Bool {
+    public func beginTransition(id: UUID, mode: ClipItemInformationTransitionType) -> Bool {
         guard lock.takeLock(id) else { return false }
         transitionMode = mode
         return true

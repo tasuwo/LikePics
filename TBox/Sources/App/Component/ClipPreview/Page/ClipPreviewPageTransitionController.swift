@@ -67,8 +67,8 @@ class ClipPreviewPageTransitionController: NSObject,
 
     private var panGestureRecognizer: UIPanGestureRecognizer!
 
-    private let previewTransitioningController: ClipPreviewTransitionControllerProtocol
-    private let informationTransitioningController: ClipItemInformationTransitioningControllerProtocol
+    private let previewTransitioningController: ClipPreviewTransitioningControllable
+    private let informationTransitioningController: ClipItemInformationTransitioningControllable
 
     private var destination: TransitionDestination?
     private var context: Context?
@@ -76,8 +76,8 @@ class ClipPreviewPageTransitionController: NSObject,
 
     // MARK: - Lifecycle
 
-    init(previewTransitioningController: ClipPreviewTransitionControllerProtocol,
-         informationTransitionController: ClipItemInformationTransitioningControllerProtocol)
+    init(previewTransitioningController: ClipPreviewTransitioningControllable,
+         informationTransitionController: ClipItemInformationTransitioningControllable)
     {
         self.previewTransitioningController = previewTransitioningController
         self.informationTransitioningController = informationTransitionController

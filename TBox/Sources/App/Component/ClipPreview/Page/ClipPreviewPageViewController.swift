@@ -58,7 +58,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     private var previewVieSubscriptions: Set<AnyCancellable> = .init()
     private var modalSubscription: Cancellable?
 
-    private let itemListTransitionController: ClipItemListTransitionControllable
+    private let itemListTransitionController: ClipItemListTransitioningControllable
 
     // MARK: - Initializers
 
@@ -67,7 +67,7 @@ class ClipPreviewPageViewController: UIPageViewController {
          dependency: ClipPreviewPageViewRootDependency,
          factory: ViewControllerFactory,
          transitionController: ClipPreviewPageTransitionControllerType,
-         itemListTransitionController: ClipItemListTransitionControllable)
+         itemListTransitionController: ClipItemListTransitioningControllable)
     {
         struct CacheDependency: ClipPreviewPageViewCacheDependency {
             weak var informationViewCache: ClipItemInformationViewCaching?

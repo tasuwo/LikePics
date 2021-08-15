@@ -5,12 +5,6 @@
 import Common
 import UIKit
 
-public protocol ClipItemListTransitionControllable: UIViewControllerTransitioningDelegate {
-    func isLocked(by id: UUID) -> Bool
-    @discardableResult
-    func beginTransition(id: UUID, mode: ClipPreviewTransitionMode) -> Bool
-}
-
 public class ClipItemListTransitioningController: NSObject {
     private let lock: TransitionLock
     private let logger: Loggable
@@ -23,14 +17,14 @@ public class ClipItemListTransitioningController: NSObject {
     }
 }
 
-extension ClipItemListTransitioningController: ClipItemListTransitionControllable {
-    // MARK: - ClipItemListTransitionControllable
+extension ClipItemListTransitioningController: ClipItemListTransitioningControllable {
+    // MARK: - ClipItemListTransitioningControllable
 
     public func isLocked(by id: UUID) -> Bool {
         lock.isLocked(by: id)
     }
 
-    public func beginTransition(id: UUID, mode: ClipPreviewTransitionMode) -> Bool {
+    public func beginTransition(id: UUID, mode: ClipPreviewTransitionType) -> Bool {
         guard lock.takeLock(id) else { return false }
         return true
     }

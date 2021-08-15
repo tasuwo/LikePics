@@ -5,27 +5,11 @@
 import Common
 import UIKit
 
-public enum ClipPreviewTransitionMode {
-    case custom(interactive: Bool)
-    case `default`
-
-    static let initialValue: Self = .custom(interactive: false)
-}
-
-public protocol ClipPreviewTransitionControllerProtocol {
-    var isInteractive: Bool { get }
-    func isLocked(by id: UUID) -> Bool
-    @discardableResult
-    func beginTransition(id: UUID, mode: ClipPreviewTransitionMode) -> Bool
-    @discardableResult
-    func didPanForDismissal(id: UUID, sender: UIPanGestureRecognizer) -> Bool
-}
-
 public class ClipPreviewTransitioningController: NSObject {
     private let lock: TransitionLock
     private let logger: Loggable
     private var dismissalInteractiveAnimator: ClipPreviewInteractiveDismissalAnimator?
-    private var transitionMode: ClipPreviewTransitionMode = .initialValue
+    private var transitionMode: ClipPreviewTransitionType = .initialValue
 
     // MARK: - Lifecycle
 
@@ -35,8 +19,8 @@ public class ClipPreviewTransitioningController: NSObject {
     }
 }
 
-extension ClipPreviewTransitioningController: ClipPreviewTransitionControllerProtocol {
-    // MARK: - ClipPreviewTransitionControllerProtocol
+extension ClipPreviewTransitioningController: ClipPreviewTransitioningControllable {
+    // MARK: - ClipPreviewTransitioningControllable
 
     public var isInteractive: Bool {
         guard case .custom(interactive: true) = self.transitionMode else { return false }
@@ -47,7 +31,7 @@ extension ClipPreviewTransitioningController: ClipPreviewTransitionControllerPro
         lock.isLocked(by: id)
     }
 
-    public func beginTransition(id: UUID, mode: ClipPreviewTransitionMode) -> Bool {
+    public func beginTransition(id: UUID, mode: ClipPreviewTransitionType) -> Bool {
         guard lock.takeLock(id) else { return false }
         self.transitionMode = mode
         return true
