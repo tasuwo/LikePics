@@ -8,12 +8,12 @@ import UIKit
 class ClipPreviewDismissalAnimator: NSObject {
     static let transitionDuration: TimeInterval = 0.15
 
-    private weak var delegate: ClipPreviewAnimatorDelegate?
+    private weak var delegate: AnimatorDelegate?
     private let fallbackAnimator: FadeTransitionAnimatorProtocol
 
-    // MARK: - Lifecycle
+    // MARK: - Initializers
 
-    init(delegate: ClipPreviewAnimatorDelegate, fallbackAnimator: FadeTransitionAnimatorProtocol) {
+    init(delegate: AnimatorDelegate, fallbackAnimator: FadeTransitionAnimatorProtocol) {
         self.delegate = delegate
         self.fallbackAnimator = fallbackAnimator
     }
@@ -135,6 +135,6 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
     }
 
     func animationEnded(_ transitionCompleted: Bool) {
-        self.delegate?.clipPreviewAnimator(self, didComplete: transitionCompleted)
+        self.delegate?.animator(self, didComplete: transitionCompleted)
     }
 }

@@ -7,12 +7,12 @@ import UIKit
 class ClipItemListDismissalAnimator: NSObject {
     static let transitionDuration: TimeInterval = 0.23
 
-    private weak var delegate: ClipItemListAnimatorDelegate?
+    private weak var delegate: AnimatorDelegate?
     private let fallbackAnimator: FadeTransitionAnimatorProtocol
 
     // MARK: - Initializers
 
-    init(delegate: ClipItemListAnimatorDelegate, fallbackAnimator: FadeTransitionAnimatorProtocol) {
+    init(delegate: AnimatorDelegate, fallbackAnimator: FadeTransitionAnimatorProtocol) {
         self.delegate = delegate
         self.fallbackAnimator = fallbackAnimator
     }
@@ -170,6 +170,6 @@ extension ClipItemListDismissalAnimator: UIViewControllerAnimatedTransitioning {
     }
 
     func animationEnded(_ transitionCompleted: Bool) {
-        self.delegate?.clipItemListAnimatorDelegate(self, didComplete: transitionCompleted)
+        self.delegate?.animator(self, didComplete: transitionCompleted)
     }
 }

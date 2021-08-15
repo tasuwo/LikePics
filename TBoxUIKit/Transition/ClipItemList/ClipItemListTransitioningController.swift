@@ -36,10 +36,10 @@ extension ClipItemListTransitioningController: ClipItemListTransitionControllabl
     }
 }
 
-extension ClipItemListTransitioningController: ClipItemListAnimatorDelegate {
-    // MARK: - ClipItemListAnimatorDelegate
+extension ClipItemListTransitioningController: AnimatorDelegate {
+    // MARK: - AnimatorDelegate
 
-    func clipItemListAnimatorDelegate(_ animator: ClipItemListAnimator, didComplete: Bool) {
+    func animator(_ animator: Animator, didComplete: Bool) {
         lock.releaseLock()
     }
 }

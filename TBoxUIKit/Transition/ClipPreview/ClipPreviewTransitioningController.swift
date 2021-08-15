@@ -60,10 +60,10 @@ extension ClipPreviewTransitioningController: ClipPreviewTransitionControllerPro
     }
 }
 
-extension ClipPreviewTransitioningController: ClipPreviewAnimatorDelegate {
-    // MARK: - ClipPreviewAnimatorDelegate
+extension ClipPreviewTransitioningController: AnimatorDelegate {
+    // MARK: - AnimatorDelegate
 
-    func clipPreviewAnimator(_ animator: ClipPreviewAnimator, didComplete: Bool) {
+    func animator(_ animator: Animator, didComplete: Bool) {
         lock.releaseLock()
         self.transitionMode = .initialValue
     }

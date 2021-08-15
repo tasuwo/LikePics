@@ -7,12 +7,12 @@ import UIKit
 class ClipItemInformationDismissalAnimator: NSObject {
     private static let transitionDuration: TimeInterval = 0.15
 
-    private weak var delegate: ClipItemInformationAnimatorDelegate?
+    private weak var delegate: AnimatorDelegate?
     private let fallbackAnimator: FadeTransitionAnimatorProtocol
 
-    // MARK: - Lifecycle
+    // MARK: - Initializers
 
-    init(delegate: ClipItemInformationAnimatorDelegate, fallbackAnimator: FadeTransitionAnimatorProtocol) {
+    init(delegate: AnimatorDelegate, fallbackAnimator: FadeTransitionAnimatorProtocol) {
         self.delegate = delegate
         self.fallbackAnimator = fallbackAnimator
     }
@@ -88,6 +88,6 @@ extension ClipItemInformationDismissalAnimator: UIViewControllerAnimatedTransiti
     }
 
     func animationEnded(_ transitionCompleted: Bool) {
-        self.delegate?.clipItemInformationAnimatorDelegate(self, didComplete: transitionCompleted)
+        self.delegate?.animator(self, didComplete: transitionCompleted)
     }
 }

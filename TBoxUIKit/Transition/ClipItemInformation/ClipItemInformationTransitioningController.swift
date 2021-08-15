@@ -72,10 +72,10 @@ extension ClipItemInformationTransitioningController: ClipItemInformationTransit
     }
 }
 
-extension ClipItemInformationTransitioningController: ClipItemInformationAnimatorDelegate {
-    // MARK: - ClipItemInformationAnimatorDelegate
+extension ClipItemInformationTransitioningController: AnimatorDelegate {
+    // MARK: - AnimatorDelegate
 
-    func clipItemInformationAnimatorDelegate(_ animator: ClipItemInformationAnimator, didComplete: Bool) {
+    func animator(_ animator: Animator, didComplete: Bool) {
         lock.releaseLock()
         self.transitionMode = .initialValue
     }
