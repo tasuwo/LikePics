@@ -19,6 +19,7 @@ class ClipItemListViewController: UIViewController {
 
     private var collectionView: UICollectionView!
     private var dataSource: Layout.DataSource!
+    private var navigationBar: UINavigationBar!
 
     // MARK: Service
 
@@ -178,9 +179,30 @@ extension ClipItemListViewController {
         collectionView.allowsSelection = true
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = self
+        collectionView.contentInset.top = 44 + 16
 
         view.addSubview(collectionView)
         NSLayoutConstraint.activate(collectionView.constraints(fittingIn: view))
+
+        let navigationBar = UINavigationBar()
+        navigationBar.isTranslucent = true
+        navigationBar.delegate = self
+        let navigationItem = UINavigationItem()
+        let closeItem = UIBarButtonItem(title: L10n.clipItemListViewBack, primaryAction: .init(handler: { [weak self] _ in
+            self?.store.execute(.dismiss)
+        }))
+        navigationItem.rightBarButtonItem = closeItem
+        navigationBar.items = [navigationItem]
+        self.navigationBar = navigationBar
+
+        view.addSubview(navigationBar)
+        navigationBar.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            navigationBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            navigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            navigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            navigationBar.heightAnchor.constraint(equalToConstant: 44)
+        ])
     }
 
     private func configureDataSource() {
@@ -198,6 +220,12 @@ extension ClipItemListViewController {
         collectionView.dragDelegate = self
         collectionView.dropDelegate = self
     }
+}
+
+extension ClipItemListViewController: UINavigationBarDelegate {
+    // MARK: - UINavigationBarDelegate
+
+    func position(for bar: UIBarPositioning) -> UIBarPosition { .topAttached }
 }
 
 extension ClipItemListViewController: UICollectionViewDelegate {
