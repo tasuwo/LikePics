@@ -176,8 +176,8 @@ internal enum L10n {
     internal static let clipInformationViewAlertForDeleteTagMessage = L10n.tr("Localizable", "clip_information_view_alert_for_delete_tag_message")
     /// 無題
     internal static let clipItemCellNoTitle = L10n.tr("Localizable", "clip_item_cell_no_title")
-    /// 戻る
-    internal static let clipItemListViewBack = L10n.tr("Localizable", "clip_item_list_view_back")
+    /// 再開
+    internal static let clipItemListViewResume = L10n.tr("Localizable", "clip_item_list_view_resume")
     /// タグを追加する
     internal static let clipMergeViewAddTagTitle = L10n.tr("Localizable", "clip_merge_view_add_tag_title")
     /// 保存に失敗しました

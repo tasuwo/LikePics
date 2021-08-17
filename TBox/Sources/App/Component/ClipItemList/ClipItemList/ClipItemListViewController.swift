@@ -202,7 +202,7 @@ extension ClipItemListViewController {
         navigationBar.isTranslucent = true
         navigationBar.delegate = self
         let navigationItem = UINavigationItem()
-        let closeItem = UIBarButtonItem(title: L10n.clipItemListViewBack, primaryAction: .init(handler: { [weak self] _ in
+        let closeItem = UIBarButtonItem(title: L10n.clipItemListViewResume, primaryAction: .init(handler: { [weak self] _ in
             self?.store.execute(.dismiss)
         }))
         navigationItem.rightBarButtonItem = closeItem

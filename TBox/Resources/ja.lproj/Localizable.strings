@@ -187,7 +187,7 @@
 "settings_interface_style_dark" = "ダーク";
 "settings_interface_style_unspecified" = "端末に合わせる";
 
-"clip_item_list_view_back" = "戻る";
+"clip_item_list_view_resume" = "再開";
 "clip_item_cell_no_title" = "無題";
 
 "url_context_menu_open" = "開く";

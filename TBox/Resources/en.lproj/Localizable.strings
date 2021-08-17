@@ -187,7 +187,7 @@
 "settings_interface_style_dark" = "Dark";
 "settings_interface_style_unspecified" = "Unspecified";
 
-"clip_item_list_view_back" = "Back";
+"clip_item_list_view_resume" = "Resume";
 "clip_item_cell_no_title" = "No Title";
 
 "url_context_menu_open" = "Open";
