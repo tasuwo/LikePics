@@ -19,6 +19,7 @@ class ClipItemListViewController: UIViewController {
 
     private var collectionView: UICollectionView!
     private var dataSource: Layout.DataSource!
+    private var selectionApplier: UICollectionViewSelectionLazyApplier<Layout.Section, Layout.Item, ClipItem>!
     private var navigationBar: UINavigationBar!
     private var toolBar: UIToolbar!
     private var toolBarTopConstraint: NSLayoutConstraint!
@@ -87,7 +88,22 @@ extension ClipItemListViewController {
                 let snapshot = Self.createSnapshot(items: state.items.orderedFilteredEntities())
                 self?.dataSource.apply(snapshot, animatingDifferences: true)
                 self?.updateCellAppearance()
+                self?.selectionApplier.didApplyDataSource(snapshot: state.items)
             }
+            .store(in: &subscriptions)
+
+        store.state
+            .removeDuplicates(by: \.items._selectedIds)
+            .throttle(for: 0.5, scheduler: RunLoop.main, latest: true)
+            .sink { [weak self] state in self?.selectionApplier.applySelection(snapshot: state.items) }
+            .store(in: &subscriptions)
+
+        store.state
+            .bindNoRetain(\.isEditing, to: \.isEditing, on: self)
+            .store(in: &subscriptions)
+
+        store.state
+            .bindNoRetain(\.isToolBarHidden, to: \.isToolBarHidden, on: self)
             .store(in: &subscriptions)
 
         store.state
@@ -191,6 +207,8 @@ extension ClipItemListViewController {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: Layout.createLayout())
         collectionView.backgroundColor = .clear
         collectionView.allowsSelection = true
+        collectionView.allowsMultipleSelection = true
+        collectionView.allowsSelectionDuringEditing = true
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = self
         collectionView.contentInset.top = 44 + 16
@@ -205,7 +223,7 @@ extension ClipItemListViewController {
         let closeItem = UIBarButtonItem(title: L10n.clipItemListViewResume, primaryAction: .init(handler: { [weak self] _ in
             self?.store.execute(.dismiss)
         }))
-        navigationItem.rightBarButtonItem = closeItem
+        navigationItem.leftBarButtonItem = closeItem
         navigationBar.items = [navigationItem]
         self.navigationBar = navigationBar
 
@@ -242,6 +260,9 @@ extension ClipItemListViewController {
     private func configureDataSource() {
         collectionView.delegate = self
         dataSource = Layout.configureDataSource(collectionView, thumbnailLoader)
+        selectionApplier = UICollectionViewSelectionLazyApplier(collectionView: collectionView,
+                                                                dataSource: dataSource,
+                                                                itemBuilder: { .init($0, at: 0, of: 0) })
     }
 
     private func configureReorder() {
@@ -288,6 +309,11 @@ extension ClipItemListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
         store.execute(.selected(item.itemId))
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
+        store.execute(.deselected(item.itemId))
     }
 }
 

@@ -23,6 +23,7 @@ struct ClipItemListState: Equatable {
     var items: EntityCollectionSnapshot<ClipItem>
     var isSomeItemsHidden: Bool
 
+    var isEditing: Bool
     var isDismissed: Bool
 
     var alert: Alert?
@@ -37,6 +38,11 @@ extension ClipItemListState {
         self.items = .init(entities: clipItems.indexed(),
                            filteredIds: Set(clipItems.map(\.id)))
         self.isSomeItemsHidden = isSomeItemsHidden
+        self.isEditing = false
         self.isDismissed = false
     }
+}
+
+extension ClipItemListState {
+    var isToolBarHidden: Bool { !isEditing }
 }

@@ -10,6 +10,7 @@ public struct ClipItemContentConfiguration {
     public var dataSize: Int
     public var page: Int
     public var numberOfPage: Int
+    var isOverlayViewHidden: Bool
 
     var displayFileName: String {
         fileName.isEmpty ? L10n.clipItemCellNoTitle : fileName
@@ -27,6 +28,7 @@ public struct ClipItemContentConfiguration {
         self.dataSize = 0
         self.page = 0
         self.numberOfPage = 0
+        self.isOverlayViewHidden = true
     }
 }
 
@@ -38,6 +40,16 @@ extension ClipItemContentConfiguration: UIContentConfiguration {
     }
 
     public func updated(for state: UIConfigurationState) -> ClipItemContentConfiguration {
-        return self
+        guard let state = state as? UICellConfigurationState else { return self }
+
+        var configuration = self
+
+        if state.isEditing {
+            configuration.isOverlayViewHidden = !state.isSelected
+        } else {
+            configuration.isOverlayViewHidden = true
+        }
+
+        return configuration
     }
 }

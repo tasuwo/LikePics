@@ -51,6 +51,11 @@ struct ClipItemListReducer: Reducer {
 
         // MARK: Operation
 
+        case let .editted(isEditing):
+            nextState.isEditing = isEditing
+            nextState.items = nextState.items.updated(selectedIds: .init())
+            return (nextState, .none)
+
         case let .reordered(itemIds):
             let stream = Deferred {
                 Future<Action?, Never> { promise in
@@ -72,10 +77,21 @@ struct ClipItemListReducer: Reducer {
             return (nextState, [Effect(stream)])
 
         case let .selected(itemId):
-            var userInfo: [ModalNotification.UserInfoKey: Any] = [:]
-            userInfo[.selectedPreviewItem] = itemId
-            dependency.modalNotificationCenter.post(id: state.id, name: .clipItemList, userInfo: userInfo)
-            return (nextState, [Effect(value: .dismiss)])
+            if state.isEditing {
+                nextState.items = state.items.updated(selectedIds: state.items._selectedIds.union(Set([itemId])))
+                return (nextState, .none)
+            } else {
+                var userInfo: [ModalNotification.UserInfoKey: Any] = [:]
+                userInfo[.selectedPreviewItem] = itemId
+                dependency.modalNotificationCenter.post(id: state.id, name: .clipItemList, userInfo: userInfo)
+                return (nextState, [Effect(value: .dismiss)])
+            }
+
+        case let .deselected(itemId):
+            guard state.isEditing else { return (nextState, .none) }
+            let newSelections = state.items._selectedIds.subtracting(Set([itemId]))
+            nextState.items = nextState.items.updated(selectedIds: newSelections)
+            return (nextState, .none)
 
         case .itemsReorderFailed:
             nextState.alert = .error(L10n.failedToUpdateClip)

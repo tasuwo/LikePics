@@ -13,8 +13,10 @@
                 <outlet property="baseView" destination="OXx-L8-iW8" id="Jo0-oD-8FR"/>
                 <outlet property="dataSizeLabel" destination="O0u-C9-w67" id="wpM-m8-aWP"/>
                 <outlet property="fileNameLabel" destination="g5d-9Q-XwA" id="q51-pK-d1T"/>
+                <outlet property="overlayView" destination="jL6-pg-Inf" id="LWA-lf-4q4"/>
                 <outlet property="pageNumberLabel" destination="0IH-lP-AGa" id="11Q-K3-Jy4"/>
                 <outlet property="pageNumberLabelContainer" destination="I1G-pk-GP2" id="7TQ-Yr-ODK"/>
+                <outlet property="selectionMarkContainer" destination="LsV-L7-b8c" id="CUw-mC-nUm"/>
                 <outlet property="thumbnailHeightConstraint" destination="jHP-M1-gQk" id="2Kt-kk-VMh"/>
                 <outlet property="thumbnailImageView" destination="lLG-t5-bWl" id="iuM-ge-6R8"/>
                 <outlet property="thumbnailWidthConstraint" destination="2iz-0w-9fr" id="wAe-tH-qx1"/>
@@ -37,6 +39,41 @@
                                         <constraint firstAttribute="width" secondItem="lLG-t5-bWl" secondAttribute="height" multiplier="1:1" priority="999" id="o9F-bI-D7k"/>
                                     </constraints>
                                 </imageView>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jL6-pg-Inf" userLabel="Overlay View">
+                                    <rect key="frame" x="0.0" y="0.0" width="196" height="196"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LsV-L7-b8c" userLabel="Selection Mark Container">
+                                            <rect key="frame" x="152" y="12" width="32" height="32"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="2wF-KH-MdQ">
+                                                    <rect key="frame" x="0.0" y="0.5" width="32" height="31"/>
+                                                    <color key="tintColor" systemColor="systemGreenColor"/>
+                                                </imageView>
+                                            </subviews>
+                                            <viewLayoutGuide key="safeArea" id="3Ga-K2-KXO"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="2wF-KH-MdQ" secondAttribute="bottom" id="Dur-H5-nVa"/>
+                                                <constraint firstItem="2wF-KH-MdQ" firstAttribute="leading" secondItem="LsV-L7-b8c" secondAttribute="leading" id="LRq-vo-3jg"/>
+                                                <constraint firstAttribute="width" constant="32" id="OPn-OC-HU0"/>
+                                                <constraint firstItem="2wF-KH-MdQ" firstAttribute="top" secondItem="LsV-L7-b8c" secondAttribute="top" id="baO-re-dkV"/>
+                                                <constraint firstAttribute="height" constant="32" id="lyG-QM-GMq"/>
+                                                <constraint firstAttribute="trailing" secondItem="2wF-KH-MdQ" secondAttribute="trailing" id="vRQ-sH-Qz5"/>
+                                            </constraints>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                    <integer key="value" value="16"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                            </userDefinedRuntimeAttributes>
+                                        </view>
+                                    </subviews>
+                                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <constraints>
+                                        <constraint firstItem="LsV-L7-b8c" firstAttribute="top" secondItem="jL6-pg-Inf" secondAttribute="top" constant="12" id="Aiv-C0-d7p"/>
+                                        <constraint firstAttribute="trailing" secondItem="LsV-L7-b8c" secondAttribute="trailing" constant="12" id="Wt9-83-UQK"/>
+                                    </constraints>
+                                </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I1G-pk-GP2" userLabel="Page Number Label Container">
                                     <rect key="frame" x="139" y="165.5" width="49" height="22.5"/>
                                     <subviews>
@@ -59,8 +96,12 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstItem="lLG-t5-bWl" firstAttribute="width" secondItem="y4z-63-YZW" secondAttribute="width" priority="999" id="2iz-0w-9fr"/>
+                                <constraint firstItem="jL6-pg-Inf" firstAttribute="bottom" secondItem="lLG-t5-bWl" secondAttribute="bottom" id="3HF-c9-j0v"/>
                                 <constraint firstAttribute="trailing" secondItem="I1G-pk-GP2" secondAttribute="trailing" constant="8" id="W6Z-JC-g19"/>
+                                <constraint firstItem="jL6-pg-Inf" firstAttribute="leading" secondItem="lLG-t5-bWl" secondAttribute="leading" id="WCG-8Z-cHi"/>
                                 <constraint firstAttribute="width" secondItem="y4z-63-YZW" secondAttribute="height" multiplier="1:1" id="bbs-UF-I02"/>
+                                <constraint firstItem="jL6-pg-Inf" firstAttribute="trailing" secondItem="lLG-t5-bWl" secondAttribute="trailing" id="e8G-Zs-c3i"/>
+                                <constraint firstItem="jL6-pg-Inf" firstAttribute="top" secondItem="lLG-t5-bWl" secondAttribute="top" id="fLJ-hT-Ceh"/>
                                 <constraint firstAttribute="bottom" secondItem="I1G-pk-GP2" secondAttribute="bottom" constant="8" id="jHJ-eK-zFh"/>
                                 <constraint firstItem="lLG-t5-bWl" firstAttribute="height" secondItem="y4z-63-YZW" secondAttribute="height" priority="999" id="jHP-M1-gQk"/>
                                 <constraint firstItem="lLG-t5-bWl" firstAttribute="centerY" secondItem="y4z-63-YZW" secondAttribute="centerY" id="oaK-b9-CZG"/>
@@ -96,8 +137,12 @@
         </view>
     </objects>
     <resources>
+        <image name="checkmark.circle.fill" catalog="system" width="128" height="121"/>
         <systemColor name="secondaryLabelColor">
             <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGreenColor">
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

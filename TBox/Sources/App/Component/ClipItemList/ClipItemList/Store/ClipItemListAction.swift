@@ -20,8 +20,10 @@ enum ClipItemListAction: Action {
 
     // MARK: Operation
 
+    case editted(Bool)
     case reordered([ClipItem.Identity])
     case selected(ClipItem.Identity)
+    case deselected(ClipItem.Identity)
     case itemsReorderFailed
     case dismiss
 

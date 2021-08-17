@@ -18,6 +18,8 @@ public class ClipItemContentView: UIView {
     @IBOutlet private var dataSizeLabel: UILabel!
     @IBOutlet private var thumbnailWidthConstraint: NSLayoutConstraint!
     @IBOutlet private var thumbnailHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private var overlayView: UIView!
+    @IBOutlet private var selectionMarkContainer: UIView!
 
     @IBOutlet var thumbnailImageView: UIImageView!
 
@@ -87,6 +89,13 @@ extension ClipItemContentView {
 
         thumbnailImageView.layer.cornerRadius = 8
         thumbnailImageView.layer.cornerCurve = .continuous
+
+        selectionMarkContainer.backgroundColor = .white
+        selectionMarkContainer.layer.cornerRadius = selectionMarkContainer.bounds.width / 2.0
+
+        overlayView.layer.cornerRadius = 8
+        overlayView.layer.cornerCurve = .continuous
+        overlayView.isHidden = true
     }
 
     func apply(_ configuration: ClipItemContentConfiguration) {
@@ -114,5 +123,7 @@ extension ClipItemContentView {
         pageNumberLabel.text = "\(configuration.page)/\(configuration.numberOfPage)"
         fileNameLabel.text = configuration.displayFileName
         dataSizeLabel.text = configuration.displayDataSize
+
+        overlayView.isHidden = configuration.isOverlayViewHidden
     }
 }
