@@ -20,6 +20,20 @@ class ClipItemListViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var dataSource: Layout.DataSource!
     private var navigationBar: UINavigationBar!
+    private var toolBar: UIToolbar!
+    private var toolBarTopConstraint: NSLayoutConstraint!
+    private var toolBarBottomConstraint: NSLayoutConstraint!
+
+    private var isToolBarHidden = true {
+        didSet {
+            toolBarBottomConstraint.isActive = !isToolBarHidden
+            toolBarTopConstraint.isActive = isToolBarHidden
+            UIView.animate(withDuration: 0.2) {
+                self.collectionView.contentInset.bottom = self.isToolBarHidden ? 16 : 44 + 16
+                self.view.layoutIfNeeded()
+            }
+        }
+    }
 
     // MARK: Service
 
@@ -203,6 +217,26 @@ extension ClipItemListViewController {
             navigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             navigationBar.heightAnchor.constraint(equalToConstant: 44)
         ])
+
+        let toolBar = UIToolbar(frame: .init(x: 0, y: 0, width: view.window?.screen.bounds.width ?? 0, height: 44))
+        toolBar.isTranslucent = true
+        toolBar.delegate = self
+        toolBar.items = [] // TODO:
+        self.toolBar = toolBar
+
+        view.addSubview(toolBar)
+        toolBar.translatesAutoresizingMaskIntoConstraints = false
+        toolBarTopConstraint = toolBar.topAnchor.constraint(equalTo: view.bottomAnchor, constant: 8) // borderがはみ出すため、やや下に配置する
+        toolBarBottomConstraint = toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        toolBarBottomConstraint.priority = .init(999)
+        let heightConstraint = toolBar.heightAnchor.constraint(equalToConstant: 44)
+        heightConstraint.priority = .init(999)
+        NSLayoutConstraint.activate([
+            toolBarTopConstraint,
+            toolBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            toolBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            heightConstraint
+        ])
     }
 
     private func configureDataSource() {
@@ -225,7 +259,19 @@ extension ClipItemListViewController {
 extension ClipItemListViewController: UINavigationBarDelegate {
     // MARK: - UINavigationBarDelegate
 
-    func position(for bar: UIBarPositioning) -> UIBarPosition { .topAttached }
+    func position(for bar: UIBarPositioning) -> UIBarPosition {
+        if bar === navigationBar {
+            return .topAttached
+        } else if bar === toolBar, !isToolBarHidden {
+            return .bottom
+        } else {
+            return .any
+        }
+    }
+}
+
+extension ClipItemListViewController: UIToolbarDelegate {
+    // MARK: - UIToolbarDelegate
 }
 
 extension ClipItemListViewController: UICollectionViewDelegate {
