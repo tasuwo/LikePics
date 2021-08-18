@@ -16,9 +16,9 @@ public enum ClipItemInformationLayout {
     typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
 
     enum Section: Int {
+        case itemInfo
         case tags
         case albums
-        case itemInfo
         case clipInfo
     }
 
@@ -133,14 +133,14 @@ extension ClipItemInformationLayout {
     static func makeSnapshot(for info: Information?) -> NSDiffableDataSourceSnapshot<Section, Item> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
 
+        snapshot.appendSections([.itemInfo])
+        snapshot.appendItems(self.createCells(for: info?.item))
+
         snapshot.appendSections([.tags])
         snapshot.appendItems(info?.tags.map({ .tag($0) }) ?? [])
 
         snapshot.appendSections([.albums])
         snapshot.appendItems(info?.albums.map({ .album($0) }) ?? [])
-
-        snapshot.appendSections([.itemInfo])
-        snapshot.appendItems(self.createCells(for: info?.item))
 
         snapshot.appendSections([.clipInfo])
         snapshot.appendItems(self.createCells(for: info?.clip))
@@ -190,10 +190,6 @@ extension ClipItemInformationLayout {
         items.append(.meta(.init(parent: .clip,
                                  title: L10n.clipInformationViewLabelClipHide,
                                  accessory: .switch(isOn: clip?.isHidden ?? false))))
-
-        items.append(.meta(.init(parent: .clip,
-                                 title: L10n.clipInformationViewLabelClipPageNumber,
-                                 accessory: .label(title: "\(clip?.items.count ?? 0)"))))
 
         let size: String = {
             guard let dataSize = clip?.dataSize else { return "-" }

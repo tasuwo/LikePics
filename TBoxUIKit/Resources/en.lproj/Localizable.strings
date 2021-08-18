@@ -11,12 +11,11 @@
 "clip_information_view_context_menu_open" = "Open";
 "clip_information_view_context_menu_copy" = "Copy";
 
-"clip_information_view_section_label_tags" = "Tags";
-"clip_information_view_section_label_albums" = "Albums";
 "clip_information_view_section_label_clip_item_info" = "This Page Info";
+"clip_information_view_section_label_tags" = "Clip Tags";
+"clip_information_view_section_label_albums" = "Clip Albums";
 "clip_information_view_section_label_clip_info" = "Clip Info";
 
-"clip_information_view_label_clip_page_number" = "Number of Pages";
 "clip_information_view_label_clip_hide" = "Hidden";
 "clip_information_view_label_clip_registered_date" = "Created";
 "clip_information_view_label_clip_updated_date" = "Modified";
