@@ -244,6 +244,7 @@
 // MAKR: Clip Item
 
 "error_at_delete_clip_item" = "Failed to delete image.";
+"error_at_update_site_url_clip_item" = "Faiuled to update.";
 
 // MARK: Clip Preview
 

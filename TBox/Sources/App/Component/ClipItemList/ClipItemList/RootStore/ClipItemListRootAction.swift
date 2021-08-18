@@ -44,8 +44,8 @@ extension ClipItemListRootAction {
 private extension ClipItemListToolBarAction {
     func mapToEvent() -> ClipItemListToolBarEvent? {
         switch self {
-        case .editUrlButtonTapped:
-            return .editUrl
+        case let .alertSiteUrlEditted(url):
+            return .editUrl(url)
 
         case let .alertShareConfirmed(succeeded):
             return .share(succeeded)

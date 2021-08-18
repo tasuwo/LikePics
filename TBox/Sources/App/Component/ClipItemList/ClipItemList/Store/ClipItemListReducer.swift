@@ -251,11 +251,34 @@ extension ClipItemListReducer {
             return (nextState, .none)
 
         case .delete:
-            // TODO:
+            var existsError = false
+            state.items.selectedEntities().forEach {
+                switch dependency.clipCommandService.deleteClipItem($0) {
+                case .success: ()
+
+                case .failure:
+                    existsError = true
+                }
+            }
+
+            nextState.isEditing = false
+            nextState.items = nextState.items.updated(selectedIds: .init())
+
+            if existsError {
+                nextState.alert = .error(L10n.errorAtDeleteClipItem)
+            }
+
             return (nextState, .none)
 
-        case .editUrl:
-            // TODO:
+        case let .editUrl(url):
+            switch dependency.clipCommandService.updateClipItems(having: Array(state.items._selectedIds), byUpdatingSiteUrl: url) {
+            case .success:
+                nextState.isEditing = false
+                nextState.items = nextState.items.updated(selectedIds: .init())
+
+            case .failure:
+                nextState.alert = .error(L10n.errorAtUpdateSiteUrlClipItem)
+            }
             return (nextState, .none)
         }
     }

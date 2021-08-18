@@ -304,6 +304,8 @@ internal enum L10n {
     internal static let confirmAlertSave = L10n.tr("Localizable", "confirm_alert_save")
     /// 画像の削除に失敗しました
     internal static let errorAtDeleteClipItem = L10n.tr("Localizable", "error_at_delete_clip_item")
+    /// 更新に失敗しました
+    internal static let errorAtUpdateSiteUrlClipItem = L10n.tr("Localizable", "error_at_update_site_url_clip_item")
     /// 以前利用していたiCloudアカウントと異なるアカウントでログインされています。\nこの端末上に保存されているデータは、現在ログイン中のiCloudアカウントに保存されているデータと統合されます
     internal static let errorIcloudAccountChangedMessage = L10n.tr("Localizable", "error_icloud_account_changed_message")
     /// iCloudアカウントが異なります

@@ -244,6 +244,7 @@
 // MARK: Clip Item
 
 "error_at_delete_clip_item" = "画像の削除に失敗しました";
+"error_at_update_site_url_clip_item" = "更新に失敗しました";
 
 // MARK: Clip Preview
 
