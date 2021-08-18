@@ -24,6 +24,18 @@ struct ClipPreviewPageBarReducer: Reducer {
             nextState = nextState.updatingAppearance()
             return (nextState, .none)
 
+        // MARK: State Observation
+
+        case let .updatedCurrentIndex(currentIndex):
+            nextState.currentIndex = currentIndex
+            nextState = nextState.updatingAppearance()
+            return (nextState, .none)
+
+        case let .updatedClipItems(clipItems):
+            nextState.clipItems = clipItems
+            nextState = nextState.updatingAppearance()
+            return (nextState, .none)
+
         // MARK: Gesture
 
         case .didTapView:
@@ -55,11 +67,11 @@ struct ClipPreviewPageBarReducer: Reducer {
         case .shareButtonTapped:
             // 画面遷移中であった場合、ボタン操作は無視する
             guard dependency.transitionLock.isFree else { return (nextState, .none) }
-            if nextState.parentState.items.count > 1 {
+            if nextState.clipItems.count > 1 {
                 nextState.alert = .shareTargetSelection
                 return (nextState, .none)
             } else {
-                let imageIds = state.parentState.items.map({ $0.imageId })
+                let imageIds = state.clipItems.map({ $0.imageId })
                 nextState.alert = .share(imageIds: imageIds)
                 return (nextState, .none)
             }
@@ -67,7 +79,7 @@ struct ClipPreviewPageBarReducer: Reducer {
         case .deleteButtonTapped:
             // 画面遷移中であった場合、ボタン操作は無視する
             guard dependency.transitionLock.isFree else { return (nextState, .none) }
-            nextState.alert = .deletion(includesRemoveFromClip: nextState.parentState.items.count > 1)
+            nextState.alert = .deletion(includesRemoveFromClip: nextState.clipItems.count > 1)
             return (nextState, .none)
 
         // MARK: Alert Completion
@@ -82,15 +94,15 @@ struct ClipPreviewPageBarReducer: Reducer {
             return (nextState, .none)
 
         case .alertShareItemConfirmed:
-            guard let index = state.parentState.currentIndex else {
+            guard let index = state.currentIndex, state.clipItems.indices.contains(index) else {
                 return (nextState, .none)
             }
-            let currentItem = state.parentState.items[index]
+            let currentItem = state.clipItems[index]
             nextState.alert = .share(imageIds: [currentItem.imageId])
             return (nextState, .none)
 
         case .alertShareClipConfirmed:
-            let imageIds = state.parentState.items.map({ $0.imageId })
+            let imageIds = state.clipItems.map({ $0.imageId })
             nextState.alert = .share(imageIds: imageIds)
             return (nextState, .none)
         }
@@ -109,8 +121,8 @@ private extension ClipPreviewPageBarState {
         }
 
         let existsUrlAtCurrentItem: Bool = {
-            guard let index = nextState.parentState.currentIndex else { return false }
-            return nextState.parentState.items[index].url != nil
+            guard let index = nextState.currentIndex, nextState.clipItems.indices.contains(index) else { return false }
+            return nextState.clipItems[index].url != nil
         }()
 
         nextState.isToolBarHidden = isVerticalSizeClassCompact

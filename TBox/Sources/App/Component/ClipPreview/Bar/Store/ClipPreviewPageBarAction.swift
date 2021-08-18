@@ -2,6 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
 import ForestKit
 import UIKit
 
@@ -9,6 +10,11 @@ enum ClipPreviewPageBarAction: Action {
     // MARK: View Life-Cycle
 
     case sizeClassChanged(isVerticalSizeClassCompact: Bool)
+
+    // MARK: State Observation
+
+    case updatedCurrentIndex(Int?)
+    case updatedClipItems([ClipItem])
 
     // MARK: Gesture
 

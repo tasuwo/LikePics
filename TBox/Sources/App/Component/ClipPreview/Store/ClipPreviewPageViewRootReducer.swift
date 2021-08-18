@@ -12,7 +12,7 @@ private typealias RootState = ClipPreviewPageViewRootState
 private typealias RootAction = ClipPreviewPageViewRootAction
 
 let clipPreviewPageViewRootReducer = combine(
-    contramap(RootAction.pageMapping, RootState.pageMapping, { $0 as ClipPreviewPageViewRootDependency })(ClipPreviewPageViewReducer()),
-    contramap(RootAction.barMapping, RootState.barMapping, { $0 })(ClipPreviewPageBarReducer()),
+    contramap(RootAction.pageMapping, RootState.mappingToPage, { $0 as ClipPreviewPageViewRootDependency })(ClipPreviewPageViewReducer()),
+    contramap(RootAction.barMapping, RootState.mappingToBar, { $0 })(ClipPreviewPageBarReducer()),
     contramap(RootAction.cacheMapping, RootState.cacheMapping, { $0 })(ClipPreviewPageViewCacheReducer())
 )

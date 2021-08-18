@@ -77,13 +77,13 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.rootStore = rootStore
 
         self.store = rootStore
-            .proxy(RootState.pageMapping, RootAction.pageMapping)
+            .proxy(RootState.mappingToPage, RootAction.pageMapping)
             .eraseToAnyStoring()
         self.cacheStore = rootStore
             .proxy(RootState.cacheMapping, RootAction.cacheMapping)
             .eraseToAnyStoring()
         let barStore: ClipPreviewPageBarController.Store = rootStore
-            .proxy(RootState.barMapping, RootAction.barMapping)
+            .proxy(RootState.mappingToBar, RootAction.barMapping)
             .eraseToAnyStoring()
         self.barController = ClipPreviewPageBarController(store: barStore, imageQueryService: dependency.imageQueryService)
 
@@ -196,6 +196,18 @@ extension ClipPreviewPageViewController {
             .bind(\.isDismissed) { [weak self] isDismissed in
                 guard isDismissed else { return }
                 self?.dismiss(animated: true, completion: nil)
+            }
+            .store(in: &subscriptions)
+
+        store.state
+            .bind(\.currentIndex) { [weak self] currentIndex in
+                self?.barController.store.execute(.updatedCurrentIndex(currentIndex))
+            }
+            .store(in: &subscriptions)
+
+        store.state
+            .bind(\.items) { [weak self] items in
+                self?.barController.store.execute(.updatedClipItems(items))
             }
             .store(in: &subscriptions)
 

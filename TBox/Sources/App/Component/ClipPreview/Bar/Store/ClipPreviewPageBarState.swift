@@ -28,7 +28,6 @@ struct ClipPreviewPageBarState: Equatable {
         let isEnabled: Bool
     }
 
-    var parentState: ClipPreviewPageViewState
     var isVerticalSizeClassCompact: Bool
 
     var leftBarButtonItems: [Item]
@@ -42,13 +41,29 @@ struct ClipPreviewPageBarState: Equatable {
 
     var alert: Alert?
 
-    let currentIndex: Int?
-    let itemsCount: Int
+    var currentIndex: Int?
+    var clipItems: [ClipItem]
+}
+
+extension ClipPreviewPageBarState {
+    init() {
+        isVerticalSizeClassCompact = true
+        leftBarButtonItems = []
+        rightBarButtonItems = []
+        toolBarItems = []
+        isFullscreen = false
+        isNavigationBarHidden = false
+        isToolBarHidden = false
+        isPageCounterHidden = false
+        alert = nil
+        currentIndex = nil
+        clipItems = []
+    }
 }
 
 extension ClipPreviewPageBarState {
     var pageCount: String? {
         guard let index = currentIndex else { return nil }
-        return "\(index + 1)/\(itemsCount)"
+        return "\(index + 1)/\(clipItems.count)"
     }
 }

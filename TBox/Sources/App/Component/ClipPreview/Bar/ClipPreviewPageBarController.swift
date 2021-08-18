@@ -122,7 +122,7 @@ extension ClipPreviewPageBarController {
             .removeDuplicates()
             .sink { [weak self] state in
                 guard let self = self else { return }
-                guard state.itemsCount > 1 else {
+                guard state.clipItems.count > 1 else {
                     self.pageLabelContainer.isHidden = true
                     self.pageLabel.text = nil
                     return
@@ -171,7 +171,7 @@ extension ClipPreviewPageBarController {
             presentShareAlert(imageIds: imageIds)
 
         case .shareTargetSelection:
-            presentShareTargetSelectionAlert(targetCount: state.parentState.items.count)
+            presentShareTargetSelectionAlert(targetCount: state.clipItems.count)
 
         case let .error(message):
             presentErrorMessageAlertIfNeeded(message: message)
