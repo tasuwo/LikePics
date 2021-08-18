@@ -255,32 +255,6 @@ extension SceneDependencyContainer: Router {
         return true
     }
 
-    func showClipEditModal(id: UUID, clipId: Clip.Identity) -> Bool {
-        guard isPresentingModal(having: id) == false else { return true }
-
-        let state = ClipEditViewState(id: id,
-                                      clipId: clipId,
-                                      isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
-        let siteUrlEditAlertState = TextEditAlertState(title: L10n.alertForEditSiteUrlTitle,
-                                                       message: L10n.alertForEditSiteUrlMessage,
-                                                       placeholder: L10n.placeholderUrl)
-        let viewController = ClipEditViewController(state: state,
-                                                    siteUrlEditAlertState: siteUrlEditAlertState,
-                                                    dependency: self,
-                                                    thumbnailLoader: container.temporaryThumbnailLoader)
-
-        let navigationViewController = UINavigationController(rootViewController: viewController)
-
-        navigationViewController.modalPresentationStyle = .pageSheet
-        navigationViewController.presentationController?.delegate = viewController
-        navigationViewController.isModalInPresentation = false
-
-        guard let topViewController = topViewController else { return false }
-        topViewController.present(navigationViewController, animated: true, completion: nil)
-
-        return true
-    }
-
     func routeToClipCollectionView(for tag: Tag) {
         guard let rootViewController = rootViewController else { return }
         dismissAllModals { isSucceeded in

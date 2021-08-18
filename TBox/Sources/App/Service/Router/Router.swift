@@ -45,9 +45,6 @@ protocol Router {
     @discardableResult
     func showClipMergeModal(id: UUID, clips: [Clip]) -> Bool
 
-    @discardableResult
-    func showClipEditModal(id: UUID, clipId: Clip.Identity) -> Bool
-
     func routeToClipCollectionView(for tag: Tag)
 
     func routeToClipCollectionView(forAlbumId albumId: Album.Identity)

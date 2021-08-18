@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -96,7 +96,6 @@
 		1D1CCC03310D0869DD922542 /* ConsoleLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40A0B3B749A25936D86321A /* ConsoleLog.swift */; };
 		1DE1E536C18001CD1583915B /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0448B038F051A3A11EE67748 /* DependencyContainer.swift */; };
 		1DF2BAF0C99D01E2375051E3 /* ClipItemInformationViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 743A3365A93A49D03D7866BB /* ClipItemInformationViewState.swift */; };
-		1EC9009B0B36445FD8F57DC5 /* ClipEditViewAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4C5035A6CF8EDB5A5407A5 /* ClipEditViewAction.swift */; };
 		1F263DA4483AFB868E60EDA9 /* SplitViewHierarchy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0464200001D44A2AFC15A5FE /* SplitViewHierarchy.swift */; };
 		1F611A0F8695F6CC73B26E68 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DDB7BB45E0D94D9C99E55355 /* Model.xcdatamodeld */; };
 		1F6CD6E2FFDE5CDA805B475F /* TemporaryImageStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99213A4F1632DDE566E6B1A /* TemporaryImageStorage.swift */; };
@@ -114,7 +113,6 @@
 		2509C53E1C31F4E415C64B27 /* Quick.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDDF5686A2117A614349EA51 /* Quick.xcframework */; };
 		25652253EA6DCBA0A4169DEE /* ListingAlbumListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638422FB9955639F556F3888 /* ListingAlbumListQuery.swift */; };
 		259E5E230BD68C9C2D007CC4 /* ForestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBEFC2434B438E31C45125D4 /* ForestKit.framework */; };
-		25CA37E740A81BEA5C11334D /* ClipEditViewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA61A6F4D632F9F31111DA1 /* ClipEditViewReducer.swift */; };
 		268CE0FE960C06796217FD0F /* ClipItemListAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0208CD9A7DF5202F6933E69 /* ClipItemListAction.swift */; };
 		26A54D36BDFC2A186FC740FA /* ClipPreviewPageTransitionDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A922B35420F6A63BB5A27F8 /* ClipPreviewPageTransitionDispatcher.swift */; };
 		26EA3BBA65834F152894E7B1 /* TagSelectionModalState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CC734A371A52DC2616C2ED /* TagSelectionModalState.swift */; };
@@ -229,7 +227,6 @@
 		522995D9503683C26193CC7E /* NSManagedObjectContext+Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F331C965E12D4D6C83B653 /* NSManagedObjectContext+Block.swift */; };
 		5275C0563C960CA7B851EBEF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65E867B2F49345CFE82700C /* AppDelegate.swift */; };
 		52852E3739F2436E6966CBBB /* SearchMenuBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BBBC54B1442F6270ADAC0B5 /* SearchMenuBuilder.swift */; };
-		52B4769ED5C78D47E2A962B0 /* ClipEditViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33A14089052396991E6A5CB /* ClipEditViewLayout.swift */; };
 		52D07CB09516DA4DCA4955D9 /* WebImageProviderPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75597156848346925DC3F5BA /* WebImageProviderPreset.swift */; };
 		52FC486CBA1E5EA8A2F45266 /* TagQueryServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CA74D55BB1B118A3382EFB /* TagQueryServiceProtocol.swift */; };
 		537836814ED4537A34CC2065 /* ThumbnailLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66C622F87D1308E1EF25995 /* ThumbnailLoader.swift */; };
@@ -340,7 +337,6 @@
 		7DDD389D72A76C9B7893A47F /* ClipCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B67B1A3764809EA28A9770 /* ClipCollectionViewCell.swift */; };
 		7DE7D0C6F6583E75A98363A1 /* Album+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5A8966D6FB4400A7F3DF53 /* Album+CoreDataClass.swift */; };
 		7E0D7CDBBD2501616197B63F /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D83B9B42C4A0D902CB4F6E88 /* TestHelper.framework */; };
-		7EC46DC4CDE7443C276C44CF /* ClipEditViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1642C1BDDBFA45832D5218E6 /* ClipEditViewState.swift */; };
 		7EDFDF80681C9C405E421222 /* Realm.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53BBB71C747011F166E64497 /* Realm.xcframework */; };
 		7F26F70996DA5BA84ED8582A /* TemporaryClipStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE14C25B068E09260E37B44 /* TemporaryClipStorage.swift */; };
 		7F431264E3578FD3E64DB10B /* ClipItemListToolBarReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 400CAD39D0BFAABE7A295421 /* ClipItemListToolBarReducer.swift */; };
@@ -357,7 +353,6 @@
 		826F1312152865111A40A893 /* Array+Indexed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10BDD7409CDCC8A17408BAC1 /* Array+Indexed.swift */; };
 		828769B6208E4B5AF5B83188 /* ClipCollectionToolBarAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5A315E078FD8AAFF60596B /* ClipCollectionToolBarAction.swift */; };
 		82AA55D66AF799BE38D24774 /* Restorable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 793A7CD4997AE0B21B51088D /* Restorable.swift */; };
-		82E506ACDE27ED5EF29551E3 /* ClipEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B27838CC268B54F47E4AD30 /* ClipEditViewController.swift */; };
 		83133AA588C3CC66D0C597A9 /* ClipItemInformationViewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30C38AEA7978B0CF2D21319 /* ClipItemInformationViewReducer.swift */; };
 		83577A8727B0E2CEC339CC46 /* UISwitch+setOnSmoothly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BA8E9BB6B01F3486975FFC /* UISwitch+setOnSmoothly.swift */; };
 		83CA0718AE2427C834041217 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AF076F8C417E02EB04BF9E2 /* Domain.framework */; };
@@ -1145,7 +1140,6 @@
 		15EF6DB9D067C88BE27C8DC6 /* ThumbnailRequestUserInfo_Key+prefetchingIndexPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThumbnailRequestUserInfo_Key+prefetchingIndexPath.swift"; sourceTree = "<group>"; };
 		1619B6404D9BD8B6F5C4DE4E /* ClipItemInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemInformationView.swift; sourceTree = "<group>"; };
 		163BAA016D527A80B1674EB6 /* ClipItemListMenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemListMenuItem.swift; sourceTree = "<group>"; };
-		1642C1BDDBFA45832D5218E6 /* ClipEditViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipEditViewState.swift; sourceTree = "<group>"; };
 		165CDA4F45B7C7AAD3833D72 /* TextEditAlertState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditAlertState.swift; sourceTree = "<group>"; };
 		1664463A448C2EF1994CF886 /* ClipItemInformationSectionBackgroundDecorationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemInformationSectionBackgroundDecorationView.swift; sourceTree = "<group>"; };
 		172FFE318CBF6FE656F14278 /* ClipItemEditContentConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemEditContentConfiguration.swift; sourceTree = "<group>"; };
@@ -1162,7 +1156,6 @@
 		19B3083656A20FF11D87F43B /* ClipItemInformationPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemInformationPresentable.swift; sourceTree = "<group>"; };
 		1A5797D876AE41270D9FE7F3 /* ModalNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalNotification.swift; sourceTree = "<group>"; };
 		1A7CD0721AFFE1439103F08D /* DomainTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DomainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1B27838CC268B54F47E4AD30 /* ClipEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipEditViewController.swift; sourceTree = "<group>"; };
 		1B93B5F3E58C229545064206 /* TransitionLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionLock.swift; sourceTree = "<group>"; };
 		1B93EA147F0949202B707230 /* ClipItemInformationTransitioningController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemInformationTransitioningController.swift; sourceTree = "<group>"; };
 		1C0F60D087225E32EC17DD5F /* StoreProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreProxy.swift; sourceTree = "<group>"; };
@@ -1202,7 +1195,7 @@
 		272B2A69BEBB097D96AFD08C /* ClipsIntegrityValidatorAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsIntegrityValidatorAction.swift; sourceTree = "<group>"; };
 		28A4C935A79A2FC77FE00ED9 /* TemporaryClipStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryClipStorageProtocol.swift; sourceTree = "<group>"; };
 		28BD5B18B0F524517030CF56 /* ClipItemInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemInformationViewController.swift; sourceTree = "<group>"; };
-		29829067763237638BD79DBE /* TBox.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		29829067763237638BD79DBE /* TBox.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; name = TBox.app; path = LikePics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		299B9417E33ACF478A448144 /* ClipItemListNavigationBarReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemListNavigationBarReducer.swift; sourceTree = "<group>"; };
 		29E9DF2025D5268F1A653546 /* CloudAvailabilitySpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAvailabilitySpec.swift; sourceTree = "<group>"; };
 		2A0BCA2BD3E3FC1957AB0A13 /* SceneRoot_BarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneRoot_BarItem.swift; sourceTree = "<group>"; };
@@ -1250,7 +1243,6 @@
 		3A7614716B0B77E96B9892C5 /* HasNop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasNop.swift; sourceTree = "<group>"; };
 		3A922B35420F6A63BB5A27F8 /* ClipPreviewPageTransitionDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageTransitionDispatcher.swift; sourceTree = "<group>"; };
 		3AF076F8C417E02EB04BF9E2 /* Domain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Domain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3BA61A6F4D632F9F31111DA1 /* ClipEditViewReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipEditViewReducer.swift; sourceTree = "<group>"; };
 		3C4ABFD69AF78AA3A1BF3057 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3C9B37B3F2AF7ABEDF91023C /* TagListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagListQuery.swift; sourceTree = "<group>"; };
 		3CC4C313287A3C5DE2EC8011 /* ClipPreviewViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewViewState.swift; sourceTree = "<group>"; };
@@ -1502,7 +1494,6 @@
 		A1BC9F3CA3583DB730E49E4F /* ClipSearchHistoryContentConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSearchHistoryContentConfiguration.swift; sourceTree = "<group>"; };
 		A26D8547A3BD6D67231AF616 /* Effect_Debounce.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Effect_Debounce.swift; sourceTree = "<group>"; };
 		A2A0440722B5D7773B492396 /* ClipItemListPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemListPresentable.swift; sourceTree = "<group>"; };
-		A33A14089052396991E6A5CB /* ClipEditViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipEditViewLayout.swift; sourceTree = "<group>"; };
 		A33D30FC156B895974C871CB /* ViewControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerFactory.swift; sourceTree = "<group>"; };
 		A35871C2F2F888212ADB59F5 /* HasTransitionLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTransitionLock.swift; sourceTree = "<group>"; };
 		A35FF5FED277D7D3546DA7DF /* Publisher+assignNotRetain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+assignNotRetain.swift"; sourceTree = "<group>"; };
@@ -1571,7 +1562,6 @@
 		BC8A06BC035461CB0544789A /* TagCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionViewController.swift; sourceTree = "<group>"; };
 		BCAF84F2106F9916482FAEE9 /* ClipItemObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemObject.swift; sourceTree = "<group>"; };
 		BD1CECCFDBC3AC7EFA9211F1 /* PersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceTests.swift; sourceTree = "<group>"; };
-		BD4C5035A6CF8EDB5A5407A5 /* ClipEditViewAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipEditViewAction.swift; sourceTree = "<group>"; };
 		BD517CC8EC379F7FCBEABA31 /* CoreDataClipListQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataClipListQuery.swift; sourceTree = "<group>"; };
 		BDBA39840E605AC609F7CAFC /* ClipRecipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipRecipe.swift; sourceTree = "<group>"; };
 		BDC9464EEB5F64F0AF179E5B /* ClipItemListRootReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemListRootReducer.swift; sourceTree = "<group>"; };
@@ -2221,16 +2211,6 @@
 			path = TabBarController;
 			sourceTree = "<group>";
 		};
-		21A207E595644F4760D045F2 /* ClipEdit */ = {
-			isa = PBXGroup;
-			children = (
-				1B27838CC268B54F47E4AD30 /* ClipEditViewController.swift */,
-				A33A14089052396991E6A5CB /* ClipEditViewLayout.swift */,
-				3CA8C3DFF02507D930299ED0 /* Store */,
-			);
-			path = ClipEdit;
-			sourceTree = "<group>";
-		};
 		225021341436407D2F780D87 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -2517,7 +2497,6 @@
 			children = (
 				E808EBD032FF519B321F20A2 /* ModalController.swift */,
 				278E9FBA16B9E97889FF6072 /* AlbumSelection */,
-				21A207E595644F4760D045F2 /* ClipEdit */,
 				1D193B1166033FC93E84EDD2 /* ClipMerge */,
 				0737E5B63C944BAE2665C27B /* TagSelection */,
 			);
@@ -2571,16 +2550,6 @@
 				C2FBB45EB4FC20E7E53950E0 /* SearchViewRootAction.swift */,
 				AB80C7BB05A9FFD937F81ABB /* SearchViewRootReducer.swift */,
 				971E06B82E58563AAD151F45 /* SearchViewRootState.swift */,
-			);
-			path = Store;
-			sourceTree = "<group>";
-		};
-		3CA8C3DFF02507D930299ED0 /* Store */ = {
-			isa = PBXGroup;
-			children = (
-				BD4C5035A6CF8EDB5A5407A5 /* ClipEditViewAction.swift */,
-				3BA61A6F4D632F9F31111DA1 /* ClipEditViewReducer.swift */,
-				1642C1BDDBFA45832D5218E6 /* ClipEditViewState.swift */,
 			);
 			path = Store;
 			sourceTree = "<group>";
@@ -5763,11 +5732,6 @@
 				7FC9F2A6A49B78B88B682219 /* ClipCollection_Operation.swift in Sources */,
 				45D62E1048C04D507F27E990 /* ClipCollection_Source.swift in Sources */,
 				8F5944A246584673917124FA /* ClipCollection_SubMenu.swift in Sources */,
-				1EC9009B0B36445FD8F57DC5 /* ClipEditViewAction.swift in Sources */,
-				82E506ACDE27ED5EF29551E3 /* ClipEditViewController.swift in Sources */,
-				52B4769ED5C78D47E2A962B0 /* ClipEditViewLayout.swift in Sources */,
-				25CA37E740A81BEA5C11334D /* ClipEditViewReducer.swift in Sources */,
-				7EC46DC4CDE7443C276C44CF /* ClipEditViewState.swift in Sources */,
 				2D5E35E175AC1E89520B7CE6 /* ClipItemImageShareItem.swift in Sources */,
 				A3B6C5196D73B457C58C5BFD /* ClipItemInformationViewAction.swift in Sources */,
 				709EC471FFC9D1ABE108FC96 /* ClipItemInformationViewCacheAction.swift in Sources */,

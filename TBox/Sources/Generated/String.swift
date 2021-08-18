@@ -282,8 +282,6 @@ internal enum L10n {
     internal static let clipsListContextMenuAddToAlbum = L10n.tr("Localizable", "clips_list_context_menu_add_to_album")
     /// 削除
     internal static let clipsListContextMenuDelete = L10n.tr("Localizable", "clips_list_context_menu_delete")
-    /// 編集
-    internal static let clipsListContextMenuEdit = L10n.tr("Localizable", "clips_list_context_menu_edit")
     /// 隠す
     internal static let clipsListContextMenuHide = L10n.tr("Localizable", "clips_list_context_menu_hide")
     /// その他

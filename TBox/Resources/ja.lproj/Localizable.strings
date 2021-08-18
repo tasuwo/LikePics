@@ -41,7 +41,6 @@
 "clips_list_context_menu_share" = "共有";
 "clips_list_context_menu_delete" = "削除";
 "clips_list_context_menu_purge" = "分割";
-"clips_list_context_menu_edit" = "編集";
 "clips_list_context_menu_others" = "その他";
 
 "clip_collection_view_title_all" = "全てのクリップ";

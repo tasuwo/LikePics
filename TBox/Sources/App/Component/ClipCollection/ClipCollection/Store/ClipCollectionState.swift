@@ -17,7 +17,6 @@ struct ClipCollectionState: Equatable {
     enum Modal: Equatable {
         case albumSelection(id: UUID, clipIds: Set<Clip.Identity>)
         case tagSelection(id: UUID, clipIds: Set<Clip.Identity>, tagIds: Set<Tag.Identity>)
-        case clipEdit(id: UUID, clipId: Clip.Identity)
         case clipMerge(id: UUID, clips: [Clip])
     }
 
@@ -163,7 +162,6 @@ extension ClipCollectionState.Modal: Codable {
     enum CodingKeys: CodingKey {
         case albumSelection
         case tagSelection
-        case clipEdit
         case clipMerge
     }
 
@@ -206,12 +204,6 @@ extension ClipCollectionState.Modal: Codable {
             let tagIds = try nestedContainer.decode(Set<Tag.Identity>.self, forKey: .tagIds)
             self = .tagSelection(id: id, clipIds: clipIds, tagIds: tagIds)
 
-        case .clipEdit:
-            let nestedContainer = try container.nestedContainer(keyedBy: ClipEditKeys.self, forKey: .clipEdit)
-            let id = try nestedContainer.decode(UUID.self, forKey: .id)
-            let clipId = try nestedContainer.decode(Clip.Identity.self, forKey: .clipId)
-            self = .clipEdit(id: id, clipId: clipId)
-
         case .clipMerge:
             let nestedContainer = try container.nestedContainer(keyedBy: ClipMergeKeys.self, forKey: .clipMerge)
             let id = try nestedContainer.decode(UUID.self, forKey: .id)
@@ -237,11 +229,6 @@ extension ClipCollectionState.Modal: Codable {
             try nestedContainer.encode(id, forKey: .id)
             try nestedContainer.encode(clipIds, forKey: .clipIds)
             try nestedContainer.encode(tagIds, forKey: .tagIds)
-
-        case let .clipEdit(id: id, clipId: clipId):
-            var nestedContainer = container.nestedContainer(keyedBy: ClipEditKeys.self, forKey: .clipEdit)
-            try nestedContainer.encode(id, forKey: .id)
-            try nestedContainer.encode(clipId, forKey: .clipId)
 
         case let .clipMerge(id: id, clips: clips):
             var nestedContainer = container.nestedContainer(keyedBy: ClipMergeKeys.self, forKey: .clipMerge)

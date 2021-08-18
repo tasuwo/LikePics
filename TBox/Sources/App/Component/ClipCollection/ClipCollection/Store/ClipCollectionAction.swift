@@ -33,7 +33,6 @@ enum ClipCollectionAction: Action {
     case hideMenuTapped(Clip.Identity)
     case deferredHide(Clip.Identity)
     case revealMenuTapped(Clip.Identity)
-    case editMenuTapped(Clip.Identity)
     case shareMenuTapped(Clip.Identity)
     case purgeMenuTapped(Clip.Identity)
     case deleteMenuTapped(Clip.Identity)

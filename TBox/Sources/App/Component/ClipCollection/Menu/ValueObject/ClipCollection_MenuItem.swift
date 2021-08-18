@@ -12,6 +12,5 @@ extension ClipCollection {
         case delete
         case share
         case purge
-        case edit
     }
 }

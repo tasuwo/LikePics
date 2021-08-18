@@ -419,9 +419,6 @@ extension ClipCollectionViewController {
         case let .tagSelection(id: id, clipIds: _, tagIds: tagIds):
             presentTagSelectionModal(id: id, selections: tagIds)
 
-        case let .clipEdit(id: id, clipId: clipId):
-            presentClipEditModal(id: id, clipId: clipId)
-
         case let .clipMerge(id: id, clips: clips):
             presentClipMergeModal(id: id, clips: clips)
 
@@ -461,22 +458,6 @@ extension ClipCollectionViewController {
             }
 
         if router.showTagSelectionModal(id: id, selections: selections) == false {
-            modalSubscription?.cancel()
-            modalSubscription = nil
-            store.execute(.modalCompleted(false))
-        }
-    }
-
-    private func presentClipEditModal(id: UUID, clipId: Clip.Identity) {
-        modalSubscription = ModalNotificationCenter.default
-            .publisher(for: id, name: .clipEditModal)
-            .sink { [weak self] _ in
-                self?.store.execute(.modalCompleted(true))
-                self?.modalSubscription?.cancel()
-                self?.modalSubscription = nil
-            }
-
-        if router.showClipEditModal(id: id, clipId: clipId) == false {
             modalSubscription?.cancel()
             modalSubscription = nil
             store.execute(.modalCompleted(false))
@@ -723,12 +704,6 @@ extension ClipCollectionViewController {
                             image: UIImage(systemName: "scissors"),
                             attributes: .destructive) { [weak self] _ in
                 self?.store.execute(.purgeMenuTapped(clip.id))
-            }
-
-        case .edit:
-            return UIAction(title: L10n.clipsListContextMenuEdit,
-                            image: UIImage(systemName: "pencil")) { [weak self] _ in
-                self?.store.execute(.editMenuTapped(clip.id))
             }
         }
     }

@@ -142,10 +142,6 @@ struct ClipCollectionReducer: Reducer {
             }
             return (nextState, .none)
 
-        case let .editMenuTapped(clipId):
-            nextState.modal = .clipEdit(id: UUID(), clipId: clipId)
-            return (nextState, .none)
-
         case let .shareMenuTapped(clipId):
             guard let imageIds = state.clips.entity(having: clipId)?.items.map({ $0.imageId }) else { return (state, .none) }
             nextState.alert = .share(clipId: clipId, imageIds: imageIds)

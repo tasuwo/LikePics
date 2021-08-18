@@ -41,7 +41,6 @@
 "clips_list_context_menu_share" = "Share";
 "clips_list_context_menu_delete" = "Delete";
 "clips_list_context_menu_purge" = "Purge";
-"clips_list_context_menu_edit" = "Edit";
 "clips_list_context_menu_others" = "Others";
 
 "clip_collection_view_title_all" = "All Clips";
