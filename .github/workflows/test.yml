@@ -4,12 +4,12 @@ on:
   push:
 
 env:
-  DEVELIPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_12.5.1.app/Contents/Developer
   BUNDLE_GITHUB__COM: ${{ secrets.BUNDLE_GITHUB__COM }}
 
 jobs:
   test:
-    runs-on: macos-latest
+    runs-on: macos-11
     steps:
       - uses: actions/checkout@v2
       - name: Setup Ruby and `bundle install`
