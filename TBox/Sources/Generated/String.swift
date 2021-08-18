@@ -72,6 +72,19 @@ internal enum L10n {
     internal static let albumSelectionViewTitle = L10n.tr("Localizable", "album_selection_view_title")
     /// アルバム内にクリップがありません
     internal static let albumViewEmptyTitle = L10n.tr("Localizable", "album_view_empty_title")
+    /// %d件の画像を削除
+    internal static func alertForDeleteClipItemsAction(_ p1: Int) -> String {
+        return L10n.tr("Localizable", "alert_for_delete_clip_items_action", p1)
+    }
+
+    /// 選択した画像を完全に削除します
+    internal static let alertForDeleteClipItemsMessage = L10n.tr("Localizable", "alert_for_delete_clip_items_message")
+    /// 選択した画像の保存元のサイトのURLを更新します\n元の設定は上書きされます
+    internal static let alertForEditClipItemsSiteUrlMessage = L10n.tr("Localizable", "alert_for_edit_clip_items_site_url_message")
+    /// この画像の保存元のサイトのURLを入力してください
+    internal static let alertForEditSiteUrlMessage = L10n.tr("Localizable", "alert_for_edit_site_url_message")
+    /// サイトのURL
+    internal static let alertForEditSiteUrlTitle = L10n.tr("Localizable", "alert_for_edit_site_url_title")
     /// 新しい画像を読み込んでいます\nしばらくお待ちください
     internal static let appRootLoadingMessage = L10n.tr("Localizable", "app_root_loading_message")
     /// (%d/%d)
@@ -89,6 +102,16 @@ internal enum L10n {
     internal static let appRootTabItemSettings = L10n.tr("Localizable", "app_root_tab_item_settings")
     /// タグ
     internal static let appRootTabItemTag = L10n.tr("Localizable", "app_root_tab_item_tag")
+    /// キャンセル
+    internal static let barItemForCancel = L10n.tr("Localizable", "bar_item_for_cancel")
+    /// 全て選択解除
+    internal static let barItemForDeselectAllTitle = L10n.tr("Localizable", "bar_item_for_deselect_all_title")
+    /// 再開
+    internal static let barItemForResume = L10n.tr("Localizable", "bar_item_for_resume")
+    /// 全て選択
+    internal static let barItemForSelectAllTitle = L10n.tr("Localizable", "bar_item_for_select_all_title")
+    /// 選択
+    internal static let barItemForSelectTitle = L10n.tr("Localizable", "bar_item_for_select_title")
     /// アルバムへの追加に失敗しました
     internal static let clipCollectionErrorAtAddClipToAlbum = L10n.tr("Localizable", "clip_collection_error_at_add_clip_to_album")
     /// アルバムへの追加に失敗しました
@@ -176,8 +199,6 @@ internal enum L10n {
     internal static let clipInformationViewAlertForDeleteTagMessage = L10n.tr("Localizable", "clip_information_view_alert_for_delete_tag_message")
     /// 無題
     internal static let clipItemCellNoTitle = L10n.tr("Localizable", "clip_item_cell_no_title")
-    /// 再開
-    internal static let clipItemListViewResume = L10n.tr("Localizable", "clip_item_list_view_resume")
     /// タグを追加する
     internal static let clipMergeViewAddTagTitle = L10n.tr("Localizable", "clip_merge_view_add_tag_title")
     /// 保存に失敗しました
@@ -198,10 +219,6 @@ internal enum L10n {
     internal static let clipPreviewViewAlertForDeleteClipItemAction = L10n.tr("Localizable", "clip_preview_view_alert_for_delete_clip_item_action")
     /// クリップを削除すると、このクリップに含まれる全ての画像も同時に削除されます
     internal static let clipPreviewViewAlertForDeleteMessage = L10n.tr("Localizable", "clip_preview_view_alert_for_delete_message")
-    /// この画像の保存元のサイトのURLを入力してください
-    internal static let clipPreviewViewAlertForEditSiteUrlMessage = L10n.tr("Localizable", "clip_preview_view_alert_for_edit_site_url_message")
-    /// サイトのURL
-    internal static let clipPreviewViewAlertForEditSiteUrlTitle = L10n.tr("Localizable", "clip_preview_view_alert_for_edit_site_url_title")
     /// 隠す
     internal static let clipPreviewViewAlertForHideAction = L10n.tr("Localizable", "clip_preview_view_alert_for_hide_action")
     /// このクリップは、設定が有効な間は全ての場所から隠されます
@@ -279,12 +296,6 @@ internal enum L10n {
     internal static let clipsListContextMenuReveal = L10n.tr("Localizable", "clips_list_context_menu_reveal")
     /// 共有
     internal static let clipsListContextMenuShare = L10n.tr("Localizable", "clips_list_context_menu_share")
-    /// 全て選択解除
-    internal static let clipsListRightBarItemForDeselectAllTitle = L10n.tr("Localizable", "clips_list_right_bar_item_for_deselect_all_title")
-    /// 全て選択
-    internal static let clipsListRightBarItemForSelectAllTitle = L10n.tr("Localizable", "clips_list_right_bar_item_for_select_all_title")
-    /// 選択
-    internal static let clipsListRightBarItemForSelectTitle = L10n.tr("Localizable", "clips_list_right_bar_item_for_select_title")
     /// キャンセル
     internal static let confirmAlertCancel = L10n.tr("Localizable", "confirm_alert_cancel")
     /// OK

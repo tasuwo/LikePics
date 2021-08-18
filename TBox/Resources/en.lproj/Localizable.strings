@@ -15,10 +15,6 @@
 "app_root_tab_item_search" = "Search";
 "app_root_tab_item_settings" = "Settings";
 
-"clips_list_right_bar_item_for_select_title" = "Select";
-"clips_list_right_bar_item_for_select_all_title" = "Select All";
-"clips_list_right_bar_item_for_deselect_all_title" = "Deselect All";
-
 "clips_list_alert_for_add_to_album" = "Add to Album";
 "clips_list_alert_for_add_tag" = "Add Tags";
 "clips_list_alert_for_delete_message" = "If you delete clip, all images in the clip will be deleted.";
@@ -150,9 +146,6 @@
 
 "clip_preview_page_view_error_at_read_clip" = "Failed to read clip.";
 
-"clip_preview_view_alert_for_edit_site_url_title" = "Site URL";
-"clip_preview_view_alert_for_edit_site_url_message" = "Enter a site url related to this image.";
-
 "clip_preview_view_alert_for_delete_message" = "If you delete clip, all images in the clip will be deleted.";
 "clip_preview_view_alert_for_add_to_album" = "Add to Album";
 "clip_preview_view_alert_for_add_tag" = "Add Tags";
@@ -187,17 +180,32 @@
 "settings_interface_style_dark" = "Dark";
 "settings_interface_style_unspecified" = "Unspecified";
 
-"clip_item_list_view_resume" = "Resume";
 "clip_item_cell_no_title" = "No Title";
 
 "url_context_menu_open" = "Open";
 "url_context_menu_copy" = "Copy";
 
+// MARK: - Bar Item
+
+"bar_item_for_select_title" = "Select";
+"bar_item_for_select_all_title" = "Select All";
+"bar_item_for_deselect_all_title" = "Deselect All";
+"bar_item_for_cancel" = "Cancel";
+"bar_item_for_resume" = "Resume";
+
+// MARK: - Alert
+
+"alert_for_delete_clip_items_message" = "Delete selected images permanently.";
+"alert_for_delete_clip_items_action" = "Delete %d images";
+"alert_for_edit_site_url_title" = "Site URL";
+"alert_for_edit_site_url_message" = "Enter a site url related to this image.";
+"alert_for_edit_clip_items_site_url_message" = "Enter a site url related to these images.\nThe entered url will replace existing url settings.";
+
 "confirm_alert_ok" = "OK";
 "confirm_alert_save" = "Save";
 "confirm_alert_cancel" = "Cancel";
 
-// MARK: Placeholder
+// MARK: - Placeholder
 
 "placeholder_search_tag" = "Search Tags";
 "placeholder_search_album" = "Search Albums";

@@ -49,12 +49,15 @@ struct ClipItemListReducer: Reducer {
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
             return (Self.performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
 
-        // MARK: Operation
+        // MARK: NavigationBar/ToolBar
 
-        case let .editted(isEditing):
-            nextState.isEditing = isEditing
-            nextState.items = nextState.items.updated(selectedIds: .init())
-            return (nextState, .none)
+        case let .navigationBarEventOccurred(event):
+            return Self.execute(action: event, state: state, dependency: dependency)
+
+        case let .toolBarEventOccurred(event):
+            return Self.execute(action: event, state: state, dependency: dependency)
+
+        // MARK: Operation
 
         case let .reordered(itemIds):
             let stream = Deferred {
@@ -200,6 +203,61 @@ extension ClipItemListReducer {
                                       previousState: state)
 
         return (nextState, [clipEffect, itemListEffect, tagListEffect, settingsEffect])
+    }
+}
+
+// MARK: NavigationBar Event
+
+extension ClipItemListReducer {
+    private static func execute(action: ClipItemListNavigationBarEvent,
+                                state: State,
+                                dependency: Dependency) -> (State, [Effect<Action>]?)
+    {
+        var nextState = state
+
+        switch action {
+        case .cancel:
+            nextState.isEditing = false
+            nextState.items = nextState.items.updated(selectedIds: .init())
+            return (nextState, .none)
+
+        case .select:
+            nextState.isEditing = true
+            nextState.items = nextState.items.updated(selectedIds: .init())
+            return (nextState, .none)
+
+        case .resume:
+            nextState.isDismissed = true
+            return (nextState, .none)
+        }
+    }
+}
+
+// MARK: ToolBar Event
+
+extension ClipItemListReducer {
+    private static func execute(action: ClipItemListToolBarEvent,
+                                state: State,
+                                dependency: Dependency) -> (State, [Effect<Action>]?)
+    {
+        var nextState = state
+        switch action {
+        case let .share(succeeded):
+            if succeeded {
+                nextState.isEditing = false
+                nextState.items = nextState.items.updated(selectedIds: .init())
+            }
+            nextState.alert = nil
+            return (nextState, .none)
+
+        case .delete:
+            // TODO:
+            return (nextState, .none)
+
+        case .editUrl:
+            // TODO:
+            return (nextState, .none)
+        }
     }
 }
 

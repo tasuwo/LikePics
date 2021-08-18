@@ -18,9 +18,13 @@ enum ClipItemListAction: Action {
     case tagsUpdated([Tag])
     case settingUpdated(isSomeItemsHidden: Bool)
 
+    // MARK: NavigationBar/ToolBar
+
+    case navigationBarEventOccurred(ClipItemListNavigationBarEvent)
+    case toolBarEventOccurred(ClipItemListToolBarEvent)
+
     // MARK: Operation
 
-    case editted(Bool)
     case reordered([ClipItem.Identity])
     case selected(ClipItem.Identity)
     case deselected(ClipItem.Identity)

@@ -10,8 +10,13 @@ import TBoxUIKit
 import UIKit
 
 class ClipItemListViewController: UIViewController {
+    typealias RootState = ClipItemListRootState
+    typealias RootAction = ClipItemListRootAction
+    typealias RootDependency = ClipItemListRootDependency
+    typealias RootStore = ForestKit.Store<RootState, RootAction, RootDependency>
+
     typealias Layout = ClipItemListViewLayout
-    typealias Store = ForestKit.Store<ClipItemListState, ClipItemListAction, ClipItemListDependency>
+    typealias Store = AnyStoring<ClipItemListState, ClipItemListAction, ClipItemListDependency>
 
     // MARK: - Properties
 
@@ -36,24 +41,38 @@ class ClipItemListViewController: UIViewController {
         }
     }
 
+    // MARK: Component
+
+    private var navigationBarController: ClipItemListNavigationBarController!
+    private var toolBarController: ClipItemListToolBarController!
+
     // MARK: Service
 
     private let thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable
+    private let imageQueryService: ImageQueryServiceProtocol
 
     // MARK: Store
 
+    private var rootStore: RootStore
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
 
     // MARK: - Initializers
 
-    init(state: ClipItemListState,
-         dependency: ClipItemListDependency,
+    init(state: ClipItemListRootState,
+         siteUrlEditAlertState: TextEditAlertState,
+         dependency: ClipItemListRootDependency,
          thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable)
     {
-        self.store = .init(initialState: state, dependency: dependency, reducer: ClipItemListReducer())
+        self.imageQueryService = dependency.imageQueryService
+        self.rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipItemListRootReducer)
+        self.store = rootStore
+            .proxy(RootState.mappingToList, RootAction.mappingToList)
+            .eraseToAnyStoring()
         self.thumbnailLoader = thumbnailLoader
         super.init(nibName: nil, bundle: nil)
+
+        configureComponents(siteUrlEditAlertState)
     }
 
     @available(*, unavailable)
@@ -70,6 +89,9 @@ class ClipItemListViewController: UIViewController {
         configureDataSource()
         configureReorder()
 
+        navigationBarController.viewDidLoad()
+        toolBarController.viewDidLoad()
+
         bind(to: store)
 
         store.execute(.viewDidLoad)
@@ -84,6 +106,7 @@ extension ClipItemListViewController {
             .removeDuplicates(by: {
                 $0.items.filteredOrderedEntities() == $1.items.filteredOrderedEntities()
             })
+            .receive(on: RunLoop.main)
             .sink { [weak self] state in
                 let snapshot = Self.createSnapshot(items: state.items.orderedFilteredEntities())
                 self?.dataSource.apply(snapshot, animatingDifferences: true)
@@ -94,12 +117,20 @@ extension ClipItemListViewController {
 
         store.state
             .removeDuplicates(by: \.items._selectedIds)
-            .throttle(for: 0.5, scheduler: RunLoop.main, latest: true)
-            .sink { [weak self] state in self?.selectionApplier.applySelection(snapshot: state.items) }
+            .throttle(for: 0.1, scheduler: RunLoop.main, latest: true)
+            .sink { [weak self] state in
+                self?.selectionApplier.applySelection(snapshot: state.items)
+                self?.navigationBarController.store.execute(.updatedSelectionCount(state.items.selectedIds().count))
+                self?.toolBarController.store.execute(.selected(state.items.selectedEntities()))
+            }
             .store(in: &subscriptions)
 
         store.state
-            .bindNoRetain(\.isEditing, to: \.isEditing, on: self)
+            .bind(\.isEditing) { [weak self] isEditing in
+                self?.isEditing = isEditing
+                self?.collectionView.isEditing = isEditing
+                self?.navigationBarController.store.execute(.editted(isEditing))
+            }
             .store(in: &subscriptions)
 
         store.state
@@ -201,14 +232,30 @@ extension ClipItemListViewController {
 // MARK: - Configuration
 
 extension ClipItemListViewController {
+    private func configureComponents(_ siteUrlEditAlertState: TextEditAlertState) {
+        let navigationBarStore: ClipItemListNavigationBarController.Store = rootStore
+            .proxy(RootState.mappingToNavigationBar, RootAction.mappingToNavigationBar)
+            .eraseToAnyStoring()
+        navigationBarController = ClipItemListNavigationBarController(store: navigationBarStore)
+
+        let toolBarStore: ClipItemListToolBarController.Store = rootStore
+            .proxy(RootState.mappingToToolBar, RootAction.mappingToToolBar)
+            .eraseToAnyStoring()
+        toolBarController = ClipItemListToolBarController(store: toolBarStore,
+                                                          siteUrlEditAlertState: siteUrlEditAlertState,
+                                                          imageQueryService: imageQueryService)
+        toolBarController.alertHostingViewController = self
+    }
+
     private func configureViewHierarchy() {
         view.backgroundColor = Asset.Color.background.color
 
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: Layout.createLayout())
         collectionView.backgroundColor = .clear
         collectionView.allowsSelection = true
-        collectionView.allowsMultipleSelection = true
+        collectionView.allowsMultipleSelection = false
         collectionView.allowsSelectionDuringEditing = true
+        collectionView.allowsMultipleSelectionDuringEditing = true
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = self
         collectionView.contentInset.top = 44 + 16
@@ -220,11 +267,8 @@ extension ClipItemListViewController {
         navigationBar.isTranslucent = true
         navigationBar.delegate = self
         let navigationItem = UINavigationItem()
-        let closeItem = UIBarButtonItem(title: L10n.clipItemListViewResume, primaryAction: .init(handler: { [weak self] _ in
-            self?.store.execute(.dismiss)
-        }))
-        navigationItem.leftBarButtonItem = closeItem
         navigationBar.items = [navigationItem]
+        navigationBarController.navigationItem = navigationItem
         self.navigationBar = navigationBar
 
         view.addSubview(navigationBar)
@@ -239,7 +283,7 @@ extension ClipItemListViewController {
         let toolBar = UIToolbar(frame: .init(x: 0, y: 0, width: view.window?.screen.bounds.width ?? 0, height: 44))
         toolBar.isTranslucent = true
         toolBar.delegate = self
-        toolBar.items = [] // TODO:
+        toolBarController.toolBar = toolBar
         self.toolBar = toolBar
 
         view.addSubview(toolBar)

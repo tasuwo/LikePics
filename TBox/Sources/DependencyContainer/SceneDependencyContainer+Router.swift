@@ -145,8 +145,8 @@ extension SceneDependencyContainer: Router {
         let state = ClipItemInformationViewState(clipId: clipId,
                                                  itemId: itemId,
                                                  isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
-        let siteUrlEditAlertState = TextEditAlertState(title: L10n.clipPreviewViewAlertForEditSiteUrlTitle,
-                                                       message: L10n.clipPreviewViewAlertForEditSiteUrlMessage,
+        let siteUrlEditAlertState = TextEditAlertState(title: L10n.alertForEditSiteUrlTitle,
+                                                       message: L10n.alertForEditSiteUrlMessage,
                                                        placeholder: L10n.placeholderUrl)
         let viewController = ClipItemInformationViewController(state: state,
                                                                siteUrlEditAlertState: siteUrlEditAlertState,
@@ -171,7 +171,12 @@ extension SceneDependencyContainer: Router {
                                       clipId: clipId,
                                       clipItems: clipItems,
                                       isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
-        let viewController = ClipItemListViewController(state: state,
+        let viewController = ClipItemListViewController(state: .init(listState: state,
+                                                                     navigationBarState: .init(),
+                                                                     toolBarState: .init()),
+                                                        siteUrlEditAlertState: .init(title: L10n.alertForEditSiteUrlTitle,
+                                                                                     message: L10n.alertForEditClipItemsSiteUrlMessage,
+                                                                                     placeholder: L10n.placeholderUrl),
                                                         dependency: self,
                                                         thumbnailLoader: container.temporaryThumbnailLoader)
         viewController.transitioningDelegate = transitioningController
@@ -256,8 +261,8 @@ extension SceneDependencyContainer: Router {
         let state = ClipEditViewState(id: id,
                                       clipId: clipId,
                                       isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
-        let siteUrlEditAlertState = TextEditAlertState(title: L10n.clipPreviewViewAlertForEditSiteUrlTitle,
-                                                       message: L10n.clipPreviewViewAlertForEditSiteUrlMessage,
+        let siteUrlEditAlertState = TextEditAlertState(title: L10n.alertForEditSiteUrlTitle,
+                                                       message: L10n.alertForEditSiteUrlMessage,
                                                        placeholder: L10n.placeholderUrl)
         let viewController = ClipEditViewController(state: state,
                                                     siteUrlEditAlertState: siteUrlEditAlertState,

@@ -7,8 +7,8 @@ import ForestKit
 import TBoxUIKit
 import UIKit
 
-class ClipCollectionNavigationBarController {
-    typealias Store = AnyStoring<ClipCollectionNavigationBarState, ClipCollectionNavigationBarAction, ClipCollectionNavigationBarDependency>
+class ClipItemListNavigationBarController {
+    typealias Store = AnyStoring<ClipItemListNavigationBarState, ClipItemListNavigationBarAction, ClipItemListNavigationBarDependency>
 
     // MARK: - Properties
 
@@ -19,10 +19,8 @@ class ClipCollectionNavigationBarController {
     // MARK: BarButtons
 
     private let cancelButton = RoundedButton()
-    private let selectAllButton = RoundedButton()
-    private let deselectAllButton = RoundedButton()
     private let selectButton = RoundedButton()
-    private let layoutButton = SingleIconButton()
+    private let resumeButton = RoundedButton()
 
     // MARK: Store
 
@@ -47,7 +45,7 @@ class ClipCollectionNavigationBarController {
 
 // MARK: - Bind
 
-extension ClipCollectionNavigationBarController {
+extension ClipItemListNavigationBarController {
     private func bind(to store: Store) {
         store.state
             .bind(\.leftItems) { [weak self] items in
@@ -67,21 +65,11 @@ extension ClipCollectionNavigationBarController {
 
 // MARK: - NavigationBar Items Builder
 
-extension ClipCollectionNavigationBarController {
+extension ClipItemListNavigationBarController {
     private func configureBarButtons() {
         cancelButton.title = L10n.confirmAlertCancel
         cancelButton.addAction(.init(handler: { [weak self] _ in
             self?.store.execute(.didTapCancel)
-        }), for: .touchUpInside)
-
-        selectAllButton.title = L10n.barItemForSelectAllTitle
-        selectAllButton.addAction(.init(handler: { [weak self] _ in
-            self?.store.execute(.didTapSelectAll)
-        }), for: .touchUpInside)
-
-        deselectAllButton.title = L10n.barItemForDeselectAllTitle
-        deselectAllButton.addAction(.init(handler: { [weak self] _ in
-            self?.store.execute(.didTapDeselectAll)
         }), for: .touchUpInside)
 
         selectButton.title = L10n.barItemForSelectTitle
@@ -89,51 +77,33 @@ extension ClipCollectionNavigationBarController {
             self?.store.execute(.didTapSelect)
         }), for: .touchUpInside)
 
-        layoutButton.addAction(.init(handler: { [weak self] _ in
-            self?.store.execute(.didTapLayout)
+        resumeButton.title = L10n.barItemForResume
+        resumeButton.addAction(.init(handler: { [weak self] _ in
+            self?.store.execute(.didTapResume)
         }), for: .touchUpInside)
     }
 }
 
-extension ClipCollectionNavigationBarController {
-    private func resolveBarButtonItems(for items: [ClipCollectionNavigationBarState.Item]) -> [UIBarButtonItem] {
+extension ClipItemListNavigationBarController {
+    private func resolveBarButtonItems(for items: [ClipItemListNavigationBarState.Item]) -> [UIBarButtonItem] {
         return items.map { resolveBarButtonItem(for: $0) }
     }
 
-    private func resolveBarButtonItem(for item: ClipCollectionNavigationBarState.Item) -> UIBarButtonItem {
+    private func resolveBarButtonItem(for item: ClipItemListNavigationBarState.Item) -> UIBarButtonItem {
         let customView: UIView = {
             switch item.kind {
             case .cancel:
                 return self.cancelButton
 
-            case .selectAll:
-                return self.selectAllButton
-
-            case .deselectAll:
-                return self.deselectAllButton
-
             case .select:
                 return self.selectButton
 
-            case let .layout(layout):
-                layoutButton.setIcon(layout.toSingleIcon)
-                return self.layoutButton
+            case .resume:
+                return self.resumeButton
             }
         }()
         let barButtonItem = UIBarButtonItem(customView: customView)
         barButtonItem.isEnabled = item.isEnabled
         return barButtonItem
-    }
-}
-
-private extension ClipCollectionNavigationBarState.Item.Kind.Layout {
-    var toSingleIcon: SingleIconButton.Icon {
-        switch self {
-        case .grid:
-            return .grid
-
-        case .waterFall:
-            return .offgrid
-        }
     }
 }

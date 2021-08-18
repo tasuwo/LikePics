@@ -15,10 +15,6 @@
 "app_root_tab_item_search" = "検索";
 "app_root_tab_item_settings" = "設定";
 
-"clips_list_right_bar_item_for_select_title" = "選択";
-"clips_list_right_bar_item_for_select_all_title" = "全て選択";
-"clips_list_right_bar_item_for_deselect_all_title" = "全て選択解除";
-
 "clips_list_alert_for_add_to_album" = "アルバムに追加する";
 "clips_list_alert_for_add_tag" = "タグを追加する";
 "clips_list_alert_for_delete_message" = "クリップを削除すると、クリップに含まれる全ての画像も同時に削除されます";
@@ -150,9 +146,6 @@
 
 "clip_preview_page_view_error_at_read_clip" = "クリップの読み込みに失敗しました";
 
-"clip_preview_view_alert_for_edit_site_url_title" = "サイトのURL";
-"clip_preview_view_alert_for_edit_site_url_message" = "この画像の保存元のサイトのURLを入力してください";
-
 "clip_preview_view_alert_for_delete_message" = "クリップを削除すると、このクリップに含まれる全ての画像も同時に削除されます";
 "clip_preview_view_alert_for_add_to_album" = "アルバムに追加する";
 "clip_preview_view_alert_for_add_tag" = "タグを追加する";
@@ -187,17 +180,32 @@
 "settings_interface_style_dark" = "ダーク";
 "settings_interface_style_unspecified" = "端末に合わせる";
 
-"clip_item_list_view_resume" = "再開";
 "clip_item_cell_no_title" = "無題";
 
 "url_context_menu_open" = "開く";
 "url_context_menu_copy" = "コピー";
 
+// MARK: - Bar Item
+
+"bar_item_for_select_title" = "選択";
+"bar_item_for_select_all_title" = "全て選択";
+"bar_item_for_deselect_all_title" = "全て選択解除";
+"bar_item_for_cancel" = "キャンセル";
+"bar_item_for_resume" = "再開";
+
+// MARK: - Alert
+
+"alert_for_delete_clip_items_message" = "選択した画像を完全に削除します";
+"alert_for_delete_clip_items_action" = "%d件の画像を削除";
+"alert_for_edit_site_url_title" = "サイトのURL";
+"alert_for_edit_site_url_message" = "この画像の保存元のサイトのURLを入力してください";
+"alert_for_edit_clip_items_site_url_message" = "選択した画像の保存元のサイトのURLを更新します\n元の設定は上書きされます";
+
 "confirm_alert_ok" = "OK";
 "confirm_alert_save" = "保存";
 "confirm_alert_cancel" = "キャンセル";
 
-// MARK: Placeholder
+// MARK: - Placeholder
 
 "placeholder_search_tag" = "タグを探す";
 "placeholder_search_album" = "アルバムを探す";
