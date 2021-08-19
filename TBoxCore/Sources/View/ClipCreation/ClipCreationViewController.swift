@@ -247,9 +247,9 @@ extension ClipCreationViewController {
             .selections
             .enumerated()
             .forEach { index, id in
-                guard let indexPath = self.dataSource.indexPath(for: .image(id)),
-                      let cell = self.collectionView.cellForItem(at: indexPath) as? ClipSelectionCollectionViewCell else { return }
-                self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+                guard let indexPath = dataSource.indexPath(for: .image(id)) else { return }
+                collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+                guard let cell = collectionView.cellForItem(at: indexPath) as? ClipSelectionCollectionViewCell else { return }
                 cell.selectionOrder = index + 1
             }
     }
