@@ -79,9 +79,6 @@ extension ClipItemInformationPresentationAnimator: UIViewControllerAnimatedTrans
                    +-------------- FromView
          */
 
-        // TODO: pageLabelContainerを画像の表に回す
-        // TODO: iPad Split View で遷移がおかしい問題を修正する
-
         // HACK: Set new frame for updating the view to current orientation.
         to.view.frame = from.view.frame
 

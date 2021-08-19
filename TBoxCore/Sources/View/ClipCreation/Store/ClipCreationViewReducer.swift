@@ -279,8 +279,6 @@ extension ClipCreationViewReducer {
     }
 
     private static func fetchImages(for selections: [(index: Int, source: ImageSource)], dependency: Dependency) -> AnyPublisher<[ClipItemSource], DownloadError> {
-        // TODO: 全画像の合計が 120MB を超えてしまう恐れがあるので、データを遅延して読み込む
-
         let publishers: [AnyPublisher<ClipItemSource, DownloadError>] = selections
             .map { [dependency] selection in
                 return dependency.imageLoader.load(from: selection.source)
