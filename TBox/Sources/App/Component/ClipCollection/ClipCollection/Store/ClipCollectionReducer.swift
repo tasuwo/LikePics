@@ -277,100 +277,29 @@ struct ClipCollectionReducer: Reducer {
 extension ClipCollectionReducer {
     static func prepare(state: State, dependency: Dependency) -> (State, [Effect<Action>]) {
         let queryEffect: Effect<Action>
-        let description: String?
 
-        let initialClips: [Clip]
+        let stream = state.source.fetchStream(by: dependency.clipQueryService)
+
+        let clipsStream = stream.clipsStream
+            .map { Action.clipsUpdated($0) as Action? }
+            .catch { _ in Just(Action.failedToLoad) }
+
         switch state.source {
-        case .all:
-            let query: ClipListQuery
-            switch dependency.clipQueryService.queryAllClips() {
-            case let .success(result):
-                query = result
+        case .album:
+            queryEffect = Effect(clipsStream, underlying: stream.query, completeWith: .albumDeleted)
 
-            case let .failure(error):
-                fatalError("Failed to load clips: \(error.localizedDescription)")
-            }
-            let clipsStream = query.clips
-                .map { Action.clipsUpdated($0) as Action? }
-                .catch { _ in Just(Action.failedToLoad) }
-            queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
-            description = L10n.clipCollectionViewTitleAll
-            initialClips = query.clips.value
-
-        case let .album(albumId):
-            let query: AlbumQuery
-            switch dependency.clipQueryService.queryAlbum(having: albumId) {
-            case let .success(result):
-                query = result
-
-            case let .failure(error):
-                fatalError("Failed to load clips: \(error.localizedDescription)")
-            }
-            let albumStream = query.album
-                .flatMap { Just(Action.clipsUpdated($0.clips) as Action?) }
-                .catch { _ in Just(Action.failedToLoad) }
-            queryEffect = Effect(albumStream, underlying: query, completeWith: .albumDeleted)
-            description = query.album.value.title
-            initialClips = query.album.value.clips
-
-        case .uncategorized:
-            let query: ClipListQuery
-            switch dependency.clipQueryService.queryUncategorizedClips() {
-            case let .success(result):
-                query = result
-
-            case let .failure(error):
-                fatalError("Failed to load clips: \(error.localizedDescription)")
-            }
-            let clipsStream = query.clips
-                .map { Action.clipsUpdated($0) as Action? }
-                .catch { _ in Just(Action.failedToLoad) }
-            queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
-            description = L10n.searchResultTitleUncategorized
-            initialClips = query.clips.value
-
-        case let .tag(tag):
-            let query: ClipListQuery
-            switch dependency.clipQueryService.queryClips(tagged: tag.id) {
-            case let .success(result):
-                query = result
-
-            case let .failure(error):
-                fatalError("Failed to load clips: \(error.localizedDescription)")
-            }
-            let clipsStream = query.clips
-                .map { Action.clipsUpdated($0) as Action? }
-                .catch { _ in Just(Action.failedToLoad) }
-            queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
-            description = tag.name
-            initialClips = query.clips.value
-
-        case let .search(searchQuery):
-            let query: ClipListQuery
-
-            switch dependency.clipQueryService.queryClips(query: searchQuery) {
-            case let .success(result):
-                query = result
-
-            case let .failure(error):
-                fatalError("Failed to load clips: \(error.localizedDescription)")
-            }
-            let clipsStream = query.clips
-                .map { Action.clipsUpdated($0) as Action? }
-                .catch { _ in Just(Action.failedToLoad) }
-            queryEffect = Effect(clipsStream, underlying: query, completeWith: .failedToLoad)
-            description = searchQuery.displayTitle
-            initialClips = query.clips.value
+        default:
+            queryEffect = Effect(clipsStream, underlying: stream.query, completeWith: .failedToLoad)
         }
 
         let settingsStream = dependency.userSettingStorage.showHiddenItems
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
-        var nextState = performFilter(clips: initialClips,
+        var nextState = performFilter(clips: stream.clips,
                                       isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
                                       previousState: state)
-        nextState.sourceDescription = description
+        nextState.sourceDescription = stream.description
 
         return (nextState, [queryEffect, settingsEffect])
     }

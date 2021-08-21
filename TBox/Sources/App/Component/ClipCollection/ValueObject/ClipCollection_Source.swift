@@ -2,6 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
 import Domain
 
 extension ClipCollection {
@@ -20,6 +21,95 @@ extension ClipCollection {
             default:
                 return false
             }
+        }
+    }
+}
+
+extension ClipCollection.Source {
+    struct Stream {
+        let clips: [Clip]
+        let clipsStream: AnyPublisher<[Clip], Error>
+        let description: String
+        let query: Any
+    }
+
+    func fetchStream(by queryService: ClipQueryServiceProtocol) -> Stream {
+        switch self {
+        case .all:
+            let query: ClipListQuery
+            switch queryService.queryAllClips() {
+            case let .success(result):
+                query = result
+
+            case let .failure(error):
+                fatalError("Failed to load clips: \(error.localizedDescription)")
+            }
+
+            return Stream(clips: query.clips.value,
+                          clipsStream: query.clips.eraseToAnyPublisher(),
+                          description: L10n.clipCollectionViewTitleAll,
+                          query: query)
+
+        case let .album(albumId):
+            let query: AlbumQuery
+            switch queryService.queryAlbum(having: albumId) {
+            case let .success(result):
+                query = result
+
+            case let .failure(error):
+                fatalError("Failed to load clips: \(error.localizedDescription)")
+            }
+
+            return Stream(clips: query.album.value.clips,
+                          clipsStream: query.album.map(\.clips).eraseToAnyPublisher(),
+                          description: query.album.value.title,
+                          query: query)
+
+        case .uncategorized:
+            let query: ClipListQuery
+            switch queryService.queryUncategorizedClips() {
+            case let .success(result):
+                query = result
+
+            case let .failure(error):
+                fatalError("Failed to load clips: \(error.localizedDescription)")
+            }
+
+            return Stream(clips: query.clips.value,
+                          clipsStream: query.clips.eraseToAnyPublisher(),
+                          description: L10n.searchResultTitleUncategorized,
+                          query: query)
+
+        case let .tag(tag):
+            let query: ClipListQuery
+            switch queryService.queryClips(tagged: tag.id) {
+            case let .success(result):
+                query = result
+
+            case let .failure(error):
+                fatalError("Failed to load clips: \(error.localizedDescription)")
+            }
+
+            return Stream(clips: query.clips.value,
+                          clipsStream: query.clips.eraseToAnyPublisher(),
+                          description: tag.name,
+                          query: query)
+
+        case let .search(searchQuery):
+            let query: ClipListQuery
+
+            switch queryService.queryClips(query: searchQuery) {
+            case let .success(result):
+                query = result
+
+            case let .failure(error):
+                fatalError("Failed to load clips: \(error.localizedDescription)")
+            }
+
+            return Stream(clips: query.clips.value,
+                          clipsStream: query.clips.eraseToAnyPublisher(),
+                          description: searchQuery.displayTitle,
+                          query: query)
         }
     }
 }
