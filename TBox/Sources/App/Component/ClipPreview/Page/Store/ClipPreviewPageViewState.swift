@@ -33,11 +33,17 @@ struct ClipPreviewPageViewState: Equatable {
 
     var isDismissed: Bool
     var isPageAnimated: Bool
+
+    var isSomeItemsHidden: Bool
 }
 
 extension ClipPreviewPageViewState {
-    init(clipId: Clip.Identity, initialItem: ClipItem.Identity? = nil) {
+    init(clipId: Clip.Identity,
+         isSomeItemsHidden: Bool,
+         initialItem: ClipItem.Identity? = nil)
+    {
         self.clipId = clipId
+        self.isSomeItemsHidden = isSomeItemsHidden
         self.initialItemId = initialItem
         currentIndex = nil
         items = []

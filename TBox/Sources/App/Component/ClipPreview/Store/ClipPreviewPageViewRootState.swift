@@ -11,8 +11,8 @@ struct ClipPreviewPageViewRootState: Equatable {
 }
 
 extension ClipPreviewPageViewRootState {
-    init(clipId: Clip.Identity, initialItem: ClipItem.Identity?) {
-        pageViewState = ClipPreviewPageViewState(clipId: clipId, initialItem: initialItem)
+    init(clipId: Clip.Identity, isSomeItemsHidden: Bool, initialItem: ClipItem.Identity?) {
+        pageViewState = ClipPreviewPageViewState(clipId: clipId, isSomeItemsHidden: isSomeItemsHidden, initialItem: initialItem)
         barState = ClipPreviewPageBarState()
     }
 }

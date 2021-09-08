@@ -13,6 +13,7 @@ typealias ClipPreviewPageViewDependency = HasRouter
     & HasClipItemInformationViewCaching
     & HasPreviewLoader
     & HasTransitionLock
+    & HasUserSettingStorage
 
 struct ClipPreviewPageViewReducer: Reducer {
     typealias Dependency = ClipPreviewPageViewDependency
@@ -70,6 +71,10 @@ struct ClipPreviewPageViewReducer: Reducer {
 
         case .failedToLoadClip:
             nextState.isDismissed = true
+            return (nextState, .none)
+
+        case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
+            nextState.isSomeItemsHidden = isSomeItemsHidden
             return (nextState, .none)
 
         // MARK: Transition
@@ -160,7 +165,11 @@ extension ClipPreviewPageViewReducer {
             .catch { _ in Just(Action.failedToLoadClip) }
         let queryEffect = Effect(clipStream, underlying: query, completeWith: .failedToLoadClip)
 
-        return (state, [queryEffect])
+        let settingsStream = dependency.userSettingStorage.showHiddenItems
+            .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
+        let settingsEffect = Effect(settingsStream)
+
+        return (state, [queryEffect, settingsEffect])
     }
 }
 

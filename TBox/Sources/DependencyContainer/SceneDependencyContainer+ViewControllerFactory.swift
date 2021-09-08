@@ -125,6 +125,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
             let informationViewCache: ClipItemInformationViewCaching?
             let previewLoader: PreviewLoader
             let transitionLock: TransitionLock
+            let userSettingStorage: UserSettingsStorageProtocol
         }
 
         let informationViewCacheState = ClipItemInformationViewCacheState(isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
@@ -144,9 +145,12 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                     imageQueryService: container._imageQueryService,
                                     informationViewCache: informationViewCacheController,
                                     previewLoader: container._previewLoader,
-                                    transitionLock: container.transitionLock)
+                                    transitionLock: container.transitionLock,
+                                    userSettingStorage: container._userSettingStorage)
 
-        let state = ClipPreviewPageViewRootState(clipId: clipId, initialItem: initialItem)
+        let state = ClipPreviewPageViewRootState(clipId: clipId,
+                                                 isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems(),
+                                                 initialItem: initialItem)
         let viewController = ClipPreviewPageViewController(state: state,
                                                            cacheController: informationViewCacheController,
                                                            dependency: dependency,
