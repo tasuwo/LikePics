@@ -49,7 +49,8 @@ struct ClipCollectionReducer: Reducer {
             nextState.clips = state.clips.updated(selectedIds: selections)
 
             if !state.operation.isAllowedMultipleSelection {
-                dependency.router.showClipPreviewView(for: clipId, clips: state.clips.orderedEntities(), source: state.source, at: nil)
+                // TODO: 選択を反映する
+                dependency.router.showClipPreviewView(clips: state.clips.orderedEntities(), source: state.source, at: nil)
             }
 
             return (nextState, .none)

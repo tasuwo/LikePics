@@ -20,8 +20,8 @@ struct ClipPreviewPageViewCacheReducer: Reducer {
 
         case .viewDidAppear:
             dependency.informationViewCache?.insertCachingViewHierarchyIfNeeded()
-            if let itemId = state.itemId {
-                dependency.informationViewCache?.startUpdating(clipId: state.clipId, itemId: itemId)
+            if let clipId = state.clipId, let itemId = state.itemId {
+                dependency.informationViewCache?.startUpdating(clipId: clipId, itemId: itemId)
             }
 
         // MARK: Transition

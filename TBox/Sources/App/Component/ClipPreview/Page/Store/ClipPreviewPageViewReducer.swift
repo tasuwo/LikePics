@@ -59,11 +59,12 @@ struct ClipPreviewPageViewReducer: Reducer {
         // MARK: Transition
 
         case .clipInformationViewPresented:
-            if let currentItemId = state.currentItem?.id,
+            if let currentClipId = state.currentClip?.id,
+               let currentItemId = state.currentItem?.id,
                let cache = dependency.informationViewCache,
                let transitioningController = dependency.clipItemInformationTransitioningController
             {
-                dependency.router.showClipInformationView(clipId: state.clipId,
+                dependency.router.showClipInformationView(clipId: currentClipId,
                                                           itemId: currentItemId,
                                                           clipInformationViewCache: cache,
                                                           transitioningController: transitioningController)
@@ -80,9 +81,10 @@ struct ClipPreviewPageViewReducer: Reducer {
         case let .tagsSelected(tagIds):
             nextState.modal = nil
 
-            guard let tagIds = tagIds else { return (nextState, .none) }
+            guard let currentClipId = state.currentClip?.id,
+                  let tagIds = tagIds else { return (nextState, .none) }
 
-            switch dependency.clipCommandService.updateClips(having: [state.clipId], byReplacingTagsHaving: Array(tagIds)) {
+            switch dependency.clipCommandService.updateClips(having: [currentClipId], byReplacingTagsHaving: Array(tagIds)) {
             case .success: ()
 
             case .failure:
@@ -94,9 +96,10 @@ struct ClipPreviewPageViewReducer: Reducer {
         case let .albumsSelected(albumId):
             nextState.modal = nil
 
-            guard let albumId = albumId else { return (nextState, .none) }
+            guard let currentClipId = state.currentClip?.id,
+                  let albumId = albumId else { return (nextState, .none) }
 
-            switch dependency.clipCommandService.updateAlbum(having: albumId, byAddingClipsHaving: [state.clipId]) {
+            switch dependency.clipCommandService.updateAlbum(having: albumId, byAddingClipsHaving: [currentClipId]) {
             case .success: ()
 
             case .failure:
@@ -228,11 +231,12 @@ extension ClipPreviewPageViewReducer {
             return (nextState, .none)
 
         case .infoRequested:
-            if let currentItemId = state.currentItem?.id,
+            if let currentClipId = state.currentClip?.id,
+               let currentItemId = state.currentItem?.id,
                let cache = dependency.informationViewCache,
                let transitioningController = dependency.clipItemInformationTransitioningController
             {
-                dependency.router.showClipInformationView(clipId: state.clipId,
+                dependency.router.showClipInformationView(clipId: currentClipId,
                                                           itemId: currentItemId,
                                                           clipInformationViewCache: cache,
                                                           transitioningController: transitioningController)
@@ -250,7 +254,12 @@ extension ClipPreviewPageViewReducer {
             return (nextState, .none)
 
         case .addTags:
-            switch dependency.clipQueryService.readClipAndTags(for: [state.clipId]) {
+            guard let currentClipId = state.currentClip?.id else {
+                nextState.alert = .error(L10n.clipCollectionErrorAtUpdateTagsToClip)
+                return (nextState, .none)
+            }
+
+            switch dependency.clipQueryService.readClipAndTags(for: [currentClipId]) {
             case let .success((_, tags)):
                 nextState.modal = .tagSelection(id: UUID(), tagIds: Set(tags.map({ $0.id })))
 
@@ -263,7 +272,12 @@ extension ClipPreviewPageViewReducer {
             return (state, .none)
 
         case .deleteClip:
-            switch dependency.clipCommandService.deleteClips(having: [state.clipId]) {
+            guard let currentClipId = state.currentClip?.id else {
+                nextState.alert = .error(L10n.clipCollectionErrorAtUpdateTagsToClip)
+                return (nextState, .none)
+            }
+
+            switch dependency.clipCommandService.deleteClips(having: [currentClipId]) {
             case .success: ()
 
             case .failure:

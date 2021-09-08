@@ -167,8 +167,9 @@ extension ClipPreviewPageViewController {
     private func updateUserActivity() {
         guard case let .clips(state, preview: _) = view.window?.windowScene?.userActivity?.intent else { return }
         DispatchQueue.global().async {
-            guard let activity = NSUserActivity.make(with: .clips(state, preview: self.store.stateValue.clipId)) else { return }
-            DispatchQueue.main.async { self.view.window?.windowScene?.userActivity = activity }
+            // TODO:
+            // guard let activity = NSUserActivity.make(with: .clips(state, preview: self.store.stateValue.clipId)) else { return }
+            // DispatchQueue.main.async { self.view.window?.windowScene?.userActivity = activity }
         }
     }
 }
@@ -250,7 +251,9 @@ extension ClipPreviewPageViewController {
             .store(in: &previewViewSubscriptions)
         transitionDispatcher.inputs.previewPanGestureRecognizer.send(viewController.previewView.panGestureRecognizer)
 
-        cacheStore.execute(.pageChanged(store.stateValue.clipId, viewController.itemId))
+        if let clip = store.stateValue.clip(of: viewController.itemId) {
+            cacheStore.execute(.pageChanged(clip.id, viewController.itemId))
+        }
     }
 
     // MARK: Alert
@@ -413,10 +416,9 @@ extension ClipPreviewPageViewController: ClipPreviewPresenting {
     // MARK: - ClipPreviewPresenting
 
     func previewingClipItem(_ animator: ClipPreviewAnimator) -> PreviewingClipItem? {
-        guard let itemId = store.stateValue.currentItem?.id ?? store.stateValue.initialItemId else { return nil }
-        return .init(clipId: store.stateValue.clipId,
-                     itemId: itemId,
-                     isItemPrimary: false) // TODO: 廃止する
+        guard let clipId = store.stateValue.currentClip?.id,
+              let itemId = store.stateValue.currentItem?.id ?? store.stateValue.initialItemId else { return nil }
+        return .init(clipId: clipId, itemId: itemId, isItemPrimary: false) // TODO: 廃止する
     }
 
     func previewView(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
@@ -437,10 +439,9 @@ extension ClipPreviewPageViewController: ClipItemListPresentable {
     // MARK: - ClipItemListPresentable
 
     func previewingClipItem(_ animator: ClipItemListAnimator) -> PreviewingClipItem? {
-        guard let itemId = store.stateValue.currentItem?.id ?? store.stateValue.initialItemId else { return nil }
-        return .init(clipId: store.stateValue.clipId,
-                     itemId: itemId,
-                     isItemPrimary: false) // TODO: 廃止する
+        guard let clipId = store.stateValue.currentClip?.id,
+              let itemId = store.stateValue.currentItem?.id ?? store.stateValue.initialItemId else { return nil }
+        return .init(clipId: clipId, itemId: itemId, isItemPrimary: false) // TODO: 廃止する
     }
 
     func previewView(_ animator: ClipItemListAnimator) -> ClipPreviewView? {

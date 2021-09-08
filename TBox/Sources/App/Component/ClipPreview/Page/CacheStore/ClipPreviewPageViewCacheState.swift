@@ -5,6 +5,6 @@
 import Domain
 
 struct ClipPreviewPageViewCacheState: Equatable {
-    var clipId: Clip.Identity
+    var clipId: Clip.Identity?
     var itemId: ClipItem.Identity?
 }

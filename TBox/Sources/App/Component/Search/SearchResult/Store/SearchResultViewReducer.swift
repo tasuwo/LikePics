@@ -75,7 +75,8 @@ struct SearchResultViewReducer: Reducer {
             return (nextState, nil)
 
         case let .selectedResult(clip):
-            dependency.router.showClipPreviewView(for: clip.id, clips: .init(), source: .search(state.searchQuery), at: nil)
+            // TODO: 選択を反映する
+            dependency.router.showClipPreviewView(clips: .init(), source: .search(state.searchQuery), at: nil)
             return (nextState, nil)
 
         case .selectedSeeAllResultsButton:

@@ -115,8 +115,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeClipPreviewPageViewController(for clipId: Clip.Identity,
-                                           clips: [Clip],
+    func makeClipPreviewPageViewController(clips: [Clip],
                                            source: ClipCollection.Source,
                                            at initialItem: ClipItem.Identity?) -> UIViewController
     {
@@ -152,8 +151,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                     transitionLock: container.transitionLock,
                                     userSettingStorage: container._userSettingStorage)
 
-        let state = ClipPreviewPageViewRootState(clipId: clipId,
-                                                 clips: clips,
+        let state = ClipPreviewPageViewRootState(clips: clips,
                                                  source: source,
                                                  isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems(),
                                                  initialItem: initialItem)

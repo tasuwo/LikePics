@@ -21,7 +21,6 @@ struct ClipPreviewPageViewState: Equatable {
         case reverse
     }
 
-    let clipId: Clip.Identity
     let source: ClipCollection.Source
 
     var currentIndexPath: ClipCollection.IndexPath?
@@ -44,13 +43,11 @@ struct ClipPreviewPageViewState: Equatable {
 }
 
 extension ClipPreviewPageViewState {
-    init(clipId: Clip.Identity,
-         clips: [Clip],
+    init(clips: [Clip],
          source: ClipCollection.Source,
          isSomeItemsHidden: Bool,
          initialItem: ClipItem.Identity? = nil)
     {
-        self.clipId = clipId
         self.clips = clips
         filteredClipIds = .init()
         self.source = source
@@ -73,6 +70,11 @@ extension ClipPreviewPageViewState {
     var currentItem: ClipItem? {
         guard let indexPath = currentIndexPath else { return nil }
         return clips[indexPath.clipIndex].items[indexPath.itemIndex]
+    }
+
+    func clip(of itemId: ClipItem.Identity) -> Clip? {
+        guard let indexPath = indexPathByClipItemId[itemId] else { return nil }
+        return clips[indexPath.clipIndex]
     }
 
     func indexPath(of itemId: ClipItem.Identity) -> ClipCollection.IndexPath? {

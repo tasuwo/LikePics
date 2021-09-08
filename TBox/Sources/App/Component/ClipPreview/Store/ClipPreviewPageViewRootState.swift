@@ -11,14 +11,12 @@ struct ClipPreviewPageViewRootState: Equatable {
 }
 
 extension ClipPreviewPageViewRootState {
-    init(clipId: Clip.Identity,
-         clips: [Clip],
+    init(clips: [Clip],
          source: ClipCollection.Source,
          isSomeItemsHidden: Bool,
          initialItem: ClipItem.Identity?)
     {
-        pageViewState = ClipPreviewPageViewState(clipId: clipId,
-                                                 clips: clips,
+        pageViewState = ClipPreviewPageViewState(clips: clips,
                                                  source: source,
                                                  isSomeItemsHidden: isSomeItemsHidden,
                                                  initialItem: initialItem)
@@ -30,7 +28,7 @@ extension ClipPreviewPageViewRootState {
     static let mappingToPage: StateMapping<Self, ClipPreviewPageViewState> = .init(keyPath: \.pageViewState)
     static let mappingToBar: StateMapping<Self, ClipPreviewPageBarState> = .init(keyPath: \.barState)
     static let cacheMapping: StateMapping<Self, ClipPreviewPageViewCacheState> = .init(get: {
-        .init(clipId: $0.pageViewState.clipId, itemId: $0.pageViewState.currentItem?.id)
+        .init(clipId: $0.pageViewState.currentClip?.id, itemId: $0.pageViewState.currentItem?.id)
     }, set: {
         // Read only
         return $1

@@ -116,19 +116,16 @@ extension SceneRoot {
                 viewController = factory.makeSettingsViewController(intent?.settingsViewState)
             }
 
-            if case let .clips(state, preview: clipId) = intent,
+            if case let .clips(state, preview: _) = intent,
                state.clipCollectionState.source.mapToTabBarItem() == self
             {
                 let clipCollectionViewController = factory.makeClipCollectionViewController(from: state.clipCollectionState.source)
                 viewController.show(clipCollectionViewController, sender: nil)
 
-                if let clipId = clipId {
-                    let previewPageViewController = factory.makeClipPreviewPageViewController(for: clipId,
-                                                                                              clips: .init(),
-                                                                                              source: state.clipCollectionState.source,
-                                                                                              at: nil)
-                    clipCollectionViewController.presentAfterLoad(previewPageViewController, animated: false, completion: nil)
-                }
+                let previewPageViewController = factory.makeClipPreviewPageViewController(clips: .init(),
+                                                                                          source: state.clipCollectionState.source,
+                                                                                          at: nil)
+                clipCollectionViewController.presentAfterLoad(previewPageViewController, animated: false, completion: nil)
             }
 
             viewController.tabBarItem = tabBarItem
