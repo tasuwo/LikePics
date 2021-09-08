@@ -210,7 +210,7 @@ extension SearchResultViewController: UICollectionViewDelegate {
             store.execute(.selectedTokenCandidate(token))
 
         case let .result(clip):
-            store.execute(.selectedResult(clip))
+            store.execute(.selectedResult(clip, at: indexPath.row))
         }
     }
 }

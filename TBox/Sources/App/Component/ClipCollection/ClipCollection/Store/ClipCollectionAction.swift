@@ -17,7 +17,7 @@ enum ClipCollectionAction: Action {
 
     // MARK: Selection
 
-    case selected(Clip.Identity)
+    case selected(Clip.Identity, at: Int)
     case deselected(Clip.Identity)
     case reordered([Clip.Identity])
 

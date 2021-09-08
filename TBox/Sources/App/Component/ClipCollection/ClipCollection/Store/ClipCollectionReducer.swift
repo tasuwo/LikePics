@@ -38,7 +38,7 @@ struct ClipCollectionReducer: Reducer {
 
         // MARK: Selection
 
-        case let .selected(clipId):
+        case let .selected(clipId, at: index):
             let selections: Set<Clip.Identity> = {
                 if state.operation.isAllowedMultipleSelection {
                     return state.clips._selectedIds.union(Set([clipId]))
@@ -49,8 +49,9 @@ struct ClipCollectionReducer: Reducer {
             nextState.clips = state.clips.updated(selectedIds: selections)
 
             if !state.operation.isAllowedMultipleSelection {
-                // TODO: 選択を反映する
-                dependency.router.showClipPreviewView(clips: state.clips.orderedEntities(), source: state.source, indexPath: nil)
+                dependency.router.showClipPreviewView(clips: state.clips.orderedEntities(),
+                                                      source: state.source,
+                                                      indexPath: ClipCollection.IndexPath(clipIndex: index, itemIndex: 0))
             }
 
             return (nextState, .none)

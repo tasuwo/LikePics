@@ -183,7 +183,6 @@ extension ClipPreviewPageViewReducer {
         nextState.isSomeItemsHidden = isSomeItemsHidden
 
         // TODO: currentIndexPathを更新する
-        nextState.currentIndexPath = .init(clipIndex: 0, itemIndex: 0)
 
         // TODO: initialItemを必要に応じて反映する
 

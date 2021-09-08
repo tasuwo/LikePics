@@ -584,7 +584,7 @@ extension ClipCollectionViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let clip = dataSource.itemIdentifier(for: indexPath) else { return }
-        store.execute(.selected(clip.id))
+        store.execute(.selected(clip.id, at: indexPath.row))
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
