@@ -24,7 +24,6 @@ struct ClipPreviewPageViewState: Equatable {
     let source: ClipCollection.Source
 
     var currentIndexPath: ClipCollection.IndexPath?
-    var initialItemId: ClipItem.Identity?
     var pageChange: PageChange?
 
     var clips: [Clip]
@@ -46,13 +45,13 @@ extension ClipPreviewPageViewState {
     init(clips: [Clip],
          source: ClipCollection.Source,
          isSomeItemsHidden: Bool,
-         initialItem: ClipItem.Identity? = nil)
+         indexPath: ClipCollection.IndexPath? = nil)
     {
         self.clips = clips
         filteredClipIds = .init()
         self.source = source
+        self.currentIndexPath = indexPath
         self.isSomeItemsHidden = isSomeItemsHidden
-        self.initialItemId = initialItem
         indexByClipId = [:]
         indexPathByClipItemId = [:]
         alert = nil

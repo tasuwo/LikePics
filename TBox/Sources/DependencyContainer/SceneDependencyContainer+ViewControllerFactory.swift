@@ -117,7 +117,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
 
     func makeClipPreviewPageViewController(clips: [Clip],
                                            source: ClipCollection.Source,
-                                           at initialItem: ClipItem.Identity?) -> UIViewController
+                                           indexPath: ClipCollection.IndexPath?) -> UIViewController
     {
         struct Dependency: ClipPreviewPageViewDependency & HasImageQueryService {
             let router: Router
@@ -154,7 +154,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
         let state = ClipPreviewPageViewRootState(clips: clips,
                                                  source: source,
                                                  isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems(),
-                                                 initialItem: initialItem)
+                                                 indexPath: indexPath)
         let viewController = ClipPreviewPageViewController(state: state,
                                                            cacheController: informationViewCacheController,
                                                            dependency: dependency,

@@ -50,7 +50,7 @@ struct ClipCollectionReducer: Reducer {
 
             if !state.operation.isAllowedMultipleSelection {
                 // TODO: 選択を反映する
-                dependency.router.showClipPreviewView(clips: state.clips.orderedEntities(), source: state.source, at: nil)
+                dependency.router.showClipPreviewView(clips: state.clips.orderedEntities(), source: state.source, indexPath: nil)
             }
 
             return (nextState, .none)
