@@ -16,6 +16,6 @@ protocol ViewControllerFactory {
     func makeSettingsViewController(_ state: SettingsViewState?) -> RestorableViewController
     func makeClipPreviewPageViewController(clips: [Clip],
                                            source: ClipCollection.Source,
-                                           indexPath: ClipCollection.IndexPath?) -> UIViewController
+                                           indexPath: ClipCollection.IndexPath) -> UIViewController
     func makeClipPreviewViewController(for item: ClipItem) -> ClipPreviewViewController?
 }

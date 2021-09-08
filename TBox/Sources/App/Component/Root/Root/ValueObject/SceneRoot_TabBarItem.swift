@@ -124,7 +124,7 @@ extension SceneRoot {
 
                 let previewPageViewController = factory.makeClipPreviewPageViewController(clips: .init(),
                                                                                           source: state.clipCollectionState.source,
-                                                                                          indexPath: nil)
+                                                                                          indexPath: .init(clipIndex: 0, itemIndex: 0)) // TODO: 反映する
                 clipCollectionViewController.presentAfterLoad(previewPageViewController, animated: false, completion: nil)
             }
 

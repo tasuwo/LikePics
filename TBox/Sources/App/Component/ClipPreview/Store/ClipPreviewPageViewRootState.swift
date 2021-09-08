@@ -14,7 +14,7 @@ extension ClipPreviewPageViewRootState {
     init(clips: [Clip],
          source: ClipCollection.Source,
          isSomeItemsHidden: Bool,
-         indexPath: ClipCollection.IndexPath?)
+         indexPath: ClipCollection.IndexPath)
     {
         pageViewState = ClipPreviewPageViewState(clips: clips,
                                                  source: source,

@@ -285,9 +285,7 @@ extension ClipPreviewPageViewReducer {
             return (nextState, .none)
 
         case .removeFromClip:
-            guard let index = state.currentIndexPath,
-                  let item = state.currentItem
-            else {
+            guard let item = state.currentItem else {
                 return (nextState, .none)
             }
 

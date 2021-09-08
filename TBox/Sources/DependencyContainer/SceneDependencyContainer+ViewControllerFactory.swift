@@ -117,7 +117,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
 
     func makeClipPreviewPageViewController(clips: [Clip],
                                            source: ClipCollection.Source,
-                                           indexPath: ClipCollection.IndexPath?) -> UIViewController
+                                           indexPath: ClipCollection.IndexPath) -> UIViewController
     {
         struct Dependency: ClipPreviewPageViewDependency & HasImageQueryService {
             let router: Router
