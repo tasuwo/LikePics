@@ -24,10 +24,10 @@ struct ClipPreviewPageViewState: Equatable {
     let source: ClipCollection.Source
 
     var currentIndexPath: ClipCollection.IndexPath
-    var pageChange: PageChange?
+    var filteredClipIds: [Clip.Identity]
+    var clipsByIdentity: [Clip.Identity: Clip]
 
-    var clips: [Clip]
-    var filteredClipIds: Set<Clip.Identity>
+    var pageChange: PageChange?
 
     var indexByClipId: [Clip.Identity: Int]
     var indexPathByClipItemId: [ClipItem.Identity: ClipCollection.IndexPath]
@@ -42,15 +42,16 @@ struct ClipPreviewPageViewState: Equatable {
 }
 
 extension ClipPreviewPageViewState {
-    init(clips: [Clip],
+    init(filteredClipIds: [Clip.Identity],
+         clipsByIdentity: [Clip.Identity: Clip],
          source: ClipCollection.Source,
          isSomeItemsHidden: Bool,
          indexPath: ClipCollection.IndexPath)
     {
-        self.clips = clips
-        filteredClipIds = .init()
         self.source = source
         self.currentIndexPath = indexPath
+        self.filteredClipIds = filteredClipIds
+        self.clipsByIdentity = clipsByIdentity
         self.isSomeItemsHidden = isSomeItemsHidden
         indexByClipId = [:]
         indexPathByClipItemId = [:]
@@ -62,16 +63,19 @@ extension ClipPreviewPageViewState {
 
 extension ClipPreviewPageViewState {
     var currentClip: Clip? {
-        return clips[currentIndexPath.clipIndex]
+        let clipId = filteredClipIds[currentIndexPath.clipIndex]
+        return clipsByIdentity[clipId]
     }
 
     var currentItem: ClipItem? {
-        return clips[currentIndexPath.clipIndex].items[currentIndexPath.itemIndex]
+        let clipId = filteredClipIds[currentIndexPath.clipIndex]
+        return clipsByIdentity[clipId]?.items[currentIndexPath.itemIndex]
     }
 
     func clip(of itemId: ClipItem.Identity) -> Clip? {
         guard let indexPath = indexPathByClipItemId[itemId] else { return nil }
-        return clips[indexPath.clipIndex]
+        let clipId = filteredClipIds[indexPath.clipIndex]
+        return clipsByIdentity[clipId]
     }
 
     func indexPath(of itemId: ClipItem.Identity) -> ClipCollection.IndexPath? {
@@ -81,12 +85,14 @@ extension ClipPreviewPageViewState {
     func item(after itemId: ClipItem.Identity) -> ClipItem? {
         guard let indexPath = indexPathByClipItemId[itemId] else { return nil }
 
-        let clip = clips[indexPath.clipIndex]
+        let clipId = filteredClipIds[indexPath.clipIndex]
+        guard let clip = clipsByIdentity[clipId] else { return nil }
 
         if indexPath.itemIndex + 1 < clip.items.count {
             return clip.items[indexPath.itemIndex + 1]
-        } else if indexPath.clipIndex + 1 < clips.count {
-            return clips[indexPath.clipIndex + 1].items.first
+        } else if indexPath.clipIndex + 1 < clipsByIdentity.count {
+            let clipId = filteredClipIds[indexPath.clipIndex + 1]
+            return clipsByIdentity[clipId]?.items.first
         } else {
             return nil
         }
@@ -95,12 +101,14 @@ extension ClipPreviewPageViewState {
     func item(before itemId: ClipItem.Identity) -> ClipItem? {
         guard let indexPath = indexPathByClipItemId[itemId] else { return nil }
 
-        let clip = clips[indexPath.clipIndex]
+        let clipId = filteredClipIds[indexPath.clipIndex]
+        guard let clip = clipsByIdentity[clipId] else { return nil }
 
         if indexPath.itemIndex - 1 >= 0 {
             return clip.items[indexPath.itemIndex - 1]
         } else if indexPath.clipIndex - 1 >= 0 {
-            return clips[indexPath.clipIndex - 1].items.last
+            let clipId = filteredClipIds[indexPath.clipIndex - 1]
+            return clipsByIdentity[clipId]?.items.last
         } else {
             return nil
         }

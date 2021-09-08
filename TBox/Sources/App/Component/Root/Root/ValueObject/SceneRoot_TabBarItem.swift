@@ -122,10 +122,11 @@ extension SceneRoot {
                 let clipCollectionViewController = factory.makeClipCollectionViewController(from: state.clipCollectionState.source)
                 viewController.show(clipCollectionViewController, sender: nil)
 
-                let previewPageViewController = factory.makeClipPreviewPageViewController(clips: .init(),
-                                                                                          source: state.clipCollectionState.source,
-                                                                                          indexPath: .init(clipIndex: 0, itemIndex: 0)) // TODO: 反映する
-                clipCollectionViewController.presentAfterLoad(previewPageViewController, animated: false, completion: nil)
+                // TODO:
+                // let previewPageViewController = factory.makeClipPreviewPageViewController(clips: .init(),
+                //                                                                           source: state.clipCollectionState.source,
+                //                                                                           indexPath: .init(clipIndex: 0, itemIndex: 0)) // TODO: 反映する
+                // clipCollectionViewController.presentAfterLoad(previewPageViewController, animated: false, completion: nil)
             }
 
             viewController.tabBarItem = tabBarItem
