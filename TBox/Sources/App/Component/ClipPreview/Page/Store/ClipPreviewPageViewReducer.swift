@@ -73,9 +73,11 @@ struct ClipPreviewPageViewReducer: Reducer {
             nextState.isDismissed = true
             return (nextState, .none)
 
+        case let .clipsUpdated(clips):
+            return (Self.performFilter(clips: clips, previousState: state), .none)
+
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
-            nextState.isSomeItemsHidden = isSomeItemsHidden
-            return (nextState, .none)
+            return (Self.performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
 
         // MARK: Transition
 
@@ -165,11 +167,55 @@ extension ClipPreviewPageViewReducer {
             .catch { _ in Just(Action.failedToLoadClip) }
         let queryEffect = Effect(clipStream, underlying: query, completeWith: .failedToLoadClip)
 
+        let stream = state.source.fetchStream(by: dependency.clipQueryService)
+        let clipsStream = stream.clipsStream
+            .map { Action.clipsUpdated($0) as Action? }
+            .catch { _ in Just(Action.failedToLoadClip) }
+        let queryEffect2 = Effect(clipsStream, underlying: stream.query, completeWith: .failedToLoadClip)
+
         let settingsStream = dependency.userSettingStorage.showHiddenItems
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
-        return (state, [queryEffect, settingsEffect])
+        return (state, [queryEffect, queryEffect2, settingsEffect])
+    }
+}
+
+// MARK: - Filter
+
+extension ClipPreviewPageViewReducer {
+    private static func performFilter(clips: [Clip],
+                                      previousState: State) -> State
+    {
+        performFilter(clips: clips,
+                      isSomeItemsHidden: previousState.isSomeItemsHidden,
+                      previousState: previousState)
+    }
+
+    private static func performFilter(isSomeItemsHidden: Bool,
+                                      previousState: State) -> State
+    {
+        performFilter(clips: previousState.clips.orderedEntities(),
+                      isSomeItemsHidden: isSomeItemsHidden,
+                      previousState: previousState)
+    }
+
+    private static func performFilter(clips: [Clip],
+                                      isSomeItemsHidden: Bool,
+                                      previousState: State) -> State
+    {
+        var nextState = previousState
+
+        let filteredClips = clips.filter { isSomeItemsHidden ? $0.isHidden == false : true }
+        let filteredClipIds = filteredClips.map { $0.id }
+
+        nextState.clips = previousState.clips
+            .updated(entities: clips.indexed())
+            .updated(filteredIds: Set(filteredClipIds))
+
+        nextState.isSomeItemsHidden = isSomeItemsHidden
+
+        return nextState
     }
 }
 

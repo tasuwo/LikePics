@@ -22,10 +22,12 @@ struct ClipPreviewPageViewState: Equatable {
     }
 
     let clipId: Clip.Identity
+    let source: ClipCollection.Source
 
     var currentIndex: Int?
     var initialItemId: ClipItem.Identity?
     var pageChange: PageChange?
+    var clips: EntityCollectionSnapshot<Clip>
     var items: [ClipItem]
 
     var alert: Alert?
@@ -39,13 +41,17 @@ struct ClipPreviewPageViewState: Equatable {
 
 extension ClipPreviewPageViewState {
     init(clipId: Clip.Identity,
+         source: ClipCollection.Source,
          isSomeItemsHidden: Bool,
          initialItem: ClipItem.Identity? = nil)
     {
         self.clipId = clipId
+        self.source = source
         self.isSomeItemsHidden = isSomeItemsHidden
         self.initialItemId = initialItem
         currentIndex = nil
+        // TODO: 外から注入できる
+        clips = .init()
         items = []
         alert = nil
         isDismissed = false
