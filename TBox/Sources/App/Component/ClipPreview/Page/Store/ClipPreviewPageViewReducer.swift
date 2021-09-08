@@ -160,7 +160,7 @@ extension ClipPreviewPageViewReducer {
     private static func performFilter(isSomeItemsHidden: Bool,
                                       previousState: State) -> (State, [Effect<Action>])
     {
-        performFilter(clips: previousState.clips.orderedEntities(),
+        performFilter(clips: previousState.clips,
                       isSomeItemsHidden: isSomeItemsHidden,
                       previousState: previousState)
     }
@@ -174,9 +174,8 @@ extension ClipPreviewPageViewReducer {
         let filteredClips = clips.filter { isSomeItemsHidden ? $0.isHidden == false : true }
         let filteredClipIds = filteredClips.map { $0.id }
 
-        nextState.clips = previousState.clips
-            .updated(entities: clips.indexed())
-            .updated(filteredIds: Set(filteredClipIds))
+        nextState.clips = clips
+        nextState.filteredClipIds = Set(filteredClipIds)
 
         nextState.isSomeItemsHidden = isSomeItemsHidden
 

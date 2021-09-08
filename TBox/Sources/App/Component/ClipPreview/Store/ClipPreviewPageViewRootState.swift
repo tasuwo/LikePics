@@ -12,7 +12,7 @@ struct ClipPreviewPageViewRootState: Equatable {
 
 extension ClipPreviewPageViewRootState {
     init(clipId: Clip.Identity,
-         clips: EntityCollectionSnapshot<Clip>,
+         clips: [Clip],
          source: ClipCollection.Source,
          isSomeItemsHidden: Bool,
          initialItem: ClipItem.Identity?)

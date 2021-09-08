@@ -27,7 +27,9 @@ struct ClipPreviewPageViewState: Equatable {
     var currentIndexPath: ClipCollection.IndexPath?
     var initialItemId: ClipItem.Identity?
     var pageChange: PageChange?
-    var clips: EntityCollectionSnapshot<Clip>
+
+    var clips: [Clip]
+    var filteredClipIds: Set<Clip.Identity>
 
     var indexByClipId: [Clip.Identity: Int]
     var indexPathByClipItemId: [ClipItem.Identity: ClipCollection.IndexPath]
@@ -43,13 +45,14 @@ struct ClipPreviewPageViewState: Equatable {
 
 extension ClipPreviewPageViewState {
     init(clipId: Clip.Identity,
-         clips: EntityCollectionSnapshot<Clip>,
+         clips: [Clip],
          source: ClipCollection.Source,
          isSomeItemsHidden: Bool,
          initialItem: ClipItem.Identity? = nil)
     {
         self.clipId = clipId
         self.clips = clips
+        filteredClipIds = .init()
         self.source = source
         self.isSomeItemsHidden = isSomeItemsHidden
         self.initialItemId = initialItem
@@ -64,14 +67,12 @@ extension ClipPreviewPageViewState {
 extension ClipPreviewPageViewState {
     var currentClip: Clip? {
         guard let indexPath = currentIndexPath else { return nil }
-        // TODO: パフォーマンスを考える
-        return clips.orderedEntities()[indexPath.clipIndex]
+        return clips[indexPath.clipIndex]
     }
 
     var currentItem: ClipItem? {
         guard let indexPath = currentIndexPath else { return nil }
-        // TODO: パフォーマンスを考える
-        return clips.orderedEntities()[indexPath.clipIndex].items[indexPath.itemIndex]
+        return clips[indexPath.clipIndex].items[indexPath.itemIndex]
     }
 
     func indexPath(of itemId: ClipItem.Identity) -> ClipCollection.IndexPath? {
@@ -81,13 +82,12 @@ extension ClipPreviewPageViewState {
     func item(after itemId: ClipItem.Identity) -> ClipItem? {
         guard let indexPath = indexPathByClipItemId[itemId] else { return nil }
 
-        // TODO: パフォーマンスを考える
-        let clip = clips.orderedEntities()[indexPath.clipIndex]
+        let clip = clips[indexPath.clipIndex]
 
         if indexPath.itemIndex + 1 < clip.items.count {
             return clip.items[indexPath.itemIndex + 1]
-        } else if indexPath.clipIndex + 1 < clips._filteredIds.count {
-            return clips.orderedEntities()[indexPath.clipIndex + 1].items.first
+        } else if indexPath.clipIndex + 1 < clips.count {
+            return clips[indexPath.clipIndex + 1].items.first
         } else {
             return nil
         }
@@ -96,13 +96,12 @@ extension ClipPreviewPageViewState {
     func item(before itemId: ClipItem.Identity) -> ClipItem? {
         guard let indexPath = indexPathByClipItemId[itemId] else { return nil }
 
-        // TODO: パフォーマンスを考える
-        let clip = clips.orderedEntities()[indexPath.clipIndex]
+        let clip = clips[indexPath.clipIndex]
 
         if indexPath.itemIndex - 1 >= 0 {
             return clip.items[indexPath.itemIndex - 1]
         } else if indexPath.clipIndex - 1 >= 0 {
-            return clips.orderedEntities()[indexPath.clipIndex - 1].items.last
+            return clips[indexPath.clipIndex - 1].items.last
         } else {
             return nil
         }

@@ -23,7 +23,7 @@ protocol Router {
 
     @discardableResult
     func showClipPreviewView(for clipId: Clip.Identity,
-                             clips: EntityCollectionSnapshot<Clip>,
+                             clips: [Clip],
                              source: ClipCollection.Source,
                              at initialItem: ClipItem.Identity?) -> Bool
 

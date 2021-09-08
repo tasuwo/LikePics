@@ -116,7 +116,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
     }
 
     func makeClipPreviewPageViewController(for clipId: Clip.Identity,
-                                           clips: EntityCollectionSnapshot<Clip>,
+                                           clips: [Clip],
                                            source: ClipCollection.Source,
                                            at initialItem: ClipItem.Identity?) -> UIViewController
     {
