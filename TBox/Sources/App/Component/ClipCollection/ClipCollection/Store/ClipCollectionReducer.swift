@@ -49,7 +49,7 @@ struct ClipCollectionReducer: Reducer {
             nextState.clips = state.clips.updated(selectedIds: selections)
 
             if !state.operation.isAllowedMultipleSelection {
-                dependency.router.showClipPreviewView(for: clipId, source: state.source, at: nil)
+                dependency.router.showClipPreviewView(for: clipId, clips: state.clips, source: state.source, at: nil)
             }
 
             return (nextState, .none)
