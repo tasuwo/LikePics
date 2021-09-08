@@ -25,9 +25,9 @@ class ClipPreviewPageViewController: UIPageViewController {
         return self.viewControllers?.first as? ClipPreviewViewController
     }
 
-    private var currentIndex: Int? {
+    private var currentIndexPath: ClipCollection.IndexPath? {
         guard let viewController = currentViewController else { return nil }
-        return store.stateValue.index(of: viewController.itemId)
+        return store.stateValue.indexPath(of: viewController.itemId)
     }
 
     private let transitionDispatcher: ClipPreviewPageTransitionDispatcherType
@@ -199,17 +199,19 @@ extension ClipPreviewPageViewController {
             }
             .store(in: &subscriptions)
 
-        store.state
-            .bind(\.currentIndex) { [weak self] currentIndex in
-                self?.barController.store.execute(.updatedCurrentIndex(currentIndex))
-            }
-            .store(in: &subscriptions)
+        // TODO:
+        // store.state
+        //     .bind(\.currentIndex) { [weak self] currentIndex in
+        //         self?.barController.store.execute(.updatedCurrentIndex(currentIndex))
+        //     }
+        //     .store(in: &subscriptions)
 
-        store.state
-            .bind(\.items) { [weak self] items in
-                self?.barController.store.execute(.updatedClipItems(items))
-            }
-            .store(in: &subscriptions)
+        // TODO:
+        // store.state
+        //     .bind(\.items) { [weak self] items in
+        //         self?.barController.store.execute(.updatedClipItems(items))
+        //     }
+        //     .store(in: &subscriptions)
 
         transitionDispatcher.outputs.presentInformation
             .sink { [weak self] in self?.store.execute(.clipInformationViewPresented) }
@@ -220,7 +222,7 @@ extension ClipPreviewPageViewController {
 
     private func changePageIfNeeded(for state: ClipPreviewPageViewState) {
         guard let currentItem = state.currentItem,
-              currentIndex != state.currentIndex,
+              currentIndexPath != state.currentIndexPath,
               let viewController = factory.makeClipPreviewViewController(for: currentItem)
         else {
             return
@@ -290,6 +292,8 @@ extension ClipPreviewPageViewController {
     }
 
     private func presentClipItemListModal(id: UUID) {
+        guard let clip = store.stateValue.currentClip else { return }
+
         modalSubscription = ModalNotificationCenter.default
             .publisher(for: id, name: .clipItemList)
             .sink { [weak self] notification in
@@ -300,8 +304,8 @@ extension ClipPreviewPageViewController {
             }
 
         let succeeded = router.showClipItemListView(id: id,
-                                                    clipId: store.stateValue.clipId,
-                                                    clipItems: store.stateValue.items,
+                                                    clipId: clip.id,
+                                                    clipItems: clip.items,
                                                     transitioningController: itemListTransitionController)
         if !succeeded {
             modalSubscription?.cancel()
@@ -383,9 +387,9 @@ extension ClipPreviewPageViewController: UIPageViewControllerDelegate {
     // MARK: - UIPageViewControllerDelegate
 
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-        guard let viewController = currentViewController, let index = currentIndex else { return }
+        guard let viewController = currentViewController, let indexPath = currentIndexPath else { return }
         didChangePage(to: viewController)
-        store.execute(.pageChanged(index: index))
+        store.execute(.pageChanged(indexPath: indexPath))
     }
 }
 
@@ -412,7 +416,7 @@ extension ClipPreviewPageViewController: ClipPreviewPresenting {
         guard let itemId = store.stateValue.currentItem?.id ?? store.stateValue.initialItemId else { return nil }
         return .init(clipId: store.stateValue.clipId,
                      itemId: itemId,
-                     isItemPrimary: store.stateValue.currentIndex == 0)
+                     isItemPrimary: false) // TODO: 廃止する
     }
 
     func previewView(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
@@ -436,7 +440,7 @@ extension ClipPreviewPageViewController: ClipItemListPresentable {
         guard let itemId = store.stateValue.currentItem?.id ?? store.stateValue.initialItemId else { return nil }
         return .init(clipId: store.stateValue.clipId,
                      itemId: itemId,
-                     isItemPrimary: store.stateValue.currentIndex == 0)
+                     isItemPrimary: false) // TODO: 廃止する
     }
 
     func previewView(_ animator: ClipItemListAnimator) -> ClipPreviewView? {

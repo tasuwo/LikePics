@@ -24,11 +24,13 @@ struct ClipPreviewPageViewState: Equatable {
     let clipId: Clip.Identity
     let source: ClipCollection.Source
 
-    var currentIndex: Int?
+    var currentIndexPath: ClipCollection.IndexPath?
     var initialItemId: ClipItem.Identity?
     var pageChange: PageChange?
     var clips: EntityCollectionSnapshot<Clip>
-    var items: [ClipItem]
+
+    var indexByClipId: [Clip.Identity: Int]
+    var indexPathByClipItemId: [ClipItem.Identity: ClipCollection.IndexPath]
 
     var alert: Alert?
     var modal: Modal?
@@ -51,8 +53,8 @@ extension ClipPreviewPageViewState {
         self.source = source
         self.isSomeItemsHidden = isSomeItemsHidden
         self.initialItemId = initialItem
-        currentIndex = nil
-        items = []
+        indexByClipId = [:]
+        indexPathByClipItemId = [:]
         alert = nil
         isDismissed = false
         isPageAnimated = true
@@ -60,36 +62,67 @@ extension ClipPreviewPageViewState {
 }
 
 extension ClipPreviewPageViewState {
-    var currentItem: ClipItem? {
-        guard let index = currentIndex else { return nil }
-        return items[index]
+    var currentClip: Clip? {
+        guard let indexPath = currentIndexPath else { return nil }
+        // TODO: パフォーマンスを考える
+        return clips.orderedEntities()[indexPath.clipIndex]
     }
 
-    func index(of itemId: ClipItem.Identity) -> Int? {
-        return items.firstIndex(where: { $0.id == itemId })
+    var currentItem: ClipItem? {
+        guard let indexPath = currentIndexPath else { return nil }
+        // TODO: パフォーマンスを考える
+        return clips.orderedEntities()[indexPath.clipIndex].items[indexPath.itemIndex]
+    }
+
+    func indexPath(of itemId: ClipItem.Identity) -> ClipCollection.IndexPath? {
+        return indexPathByClipItemId[itemId]
     }
 
     func item(after itemId: ClipItem.Identity) -> ClipItem? {
-        guard let index = index(of: itemId), index + 1 < items.count else { return nil }
-        return items[index + 1]
+        guard let indexPath = indexPathByClipItemId[itemId] else { return nil }
+
+        // TODO: パフォーマンスを考える
+        let clip = clips.orderedEntities()[indexPath.clipIndex]
+
+        if indexPath.itemIndex + 1 < clip.items.count {
+            return clip.items[indexPath.itemIndex + 1]
+        } else if indexPath.clipIndex + 1 < clips._filteredIds.count {
+            return clips.orderedEntities()[indexPath.clipIndex + 1].items.first
+        } else {
+            return nil
+        }
     }
 
     func item(before itemId: ClipItem.Identity) -> ClipItem? {
-        guard let index = index(of: itemId), index - 1 >= 0 else { return nil }
-        return items[index - 1]
+        guard let indexPath = indexPathByClipItemId[itemId] else { return nil }
+
+        // TODO: パフォーマンスを考える
+        let clip = clips.orderedEntities()[indexPath.clipIndex]
+
+        if indexPath.itemIndex - 1 >= 0 {
+            return clip.items[indexPath.itemIndex - 1]
+        } else if indexPath.clipIndex - 1 >= 0 {
+            return clips.orderedEntities()[indexPath.clipIndex - 1].items.last
+        } else {
+            return nil
+        }
     }
 
     func currentPreloadTargets() -> [UUID] {
-        guard let index = currentIndex else { return [] }
+        // TODO:
+        /*
+         guard let index = currentIndex else { return [] }
 
-        let preloadPages = 6
+         let preloadPages = 6
 
-        let backwards = Set((index - preloadPages ... index - 1).clamped(to: 0 ... items.count - 1))
-        let forwards = Set((index + 1 ... index + preloadPages).clamped(to: 0 ... items.count - 1))
+         let backwards = Set((index - preloadPages ... index - 1).clamped(to: 0 ... items.count - 1))
+         let forwards = Set((index + 1 ... index + preloadPages).clamped(to: 0 ... items.count - 1))
 
-        let preloadIndices = backwards.union(forwards).subtracting(Set([index]))
+         let preloadIndices = backwards.union(forwards).subtracting(Set([index]))
 
-        return preloadIndices.map { items[$0].imageId }
+         return preloadIndices.map { items[$0].imageId }
+          */
+        return []
     }
 }
 

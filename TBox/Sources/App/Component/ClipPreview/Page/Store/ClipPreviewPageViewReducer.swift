@@ -35,49 +35,26 @@ struct ClipPreviewPageViewReducer: Reducer {
 
         // MARK: State Observation
 
-        case let .pageChanged(index: index):
+        case let .indicesCalculated(indexByClipId: indexByClipId,
+                                    indexPathByClipItemId: indexPathByClipItemId):
+            nextState.indexByClipId = indexByClipId
+            nextState.indexPathByClipItemId = indexPathByClipItemId
+            return (nextState, .none)
+
+        case let .pageChanged(indexPath: indexPath):
             nextState.pageChange = nil
-            nextState.currentIndex = index
+            nextState.currentIndexPath = indexPath
             return (nextState, [Self.preloadEffect(state: nextState, dependency: dependency)])
-
-        case let .clipUpdated(clip):
-            guard !clip.items.isEmpty else {
-                nextState.isDismissed = true
-                return (nextState, [Self.preloadEffect(state: nextState, dependency: dependency)])
-            }
-
-            nextState.items = clip.items.sorted(by: { $0.clipIndex < $1.clipIndex })
-
-            if let initialItem = state.initialItemId,
-               let newIndex = nextState.items.firstIndex(where: { $0.id == initialItem })
-            {
-                nextState.currentIndex = newIndex
-                nextState.initialItemId = nil
-                return (nextState, [Self.preloadEffect(state: nextState, dependency: dependency)])
-            }
-
-            guard let previousItemId = state.currentItem?.id else {
-                nextState.currentIndex = 0
-                return (nextState, [Self.preloadEffect(state: nextState, dependency: dependency)])
-            }
-
-            if let newIndex = nextState.items.firstIndex(where: { $0.id == previousItemId }) {
-                nextState.currentIndex = newIndex
-                return (nextState, [Self.preloadEffect(state: nextState, dependency: dependency)])
-            } else {
-                nextState.currentIndex = 0
-                return (nextState, [Self.preloadEffect(state: nextState, dependency: dependency)])
-            }
 
         case .failedToLoadClip:
             nextState.isDismissed = true
             return (nextState, .none)
 
         case let .clipsUpdated(clips):
-            return (Self.performFilter(clips: clips, previousState: state), .none)
+            return Self.performFilter(clips: clips, previousState: state)
 
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
-            return (Self.performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
+            return Self.performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state)
 
         // MARK: Transition
 
@@ -129,11 +106,11 @@ struct ClipPreviewPageViewReducer: Reducer {
             return (nextState, .none)
 
         case let .itemRequested(itemId):
-            guard let newIndex = nextState.items.firstIndex(where: { $0.id == itemId }) else {
+            guard let itemId = itemId, let indexPath = state.indexPathByClipItemId[itemId] else {
                 return (nextState, .none)
             }
             nextState.isPageAnimated = false
-            nextState.currentIndex = newIndex
+            nextState.currentIndexPath = indexPath
             nextState.modal = nil
             return (nextState, .none)
 
@@ -154,30 +131,18 @@ struct ClipPreviewPageViewReducer: Reducer {
 
 extension ClipPreviewPageViewReducer {
     static func prepare(state: State, dependency: Dependency) -> (State, [Effect<Action>]) {
-        let query: ClipQuery
-        switch dependency.clipQueryService.queryClip(having: state.clipId) {
-        case let .success(result):
-            query = result
-
-        case let .failure(error):
-            fatalError("Failed to load clips: \(error.localizedDescription)")
-        }
-        let clipStream = query.clip
-            .map { Action.clipUpdated($0) as Action? }
-            .catch { _ in Just(Action.failedToLoadClip) }
-        let queryEffect = Effect(clipStream, underlying: query, completeWith: .failedToLoadClip)
-
+        // TODO: パフォーマンスを考える
         let stream = state.source.fetchStream(by: dependency.clipQueryService)
         let clipsStream = stream.clipsStream
             .map { Action.clipsUpdated($0) as Action? }
             .catch { _ in Just(Action.failedToLoadClip) }
-        let queryEffect2 = Effect(clipsStream, underlying: stream.query, completeWith: .failedToLoadClip)
+        let queryEffect = Effect(clipsStream, underlying: stream.query, completeWith: .failedToLoadClip)
 
         let settingsStream = dependency.userSettingStorage.showHiddenItems
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
-        return (state, [queryEffect, queryEffect2, settingsEffect])
+        return (state, [queryEffect, settingsEffect])
     }
 }
 
@@ -185,7 +150,7 @@ extension ClipPreviewPageViewReducer {
 
 extension ClipPreviewPageViewReducer {
     private static func performFilter(clips: [Clip],
-                                      previousState: State) -> State
+                                      previousState: State) -> (State, [Effect<Action>])
     {
         performFilter(clips: clips,
                       isSomeItemsHidden: previousState.isSomeItemsHidden,
@@ -193,7 +158,7 @@ extension ClipPreviewPageViewReducer {
     }
 
     private static func performFilter(isSomeItemsHidden: Bool,
-                                      previousState: State) -> State
+                                      previousState: State) -> (State, [Effect<Action>])
     {
         performFilter(clips: previousState.clips.orderedEntities(),
                       isSomeItemsHidden: isSomeItemsHidden,
@@ -202,7 +167,7 @@ extension ClipPreviewPageViewReducer {
 
     private static func performFilter(clips: [Clip],
                                       isSomeItemsHidden: Bool,
-                                      previousState: State) -> State
+                                      previousState: State) -> (State, [Effect<Action>])
     {
         var nextState = previousState
 
@@ -215,7 +180,30 @@ extension ClipPreviewPageViewReducer {
 
         nextState.isSomeItemsHidden = isSomeItemsHidden
 
-        return nextState
+        // TODO: currentIndexPathを更新する
+        nextState.currentIndexPath = .init(clipIndex: 0, itemIndex: 0)
+
+        // TODO: initialItemを必要に応じて反映する
+
+        let calcStream = Deferred {
+            Future<Action?, Never> { [clips] promise in
+                var indexByClipId: [Clip.Identity: Int] = [:]
+                var indexPathByClipItemId: [ClipItem.Identity: ClipCollection.IndexPath] = [:]
+                DispatchQueue.global().async {
+                    zip(clips.indices, clips).forEach { clipIndex, clip in
+                        indexByClipId[clip.id] = clipIndex
+                        zip(clip.items.indices, clip.items).forEach { itemIndex, item in
+                            indexPathByClipItemId[item.id] = ClipCollection.IndexPath(clipIndex: clipIndex, itemIndex: itemIndex)
+                        }
+                    }
+
+                    promise(.success(.indicesCalculated(indexByClipId: indexByClipId,
+                                                        indexPathByClipItemId: indexPathByClipItemId)))
+                }
+            }
+        }
+
+        return (nextState, [Effect(calcStream)])
     }
 }
 
@@ -285,14 +273,16 @@ extension ClipPreviewPageViewReducer {
             return (nextState, .none)
 
         case .removeFromClip:
-            guard let index = state.currentIndex,
+            guard let index = state.currentIndexPath,
                   let item = state.currentItem
             else {
                 return (nextState, .none)
             }
 
             switch dependency.clipCommandService.deleteClipItem(item) {
-            case .success:
+            case .success: ()
+                // TODO:
+                /*
                 nextState.items = nextState.items.filter({ $0.id != item.id })
 
                 guard !nextState.items.isEmpty else {
@@ -311,6 +301,7 @@ extension ClipPreviewPageViewReducer {
                     nextState.currentIndex = 0
                     nextState.pageChange = .forward
                 }
+             */
 
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtRemoveItemFromClip)
