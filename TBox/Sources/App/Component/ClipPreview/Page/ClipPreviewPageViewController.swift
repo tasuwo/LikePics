@@ -415,9 +415,11 @@ extension ClipPreviewPageViewController: ClipPreviewPresenting {
     // MARK: - ClipPreviewPresenting
 
     func previewingClipItem(_ animator: ClipPreviewAnimator) -> PreviewingClipItem? {
-        guard let clipId = store.stateValue.currentClip?.id,
-              let itemId = store.stateValue.currentItem?.id else { return nil }
-        return .init(clipId: clipId, itemId: itemId, isItemPrimary: true) // TODO: 廃止する
+        guard let clip = store.stateValue.currentClip,
+              let item = store.stateValue.currentItem else { return nil }
+        return .init(clipId: clip.id,
+                     itemId: item.id,
+                     isItemPrimary: clip.items.first == item)
     }
 
     func previewView(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
@@ -438,9 +440,11 @@ extension ClipPreviewPageViewController: ClipItemListPresentable {
     // MARK: - ClipItemListPresentable
 
     func previewingClipItem(_ animator: ClipItemListAnimator) -> PreviewingClipItem? {
-        guard let clipId = store.stateValue.currentClip?.id,
-              let itemId = store.stateValue.currentItem?.id else { return nil }
-        return .init(clipId: clipId, itemId: itemId, isItemPrimary: true) // TODO: 廃止する
+        guard let clip = store.stateValue.currentClip,
+              let item = store.stateValue.currentItem else { return nil }
+        return .init(clipId: clip.id,
+                     itemId: item.id,
+                     isItemPrimary: clip.items.first == item)
     }
 
     func previewView(_ animator: ClipItemListAnimator) -> ClipPreviewView? {
