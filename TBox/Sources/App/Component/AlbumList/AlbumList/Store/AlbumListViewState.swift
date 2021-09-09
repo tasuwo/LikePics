@@ -82,7 +82,7 @@ extension AlbumListViewState {
         var state = self
         state.searchStorage = .init()
         state.albums = state.albums
-            .updated(entities: [:])
+            .updated(entities: [])
             .updated(filteredIds: .init())
         state.alert = nil
         state.isPreparedQueryEffects = false

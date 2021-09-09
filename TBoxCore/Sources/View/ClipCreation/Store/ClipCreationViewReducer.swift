@@ -229,7 +229,7 @@ extension ClipCreationViewReducer {
             .map { $0.id }
 
         nextState.tags = nextState.tags
-            .updated(entities: tags.indexed())
+            .updated(entities: tags)
             .updated(filteredIds: Set(filteredTagIds))
         nextState.isSomeItemsHidden = isSomeItemsHidden
 

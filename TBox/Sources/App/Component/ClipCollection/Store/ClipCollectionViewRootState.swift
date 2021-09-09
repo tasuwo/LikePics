@@ -34,7 +34,7 @@ extension ClipCollectionViewRootState {
     func removingSessionStates() -> Self {
         var state = self
         state.clipCollectionState.clips = state.clipCollectionState.clips
-            .updated(entities: [:])
+            .updated(entities: [])
             .updated(filteredIds: .init())
         state.clipCollectionState.alert = nil
         state.clipCollectionState.modal = nil

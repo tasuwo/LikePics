@@ -146,7 +146,7 @@ extension AlbumSelectionModalReducer {
         let filteringAlbums = albums.filter { isSomeItemsHidden ? $0.isHidden == false : true }
         let filteredAlbumIds = searchStorage.perform(query: searchQuery, to: filteringAlbums).map { $0.id }
         let newAlbums = previousState.albums
-            .updated(entities: albums.indexed())
+            .updated(entities: albums)
             .updated(filteredIds: Set(filteredAlbumIds))
         nextState.albums = newAlbums
 

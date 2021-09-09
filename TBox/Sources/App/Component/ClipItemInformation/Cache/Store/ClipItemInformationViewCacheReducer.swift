@@ -197,10 +197,10 @@ extension ClipItemInformationViewCacheReducer {
         nextState.clip = clip
         nextState.item = item
         nextState.tags = nextState.tags
-            .updated(entities: tags.indexed())
+            .updated(entities: tags)
             .updated(filteredIds: Set(filteredTagIds))
         nextState.albums = nextState.albums
-            .updated(entities: albums.indexed())
+            .updated(entities: albums)
             .updated(filteredIds: Set(filteredAlbumIds))
         nextState.isSomeItemsHidden = isSomeItemsHidden
 

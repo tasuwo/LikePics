@@ -544,7 +544,7 @@ extension AlbumListViewController: Restorable {
         var nextState = store.stateValue
         nextState.isPreparedQueryEffects = false
 
-        let nextAlbums = nextState.albums.updated(entities: [:])
+        let nextAlbums = nextState.albums.updated(entities: [])
         nextState.albums = nextAlbums
 
         presentingAlert?.dismiss(animated: false, completion: nil)

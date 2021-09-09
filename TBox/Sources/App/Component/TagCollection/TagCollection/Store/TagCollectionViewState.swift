@@ -54,7 +54,7 @@ extension TagCollectionViewState {
     func removingSessionStates() -> Self {
         var state = self
         state.tags = state.tags
-            .updated(entities: [:])
+            .updated(entities: [])
             .updated(filteredIds: .init())
         state.searchStorage = .init()
         state.alert = nil

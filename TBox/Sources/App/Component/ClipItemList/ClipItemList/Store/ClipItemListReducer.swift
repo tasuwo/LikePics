@@ -38,7 +38,7 @@ struct ClipItemListReducer: Reducer {
 
         case let .itemsUpdated(items):
             let newItems = state.items
-                .updated(entities: items.indexed())
+                .updated(entities: items)
                 .updated(filteredIds: Set(items.map({ $0.identity })))
             nextState.items = newItems
             return (nextState, .none)
@@ -75,7 +75,6 @@ struct ClipItemListReducer: Reducer {
             }
             let newValues = itemIds
                 .compactMap { state.items.entity(having: $0) }
-                .indexed()
             nextState.items = state.items.updated(entities: newValues)
             return (nextState, [Effect(stream)])
 
@@ -311,7 +310,7 @@ extension ClipItemListReducer {
             .filter { isSomeItemsHidden ? !$0.isHidden : true }
             .map { $0.id }
         let newTags = previousState.tags
-            .updated(entities: tags.indexed())
+            .updated(entities: tags)
             .updated(filteredIds: Set(newDisplayableTagIds))
 
         var nextState = previousState

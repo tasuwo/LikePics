@@ -75,7 +75,7 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
                 settingStorage: UserSettingsStorageProtocol,
                 logger: Loggable)
     {
-        self.tags = .init(.init(entities: [:], selectedIds: selectedTags, filteredIds: .init()))
+        self.tags = .init(.init(entities: [], selectedIds: selectedTags, filteredIds: .init()))
         self.query = query
         self.commandService = commandService
         self.settingStorage = settingStorage
@@ -98,7 +98,7 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
                 let filteredTagIds = self.searchStorage.perform(query: query, to: filteringTags).map { $0.id }
 
                 let newTags = self.tags.value
-                    .updated(entities: tags.indexed())
+                    .updated(entities: tags)
                     .updated(filteredIds: Set(filteredTagIds))
                 self.tags.send(newTags)
 

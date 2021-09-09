@@ -164,7 +164,7 @@ extension TagSelectionModalReducer {
         let filteredTagIds = searchStorage.perform(query: searchQuery, to: filteringTags).map { $0.id }
 
         let newTags = previousState.tags
-            .updated(entities: tags.indexed())
+            .updated(entities: tags)
             .updated(filteredIds: Set(filteredTagIds))
         nextState.tags = newTags
 

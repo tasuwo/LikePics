@@ -5,16 +5,30 @@
 // swiftlint:disable identifier_name
 
 public struct EntityCollectionSnapshot<Entity: Identifiable & Codable & Hashable>: Equatable, Codable {
+    private let order: [Entity.Identity]
+
     public let _entities: [Entity.Identity: Ordered<Entity>]
     public let _selectedIds: Set<Entity.Identity>
     public let _filteredIds: Set<Entity.Identity>
 
     // MARK: - Initializers
 
-    public init(entities: [Entity.Identity: Ordered<Entity>] = [:],
+    public init(entities: [Entity] = [],
                 selectedIds: Set<Entity.Identity> = .init(),
                 filteredIds: Set<Entity.Identity> = .init())
     {
+        self.order = entities.map(\.identity)
+        self._entities = entities.indexed()
+        self._selectedIds = selectedIds
+        self._filteredIds = filteredIds
+    }
+
+    private init(order: [Entity.Identity],
+                 entities: [Entity.Identity: Ordered<Entity>],
+                 selectedIds: Set<Entity.Identity>,
+                 filteredIds: Set<Entity.Identity>)
+    {
+        self.order = order
         self._entities = entities
         self._selectedIds = selectedIds
         self._filteredIds = filteredIds
@@ -24,41 +38,53 @@ public struct EntityCollectionSnapshot<Entity: Identifiable & Codable & Hashable
 // MARK: - Write
 
 public extension EntityCollectionSnapshot {
-    func updated(entities: [Entity.Identity: Ordered<Entity>]) -> Self {
+    func updated(entities: [Entity]) -> Self {
         return .init(entities: entities,
                      selectedIds: _selectedIds,
                      filteredIds: _filteredIds)
     }
 
     func updated(selectedIds: Set<Entity.Identity>) -> Self {
-        return .init(entities: _entities,
+        return .init(order: order,
+                     entities: _entities,
                      selectedIds: selectedIds,
                      filteredIds: _filteredIds)
     }
 
     func updated(filteredIds: Set<Entity.Identity>) -> Self {
-        return .init(entities: _entities,
+        return .init(order: order,
+                     entities: _entities,
                      selectedIds: _selectedIds,
                      filteredIds: filteredIds)
     }
 
     func removingEntity(having id: Entity.Identity) -> Self {
         var removed = false
-        let newEntities = _entities.values
-            .sorted(by: { $0.index < $1.index })
-            .reduce(into: [Entity.Identity: Ordered<Entity>](), { dict, orderedEntity in
-                if removed {
-                    dict[orderedEntity.value.identity] = Ordered(index: orderedEntity.index - 1,
-                                                                 value: orderedEntity.value)
-                } else {
-                    if orderedEntity.value.identity == id {
-                        removed = true
-                    } else {
-                        dict[orderedEntity.value.identity] = orderedEntity
-                    }
+
+        var newOrder: [Entity.Identity] = []
+        let newEntities = zip(order.indices, order)
+            .reduce(into: [Entity.Identity: Ordered<Entity>]()) { dict, element in
+                let index = element.0
+                let identity = element.1
+
+                guard removed == false else {
+                    newOrder.append(identity)
+                    // swiftlint:disable force_unwrapping
+                    dict[identity] = Ordered(index: index - 1, value: _entities[identity]!.value)
+                    return
                 }
-            })
-        return .init(entities: newEntities,
+
+                if identity == id {
+                    removed = true
+                } else {
+                    newOrder.append(identity)
+                    // swiftlint:disable force_unwrapping
+                    dict[identity] = _entities[identity]!
+                }
+            }
+
+        return .init(order: newOrder,
+                     entities: newEntities,
                      selectedIds: _selectedIds,
                      filteredIds: _filteredIds)
     }
@@ -76,10 +102,8 @@ public extension EntityCollectionSnapshot {
     }
 
     func orderedEntities() -> [Entity] {
-        _entities
-            .map { $0.value }
-            .sorted(by: { $0.index < $1.index })
-            .map { $0.value }
+        order
+            .compactMap { _entities[$0]?.value }
     }
 
     func selectedIds() -> Set<Entity.Identity> {
@@ -96,10 +120,9 @@ public extension EntityCollectionSnapshot {
     }
 
     func orderedSelectedEntities() -> [Entity] {
-        _selectedIds
-            .compactMap { _entities[$0] }
-            .sorted(by: { $0.index < $1.index })
-            .map { $0.value }
+        order
+            .filter { _selectedIds.contains($0) }
+            .compactMap { _entities[$0]?.value }
     }
 
     func filteredEntity(having id: Entity.Identity) -> Entity? {
@@ -121,9 +144,8 @@ public extension EntityCollectionSnapshot {
     }
 
     func orderedFilteredEntities() -> [Entity] {
-        _filteredIds
-            .compactMap { _entities[$0] }
-            .sorted(by: { $0.index < $1.index })
-            .map { $0.value }
+        order
+            .filter { _filteredIds.contains($0) }
+            .compactMap { _entities[$0]?.value }
     }
 }

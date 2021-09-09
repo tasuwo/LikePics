@@ -52,7 +52,6 @@ struct ClipCollectionReducer: Reducer {
 
             if !state.operation.isAllowedMultipleSelection {
                 dependency.router.showClipPreviewView(filteredClipIds: state.clips._filteredIds,
-                                                      // TODO: パフォーマンスを考慮する
                                                       clips: state.clips.orderedEntities(),
                                                       source: state.source,
                                                       indexPath: ClipCollection.IndexPath(clipIndex: clip.index, itemIndex: 0))
@@ -80,7 +79,6 @@ struct ClipCollectionReducer: Reducer {
             case .success:
                 let newClips = ids
                     .compactMap { state.clips.entity(having: $0) }
-                    .indexed()
                 nextState.clips = nextState.clips.updated(entities: newClips)
 
             case .failure:
@@ -340,7 +338,7 @@ extension ClipCollectionReducer {
         let filteredClipIds = filteredClips.map { $0.id }
 
         nextState.clips = previousState.clips
-            .updated(entities: clips.indexed())
+            .updated(entities: clips)
             .updated(filteredIds: Set(filteredClipIds))
 
         nextState.isEmptyMessageViewDisplaying = filteredClips.isEmpty

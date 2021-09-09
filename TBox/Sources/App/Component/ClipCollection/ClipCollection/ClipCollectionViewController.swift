@@ -823,7 +823,7 @@ extension ClipCollectionViewController: Restorable {
         var nextState = rootStore.stateValue
         nextState.clipCollectionState.isPreparedQueryEffects = false
 
-        let nextClips = nextState.clipCollectionState.clips.updated(entities: [:])
+        let nextClips = nextState.clipCollectionState.clips.updated(entities: [])
         nextState.clipCollectionState.clips = nextClips
 
         presentingAlert?.dismiss(animated: false, completion: nil)

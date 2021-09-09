@@ -511,7 +511,7 @@ extension TagCollectionViewController: Restorable {
         var nextState = store.stateValue
         nextState.isPreparedQueryEffects = false
 
-        let nextTags = nextState.tags.updated(entities: [:])
+        let nextTags = nextState.tags.updated(entities: [])
         nextState.tags = nextTags
 
         presentingAlert?.dismiss(animated: false, completion: nil)
