@@ -200,19 +200,18 @@ extension ClipPreviewPageViewController {
             }
             .store(in: &subscriptions)
 
-        // TODO:
-        // store.state
-        //     .bind(\.currentIndex) { [weak self] currentIndex in
-        //         self?.barController.store.execute(.updatedCurrentIndex(currentIndex))
-        //     }
-        //     .store(in: &subscriptions)
+        store.state
+            .bind(\.currentIndexPath) { [weak self] indexPath in
+                self?.barController.store.execute(.updatedCurrentIndex(indexPath.itemIndex))
+            }
+            .store(in: &subscriptions)
 
-        // TODO:
-        // store.state
-        //     .bind(\.items) { [weak self] items in
-        //         self?.barController.store.execute(.updatedClipItems(items))
-        //     }
-        //     .store(in: &subscriptions)
+        store.state
+            .bind(\.currentClip) { [weak self] currentClip in
+                guard let items = currentClip?.items else { return }
+                self?.barController.store.execute(.updatedClipItems(items))
+            }
+            .store(in: &subscriptions)
 
         transitionDispatcher.outputs.presentInformation
             .sink { [weak self] in self?.store.execute(.clipInformationViewPresented) }
