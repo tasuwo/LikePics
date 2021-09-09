@@ -135,17 +135,17 @@ struct ClipPreviewPageViewReducer: Reducer {
 extension ClipPreviewPageViewReducer {
     static func prepare(state: State, dependency: Dependency) -> (State, [Effect<Action>]) {
         // TODO: パフォーマンスを考える
-        let stream = state.source.fetchStream(by: dependency.clipQueryService)
-        let clipsStream = stream.clipsStream
-            .map { Action.clipsUpdated($0) as Action? }
-            .catch { _ in Just(Action.failedToLoadClip) }
-        let queryEffect = Effect(clipsStream, underlying: stream.query, completeWith: .failedToLoadClip)
+        // let stream = state.source.fetchStream(by: dependency.clipQueryService)
+        // let clipsStream = stream.clipsStream
+        //     .map { Action.clipsUpdated($0) as Action? }
+        //     .catch { _ in Just(Action.failedToLoadClip) }
+        // let queryEffect = Effect(clipsStream, underlying: stream.query, completeWith: .failedToLoadClip)
 
         let settingsStream = dependency.userSettingStorage.showHiddenItems
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
-        return (state, [queryEffect, settingsEffect])
+        return (state, [settingsEffect])
     }
 }
 
@@ -163,7 +163,7 @@ extension ClipPreviewPageViewReducer {
     private static func performFilter(isSomeItemsHidden: Bool,
                                       previousState: State) -> (State, [Effect<Action>])
     {
-        performFilter(clips: previousState.filteredClipIds.compactMap { previousState.clipsByIdentity[$0] },
+        performFilter(clips: previousState.clips,
                       isSomeItemsHidden: isSomeItemsHidden,
                       previousState: previousState)
     }
@@ -174,17 +174,15 @@ extension ClipPreviewPageViewReducer {
     {
         var nextState = previousState
 
-        let filteredClips = clips.filter { isSomeItemsHidden ? $0.isHidden == false : true }
-        let filteredClipIds = filteredClips.map(\.id)
+        let filteredClipIds = clips
+            .filter { isSomeItemsHidden ? $0.isHidden == false : true }
+            .map(\.id)
 
-        nextState.clipsByIdentity = clips.reduce(into: [Clip.Identity: Clip]()) { dict, clip in dict[clip.id] = clip }
-        nextState.filteredClipIds = filteredClipIds
-
+        nextState.clips = clips
+        nextState.filteredClipIds = Set(filteredClipIds)
         nextState.isSomeItemsHidden = isSomeItemsHidden
 
         // TODO: currentIndexPathを更新する
-
-        // TODO: initialItemを必要に応じて反映する
 
         let calcStream = Deferred {
             Future<Action?, Never> { [clips] promise in

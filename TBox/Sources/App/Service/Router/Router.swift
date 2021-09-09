@@ -22,8 +22,8 @@ protocol Router {
     func showClipCollectionView(for albumId: Album.Identity) -> Bool
 
     @discardableResult
-    func showClipPreviewView(filteredClipIds: [Clip.Identity],
-                             clipsByIdentity: [Clip.Identity: Clip],
+    func showClipPreviewView(filteredClipIds: Set<Clip.Identity>,
+                             clips: [Clip],
                              source: ClipCollection.Source,
                              indexPath: ClipCollection.IndexPath) -> Bool
 

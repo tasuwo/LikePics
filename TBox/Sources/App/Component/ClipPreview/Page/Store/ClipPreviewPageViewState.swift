@@ -24,8 +24,8 @@ struct ClipPreviewPageViewState: Equatable {
     let source: ClipCollection.Source
 
     var currentIndexPath: ClipCollection.IndexPath
-    var filteredClipIds: [Clip.Identity]
-    var clipsByIdentity: [Clip.Identity: Clip]
+    var filteredClipIds: Set<Clip.Identity>
+    var clips: [Clip]
 
     var pageChange: PageChange?
 
@@ -42,8 +42,8 @@ struct ClipPreviewPageViewState: Equatable {
 }
 
 extension ClipPreviewPageViewState {
-    init(filteredClipIds: [Clip.Identity],
-         clipsByIdentity: [Clip.Identity: Clip],
+    init(filteredClipIds: Set<Clip.Identity>,
+         clips: [Clip],
          source: ClipCollection.Source,
          isSomeItemsHidden: Bool,
          indexPath: ClipCollection.IndexPath)
@@ -51,7 +51,7 @@ extension ClipPreviewPageViewState {
         self.source = source
         self.currentIndexPath = indexPath
         self.filteredClipIds = filteredClipIds
-        self.clipsByIdentity = clipsByIdentity
+        self.clips = clips
         self.isSomeItemsHidden = isSomeItemsHidden
         indexByClipId = [:]
         indexPathByClipItemId = [:]
@@ -63,19 +63,19 @@ extension ClipPreviewPageViewState {
 
 extension ClipPreviewPageViewState {
     var currentClip: Clip? {
-        let clipId = filteredClipIds[currentIndexPath.clipIndex]
-        return clipsByIdentity[clipId]
+        guard clips.indices.contains(currentIndexPath.clipIndex) else { return nil }
+        return clips[currentIndexPath.clipIndex]
     }
 
     var currentItem: ClipItem? {
-        let clipId = filteredClipIds[currentIndexPath.clipIndex]
-        return clipsByIdentity[clipId]?.items[currentIndexPath.itemIndex]
+        guard clips.indices.contains(currentIndexPath.clipIndex) else { return nil }
+        return clips[currentIndexPath.clipIndex].items[currentIndexPath.itemIndex]
     }
 
     func clip(of itemId: ClipItem.Identity) -> Clip? {
         guard let indexPath = indexPathByClipItemId[itemId] else { return nil }
-        let clipId = filteredClipIds[indexPath.clipIndex]
-        return clipsByIdentity[clipId]
+        guard clips.indices.contains(indexPath.clipIndex) else { return nil }
+        return clips[indexPath.clipIndex]
     }
 
     func indexPath(of itemId: ClipItem.Identity) -> ClipCollection.IndexPath? {
@@ -84,33 +84,53 @@ extension ClipPreviewPageViewState {
 
     func item(after itemId: ClipItem.Identity) -> ClipItem? {
         guard let indexPath = indexPathByClipItemId[itemId] else { return nil }
+        guard clips.indices.contains(indexPath.clipIndex) else { return nil }
 
-        let clipId = filteredClipIds[indexPath.clipIndex]
-        guard let clip = clipsByIdentity[clipId] else { return nil }
+        let currentClip = clips[indexPath.clipIndex]
 
-        if indexPath.itemIndex + 1 < clip.items.count {
-            return clip.items[indexPath.itemIndex + 1]
-        } else if indexPath.clipIndex + 1 < clipsByIdentity.count {
-            let clipId = filteredClipIds[indexPath.clipIndex + 1]
-            return clipsByIdentity[clipId]?.items.first
+        if indexPath.itemIndex + 1 < currentClip.items.count {
+            return currentClip.items[indexPath.itemIndex + 1]
         } else {
-            return nil
+            var item: ClipItem?
+
+            guard indexPath.clipIndex + 1 < clips.count else {
+                return nil
+            }
+
+            for clipIndex in indexPath.clipIndex + 1 ... clips.count - 1 {
+                if filteredClipIds.contains(clips[clipIndex].id) {
+                    item = clips[clipIndex].items.first
+                    break
+                }
+            }
+
+            return item
         }
     }
 
     func item(before itemId: ClipItem.Identity) -> ClipItem? {
         guard let indexPath = indexPathByClipItemId[itemId] else { return nil }
+        guard clips.indices.contains(indexPath.clipIndex) else { return nil }
 
-        let clipId = filteredClipIds[indexPath.clipIndex]
-        guard let clip = clipsByIdentity[clipId] else { return nil }
+        let currentClip = clips[indexPath.clipIndex]
 
         if indexPath.itemIndex - 1 >= 0 {
-            return clip.items[indexPath.itemIndex - 1]
-        } else if indexPath.clipIndex - 1 >= 0 {
-            let clipId = filteredClipIds[indexPath.clipIndex - 1]
-            return clipsByIdentity[clipId]?.items.last
+            return currentClip.items[indexPath.itemIndex - 1]
         } else {
-            return nil
+            var item: ClipItem?
+
+            guard indexPath.clipIndex - 1 >= 0 else {
+                return nil
+            }
+
+            for clipIndex in (0 ... indexPath.clipIndex - 1).reversed() {
+                if filteredClipIds.contains(clips[clipIndex].id) {
+                    item = clips[clipIndex].items.last
+                    break
+                }
+            }
+
+            return item
         }
     }
 
