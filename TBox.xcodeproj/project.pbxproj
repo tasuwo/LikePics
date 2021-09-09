@@ -389,6 +389,7 @@
 		90C16D3A15041CF02F080D3F /* HasClipCommandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41ECEE2A56277AD907FA2A57 /* HasClipCommandService.swift */; };
 		918FDD2141D2856D9B658CF5 /* TemporaryClipCommandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622B5B50DE06F1FBDB46F405 /* TemporaryClipCommandService.swift */; };
 		91B32657788D49E892C9489E /* SearchResultViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B6228CD9BB7B7FF0D9C8C0 /* SearchResultViewState.swift */; };
+		91E45C4258BD4A2578125468 /* ClipQueryCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B87040989A1321011D817F4 /* ClipQueryCacheService.swift */; };
 		92376570DD63DE4BDDE3FEE8 /* ClipItemInformationViewCacheController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3551838A30E9229113C2D373 /* ClipItemInformationViewCacheController.swift */; };
 		9244037846EAF2A38D8A73FD /* CoreDataAlbumListQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751CEB868E29C74075D6648B /* CoreDataAlbumListQuery.swift */; };
 		925419957306C185F3B14C96 /* ClipQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A799901A61270D5E3DBF455A /* ClipQuery.swift */; };
@@ -1276,6 +1277,7 @@
 		4A75570DD7FB01C634043477 /* AlbumListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListViewController.swift; sourceTree = "<group>"; };
 		4AE3E5426CA997DAB4D580E3 /* ClipCreationViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCreationViewLayout.swift; sourceTree = "<group>"; };
 		4B6989887F1BE91F70014849 /* Album+MapToDomainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Album+MapToDomainModel.swift"; sourceTree = "<group>"; };
+		4B87040989A1321011D817F4 /* ClipQueryCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipQueryCacheService.swift; sourceTree = "<group>"; };
 		4C3B930B73290484084CDB23 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		4C7BDAF800D7641484B935C4 /* ClipStorageMigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipStorageMigrationService.swift; sourceTree = "<group>"; };
 		4D1D41C38B3CAE973756BFF9 /* ClipCollection_IndexPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollection_IndexPath.swift; sourceTree = "<group>"; };
@@ -3664,6 +3666,7 @@
 		AE1B26EADA11D2F178531ADD /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				4B87040989A1321011D817F4 /* ClipQueryCacheService.swift */,
 				692D97CBE54B25B3FFA95B84 /* ClipQueryService.swift */,
 				AA23535B95D178DBC1E4EFD8 /* ClipStorage.swift */,
 				4C3B930B73290484084CDB23 /* CoreDataStack.swift */,
@@ -5566,6 +5569,7 @@
 				B184D12ACE7C5BFA2CB5FF4F /* ClipItem+MapToDomainModel.swift in Sources */,
 				0FA56BDB7014D9159CEF8709 /* ClipItemObject.swift in Sources */,
 				CB082E0160F52BA200B3BC3B /* ClipObject.swift in Sources */,
+				91E45C4258BD4A2578125468 /* ClipQueryCacheService.swift in Sources */,
 				A9DD479CCFEB5E1328AEF8E8 /* ClipQueryService.swift in Sources */,
 				97AFBFC5D89BF5A2823940AB /* ClipSearchHistoryService.swift in Sources */,
 				F69635F74FAC50667D23AC3A /* ClipSearchQuery+NSPredicate.swift in Sources */,

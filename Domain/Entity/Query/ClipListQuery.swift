@@ -5,6 +5,6 @@
 import Combine
 
 /// @mockable
-public protocol ClipListQuery {
+public protocol ClipListQuery: AnyObject {
     var clips: CurrentValueSubject<[Clip], Error> { get }
 }

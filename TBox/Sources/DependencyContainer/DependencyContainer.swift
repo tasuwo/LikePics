@@ -38,7 +38,7 @@ class DependencyContainer {
     // MARK: Service
 
     let _clipCommandService: ClipCommandService
-    let _clipQueryService: ClipQueryService
+    let _clipQueryService: ClipQueryCacheService<ClipQueryService>
     let _clipSearchHistoryService: Persistence.ClipSearchHistoryService
     let _clipSearchSettingService: Persistence.ClipSearchSettingService
     let _imageQueryService: ImageQueryService
@@ -97,7 +97,7 @@ class DependencyContainer {
         //       同一Contextとする
         self.clipStorage = ClipStorage(context: self.commandContext, logger: logger)
         self.imageStorage = ImageStorage(context: self.commandContext)
-        self._clipQueryService = ClipQueryService(context: self.coreDataStack.viewContext)
+        self._clipQueryService = ClipQueryCacheService(ClipQueryService(context: self.coreDataStack.viewContext))
         self._imageQueryService = ImageQueryService(context: self.imageQueryContext, logger: logger)
 
         self._clipSearchHistoryService = Persistence.ClipSearchHistoryService()
@@ -235,7 +235,7 @@ extension DependencyContainer: CoreDataStackObserver {
             self.imageStorage.context = newCommandContext
         }
 
-        self._clipQueryService.context = self.coreDataStack.viewContext
+        self._clipQueryService.internalService.context = self.coreDataStack.viewContext
         self._imageQueryService.context = newImageQueryContext
     }
 }
