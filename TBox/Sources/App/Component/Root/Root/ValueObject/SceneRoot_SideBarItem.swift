@@ -54,12 +54,13 @@ extension SceneRoot {
             let viewController: RestorableViewController
             switch self {
             case .top:
+                let rootViewController: RestorableViewController
                 if let homeViewState = intent?.homeViewState {
-                    viewController = factory.makeClipCollectionViewController(homeViewState)
+                    rootViewController = factory.makeClipCollectionViewController(homeViewState)
                 } else {
-                    viewController = factory.makeClipCollectionViewController(from: .all)
+                    rootViewController = factory.makeClipCollectionViewController(from: .all)
                 }
-                return UINavigationController(rootViewController: viewController)
+                viewController = UINavigationController(rootViewController: rootViewController)
 
             case .search:
                 // swiftlint:disable:next force_unwrapping
