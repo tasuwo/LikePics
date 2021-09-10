@@ -3,8 +3,8 @@
 //
 
 import Domain
+import LikePicsUIKit
 import Smoothie
-import TBoxUIKit
 import UIKit
 
 protocol ClipMergeViewDelegate: AnyObject {

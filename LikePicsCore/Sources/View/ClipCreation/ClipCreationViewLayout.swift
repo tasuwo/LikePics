@@ -4,8 +4,8 @@
 
 import Combine
 import Domain
+import LikePicsUIKit
 import Smoothie
-import TBoxUIKit
 import UIKit
 
 public protocol ClipCreationViewDelegate: AnyObject {

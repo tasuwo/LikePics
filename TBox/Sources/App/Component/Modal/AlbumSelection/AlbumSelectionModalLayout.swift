@@ -3,8 +3,8 @@
 //
 
 import Domain
+import LikePicsUIKit
 import Smoothie
-import TBoxUIKit
 import UIKit
 
 enum AlbumSelectionModalLayout {

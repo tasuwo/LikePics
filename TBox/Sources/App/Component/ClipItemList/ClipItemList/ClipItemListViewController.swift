@@ -5,8 +5,8 @@
 import Combine
 import Domain
 import ForestKit
+import LikePicsUIKit
 import Smoothie
-import TBoxUIKit
 import UIKit
 
 class ClipItemListViewController: UIViewController {

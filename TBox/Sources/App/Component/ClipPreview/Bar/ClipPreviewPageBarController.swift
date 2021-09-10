@@ -5,7 +5,7 @@
 import Combine
 import Domain
 import ForestKit
-import TBoxUIKit
+import LikePicsUIKit
 import UIKit
 
 class ClipPreviewPageBarController {

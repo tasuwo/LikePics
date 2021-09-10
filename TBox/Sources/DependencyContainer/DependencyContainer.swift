@@ -7,9 +7,9 @@ import CoreData
 import Domain
 import ForestKit
 import LikePicsCore
+import LikePicsUIKit
 import Persistence
 import Smoothie
-import TBoxUIKit
 import UIKit
 
 // swiftlint:disable identifier_name

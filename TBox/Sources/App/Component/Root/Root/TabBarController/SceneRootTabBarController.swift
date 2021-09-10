@@ -6,7 +6,7 @@ import Combine
 import Common
 import Domain
 import ForestKit
-import TBoxUIKit
+import LikePicsUIKit
 import UIKit
 
 class SceneRootTabBarController: UITabBarController {

@@ -6,9 +6,9 @@ import Common
 import CoreData
 import Domain
 import LikePicsCore
+import LikePicsUIKit
 import Persistence
 import Smoothie
-import TBoxUIKit
 import UIKit
 
 class SceneDependencyContainer {

@@ -4,8 +4,8 @@
 
 import Combine
 import Domain
+import LikePicsUIKit
 import Persistence
-import TBoxUIKit
 import UIKit
 
 class UserInterfaceStyleSelectionViewController: UIViewController {

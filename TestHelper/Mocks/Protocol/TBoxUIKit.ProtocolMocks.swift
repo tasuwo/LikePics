@@ -6,6 +6,6 @@ import Combine
 import Common
 import CoreGraphics
 import Domain
+@testable import LikePicsUIKit
 import Smoothie
-@testable import TBoxUIKit
 import UIKit

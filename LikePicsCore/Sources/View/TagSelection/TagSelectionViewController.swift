@@ -4,7 +4,7 @@
 
 import Combine
 import Domain
-import TBoxUIKit
+import LikePicsUIKit
 import UIKit
 
 public protocol TagSelectionViewControllerDelegate: AnyObject {

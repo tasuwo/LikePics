@@ -71,9 +71,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D6F8D00AA07870E6EB2CAD36"
-               BuildableName = "TBoxUIKitTests.xctest"
-               BlueprintName = "TBoxUIKitTests"
+               BlueprintIdentifier = "CF7C10B74DDF7D3DF50DC8A4"
+               BuildableName = "LikePicsUIKitTests.xctest"
+               BlueprintName = "LikePicsUIKitTests"
                ReferencedContainer = "container:TBox.xcodeproj">
             </BuildableReference>
          </TestableReference>

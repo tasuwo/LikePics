@@ -3,7 +3,7 @@
 //
 
 import Combine
-import TBoxUIKit
+import LikePicsUIKit
 import UIKit
 
 protocol ClipPreviewPageTransitionDispatcherType {

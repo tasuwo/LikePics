@@ -7,8 +7,8 @@ import Common
 import Domain
 import ForestKit
 import LikePicsCore
+import LikePicsUIKit
 import Smoothie
-import TBoxUIKit
 import UIKit
 
 extension SceneDependencyContainer: ViewControllerFactory {

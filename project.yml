@@ -6,8 +6,8 @@ options:
     - order:
       - TBox
       - TBoxTests
-      - TBoxUIKit
-      - TBoxUIKitTests
+      - LikePicsUIKit
+      - LikePicsUIKitTests
       - TBoxUITests
       - Domain
       - DomainTests
@@ -99,7 +99,7 @@ schemes:
         - TBoxTests
         - PersistenceTests
         - DomainTests
-        - TBoxUIKitTests
+        - LikePicsUIKitTests
         - CommonTests
   TBoxDev:
     analyze:
@@ -127,7 +127,7 @@ schemes:
         - TBoxTests
         - PersistenceTests
         - DomainTests
-        - TBoxUIKitTests
+        - LikePicsUIKitTests
         - CommonTests
 settings:
   base:
@@ -422,7 +422,7 @@ targets:
       - target: Persistence
       - target: Domain
       - target: ShareExtension
-      - target: TBoxUIKit
+      - target: LikePicsUIKit
       - target: LikePicsCore
       - target: Common
       - target: Smoothie
@@ -474,7 +474,7 @@ targets:
       - path: LikePicsCore
     dependencies:
       - target: Domain
-      - target: TBoxUIKit
+      - target: LikePicsUIKit
       - target: Common
       - target: ForestKit
       - framework: Carthage/Build/Erik.xcframework
@@ -508,28 +508,28 @@ targets:
         PROVISIONING_PROFILE_SPECIFIER:
         PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
         TEST_HOST: $(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics
-  TBoxUIKit:
+  LikePicsUIKit:
     type: framework
     platform: iOS
     sources:
-      - path: TBoxUIKit
+      - path: LikePicsUIKit
     dependencies:
       - target: Domain
     settings:
       base:
         APPLICATION_EXTENSION_API_ONLY: YES
         DEVELOPMENT_TEAM: RY2377PP7S
-        INFOPLIST_FILE: TBoxUIKit/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBoxUIKit
+        INFOPLIST_FILE: LikePicsUIKit/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.LikePicsUIKit
         PROVISIONING_PROFILE_SPECIFIER:
         SUPPORTS_MACCATALYST: NO
-  TBoxUIKitTests:
+  LikePicsUIKitTests:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - path: TBoxUIKitTests
+      - path: LikePicsUIKitTests
     dependencies:
-      - target: TBoxUIKit
+      - target: LikePicsUIKit
       - target: TBox
       - target: TestHelper
       - framework: Carthage/Build/Nimble.xcframework
@@ -538,8 +538,8 @@ targets:
       base:
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
         DEVELOPMENT_TEAM: RY2377PP7S
-        INFOPLIST_FILE: TBoxUIKitTests/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBoxUIKitTests
+        INFOPLIST_FILE: LikePicsUIKitTests/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.LikePicsUIKitTests
         PROVISIONING_PROFILE_SPECIFIER:
         PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
         TEST_HOST: $(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics

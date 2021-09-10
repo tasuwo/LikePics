@@ -4,7 +4,7 @@
 
 import Domain
 import LikePicsCore
-import TBoxUIKit
+import LikePicsUIKit
 import UIKit
 
 protocol ViewControllerFactory {

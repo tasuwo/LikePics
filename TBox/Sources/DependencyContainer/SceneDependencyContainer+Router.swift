@@ -4,7 +4,7 @@
 
 import Common
 import Domain
-import TBoxUIKit
+import LikePicsUIKit
 import UIKit
 
 extension SceneDependencyContainer {

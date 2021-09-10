@@ -3,7 +3,7 @@
 //
 
 import Domain
-import TBoxUIKit
+import LikePicsUIKit
 import UIKit
 
 class ClipPreviewNavigationController: UINavigationController {
