@@ -4,7 +4,7 @@
 
 import XCTest
 
-class TBoxUITests: XCTestCase {
+class LikePicsUITests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
 

@@ -8,7 +8,7 @@ options:
       - TBoxTests
       - LikePicsUIKit
       - LikePicsUIKitTests
-      - TBoxUITests
+      - LikePicsUITests
       - Domain
       - DomainTests
       - Persistence
@@ -51,7 +51,7 @@ schemes:
     test:
       config: Debug
       targets:
-        - TBoxUITests
+        - LikePicsUITests
   SnapshotHelper:
     analyze:
       config: DebugDev
@@ -59,7 +59,7 @@ schemes:
       config: ReleaseDev
     build:
       targets:
-        TBoxUITests:
+        LikePicsUITests:
           - running
           - testing
           - profiling
@@ -72,7 +72,7 @@ schemes:
     test:
       config: DebugDev
       targets:
-        - TBoxUITests
+        - LikePicsUITests
   TBox:
     analyze:
       config: Debug
@@ -543,11 +543,11 @@ targets:
         PROVISIONING_PROFILE_SPECIFIER:
         PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
         TEST_HOST: $(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics
-  TBoxUITests:
+  LikePicsUITests:
     type: bundle.ui-testing
     platform: iOS
     sources:
-      - path: TBoxUITests
+      - path: LikePicsUITests
     dependencies:
       - target: TBox
       - target: TestHelper
@@ -556,8 +556,8 @@ targets:
     settings:
       base:
         DEVELOPMENT_TEAM:
-        INFOPLIST_FILE: TBoxUITests/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBoxUITests
+        INFOPLIST_FILE: LikePicsUITests/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.LikePicsUITests
         PROVISIONING_PROFILE_SPECIFIER:
         PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
         TEST_TARGET_NAME: TBox
