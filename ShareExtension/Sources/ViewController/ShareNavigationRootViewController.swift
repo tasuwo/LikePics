@@ -2,7 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-import TBoxCore
+import LikePicsCore
 import UIKit
 
 class ShareNavigationRootViewController: UIViewController {

@@ -5,9 +5,9 @@
 import Common
 import CoreData
 import Domain
+import LikePicsCore
 import Persistence
 import Smoothie
-import TBoxCore
 import TBoxUIKit
 import UIKit
 

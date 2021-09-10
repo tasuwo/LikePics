@@ -2,8 +2,8 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import LikePicsCore
 import MobileCoreServices
-import TBoxCore
 import UIKit
 
 class ImageProvider {
@@ -14,7 +14,7 @@ class ImageProvider {
     }
 }
 
-extension ImageProvider: TBoxCore.ImageProvider {
+extension ImageProvider: LikePicsCore.ImageProvider {
     // MARK: - ImageProvider
 
     func load(_ completion: @escaping (Data?) -> Void) {

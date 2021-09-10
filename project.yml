@@ -15,7 +15,7 @@ options:
       - PersistenceTests
       - Common
       - CommonTests
-      - TBoxCore
+      - LikePicsCore
       - ShareExtension
       - TestHelper
       - Smoothie
@@ -357,7 +357,7 @@ targets:
     dependencies:
       - target: Domain
       - target: Persistence
-      - target: TBoxCore
+      - target: LikePicsCore
     settings:
       base:
         CODE_SIGN_ENTITLEMENTS: ShareExtension/ShareExtension.entitlements
@@ -423,7 +423,7 @@ targets:
       - target: Domain
       - target: ShareExtension
       - target: TBoxUIKit
-      - target: TBoxCore
+      - target: LikePicsCore
       - target: Common
       - target: Smoothie
       - target: ForestKit
@@ -467,11 +467,11 @@ targets:
           CODE_SIGN_IDENTITY: iPhone Distribution
           PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBox.dev
           PROVISIONING_PROFILE_SPECIFIER: match AppStore net.tasuwo.TBox.dev
-  TBoxCore:
+  LikePicsCore:
     type: framework
     platform: iOS
     sources:
-      - path: TBoxCore
+      - path: LikePicsCore
     dependencies:
       - target: Domain
       - target: TBoxUIKit
@@ -484,8 +484,8 @@ targets:
       base:
         APPLICATION_EXTENSION_API_ONLY: YES
         DEVELOPMENT_TEAM: RY2377PP7S
-        INFOPLIST_FILE: TBoxCore/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBoxCore
+        INFOPLIST_FILE: LikePicsCore/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.LikePicsCore
         PROVISIONING_PROFILE_SPECIFIER:
         SUPPORTS_MACCATALYST: NO
   TBoxTests:

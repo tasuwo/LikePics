@@ -5,15 +5,15 @@
 import Combine
 import Common
 import Domain
+import LikePicsCore
 import Persistence
 import Smoothie
-import TBoxCore
 import UIKit
 
 protocol ViewControllerFactory {
     func makeShareNavigationRootViewController() -> ShareNavigationRootViewController
     func makeClipTargetCollectionViewController(webUrl: URL, delegate: ClipCreationDelegate) -> ClipCreationViewController
-    func makeClipTargetCollectionViewController(imageProviders: [TBoxCore.ImageProvider],
+    func makeClipTargetCollectionViewController(imageProviders: [LikePicsCore.ImageProvider],
                                                 fileUrls: [URL],
                                                 delegate: ClipCreationDelegate) -> ClipCreationViewController
 }
@@ -91,7 +91,7 @@ extension DependencyContainer: ViewControllerFactory {
                                           delegate: delegate)
     }
 
-    func makeClipTargetCollectionViewController(imageProviders: [TBoxCore.ImageProvider],
+    func makeClipTargetCollectionViewController(imageProviders: [LikePicsCore.ImageProvider],
                                                 fileUrls: [URL],
                                                 delegate: ClipCreationDelegate) -> ClipCreationViewController
     {
@@ -117,7 +117,7 @@ extension DependencyContainer: ViewControllerFactory {
     }
 }
 
-extension DependencyContainer: TBoxCore.ViewControllerFactory {
+extension DependencyContainer: LikePicsCore.ViewControllerFactory {
     func makeTagSelectionViewController(selectedTags: Set<Domain.Tag.Identity>,
                                         delegate: TagSelectionViewControllerDelegate) -> UIViewController?
     {
