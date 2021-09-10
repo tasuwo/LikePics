@@ -289,8 +289,30 @@ extension ClipPreviewPageViewReducer {
                 return (nextState, .none)
             }
 
+            let clipIndex = state.currentIndexPath.clipIndex
+            let itemIndex = state.currentIndexPath.itemIndex
+
+            guard nextState.clips.indices.contains(clipIndex),
+                  nextState.clips[clipIndex].items.indices.contains(itemIndex)
+            else {
+                return (nextState, .none)
+            }
+
             switch dependency.clipCommandService.deleteClips(having: [currentClipId]) {
-            case .success: ()
+            case .success:
+                nextState.clips.remove(at: clipIndex)
+
+                if clipIndex < nextState.clips.count {
+                    // 現在位置に該当するクリップが存在する
+                    nextState.currentIndexPath = .init(clipIndex: clipIndex, itemIndex: 0)
+                    nextState.pageChange = .forward
+                } else if clipIndex - 1 >= 0 {
+                    // 一つ前のクリップが存在する
+                    nextState.currentIndexPath = .init(clipIndex: clipIndex - 1, itemIndex: nextState.clips[clipIndex - 1].items.count - 1)
+                    nextState.pageChange = .reverse
+                } else {
+                    nextState.isDismissed = true
+                }
 
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtDeleteClip)
@@ -302,29 +324,43 @@ extension ClipPreviewPageViewReducer {
                 return (nextState, .none)
             }
 
+            let clipIndex = state.currentIndexPath.clipIndex
+            let itemIndex = state.currentIndexPath.itemIndex
+
+            guard nextState.clips.indices.contains(clipIndex),
+                  nextState.clips[clipIndex].items.indices.contains(itemIndex)
+            else {
+                return (nextState, .none)
+            }
+
             switch dependency.clipCommandService.deleteClipItem(item) {
             case .success: ()
-                // TODO:
-                /*
-                nextState.items = nextState.items.filter({ $0.id != item.id })
+                nextState.clips[clipIndex] = state.clips[clipIndex].removedItem(at: itemIndex)
 
-                guard !nextState.items.isEmpty else {
-                    nextState.currentIndex = nil
+                guard !nextState.clips[clipIndex].items.isEmpty else {
                     nextState.isDismissed = true
                     return (nextState, .none)
                 }
 
-                if index < nextState.items.count {
-                    nextState.currentIndex = index
+                if itemIndex < nextState.clips[clipIndex].items.count {
+                    // 現在位置に該当するアイテムが存在する
+                    nextState.currentIndexPath = .init(clipIndex: clipIndex, itemIndex: itemIndex)
                     nextState.pageChange = .forward
-                } else if index - 1 >= 0 {
-                    nextState.currentIndex = index - 1
+                } else if clipIndex + 1 < nextState.clips.count {
+                    // 次のクリップが存在する
+                    nextState.currentIndexPath = .init(clipIndex: clipIndex + 1, itemIndex: 0)
+                    nextState.pageChange = .forward
+                } else if itemIndex - 1 >= 0 {
+                    // 1つ前のアイテムが存在する
+                    nextState.currentIndexPath = .init(clipIndex: clipIndex, itemIndex: itemIndex - 1)
+                    nextState.pageChange = .reverse
+                } else if clipIndex - 1 >= 0 {
+                    // 1つ前のクリップが存在する
+                    nextState.currentIndexPath = .init(clipIndex: clipIndex - 1, itemIndex: nextState.clips[clipIndex - 1].items.count - 1)
                     nextState.pageChange = .reverse
                 } else {
-                    nextState.currentIndex = 0
-                    nextState.pageChange = .forward
+                    nextState.isDismissed = true
                 }
-             */
 
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtRemoveItemFromClip)
