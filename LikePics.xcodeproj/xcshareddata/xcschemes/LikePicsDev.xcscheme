@@ -15,10 +15,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6FC4A896ED54FA33639E441D"
+               BlueprintIdentifier = "8084EEB0A690B12BDD5EF1B5"
                BuildableName = "LikePics.app"
                BlueprintName = "LikePics"
-               ReferencedContainer = "container:TBox.xcodeproj">
+               ReferencedContainer = "container:LikePics.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -34,60 +34,60 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FC9D92CB23912A8680D67B0A"
+               BlueprintIdentifier = "FD0F4DEE70874187C974BE1F"
                BuildableName = "LikePicsTests.xctest"
                BlueprintName = "LikePicsTests"
-               ReferencedContainer = "container:TBox.xcodeproj">
+               ReferencedContainer = "container:LikePics.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E46EEFAE1F05579895DA6342"
+               BlueprintIdentifier = "93050D57DB26394862A2A01F"
                BuildableName = "PersistenceTests.xctest"
                BlueprintName = "PersistenceTests"
-               ReferencedContainer = "container:TBox.xcodeproj">
+               ReferencedContainer = "container:LikePics.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9DB118AC25188A439C7B4B26"
+               BlueprintIdentifier = "6CF8DB174FCCB0AF8B5C40C1"
                BuildableName = "DomainTests.xctest"
                BlueprintName = "DomainTests"
-               ReferencedContainer = "container:TBox.xcodeproj">
+               ReferencedContainer = "container:LikePics.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CF7C10B74DDF7D3DF50DC8A4"
+               BlueprintIdentifier = "5327A07BF22981F7655B4DD8"
                BuildableName = "LikePicsUIKitTests.xctest"
                BlueprintName = "LikePicsUIKitTests"
-               ReferencedContainer = "container:TBox.xcodeproj">
+               ReferencedContainer = "container:LikePics.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6C86890BE90F4A7831BD5542"
+               BlueprintIdentifier = "0C8705C2ACAE4C1DC404DF2E"
                BuildableName = "CommonTests.xctest"
                BlueprintName = "CommonTests"
-               ReferencedContainer = "container:TBox.xcodeproj">
+               ReferencedContainer = "container:LikePics.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6FC4A896ED54FA33639E441D"
+            BlueprintIdentifier = "8084EEB0A690B12BDD5EF1B5"
             BuildableName = "LikePics.app"
             BlueprintName = "LikePics"
-            ReferencedContainer = "container:TBox.xcodeproj">
+            ReferencedContainer = "container:LikePics.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <CommandLineArguments>
@@ -107,10 +107,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6FC4A896ED54FA33639E441D"
+            BlueprintIdentifier = "8084EEB0A690B12BDD5EF1B5"
             BuildableName = "LikePics.app"
             BlueprintName = "LikePics"
-            ReferencedContainer = "container:TBox.xcodeproj">
+            ReferencedContainer = "container:LikePics.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
@@ -134,10 +134,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6FC4A896ED54FA33639E441D"
+            BlueprintIdentifier = "8084EEB0A690B12BDD5EF1B5"
             BuildableName = "LikePics.app"
             BlueprintName = "LikePics"
-            ReferencedContainer = "container:TBox.xcodeproj">
+            ReferencedContainer = "container:LikePics.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>

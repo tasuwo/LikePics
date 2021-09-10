@@ -1,4 +1,4 @@
-name: TBox
+name: LikePics
 options:
   defaultConfig: Release
   transitivelyLinkDependencies: false
