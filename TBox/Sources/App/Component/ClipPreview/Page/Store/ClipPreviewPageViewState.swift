@@ -126,20 +126,26 @@ extension ClipPreviewPageViewState {
     }
 
     func currentPreloadTargets() -> [UUID] {
-        // TODO:
-        /*
-         guard let index = currentIndex else { return [] }
+        guard let currentItem = currentItem else { return [] }
 
-         let preloadPages = 6
+        var forwards: [UUID] = []
+        var backwards: [UUID] = []
 
-         let backwards = Set((index - preloadPages ... index - 1).clamped(to: 0 ... items.count - 1))
-         let forwards = Set((index + 1 ... index + preloadPages).clamped(to: 0 ... items.count - 1))
+        var baseItem = currentItem
+        for _ in 0 ..< 6 {
+            guard let nextItem = item(after: baseItem.id) else { break }
+            forwards.append(nextItem.imageId)
+            baseItem = nextItem
+        }
 
-         let preloadIndices = backwards.union(forwards).subtracting(Set([index]))
+        baseItem = currentItem
+        for _ in 0 ..< 6 {
+            guard let previousItem = item(before: baseItem.id) else { break }
+            backwards.append(previousItem.imageId)
+            baseItem = previousItem
+        }
 
-         return preloadIndices.map { items[$0].imageId }
-          */
-        return []
+        return forwards + backwards
     }
 }
 

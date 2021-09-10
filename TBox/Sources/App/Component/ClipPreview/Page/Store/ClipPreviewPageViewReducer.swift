@@ -37,9 +37,14 @@ struct ClipPreviewPageViewReducer: Reducer {
 
         case let .indicesCalculated(indexByClipId: indexByClipId,
                                     indexPathByClipItemId: indexPathByClipItemId):
+            guard indexByClipId != nextState.indexByClipId
+                || indexPathByClipItemId != nextState.indexPathByClipItemId
+            else {
+                return (nextState, .none)
+            }
             nextState.indexByClipId = indexByClipId
             nextState.indexPathByClipItemId = indexPathByClipItemId
-            return (nextState, .none)
+            return (nextState, [Self.preloadEffect(state: nextState, dependency: dependency)])
 
         case let .pageChanged(indexPath: indexPath):
             nextState.pageChange = nil
