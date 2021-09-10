@@ -377,16 +377,28 @@ extension ClipPreviewPageViewReducer {
             case .success:
                 nextState.clips.remove(at: clipIndex)
 
-                if clipIndex < nextState.clips.count {
-                    // 現在位置に該当するクリップが存在する
+                if nextState.clips.indices.contains(clipIndex),
+                   nextState.filteredClipIds.contains(nextState.clips[clipIndex].id)
+                {
+                    // 現在位置に該当するクリップが表示可能だった
                     nextState.currentIndexPath = .init(clipIndex: clipIndex, itemIndex: 0)
                     nextState.pageChange = .forward
-                } else if clipIndex - 1 >= 0 {
-                    // 一つ前のクリップが存在する
-                    nextState.currentIndexPath = .init(clipIndex: clipIndex - 1, itemIndex: nextState.clips[clipIndex - 1].items.count - 1)
-                    nextState.pageChange = .reverse
                 } else {
-                    nextState.isDismissed = true
+                    // 現在位置に該当するクリップが表示不可だった
+                    if let indexPath = indexPath(after: clipIndex, clips: nextState.clips, filteredClipIds: nextState.filteredClipIds) {
+                        // 前方向に探索
+                        nextState.isPageAnimated = true
+                        nextState.pageChange = .forward
+                        nextState.currentIndexPath = indexPath
+                    } else if let indexPath = indexPath(before: clipIndex, clips: nextState.clips, filteredClipIds: nextState.filteredClipIds) {
+                        // 後方向に探索
+                        nextState.isPageAnimated = true
+                        nextState.pageChange = .reverse
+                        nextState.currentIndexPath = indexPath
+                    } else {
+                        // 表示できるクリップが存在しないため、閉じる
+                        nextState.isDismissed = true
+                    }
                 }
 
             case .failure:
@@ -421,20 +433,26 @@ extension ClipPreviewPageViewReducer {
                     // 現在位置に該当するアイテムが存在する
                     nextState.currentIndexPath = .init(clipIndex: clipIndex, itemIndex: itemIndex)
                     nextState.pageChange = .forward
-                } else if clipIndex + 1 < nextState.clips.count {
-                    // 次のクリップが存在する
-                    nextState.currentIndexPath = .init(clipIndex: clipIndex + 1, itemIndex: 0)
-                    nextState.pageChange = .forward
                 } else if itemIndex - 1 >= 0 {
                     // 1つ前のアイテムが存在する
                     nextState.currentIndexPath = .init(clipIndex: clipIndex, itemIndex: itemIndex - 1)
                     nextState.pageChange = .reverse
-                } else if clipIndex - 1 >= 0 {
-                    // 1つ前のクリップが存在する
-                    nextState.currentIndexPath = .init(clipIndex: clipIndex - 1, itemIndex: nextState.clips[clipIndex - 1].items.count - 1)
-                    nextState.pageChange = .reverse
                 } else {
-                    nextState.isDismissed = true
+                    // クリップ内にアイテムが存在しない
+                    if let indexPath = indexPath(after: clipIndex, clips: nextState.clips, filteredClipIds: nextState.filteredClipIds) {
+                        // 前方向に探索
+                        nextState.isPageAnimated = true
+                        nextState.pageChange = .forward
+                        nextState.currentIndexPath = indexPath
+                    } else if let indexPath = indexPath(before: clipIndex, clips: nextState.clips, filteredClipIds: nextState.filteredClipIds) {
+                        // 後方向に探索
+                        nextState.isPageAnimated = true
+                        nextState.pageChange = .reverse
+                        nextState.currentIndexPath = indexPath
+                    } else {
+                        // 表示できるクリップが存在しないため、閉じる
+                        nextState.isDismissed = true
+                    }
                 }
 
             case .failure:
