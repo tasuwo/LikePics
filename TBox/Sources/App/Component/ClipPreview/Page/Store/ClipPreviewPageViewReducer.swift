@@ -201,23 +201,98 @@ extension ClipPreviewPageViewReducer {
             }
         }
 
+        // 差分があった場合のみ後続で計算を行う
         guard previousState.isSomeItemsHidden != isSomeItemsHidden
             || previousState.clips != clips
         else {
             return (previousState, [Effect(calcStream)])
         }
 
-        let filteredClipIds = clips
-            .filter { isSomeItemsHidden ? $0.isHidden == false : true }
-            .map(\.id)
+        var filteredClipIds: [Clip.Identity] = []
+        var newClipIndex: Int?
+
+        for (index, clip) in zip(clips.indices, clips) {
+            if isSomeItemsHidden {
+                if clip.isHidden == false {
+                    filteredClipIds.append(clip.id)
+                }
+            } else {
+                filteredClipIds.append(clip.id)
+            }
+
+            if previousState.currentClip?.id == clip.id {
+                newClipIndex = index
+            }
+        }
 
         nextState.clips = clips
         nextState.filteredClipIds = Set(filteredClipIds)
         nextState.isSomeItemsHidden = isSomeItemsHidden
 
-        // TODO: currentIndexPathを更新する
+        // 元々フォーカスしていた Clip や Item が存在した場合は、IndexPath の調整を行う
+        guard let previousClip = previousState.currentClip,
+              let previousItem = previousState.currentItem
+        else {
+            return (nextState, [Effect(calcStream)])
+        }
+
+        if let clipIndex = newClipIndex {
+            if filteredClipIds.contains(previousClip.id) {
+                // 元々フォーカスしていた Clip が存在し、表示可能だった場合
+                if let itemIndex = previousClip.items.firstIndex(of: previousItem) {
+                    // 元々フォーカスしていた Item が存在した場合
+                    nextState.isPageAnimated = false
+                    nextState.currentIndexPath = .init(clipIndex: clipIndex, itemIndex: itemIndex)
+                } else {
+                    // 元々フォーカスしていた Item が存在しなかった場合
+                    nextState.isPageAnimated = true
+                    nextState.pageChange = .reverse
+                    nextState.currentIndexPath = .init(clipIndex: clipIndex, itemIndex: 0)
+                }
+            } else {
+                // 元々フォーカスしていた Clip が存在し、表示不可だった場合
+                if let indexPath = indexPath(after: clipIndex, clips: clips, filteredClipIds: Set(filteredClipIds)) {
+                    // 前方向に探索
+                    nextState.isPageAnimated = true
+                    nextState.pageChange = .forward
+                    nextState.currentIndexPath = indexPath
+                } else if let indexPath = indexPath(before: clipIndex, clips: clips, filteredClipIds: Set(filteredClipIds)) {
+                    // 後方向に探索
+                    nextState.isPageAnimated = true
+                    nextState.pageChange = .reverse
+                    nextState.currentIndexPath = indexPath
+                } else {
+                    // 表示できるクリップが存在しないため、閉じる
+                    nextState.isDismissed = true
+                }
+            }
+        } else {
+            // 元々フォーカスしていた Clip が存在しなかった場合
+            // 上手く遷移する方法がないため、閉じる
+            nextState.isDismissed = true
+        }
 
         return (nextState, [Effect(calcStream)])
+    }
+
+    static func indexPath(after clipIndex: Int, clips: [Clip], filteredClipIds: Set<Clip.Identity>) -> ClipCollection.IndexPath? {
+        guard clipIndex + 1 < clips.count else { return nil }
+        for clipIndex in clipIndex + 1 ... clips.count - 1 {
+            if filteredClipIds.contains(clips[clipIndex].id) {
+                return .init(clipIndex: clipIndex, itemIndex: 0)
+            }
+        }
+        return nil
+    }
+
+    static func indexPath(before clipIndex: Int, clips: [Clip], filteredClipIds: Set<Clip.Identity>) -> ClipCollection.IndexPath? {
+        guard clipIndex - 1 >= 0 else { return nil }
+        for clipIndex in (0 ... clipIndex - 1).reversed() {
+            if filteredClipIds.contains(clips[clipIndex].id) {
+                return .init(clipIndex: clipIndex, itemIndex: clips[clipIndex].items.count - 1)
+            }
+        }
+        return nil
     }
 }
 

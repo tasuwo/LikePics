@@ -96,20 +96,13 @@ extension ClipPreviewPageViewState {
         if indexPath.itemIndex + 1 < currentClip.items.count {
             return currentClip.items[indexPath.itemIndex + 1]
         } else {
-            var item: ClipItem?
-
-            guard indexPath.clipIndex + 1 < clips.count else {
-                return nil
-            }
-
+            guard indexPath.clipIndex + 1 < clips.count else { return nil }
             for clipIndex in indexPath.clipIndex + 1 ... clips.count - 1 {
                 if filteredClipIds.contains(clips[clipIndex].id) {
-                    item = clips[clipIndex].items.first
-                    break
+                    return clips[clipIndex].items.first
                 }
             }
-
-            return item
+            return nil
         }
     }
 
@@ -122,20 +115,13 @@ extension ClipPreviewPageViewState {
         if indexPath.itemIndex - 1 >= 0 {
             return currentClip.items[indexPath.itemIndex - 1]
         } else {
-            var item: ClipItem?
-
-            guard indexPath.clipIndex - 1 >= 0 else {
-                return nil
-            }
-
+            guard indexPath.clipIndex - 1 >= 0 else { return nil }
             for clipIndex in (0 ... indexPath.clipIndex - 1).reversed() {
                 if filteredClipIds.contains(clips[clipIndex].id) {
-                    item = clips[clipIndex].items.last
-                    break
+                    return clips[clipIndex].items.last
                 }
             }
-
-            return item
+            return nil
         }
     }
 
