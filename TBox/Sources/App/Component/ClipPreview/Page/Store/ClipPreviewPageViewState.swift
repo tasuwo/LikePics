@@ -73,7 +73,8 @@ extension ClipPreviewPageViewState {
     }
 
     var currentItem: ClipItem? {
-        guard clips.indices.contains(currentIndexPath.clipIndex) else { return nil }
+        guard clips.indices.contains(currentIndexPath.clipIndex),
+              clips[currentIndexPath.clipIndex].items.indices.contains(currentIndexPath.itemIndex) else { return nil }
         return clips[currentIndexPath.clipIndex].items[currentIndexPath.itemIndex]
     }
 
