@@ -74,11 +74,12 @@ struct SearchResultViewReducer: Reducer {
             nextState.inputtedTokens = state.inputtedTokens + [token]
             return (nextState, nil)
 
-        case let .selectedResult(_, at: index):
-            // TODO:
-            // dependency.router.showClipPreviewView(clips: .init(),
-            //                                       source: .search(state.searchQuery),
-            //                                       indexPath: ClipCollection.IndexPath(clipIndex: index, itemIndex: 0))
+        case let .selectedResult(clip):
+            guard let index = state.searchResults.firstIndex(of: clip) else { return (nextState, .none) }
+            dependency.router.showClipPreviewView(filteredClipIds: Set(state.searchResults.map(\.id)),
+                                                  clips: state.searchResults,
+                                                  query: .searchResult(state.searchQuery),
+                                                  indexPath: .init(clipIndex: index, itemIndex: 0))
             return (nextState, nil)
 
         case .selectedSeeAllResultsButton:

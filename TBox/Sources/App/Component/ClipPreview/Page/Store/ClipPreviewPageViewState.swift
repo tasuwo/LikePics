@@ -21,7 +21,12 @@ struct ClipPreviewPageViewState: Equatable {
         case reverse
     }
 
-    let source: ClipCollection.Source
+    enum Query: Equatable {
+        case clips(ClipCollection.Source)
+        case searchResult(ClipSearchQuery)
+    }
+
+    let query: Query
 
     var currentIndexPath: ClipCollection.IndexPath
     var filteredClipIds: Set<Clip.Identity>
@@ -44,11 +49,11 @@ struct ClipPreviewPageViewState: Equatable {
 extension ClipPreviewPageViewState {
     init(filteredClipIds: Set<Clip.Identity>,
          clips: [Clip],
-         source: ClipCollection.Source,
+         query: Query,
          isSomeItemsHidden: Bool,
          indexPath: ClipCollection.IndexPath)
     {
-        self.source = source
+        self.query = query
         self.currentIndexPath = indexPath
         self.filteredClipIds = filteredClipIds
         self.clips = clips
@@ -242,6 +247,43 @@ extension ClipPreviewPageViewState.Modal: Codable {
             var nestedContainer = container.nestedUnkeyedContainer(forKey: .tagSelection)
             try nestedContainer.encode(id)
             try nestedContainer.encode(tagIds)
+        }
+    }
+}
+
+extension ClipPreviewPageViewState.Query: Codable {
+    enum CodingKeys: CodingKey {
+        case query
+        case searchResult
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let key = container.allKeys.first
+
+        switch key {
+        case .query:
+            let source = try container.decode(ClipCollection.Source.self, forKey: .query)
+            self = .clips(source)
+
+        case .searchResult:
+            let query = try container.decode(ClipSearchQuery.self, forKey: .searchResult)
+            self = .searchResult(query)
+
+        default:
+            throw DecodingError.dataCorrupted(.init(codingPath: container.codingPath, debugDescription: "Unable to decode"))
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        switch self {
+        case let .clips(source):
+            try container.encode(source, forKey: .query)
+
+        case let .searchResult(query):
+            try container.encode(query, forKey: .searchResult)
         }
     }
 }

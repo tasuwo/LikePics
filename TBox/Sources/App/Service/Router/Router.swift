@@ -24,7 +24,7 @@ protocol Router {
     @discardableResult
     func showClipPreviewView(filteredClipIds: Set<Clip.Identity>,
                              clips: [Clip],
-                             source: ClipCollection.Source,
+                             query: ClipPreviewPageViewState.Query,
                              indexPath: ClipCollection.IndexPath) -> Bool
 
     @discardableResult

@@ -134,17 +134,27 @@ struct ClipPreviewPageViewReducer: Reducer {
 
 extension ClipPreviewPageViewReducer {
     static func prepare(state: State, dependency: Dependency) -> (State, [Effect<Action>]) {
-        let stream = state.source.fetchStream(by: dependency.clipQueryService)
-        let clipsStream = stream.clipsStream
-            .map { Action.clipsUpdated($0) as Action? }
-            .catch { _ in Just(Action.failedToLoadClip) }
-        let queryEffect = Effect(clipsStream, underlying: stream.query, completeWith: .failedToLoadClip)
+        var effects: [Effect<Action>] = []
+
+        switch state.query {
+        case let .clips(source):
+            let stream = source.fetchStream(by: dependency.clipQueryService)
+            let clipsStream = stream.clipsStream
+                .map { Action.clipsUpdated($0) as Action? }
+                .catch { _ in Just(Action.failedToLoadClip) }
+            let queryEffect = Effect(clipsStream, underlying: stream.query, completeWith: .failedToLoadClip)
+            effects.append(queryEffect)
+
+        case .searchResult:
+            break
+        }
 
         let settingsStream = dependency.userSettingStorage.showHiddenItems
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
+        effects.append(settingsEffect)
 
-        return (state, [queryEffect, settingsEffect])
+        return (state, effects)
     }
 }
 
