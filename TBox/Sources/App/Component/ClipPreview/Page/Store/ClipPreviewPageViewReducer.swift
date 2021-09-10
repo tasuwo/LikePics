@@ -385,20 +385,7 @@ extension ClipPreviewPageViewReducer {
                     nextState.pageChange = .forward
                 } else {
                     // 現在位置に該当するクリップが表示不可だった
-                    if let indexPath = indexPath(after: clipIndex, clips: nextState.clips, filteredClipIds: nextState.filteredClipIds) {
-                        // 前方向に探索
-                        nextState.isPageAnimated = true
-                        nextState.pageChange = .forward
-                        nextState.currentIndexPath = indexPath
-                    } else if let indexPath = indexPath(before: clipIndex, clips: nextState.clips, filteredClipIds: nextState.filteredClipIds) {
-                        // 後方向に探索
-                        nextState.isPageAnimated = true
-                        nextState.pageChange = .reverse
-                        nextState.currentIndexPath = indexPath
-                    } else {
-                        // 表示できるクリップが存在しないため、閉じる
-                        nextState.isDismissed = true
-                    }
+                    nextState = transitToClip(around: clipIndex, state: nextState)
                 }
 
             case .failure:
@@ -438,21 +425,7 @@ extension ClipPreviewPageViewReducer {
                     nextState.currentIndexPath = .init(clipIndex: clipIndex, itemIndex: itemIndex - 1)
                     nextState.pageChange = .reverse
                 } else {
-                    // クリップ内にアイテムが存在しない
-                    if let indexPath = indexPath(after: clipIndex, clips: nextState.clips, filteredClipIds: nextState.filteredClipIds) {
-                        // 前方向に探索
-                        nextState.isPageAnimated = true
-                        nextState.pageChange = .forward
-                        nextState.currentIndexPath = indexPath
-                    } else if let indexPath = indexPath(before: clipIndex, clips: nextState.clips, filteredClipIds: nextState.filteredClipIds) {
-                        // 後方向に探索
-                        nextState.isPageAnimated = true
-                        nextState.pageChange = .reverse
-                        nextState.currentIndexPath = indexPath
-                    } else {
-                        // 表示できるクリップが存在しないため、閉じる
-                        nextState.isDismissed = true
-                    }
+                    nextState = transitToClip(around: clipIndex, state: nextState)
                 }
 
             case .failure:
@@ -460,6 +433,25 @@ extension ClipPreviewPageViewReducer {
             }
             return (nextState, [Self.preloadEffect(state: nextState, dependency: dependency)])
         }
+    }
+
+    private static func transitToClip(around clipIndex: Int, state: State) -> State {
+        var nextState = state
+        if let indexPath = indexPath(after: clipIndex, clips: nextState.clips, filteredClipIds: nextState.filteredClipIds) {
+            // 前方向に探索
+            nextState.isPageAnimated = true
+            nextState.pageChange = .forward
+            nextState.currentIndexPath = indexPath
+        } else if let indexPath = indexPath(before: clipIndex, clips: nextState.clips, filteredClipIds: nextState.filteredClipIds) {
+            // 後方向に探索
+            nextState.isPageAnimated = true
+            nextState.pageChange = .reverse
+            nextState.currentIndexPath = indexPath
+        } else {
+            // 表示できるクリップが存在しないため、閉じる
+            nextState.isDismissed = true
+        }
+        return nextState
     }
 }
 
