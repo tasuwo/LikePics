@@ -1,6 +1,6 @@
 # vim: syntax=ruby
 
-scheme("TBox")
+scheme("LikePics")
 
 force_quit_simulator(true)
 clean(true)

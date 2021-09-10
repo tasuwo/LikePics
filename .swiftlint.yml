@@ -1,10 +1,10 @@
 included:
-  - TBox
+  - LikePics
+  - LikePicsCore
+  - LikePicsUIKit
   - Common
   - Domain
   - Persistence
-  - TBoxCore
-  - TBoxUIKit
   - ShareExtension
   - Smoothie
 excluded:

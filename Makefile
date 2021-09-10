@@ -8,7 +8,7 @@ generate: license_generate swiftgen_generate sourcery_generate mockolo_generate 
 .PHONY: license_generate
 license_generate: ## ライセンスを自動生成する
 	 ./Pods/LicensePlist/license-plist \
-		 --output-path ./TBox/Resources/Settings.bundle \
+		 --output-path ./LikePics/Resources/Settings.bundle \
 		 --config-path ./license_plist.yml
 
 .PHONY: swiftgen_generate
@@ -34,10 +34,10 @@ sourcery_generate: ## Sourceryによるモック自動生成を行う
 		--output ./TestHelper/Mocks/Struct/Persistence.AutoDefaultValue.generated.swift \
 		--args testable_import=Persistence
 	./Pods/Sourcery/bin/sourcery \
-		--sources ./TBoxUIKit \
+		--sources ./LikePicsUIKit \
 		--templates ./templates \
-		--output ./TestHelper/Mocks/Struct/TBoxUIKit.AutoDefaultValue.generated.swift \
-		--args testable_import=TBoxUIKit
+		--output ./TestHelper/Mocks/Struct/LikePicsUIKit.AutoDefaultValue.generated.swift \
+		--args testable_import=LikePicsUIKit
 
 .PHONY: mockolo_generate
 mockolo_generate: ## mockoloによるモック自動生成を行う
@@ -51,9 +51,9 @@ mockolo_generate: ## mockoloによるモック自動生成を行う
 		--destination ../TestHelper/Mocks/Protocol/Domain.ProtocolMocks.swift \
 		--testable-imports Domain; \
 	./mockolo \
-		--sourcedirs ../TBoxUIKit \
-		--destination ../TestHelper/Mocks/Protocol/TBoxUIKit.ProtocolMocks.swift \
-		--testable-imports TBoxUIKit; \
+		--sourcedirs ../LikePicsUIKit \
+		--destination ../TestHelper/Mocks/Protocol/LikePicsUIKit.ProtocolMocks.swift \
+		--testable-imports LikePicsUIKit; \
 	./mockolo \
 		--sourcedirs ../Common \
 		--destination ../TestHelper/Mocks/Protocol/Common.ProtocolMocks.swift \

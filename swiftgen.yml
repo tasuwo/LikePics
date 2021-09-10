@@ -1,19 +1,19 @@
 strings:
     - inputs:
-        - TBox/Resources/ja.lproj/Localizable.strings
+        - LikePics/Resources/ja.lproj/Localizable.strings
       outputs:
         - templateName: structured-swift5
-          output: TBox/Sources/Generated/String.swift
+          output: LikePics/Sources/Generated/String.swift
     - inputs:
-        - TBoxCore/Resources/ja.lproj
+        - LikePicsCore/Resources/ja.lproj
       outputs:
         - templateName: structured-swift5
-          output: TBoxCore/Sources/Generated/String.swift
+          output: LikePicsCore/Sources/Generated/String.swift
     - inputs:
-        - TBoxUIKit/Resources/ja.lproj
+        - LikePicsUIKit/Resources/ja.lproj
       outputs:
         - templateName: structured-swift5
-          output: TBoxUIKit/Generated/String.swift
+          output: LikePicsUIKit/Generated/String.swift
     - inputs:
         - ShareExtension/Resources/ja.lproj
       outputs:
@@ -21,10 +21,10 @@ strings:
           output: ShareExtension/Sources/Generated/String.swift
 xcassets:
     - inputs:
-        - TBoxUIKit/Resources/Assets.xcassets
+        - LikePicsUIKit/Resources/Assets.xcassets
       outputs:
         - templateName: swift5
-          output: TBoxUIKit/Generated/AssetCatalog.swift
+          output: LikePicsUIKit/Generated/AssetCatalog.swift
           params:
             forceProvidesNamespaces: true
             publicAccess: true

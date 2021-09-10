@@ -1,6 +1,6 @@
 # vim: syntax=ruby
 
-scheme("TBox")
+scheme("LikePics")
 sdk("iphoneos")
 output_directory("./build")
 include_bitcode(false)
@@ -11,7 +11,7 @@ for_lane :release do
   export_method("app-store")
   include_bitcode(true)
 
-  output_name("tbox.ipa")
+  output_name("likepics.ipa")
 end
 
 for_lane :release_build_only do
@@ -19,6 +19,6 @@ for_lane :release_build_only do
   export_method("app-store")
   include_bitcode(true)
 
-  output_name("tbox.ipa")
+  output_name("likepics.ipa")
 end
 
