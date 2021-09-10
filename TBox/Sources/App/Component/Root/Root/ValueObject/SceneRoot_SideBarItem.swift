@@ -77,15 +77,17 @@ extension SceneRoot {
                 viewController = factory.makeSettingsViewController(intent?.settingsViewState)
             }
 
-            if case let .clips(state, preview: _) = intent {
+            if case let .clips(state, preview: indexPath) = intent {
                 let clipCollectionViewController = factory.makeClipCollectionViewController(from: state.clipCollectionState.source)
                 viewController.show(clipCollectionViewController, sender: nil)
 
-                // TODO:
-                // let previewPageViewController = factory.makeClipPreviewPageViewController(clips: .init(),
-                //                                                                           source: state.clipCollectionState.source,
-                //                                                                           indexPath: .init(clipIndex: 0, itemIndex: 0)) // TODO: 反映する
-                // clipCollectionViewController.presentAfterLoad(previewPageViewController, animated: false, completion: nil)
+                if let indexPath = indexPath {
+                    let previewPageViewController = factory.makeClipPreviewPageViewController(filteredClipIds: .init(),
+                                                                                              clips: [],
+                                                                                              query: .clips(state.clipCollectionState.source),
+                                                                                              indexPath: indexPath)
+                    clipCollectionViewController.presentAfterLoad(previewPageViewController, animated: false, completion: nil)
+                }
             }
 
             return viewController

@@ -5,7 +5,7 @@
 import Domain
 
 enum Intent {
-    case clips(ClipCollectionViewRootState, preview: Clip.Identity?)
+    case clips(ClipCollectionViewRootState, preview: ClipCollection.IndexPath?)
     case search(SearchViewRootState)
     case setting(SettingsViewState)
     case albums(AlbumListViewState)
@@ -58,8 +58,8 @@ extension Intent: Codable {
         case .clips:
             var nestedContainer = try container.nestedUnkeyedContainer(forKey: .clips)
             let state = try nestedContainer.decode(ClipCollectionViewRootState.self)
-            let clipId = try nestedContainer.decodeIfPresent(Clip.Identity.self)
-            self = .clips(state, preview: clipId)
+            let indexPath = try nestedContainer.decodeIfPresent(ClipCollection.IndexPath.self)
+            self = .clips(state, preview: indexPath)
 
         case .search:
             let state = try container.decode(SearchViewRootState.self, forKey: .search)
@@ -86,10 +86,10 @@ extension Intent: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
         switch self {
-        case let .clips(state, preview: clipId):
+        case let .clips(state, preview: indexPath):
             var nestedContainer = container.nestedUnkeyedContainer(forKey: .clips)
             try nestedContainer.encode(state)
-            try nestedContainer.encode(clipId)
+            try nestedContainer.encode(indexPath)
 
         case let .search(state):
             try container.encode(state, forKey: .search)
