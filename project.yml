@@ -4,8 +4,8 @@ options:
   transitivelyLinkDependencies: false
   groupOrdering:
     - order:
-      - TBox
-      - TBoxTests
+      - LikePics
+      - LikePicsTests
       - LikePicsUIKit
       - LikePicsUIKitTests
       - LikePicsUITests
@@ -73,14 +73,14 @@ schemes:
       config: DebugDev
       targets:
         - LikePicsUITests
-  TBox:
+  LikePics:
     analyze:
       config: Debug
     archive:
       config: Release
     build:
       targets:
-        TBox:
+        LikePics:
           - running
           - testing
           - profiling
@@ -96,19 +96,19 @@ schemes:
     test:
       config: Debug
       targets:
-        - TBoxTests
+        - LikePicsTests
         - PersistenceTests
         - DomainTests
         - LikePicsUIKitTests
         - CommonTests
-  TBoxDev:
+  LikePicsDev:
     analyze:
       config: DebugDev
     archive:
       config: ReleaseDev
     build:
       targets:
-        TBox:
+        LikePics:
           - running
           - testing
           - profiling
@@ -124,7 +124,7 @@ schemes:
     test:
       config: DebugDev
       targets:
-        - TBoxTests
+        - LikePicsTests
         - PersistenceTests
         - DomainTests
         - LikePicsUIKitTests
@@ -262,7 +262,7 @@ targets:
       - path: CommonTests
     dependencies:
       - target: Common
-      - target: TBox
+      - target: LikePics
       - target: TestHelper
       - framework: Carthage/Build/Nimble.xcframework
       - framework: Carthage/Build/Quick.xcframework
@@ -298,7 +298,7 @@ targets:
       - path: DomainTests
     dependencies:
       - target: Domain
-      - target: TBox
+      - target: LikePics
       - target: TestHelper
       - framework: Carthage/Build/Nimble.xcframework
       - framework: Carthage/Build/Quick.xcframework
@@ -336,7 +336,7 @@ targets:
       - path: PersistenceTests
     dependencies:
       - target: Persistence
-      - target: TBox
+      - target: LikePics
       - target: TestHelper
       - framework: Carthage/Build/Nimble.xcframework
       - framework: Carthage/Build/Quick.xcframework
@@ -413,11 +413,11 @@ targets:
         PROVISIONING_PROFILE_SPECIFIER:
         PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
         SUPPORTS_MACCATALYST: NO
-  TBox:
+  LikePics:
     type: application
     platform: iOS
     sources:
-      - path: TBox
+      - path: LikePics
     dependencies:
       - target: Persistence
       - target: Domain
@@ -445,9 +445,9 @@ targets:
     settings:
       base:
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
-        CODE_SIGN_ENTITLEMENTS: TBox/TBox.entitlements
+        CODE_SIGN_ENTITLEMENTS: LikePics/LikePics.entitlements
         DEVELOPMENT_TEAM: RY2377PP7S
-        INFOPLIST_FILE: TBox/Resources/Info.plist
+        INFOPLIST_FILE: LikePics/Resources/Info.plist
         PRODUCT_NAME: LikePics
       configs:
         Debug:
@@ -488,13 +488,13 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.LikePicsCore
         PROVISIONING_PROFILE_SPECIFIER:
         SUPPORTS_MACCATALYST: NO
-  TBoxTests:
+  LikePicsTests:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - path: TBoxTests
+      - path: LikePicsTests
     dependencies:
-      - target: TBox
+      - target: LikePics
       - target: TestHelper
       - framework: Carthage/Build/Nimble.xcframework
       - framework: Carthage/Build/Quick.xcframework
@@ -503,8 +503,8 @@ targets:
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
         BUNDLE_LOADER: $(TEST_HOST)
         DEVELOPMENT_TEAM: RY2377PP7S
-        INFOPLIST_FILE: TBoxTests/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBoxTests
+        INFOPLIST_FILE: LikePicsTests/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.LikePicsTests
         PROVISIONING_PROFILE_SPECIFIER:
         PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
         TEST_HOST: $(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics
@@ -530,7 +530,7 @@ targets:
       - path: LikePicsUIKitTests
     dependencies:
       - target: LikePicsUIKit
-      - target: TBox
+      - target: LikePics
       - target: TestHelper
       - framework: Carthage/Build/Nimble.xcframework
       - framework: Carthage/Build/Quick.xcframework
@@ -549,7 +549,7 @@ targets:
     sources:
       - path: LikePicsUITests
     dependencies:
-      - target: TBox
+      - target: LikePics
       - target: TestHelper
       - framework: Carthage/Build/Nimble.xcframework
       - framework: Carthage/Build/Quick.xcframework
@@ -560,7 +560,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.LikePicsUITests
         PROVISIONING_PROFILE_SPECIFIER:
         PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
-        TEST_TARGET_NAME: TBox
+        TEST_TARGET_NAME: LikePics
   TestHelper:
     type: framework
     platform: iOS

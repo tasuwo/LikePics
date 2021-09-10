@@ -4,7 +4,8 @@
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
-      buildImplicitDependencies = "YES">
+      buildImplicitDependencies = "YES"
+      runPostActionsOnFailure = "NO">
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
@@ -14,36 +15,28 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "68D90AE94993E5FDF8AD551F"
+               BlueprintIdentifier = "6FC4A896ED54FA33639E441D"
                BuildableName = "LikePics.app"
-               BlueprintName = "TBox"
+               BlueprintName = "LikePics"
                ReferencedContainer = "container:TBox.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
-      buildConfiguration = "DebugDev"
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      onlyGenerateCoverageForSpecifiedTargets = "NO"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "68D90AE94993E5FDF8AD551F"
-            BuildableName = "LikePics.app"
-            BlueprintName = "TBox"
-            ReferencedContainer = "container:TBox.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6427242AA48C59D106DBD776"
-               BuildableName = "TBoxTests.xctest"
-               BlueprintName = "TBoxTests"
+               BlueprintIdentifier = "FC9D92CB23912A8680D67B0A"
+               BuildableName = "LikePicsTests.xctest"
+               BlueprintName = "LikePicsTests"
                ReferencedContainer = "container:TBox.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -88,9 +81,20 @@
             </BuildableReference>
          </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "6FC4A896ED54FA33639E441D"
+            BuildableName = "LikePics.app"
+            BlueprintName = "LikePics"
+            ReferencedContainer = "container:TBox.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "DebugDev"
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -103,9 +107,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "68D90AE94993E5FDF8AD551F"
+            BlueprintIdentifier = "6FC4A896ED54FA33639E441D"
             BuildableName = "LikePics.app"
-            BlueprintName = "TBox"
+            BlueprintName = "LikePics"
             ReferencedContainer = "container:TBox.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -121,7 +125,7 @@
       </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
-      buildConfiguration = "ReleaseDev"
+      buildConfiguration = "Release"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
@@ -130,18 +134,20 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "68D90AE94993E5FDF8AD551F"
+            BlueprintIdentifier = "6FC4A896ED54FA33639E441D"
             BuildableName = "LikePics.app"
-            BlueprintName = "TBox"
+            BlueprintName = "LikePics"
             ReferencedContainer = "container:TBox.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "DebugDev">
+      buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "ReleaseDev"
+      buildConfiguration = "Release"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
