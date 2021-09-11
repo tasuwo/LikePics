@@ -158,7 +158,6 @@ extension ClipReferencesIntegrityValidationService: CloudStackObserver {
 
         do {
             if !inserted.isEmpty || !updated.isEmpty || !deleted.isEmpty {
-                // TODO: パフォーマンス向上を検討する
                 try self.validateAndFixTagsIntegrityIfNeeded()
             }
         } catch {
