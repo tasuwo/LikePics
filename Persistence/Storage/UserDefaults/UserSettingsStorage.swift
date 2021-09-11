@@ -11,6 +11,7 @@ public class UserSettingsStorage {
         case userInterfaceStyle = "userSettingsUserInterfaceStyle"
         case showHiddenItems = "userSettingsShowHiddenItems"
         case enabledICloudSync = "userSettingsEnabledICloudSync"
+        case ignoreCloudUnavailableAlert = "userSettingsIgnoreCloudUnavailableAlert"
     }
 
     private let bundle: Bundle
@@ -33,7 +34,8 @@ public class UserSettingsStorage {
         self.userDefaults.register(defaults: [
             Self.Key.userInterfaceStyle.rawValue: UserInterfaceStyle.unspecified.rawValue,
             Self.Key.showHiddenItems.rawValue: false,
-            Self.Key.enabledICloudSync.rawValue: true
+            Self.Key.enabledICloudSync.rawValue: true,
+            Self.Key.ignoreCloudUnavailableAlert.rawValue: false
         ])
     }
 
@@ -54,6 +56,11 @@ public class UserSettingsStorage {
         userDefaults.set(enabledICloudSync, forKey: Key.enabledICloudSync.rawValue)
     }
 
+    private func setIgnoreCloudUnavailableAlert(_ ignoreCloudUnavailableAlert: Bool) {
+        guard fetchIgnoreCloudUnavailableAlert() != ignoreCloudUnavailableAlert else { return }
+        userDefaults.set(ignoreCloudUnavailableAlert, forKey: Key.ignoreCloudUnavailableAlert.rawValue)
+    }
+
     private func fetchUserInterfaceStyleNonAtomically() -> UserInterfaceStyle {
         return UserInterfaceStyle(rawValue: userDefaults.userSettingsUserInterfaceStyle) ?? .unspecified
     }
@@ -64,6 +71,10 @@ public class UserSettingsStorage {
 
     private func fetchEnabledICloudSync() -> Bool {
         return userDefaults.userSettingsEnabledICloudSync
+    }
+
+    private func fetchIgnoreCloudUnavailableAlert() -> Bool {
+        return userDefaults.userSettingsIgnoreCloudUnavailableAlert
     }
 }
 
@@ -78,6 +89,10 @@ extension UserDefaults {
 
     @objc dynamic var userSettingsEnabledICloudSync: Bool {
         return bool(forKey: UserSettingsStorage.Key.enabledICloudSync.rawValue)
+    }
+
+    @objc dynamic var userSettingsIgnoreCloudUnavailableAlert: Bool {
+        return bool(forKey: UserSettingsStorage.Key.ignoreCloudUnavailableAlert.rawValue)
     }
 }
 
@@ -103,6 +118,12 @@ extension UserSettingsStorage: UserSettingsStorageProtocol {
             .eraseToAnyPublisher()
     }
 
+    public var ignoreCloudUnavailableAlert: AnyPublisher<Bool, Never> {
+        return userDefaults
+            .publisher(for: \.userSettingsIgnoreCloudUnavailableAlert)
+            .eraseToAnyPublisher()
+    }
+
     public func readUserInterfaceStyle() -> UserInterfaceStyle {
         return fetchUserInterfaceStyleNonAtomically()
     }
@@ -115,6 +136,10 @@ extension UserSettingsStorage: UserSettingsStorageProtocol {
         return fetchEnabledICloudSync()
     }
 
+    public func readIgnoreCloudUnavailableAlert() -> Bool {
+        return fetchIgnoreCloudUnavailableAlert()
+    }
+
     public func set(userInterfaceStyle: UserInterfaceStyle) {
         queue.sync { setUserInterfaceStyleNonAtomically(userInterfaceStyle) }
     }
@@ -125,5 +150,9 @@ extension UserSettingsStorage: UserSettingsStorageProtocol {
 
     public func set(enabledICloudSync: Bool) {
         queue.sync { setEnabledICloudSyncNonAtomically(enabledICloudSync) }
+    }
+
+    public func set(ignoreCloudUnavailableAlert: Bool) {
+        queue.sync { setIgnoreCloudUnavailableAlert(ignoreCloudUnavailableAlert) }
     }
 }

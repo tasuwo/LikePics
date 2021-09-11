@@ -1295,10 +1295,11 @@ public class TagQueryMock: TagQuery {
 
 public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
     public init() { }
-    public init(userInterfaceStyle: AnyPublisher<UserInterfaceStyle, Never>, showHiddenItems: AnyPublisher<Bool, Never>, enabledICloudSync: AnyPublisher<Bool, Never>) {
+    public init(userInterfaceStyle: AnyPublisher<UserInterfaceStyle, Never>, showHiddenItems: AnyPublisher<Bool, Never>, enabledICloudSync: AnyPublisher<Bool, Never>, ignoreCloudUnavailableAlert: AnyPublisher<Bool, Never>) {
         self._userInterfaceStyle = userInterfaceStyle
         self._showHiddenItems = showHiddenItems
         self._enabledICloudSync = enabledICloudSync
+        self._ignoreCloudUnavailableAlert = ignoreCloudUnavailableAlert
     }
 
     public private(set) var userInterfaceStyleSetCallCount = 0
@@ -1320,6 +1321,13 @@ public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
     public var enabledICloudSync: AnyPublisher<Bool, Never> {
         get { return _enabledICloudSync }
         set { _enabledICloudSync = newValue }
+    }
+
+    public private(set) var ignoreCloudUnavailableAlertSetCallCount = 0
+    private var _ignoreCloudUnavailableAlert: AnyPublisher<Bool, Never>! { didSet { ignoreCloudUnavailableAlertSetCallCount += 1 } }
+    public var ignoreCloudUnavailableAlert: AnyPublisher<Bool, Never> {
+        get { return _ignoreCloudUnavailableAlert }
+        set { _ignoreCloudUnavailableAlert = newValue }
     }
 
     public private(set) var readUserInterfaceStyleCallCount = 0
@@ -1352,6 +1360,16 @@ public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
         return false
     }
 
+    public private(set) var readIgnoreCloudUnavailableAlertCallCount = 0
+    public var readIgnoreCloudUnavailableAlertHandler: (() -> (Bool))?
+    public func readIgnoreCloudUnavailableAlert() -> Bool {
+        readIgnoreCloudUnavailableAlertCallCount += 1
+        if let readIgnoreCloudUnavailableAlertHandler = readIgnoreCloudUnavailableAlertHandler {
+            return readIgnoreCloudUnavailableAlertHandler()
+        }
+        return false
+    }
+
     public private(set) var setCallCount = 0
     public var setHandler: ((UserInterfaceStyle) -> Void)?
     public func set(userInterfaceStyle: UserInterfaceStyle) {
@@ -1376,6 +1394,15 @@ public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
         setEnabledICloudSyncCallCount += 1
         if let setEnabledICloudSyncHandler = setEnabledICloudSyncHandler {
             setEnabledICloudSyncHandler(enabledICloudSync)
+        }
+    }
+
+    public private(set) var setIgnoreCloudUnavailableAlertCallCount = 0
+    public var setIgnoreCloudUnavailableAlertHandler: ((Bool) -> Void)?
+    public func set(ignoreCloudUnavailableAlert: Bool) {
+        setIgnoreCloudUnavailableAlertCallCount += 1
+        if let setIgnoreCloudUnavailableAlertHandler = setIgnoreCloudUnavailableAlertHandler {
+            setIgnoreCloudUnavailableAlertHandler(ignoreCloudUnavailableAlert)
         }
     }
 }
