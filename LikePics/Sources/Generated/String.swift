@@ -312,6 +312,10 @@ internal enum L10n {
     internal static let errorIcloudDefaultMessage = L10n.tr("Localizable", "error_icloud_default_message")
     /// iCloudが利用できません
     internal static let errorIcloudDefaultTitle = L10n.tr("Localizable", "error_icloud_default_title")
+    /// iCloudは現在利用できません
+    internal static let errorIcloudFailureMessage = L10n.tr("Localizable", "error_icloud_failure_message")
+    /// iCloudが利用できません
+    internal static let errorIcloudFailureTitle = L10n.tr("Localizable", "error_icloud_failure_title")
     /// iCloudアカウントでログインしていないか、端末のiCloud同期設定がオフになっている可能性があります。\niCluoudが利用できない間に保存したデータは、後ほどiCloudが有効になった際に統合されます
     internal static let errorIcloudUnavailableMessage = L10n.tr("Localizable", "error_icloud_unavailable_message")
     /// iCloudが利用できません

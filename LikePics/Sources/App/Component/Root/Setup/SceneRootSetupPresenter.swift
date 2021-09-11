@@ -11,6 +11,7 @@ protocol SceneRootSetupViewProtocol: AnyObject {
     func launchLikePics(_ intent: Intent?)
     func confirmAccountChanged()
     func confirmUnavailable()
+    func confirmFailure()
 }
 
 class SceneRootSetupPresenter {
@@ -54,8 +55,7 @@ class SceneRootSetupPresenter {
                     self.view?.confirmUnavailable()
 
                 case (true, .failure):
-                    // TODO: 別の文言を表示する
-                    self.view?.confirmUnavailable()
+                    self.view?.confirmFailure()
 
                 case (false, _):
                     self.view?.launchLikePics(self.intent)
@@ -69,6 +69,10 @@ class SceneRootSetupPresenter {
     }
 
     func didConfirmUnavailable() {
+        self.view?.launchLikePics(intent)
+    }
+
+    func didConfirmFailure() {
         self.view?.launchLikePics(intent)
     }
 }

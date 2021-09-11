@@ -285,5 +285,7 @@
 "error_icloud_unavailable_message" = "Please sign in to iCloud or enable using iCloud for this app at device setting.";
 "error_icloud_unavailable_turn_off_action" = "Always disable iCloud Sync";
 "error_icloud_unavailable_turn_on_action" = "Enable iCloud Sync automatically";
+"error_icloud_failure_title" = "iCloud Unavailable";
+"error_icloud_failure_message" = "iCloud is currently unavailable.";
 "error_icloud__account_changed_title" = "iCloud Account Changed";
 "error_icloud_account_changed_message" = "Data in this device would sync with new iCloud account data.";

@@ -102,4 +102,18 @@ extension SceneRootSetupViewController: SceneRootSetupViewProtocol {
             self.present(alertController, animated: true, completion: nil)
         }
     }
+
+    func confirmFailure() {
+        let alertController = UIAlertController(title: L10n.errorIcloudFailureTitle,
+                                                message: L10n.errorIcloudFailureMessage,
+                                                preferredStyle: .alert)
+        let okAction = UIAlertAction(title: L10n.confirmAlertOk,
+                                     style: .default,
+                                     handler: { [weak self] _ in self?.presenter.didConfirmFailure() })
+        alertController.addAction(okAction)
+
+        DispatchQueue.main.async {
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
 }
