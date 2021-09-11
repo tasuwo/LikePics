@@ -186,9 +186,8 @@ extension ClipCreationViewLayout {
 
             switch info.accessory {
             case let .button(title: title):
-                let button = UIButton()
+                let button = UIButton(type: .system)
                 button.setTitle(title, for: .normal)
-                button.setTitleColor(button.tintColor, for: .normal)
                 button.addAction(.init(handler: { [weak proxy] _ in
                     proxy?.didTapButton(cell, at: indexPath)
                 }), for: .touchUpInside)

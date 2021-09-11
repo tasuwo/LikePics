@@ -63,13 +63,11 @@ extension ClipItemEditContentView {
         siteUrlEditButton.setTitle(L10n.clipItemEditContentViewSiteUrlEditTitle, for: .normal)
         siteUrlEditButton.titleLabel?.adjustsFontForContentSizeCategory = true
         siteUrlEditButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
-        siteUrlEditButton.setTitleColor(.secondaryLabel, for: .disabled)
 
         siteUrlTitleLabel.text = L10n.clipItemEditContentViewSiteTitle
 
         siteUrlButton.titleLabel?.adjustsFontForContentSizeCategory = true
         siteUrlButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .callout)
-        siteUrlButton.setTitleColor(.secondaryLabel, for: .disabled)
 
         dataSizeTitleLabel.text = L10n.clipItemEditContentViewSizeTitle
         dataSizeTitleLabel.numberOfLines = 0

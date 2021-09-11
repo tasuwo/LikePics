@@ -6,7 +6,7 @@ import UIKit
 
 public class ClipSearchHistoryHeaderContentView: UIView, UIContentView {
     let label = UILabel()
-    let removeAllButton = UIButton()
+    let removeAllButton = UIButton(type: .system)
 
     private var _configuration: ClipSearchHistoryHeaderConfiguration!
     public var configuration: UIContentConfiguration {
@@ -58,9 +58,6 @@ extension ClipSearchHistoryHeaderContentView {
         removeAllButton.titleLabel?.font = .preferredFont(forTextStyle: .body)
         removeAllButton.titleLabel?.adjustsFontForContentSizeCategory = true
         removeAllButton.setTitle(L10n.searchEntryHeaderRemoveAll, for: .normal)
-        removeAllButton.setTitleColor(Asset.Color.likePicsRed.color, for: .normal)
-        removeAllButton.setTitleColor(Asset.Color.likePicsRed.color.withAlphaComponent(0.8), for: [.selected, .highlighted])
-        removeAllButton.setTitleColor(.systemGray, for: .disabled)
         NSLayoutConstraint.activate([
             removeAllButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             removeAllButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
