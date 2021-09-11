@@ -1,16 +1,16 @@
 PODS:
   - LicensePlist (3.13.0)
-  - Sourcery (1.4.2)
-  - SwiftFormat/CLI (0.48.3)
+  - Sourcery (1.5.0)
+  - SwiftFormat/CLI (0.48.11)
   - SwiftGen (6.4.0)
-  - SwiftLint (0.43.1)
+  - SwiftLint (0.44.0)
 
 DEPENDENCIES:
   - LicensePlist (~> 3.13.0)
-  - Sourcery (~> 1.4.2)
-  - SwiftFormat/CLI (~> 0.48.3)
+  - Sourcery (~> 1.5.0)
+  - SwiftFormat/CLI (~> 0.48.11)
   - SwiftGen (~> 6.4.0)
-  - SwiftLint (~> 0.43.1)
+  - SwiftLint (~> 0.44.0)
 
 SPEC REPOS:
   trunk:
@@ -22,11 +22,11 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   LicensePlist: 4e87d3438e03ae2d368ff5bd85344aa03ca722eb
-  Sourcery: 43d8addc35ca31c2ab331cfd34b02421fa53bb7f
-  SwiftFormat: 996933a4030607ae07c4f94fdb66dcf4f473b355
+  Sourcery: eecfeb011c61d150ffc4f306d2fbf52ae89019d5
+  SwiftFormat: 938e5865a118c49d63c7a290ddad86335f9e585f
   SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
-  SwiftLint: 99f82d07b837b942dd563c668de129a03fc3fb52
+  SwiftLint: e96c0a8c770c7ebbc4d36c55baf9096bb65c4584
 
-PODFILE CHECKSUM: fdc6989fb57ecd910327c856ddefbcfa664016ab
+PODFILE CHECKSUM: 54db181008928fc4e4543b532120ef5d0faf3038
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.10.2
