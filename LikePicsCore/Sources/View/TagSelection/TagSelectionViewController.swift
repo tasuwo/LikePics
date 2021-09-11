@@ -130,23 +130,22 @@ public class TagSelectionViewController: UIViewController {
     private func setupNavigationBar() {
         self.navigationItem.title = L10n.tagSelectionViewTitle
 
-        let addItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.didTapAdd))
-        let saveItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.didTapDone))
+        let addItem = UIBarButtonItem(systemItem: .add, primaryAction: UIAction { [weak self] _ in
+            self?.startAddingTag()
+        })
+        let saveItem = UIBarButtonItem(systemItem: .done, primaryAction: UIAction { [weak self] _ in
+            guard let self = self else { return }
+            self.dismiss(animated: true) {
+                self.delegate?.didSelectTags(tags: self.viewModel.outputs.tags.value.orderedSelectedEntities())
+            }
+        })
+
+        // HACK: ShareExtentionだと、tintColorがテキスト色にうまく反映されないケースがあるので、ここで反映する
+        saveItem.setTitleTextAttributes([.foregroundColor: Asset.Color.likePicsRed.color], for: .normal)
+        saveItem.setTitleTextAttributes([.foregroundColor: UIColor.lightGray.withAlphaComponent(0.6)], for: .disabled)
 
         self.navigationItem.leftBarButtonItems = [addItem]
         self.navigationItem.rightBarButtonItems = [saveItem]
-    }
-
-    @objc
-    func didTapAdd() {
-        self.startAddingTag()
-    }
-
-    @objc
-    func didTapDone() {
-        self.dismiss(animated: true) {
-            self.delegate?.didSelectTags(tags: self.viewModel.outputs.tags.value.orderedSelectedEntities())
-        }
     }
 
     // MARK: Collection View

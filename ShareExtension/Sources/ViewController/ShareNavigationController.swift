@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import LikePicsUIKit
 import UIKit
 
 @objc(ShareNavigationController)
@@ -12,6 +13,9 @@ class ShareNavigationController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        UIView.appearance().tintColor = Asset.Color.likePicsRed.color
+        UIBarButtonItem.appearance().tintColor = Asset.Color.likePicsRed.color
 
         do {
             self.factory = try DependencyContainer()
