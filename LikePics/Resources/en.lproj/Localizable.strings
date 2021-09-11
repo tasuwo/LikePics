@@ -289,3 +289,4 @@
 "error_icloud_failure_message" = "iCloud is currently unavailable.";
 "error_icloud__account_changed_title" = "iCloud Account Changed";
 "error_icloud_account_changed_message" = "Data in this device would sync with new iCloud account data.";
+"error_icloud_ignore_action" = "Don't show this again";

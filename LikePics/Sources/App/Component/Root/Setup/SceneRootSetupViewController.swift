@@ -98,6 +98,11 @@ extension SceneRootSetupViewController: SceneRootSetupViewProtocol {
                                      handler: { [weak self] _ in self?.presenter.didConfirmUnavailable() })
         alertController.addAction(okAction)
 
+        let doNotShowAgainAction = UIAlertAction(title: L10n.errorIcloudIgnoreAction,
+                                                 style: .cancel,
+                                                 handler: { [weak self] _ in self?.presenter.didTapDoNotShowUnavailableAlertAgain() })
+        alertController.addAction(doNotShowAgainAction)
+
         DispatchQueue.main.async {
             self.present(alertController, animated: true, completion: nil)
         }

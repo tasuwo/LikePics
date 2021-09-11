@@ -35,7 +35,6 @@ class SceneRootSetupPresenter {
     func checkCloudAvailability() {
         self.view?.startLoading()
 
-        // TODO: 必要に応じて表示をスキップする
         cloudAvailabilityService.currentAvailability { [weak self] availability in
             guard let self = self else { return }
 
@@ -52,7 +51,11 @@ class SceneRootSetupPresenter {
                     self.view?.confirmAccountChanged()
 
                 case (true, .success(.unavailable)):
-                    self.view?.confirmUnavailable()
+                    if self.userSettingsStorage.readIgnoreCloudUnavailableAlert() {
+                        self.view?.launchLikePics(self.intent)
+                    } else {
+                        self.view?.confirmUnavailable()
+                    }
 
                 case (true, .failure):
                     self.view?.confirmFailure()
@@ -74,5 +77,10 @@ class SceneRootSetupPresenter {
 
     func didConfirmFailure() {
         self.view?.launchLikePics(intent)
+    }
+
+    func didTapDoNotShowUnavailableAlertAgain() {
+        userSettingsStorage.set(ignoreCloudUnavailableAlert: true)
+        view?.launchLikePics(intent)
     }
 }

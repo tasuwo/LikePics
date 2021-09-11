@@ -289,3 +289,4 @@
 "error_icloud_failure_message" = "iCloudは現在利用できません";
 "error_icloud_account_changed_title" = "iCloudアカウントが異なります";
 "error_icloud_account_changed_message" = "以前利用していたiCloudアカウントと異なるアカウントでログインされています。\nこの端末上に保存されているデータは、現在ログイン中のiCloudアカウントに保存されているデータと統合されます";
+"error_icloud_ignore_action" = "二度と表示しない";
