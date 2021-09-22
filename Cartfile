@@ -1,7 +1,0 @@
-github "realm/realm-cocoa" == 10.7.5
-
-github "phimage/Erik" == 5.1.0
-
-# https://github.com/Quick/Nimble/pull/915 のリリースまち
-github "Quick/Nimble" "main"
-github "Quick/Quick" == 4.0.0

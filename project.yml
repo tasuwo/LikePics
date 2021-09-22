@@ -20,6 +20,19 @@ options:
       - TestHelper
       - Smoothie
       - ForestKit
+packages:
+  Realm:
+    url: https://github.com/realm/realm-cocoa
+    exactVersion: 10.15.1
+  Erik:
+    url: https://github.com/phimage/Erik
+    exactVersion: 5.1.0
+  Quick:
+    url: https://github.com/Quick/Quick
+    exactVersion: 4.0.0
+  Nimble:
+    url: https://github.com/Quick/Nimble
+    exactVersion: 9.2.1
 attributes:
   ORGANIZATIONNAME: Tasuku Tozawa
 configs:
@@ -184,9 +197,6 @@ settings:
     SDKROOT: iphoneos
     SWIFT_VERSION: 5.0
     TARGETED_DEVICE_FAMILY: "1,2"
-    # Realmがarm64対応するまでのworkaround
-    # https://github.com/realm/realm-cocoa/pull/7158
-    EXCLUDED_ARCHS[sdk=iphonesimulator*]: arm64
   configs:
     Debug:
       APP_GROUP: group.net.tasuwo.TBox
@@ -264,8 +274,8 @@ targets:
       - target: Common
       - target: LikePics
       - target: TestHelper
-      - framework: Carthage/Build/Nimble.xcframework
-      - framework: Carthage/Build/Quick.xcframework
+      - package: Nimble
+      - package: Quick
     settings:
       base:
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
@@ -300,8 +310,8 @@ targets:
       - target: Domain
       - target: LikePics
       - target: TestHelper
-      - framework: Carthage/Build/Nimble.xcframework
-      - framework: Carthage/Build/Quick.xcframework
+      - package: Nimble
+      - package: Quick
     settings:
       base:
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
@@ -319,8 +329,10 @@ targets:
     dependencies:
       - target: Domain
       - target: Common
-      - framework: Carthage/Build/Realm.xcframework
-      - framework: Carthage/Build/RealmSwift.xcframework
+      - package: Realm
+        product: Realm
+      - package: Realm
+        product: RealmSwift
     settings:
       base:
         APPLICATION_EXTENSION_API_ONLY: YES
@@ -338,8 +350,8 @@ targets:
       - target: Persistence
       - target: LikePics
       - target: TestHelper
-      - framework: Carthage/Build/Nimble.xcframework
-      - framework: Carthage/Build/Quick.xcframework
+      - package: Nimble
+      - package: Quick
     settings:
       base:
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
@@ -427,11 +439,6 @@ targets:
       - target: Common
       - target: Smoothie
       - target: ForestKit
-      - framework: Carthage/Build/Realm.xcframework
-      - framework: Carthage/Build/RealmSwift.xcframework
-      - framework: Carthage/Build/Erik.xcframework
-      - framework: Carthage/Build/Kanna.xcframework
-      - framework: Carthage/Build/BrightFutures.xcframework
     postbuildScripts:
       - name: Copy App Data
         runOnlyWhenInstalling: false
@@ -477,9 +484,7 @@ targets:
       - target: LikePicsUIKit
       - target: Common
       - target: ForestKit
-      - framework: Carthage/Build/Erik.xcframework
-      - framework: Carthage/Build/Kanna.xcframework
-      - framework: Carthage/Build/BrightFutures.xcframework
+      - package: Erik
     settings:
       base:
         APPLICATION_EXTENSION_API_ONLY: YES
@@ -496,8 +501,8 @@ targets:
     dependencies:
       - target: LikePics
       - target: TestHelper
-      - framework: Carthage/Build/Nimble.xcframework
-      - framework: Carthage/Build/Quick.xcframework
+      - package: Nimble
+      - package: Quick
     settings:
       base:
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
@@ -532,8 +537,8 @@ targets:
       - target: LikePicsUIKit
       - target: LikePics
       - target: TestHelper
-      - framework: Carthage/Build/Nimble.xcframework
-      - framework: Carthage/Build/Quick.xcframework
+      - package: Nimble
+      - package: Quick
     settings:
       base:
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
@@ -551,8 +556,8 @@ targets:
     dependencies:
       - target: LikePics
       - target: TestHelper
-      - framework: Carthage/Build/Nimble.xcframework
-      - framework: Carthage/Build/Quick.xcframework
+      - package: Nimble
+      - package: Quick
     settings:
       base:
         DEVELOPMENT_TEAM:
