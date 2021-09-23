@@ -6,6 +6,9 @@ output_directory("./build")
 include_bitcode(false)
 clean(true)
 
+disable_package_automatic_updates(true)
+cloned_source_packages_path("./SourcePackages")
+
 for_lane :release do
   configuration("Release")
   export_method("app-store")

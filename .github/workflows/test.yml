@@ -4,7 +4,7 @@ on:
   push:
 
 env:
-  DEVELOPER_DIR: /Applications/Xcode_12.5.1.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_13.0.app/Contents/Developer
   BUNDLE_GITHUB__COM: ${{ secrets.BUNDLE_GITHUB__COM }}
 
 jobs:
@@ -17,13 +17,12 @@ jobs:
         with:
           ruby-version: 2.7
           bundler-cache: true
-      - name: Cache Carthage files
+      - name: Cache Swift Packages
         uses: actions/cache@v1
         with:
-          path: Carthage
-          key: ${{ runner.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-carthage-
+          path: SourcePackages
+          key: ${{ runner.os }}-spm-${{ hashFiles('*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: ${{ runner.os }}-spm-
       - name: Cache CocoaPods files
         uses: actions/cache@v2
         with:

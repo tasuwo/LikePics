@@ -1,54 +1,34 @@
 # Xcode
-build/
-*.xcodeproj/*
+*.xcodeproj
+*.xcworkspace
 !*.xcodeproj/xcshareddata
 !*.xcodeproj/project.pbxproj
-!*.xcworkspace/contents.xcworkspacedata
+# Cache SwiftPM for CI
+!*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
 
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-xcuserdata/
-*.xccheckout
-*.moved-aside
-DerivedData/
-*.hmap
-*.ipa
-*.xcuserstate
-profile
-
-## CocoaPod
+# CocoaPod
 Pods/*
 
-## Carthage
-Carthage/*.xcconfig
-Carthage/Checkouts
-Carthage/Build/
-
-## maxOS
+# macOS
 .DS_Store
 
-## SPM
+# SPM
 .build/
+SourcePackages
 
+# mockolo
 !lib_InternalSwiftSyntaxParser.dylib
 
+# Sourcery
 templates/*
 !templates/.gitkeep
 !templates/AutoDefaultValue.extension.swifttemplate
 
-## Fastlane
-# fastlane specific
+# Fastlane
 **/fastlane/report.xml
-# deliver temporary files
 **/fastlane/Preview.html
-# scan temporary files
 **/fastlane/test_output
+build
 
 .env.secret
 *.p8
