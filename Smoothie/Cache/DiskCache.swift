@@ -12,7 +12,7 @@ public protocol DiskCaching: AnyObject {
 public final class DiskCache {
     public struct Configuration {
         public static let `default` = Configuration(
-            sizeLimit: 1024 * 1024 * 1024,
+            sizeLimit: 1024 * 1024 * 150, // 150MB
             countLimit: 1000,
             fileNameResolver: { $0.sha256() }
         )
@@ -28,19 +28,30 @@ public final class DiskCache {
         }
     }
 
+    // MARK: - Properties
+
+    private let url: URL
+    private let config: Configuration
+    private let ioQueue = DispatchQueue(label: "net.tasuwo.TBox.Domain.DiskCache.IOQueue", target: .global(qos: .utility))
+
+    // MARK: Sweep
+
     public var initialSweepDelay: TimeInterval = 10
     public var sweepInterval: TimeInterval = 30
 
-    private let url: URL
-    private let lock = NSLock()
-    private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.DiskCache.IOQueue", target: .global(qos: .utility))
-    private let config: Configuration
+    // MARK: Staging
+
+    public var flushInterval: TimeInterval = 1
+    private var isFlushScheduled = false
+    private let stagingLock = NSLock()
+    private var staging: Staging
 
     // MARK: - Initializers
 
     public init(path: URL, config: Configuration = .default) throws {
         self.url = path
         self.config = config
+        self.staging = Staging()
         try self.setup()
     }
 
@@ -48,7 +59,7 @@ public final class DiskCache {
 
     private func setup() throws {
         try createDirectoryIfNeeded(at: url)
-        queue.asyncAfter(deadline: .now() + initialSweepDelay) { [weak self] in
+        ioQueue.asyncAfter(deadline: .now() + initialSweepDelay) { [weak self] in
             self?.performAndScheduleSweep()
         }
     }
@@ -99,12 +110,14 @@ extension Array where Element == DiskCache.Content {
 extension DiskCache {
     private func performAndScheduleSweep() {
         performSweep()
-        queue.asyncAfter(deadline: .now() + sweepInterval) { [weak self] in
+        ioQueue.asyncAfter(deadline: .now() + sweepInterval) { [weak self] in
             self?.performAndScheduleSweep()
         }
     }
 
     private func performSweep() {
+        dispatchPrecondition(condition: .onQueue(ioQueue))
+
         let contents = self.contents()
         guard !contents.isEmpty else { return }
 
@@ -122,31 +135,134 @@ extension DiskCache {
     }
 }
 
+// MARK: - Staging
+
+extension DiskCache {
+    private struct Staging {
+        enum Change: Equatable {
+            case add(Data)
+            case remove
+        }
+
+        private(set) var changes: [String: Change] = [:]
+        private(set) var shouldRemoveAll = false
+        private(set) var isFlushNeeded = false
+
+        func change(for key: String) -> Change? {
+            changes[key]
+        }
+
+        mutating func remove(key: String) {
+            changes[key] = .remove
+            isFlushNeeded = true
+        }
+
+        mutating func add(_ data: Data, for key: String) {
+            changes[key] = .add(data)
+            isFlushNeeded = true
+        }
+
+        mutating func removeAll() {
+            shouldRemoveAll = true
+            isFlushNeeded = true
+        }
+
+        mutating func flushed() {
+            changes = [:]
+            shouldRemoveAll = false
+            isFlushNeeded = false
+        }
+    }
+
+    private func scheduleFlushNonAtomically() {
+        guard !isFlushScheduled else { return }
+        isFlushScheduled = true
+        ioQueue.asyncAfter(deadline: .now() + flushInterval) { [weak self] in
+            self?.performFlush()
+        }
+    }
+
+    private func performFlush() {
+        dispatchPrecondition(condition: .onQueue(ioQueue))
+
+        let stagingSnapshot: Staging
+        stagingLock.lock()
+        stagingSnapshot = staging
+        staging.flushed()
+        stagingLock.unlock()
+
+        autoreleasepool {
+            if stagingSnapshot.shouldRemoveAll {
+                try? FileManager.default.removeItem(at: url)
+                try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+            }
+
+            for (key, change) in stagingSnapshot.changes {
+                guard let url = resolveCacheUrl(for: key) else { continue }
+
+                switch change {
+                case let .add(data):
+                    try? data.write(to: url)
+
+                case .remove:
+                    try? FileManager.default.removeItem(at: url)
+                }
+            }
+        }
+
+        stagingLock.lock()
+        isFlushScheduled = false
+        if staging.isFlushNeeded {
+            scheduleFlushNonAtomically()
+        }
+        stagingLock.unlock()
+    }
+}
+
 extension DiskCache: DiskCaching {
     // MARK: - DiskCaching
 
     public func store(_ data: Data?, forKey key: String) {
         guard let data = data else { remove(forKey: key); return }
-        lock.lock(); defer { lock.unlock() }
-        guard let url = resolveCacheUrl(for: key) else { return }
-        try? data.write(to: url)
+        stagingLock.lock(); defer { stagingLock.unlock() }
+        staging.add(data, for: key)
+        scheduleFlushNonAtomically()
     }
 
     public func remove(forKey key: String) {
-        lock.lock(); defer { lock.unlock() }
-        guard let url = resolveCacheUrl(for: key) else { return }
-        try? FileManager.default.removeItem(at: url)
+        stagingLock.lock(); defer { stagingLock.unlock() }
+        staging.remove(key: key)
+        scheduleFlushNonAtomically()
     }
 
     public func removeAll() {
-        lock.lock(); defer { lock.unlock() }
-        try? FileManager.default.removeItem(at: url)
-        try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+        stagingLock.lock(); defer { stagingLock.unlock() }
+        staging.removeAll()
+        scheduleFlushNonAtomically()
     }
 
     public subscript(_ key: String) -> Data? {
         get {
-            guard let url = resolveCacheUrl(for: key) else { return nil }
+            let change: Staging.Change?
+            stagingLock.lock()
+            change = staging.change(for: key)
+            stagingLock.unlock()
+
+            switch change {
+            case let .add(data):
+                return data
+
+            case .remove:
+                return nil
+
+            case .none:
+                break
+            }
+
+            guard let url = resolveCacheUrl(for: key) else {
+                return nil
+            }
+
             return try? Data(contentsOf: url)
         }
         set {
