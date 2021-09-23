@@ -13,7 +13,7 @@ public class ThumbnailLoadQueue {
         public var memoryCache: MemoryCaching = MemoryCache()
         public var diskCache: DiskCaching?
         public var compressionRatio: Float = 0.8
-        public var originalImageLoader: OriginalImageLoader
+        public var imageLoader: ImageLoadable
 
         public let dataLoadingQueue = OperationQueue()
         public let dataCachingQueue = OperationQueue()
@@ -21,8 +21,8 @@ public class ThumbnailLoadQueue {
         public let imageEncodingQueue = OperationQueue()
         public let imageDecompressingQueue = OperationQueue()
 
-        public init(originalImageLoader: OriginalImageLoader) {
-            self.originalImageLoader = originalImageLoader
+        public init(originalImageLoader: ImageLoadable) {
+            self.imageLoader = originalImageLoader
 
             self.dataLoadingQueue.maxConcurrentOperationCount = 1
             self.dataCachingQueue.maxConcurrentOperationCount = 3
@@ -145,14 +145,15 @@ extension ThumbnailLoadQueue {
 
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Load Original Data")
-            let data = self.config.originalImageLoader.loadData(with: pool.imageRequest)
-            log.log(.end, name: "Load Original Data")
+            self.config.imageLoader.load(for: pool.imageRequest) { data in
+                log.log(.end, name: "Load Original Data")
 
-            self.queue.async {
-                if let data = data {
-                    self.enqueueDownsamplingOperation(pool, data: data)
-                } else {
-                    pool.didLoad(thumbnail: nil)
+                self.queue.async {
+                    if let data = data {
+                        self.enqueueDownsamplingOperation(pool, data: data)
+                    } else {
+                        pool.didLoad(thumbnail: nil)
+                    }
                 }
             }
         }

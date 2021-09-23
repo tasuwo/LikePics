@@ -59,7 +59,7 @@ class ThumbnailRequestPool {
     private var isPrefetched = false
 
     var config: ThumbnailConfig { baseRequest.config }
-    var imageRequest: OriginalImageRequest { baseRequest.imageRequest }
+    var imageRequest: ImageRequest { baseRequest.imageRequest }
 
     var isEmpty: Bool {
         lock.lock(); defer { lock.unlock() }

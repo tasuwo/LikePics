@@ -4,12 +4,12 @@
 
 public struct ThumbnailRequest {
     public let requestId: String
-    public let imageRequest: OriginalImageRequest
+    public let imageRequest: ImageRequest
     public let config: ThumbnailConfig
     public let userInfo: [ThumbnailRequestUserInfo.Key: Any]?
 
     public init(requestId: String,
-                originalImageRequest: OriginalImageRequest,
+                originalImageRequest: ImageRequest,
                 config: ThumbnailConfig,
                 userInfo: [ThumbnailRequestUserInfo.Key: Any]? = nil)
     {

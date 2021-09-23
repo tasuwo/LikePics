@@ -8,33 +8,25 @@ public class ImageSourceLoader {
     public init() {}
 }
 
-extension ImageSourceLoader: OriginalImageLoader {
-    // MARK: - OriginalImageLoader
+extension ImageSourceLoader: ImageLoadable {
+    // MARK: - ImageLoadable
 
-    public func loadData(with request: OriginalImageRequest) -> Data? {
-        guard let source = request as? ImageSource else { return nil }
+    public func load(for request: ImageRequest, completion: @escaping (Data?) -> Void) {
+        guard let source = request as? ImageSource else {
+            completion(nil)
+            return
+        }
 
         switch source.value {
         case let .imageProvider(provider):
-            let semaphore = DispatchSemaphore(value: 0)
-
-            var result: Data?
-            provider.load { data in
-                result = data
-                semaphore.signal()
-            }
-
-            if semaphore.wait(timeout: .now() + 5) == .timedOut {
-                return nil
-            }
-
-            return result
+            provider.load(completion)
 
         case let .fileUrl(url):
             guard let data = try? Data(contentsOf: url) else {
-                return nil
+                completion(nil)
+                return
             }
-            return data
+            completion(data)
 
         case let .urlSet(urlSet):
             let semaphore = DispatchSemaphore(value: 0)
@@ -47,12 +39,13 @@ extension ImageSourceLoader: OriginalImageLoader {
             task.resume()
 
             if semaphore.wait(timeout: .now() + 5) == .timedOut {
-                return nil
+                completion(nil)
+                return
             }
 
-            return result
+            completion(result)
         }
     }
 }
 
-extension ImageSource: OriginalImageRequest {}
+extension ImageSource: ImageRequest {}

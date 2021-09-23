@@ -9,7 +9,7 @@ public protocol ImageQueryServiceProtocol {
     func read(having id: ImageContainer.Identity) throws -> Data?
 }
 
-public struct ImageDataLoadRequest: OriginalImageRequest {
+public struct ImageDataLoadRequest: ImageRequest {
     public let imageId: UUID
 
     public init(imageId: UUID) {

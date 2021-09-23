@@ -38,14 +38,15 @@ extension ImageQueryService: ImageQueryServiceProtocol {
     }
 }
 
-extension ImageQueryService: OriginalImageLoader {
-    // MARK: - OriginalImageLoader
+extension ImageQueryService: ImageLoadable {
+    // MARK: - ImageLoadable
 
-    public func loadData(with request: OriginalImageRequest) -> Data? {
+    public func load(for request: ImageRequest, completion: @escaping (Data?) -> Void) {
         guard let request = request as? ImageDataLoadRequest else {
             logger.write(ConsoleLog(level: .error, message: "不正なリクエスト"))
-            return nil
+            completion(nil)
+            return
         }
-        return try? self.read(having: request.imageId)
+        completion(try? self.read(having: request.imageId))
     }
 }
