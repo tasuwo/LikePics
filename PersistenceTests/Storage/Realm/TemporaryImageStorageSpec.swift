@@ -5,6 +5,7 @@
 import Nimble
 import Quick
 
+import UIKit
 import Domain
 @testable import Persistence
 
