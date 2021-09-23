@@ -36,7 +36,7 @@ public final class DiskCache {
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.DiskCache.IOQueue", target: .global(qos: .utility))
     private let config: Configuration
 
-    // MARK: - Lifecycle
+    // MARK: - Initializers
 
     public init(path: URL, config: Configuration = .default) throws {
         self.url = path
