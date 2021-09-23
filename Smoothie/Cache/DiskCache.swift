@@ -21,10 +21,10 @@ public final class DiskCache {
         public let countLimit: Int
         public let fileNameResolver: (_ key: String) -> String?
 
-        public init(sizeLimit: Int, countLimit: Int, fileNameResolver: ((_ key: String) -> String?) = { $0.sha256() }) {
+        public init(sizeLimit: Int, countLimit: Int, fileNameResolver: @escaping ((_ key: String) -> String?) = { $0.sha256() }) {
             self.sizeLimit = sizeLimit
             self.countLimit = countLimit
-            self.fileNameResolver = { $0.sha256() }
+            self.fileNameResolver = fileNameResolver
         }
     }
 
