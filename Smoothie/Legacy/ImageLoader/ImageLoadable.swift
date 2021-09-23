@@ -3,5 +3,5 @@
 //
 
 public protocol ImageLoadable {
-    func load(for request: ImageRequest, completion: @escaping (Data?) -> Void)
+    func load(for request: LegacyImageRequest, completion: @escaping (Data?) -> Void)
 }

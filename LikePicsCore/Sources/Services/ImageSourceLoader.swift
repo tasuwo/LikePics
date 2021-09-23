@@ -11,7 +11,7 @@ public class ImageSourceLoader {
 extension ImageSourceLoader: ImageLoadable {
     // MARK: - ImageLoadable
 
-    public func load(for request: ImageRequest, completion: @escaping (Data?) -> Void) {
+    public func load(for request: LegacyImageRequest, completion: @escaping (Data?) -> Void) {
         guard let source = request as? ImageSource else {
             completion(nil)
             return
@@ -48,4 +48,4 @@ extension ImageSourceLoader: ImageLoadable {
     }
 }
 
-extension ImageSource: ImageRequest {}
+extension ImageSource: LegacyImageRequest {}
