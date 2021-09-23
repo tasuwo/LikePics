@@ -130,7 +130,7 @@ extension ClipCreationViewLayout {
 
     static func configureDataSource(collectionView: UICollectionView,
                                     cellDataSource: ClipSelectionCollectionViewCellDataSource,
-                                    thumbnailLoader: Smoothie.ThumbnailLoaderProtocol) -> (Proxy, DataSource)
+                                    thumbnailLoader: ThumbnailLoaderProtocol) -> (Proxy, DataSource)
     {
         let proxy = Proxy()
 

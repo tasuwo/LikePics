@@ -4,7 +4,7 @@
 
 import CoreGraphics
 
-public struct ImageRequestKey {
+public struct ImageRequestKey: Equatable {
     // MARK: - Properties
 
     public let cacheKey: String
@@ -23,5 +23,16 @@ public struct ImageRequestKey {
         self.cacheKey = cacheKey
         self.size = size
         self.scale = scale
+    }
+}
+
+extension ImageRequestKey: Hashable {
+    // MARK: - Hashable
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(cacheKey)
+        hasher.combine(size.width)
+        hasher.combine(size.height)
+        hasher.combine(scale)
     }
 }

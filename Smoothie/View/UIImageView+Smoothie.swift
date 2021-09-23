@@ -4,19 +4,12 @@
 
 import UIKit
 
-extension UIImageView: SmoothieCompatible {}
-
-public extension Smoothie where Base: UIImageView {
-    func loadImage() {
-        TaskManager.associateInstance(to: base).loadImage()
-    }
-}
-
 private final class TaskManager {
     // MARK: - Properties
 
     static var associatedKey = "TaskManager.AssociatedKey"
 
+    private var cancellable: ImageLoadTaskCancellable?
     private weak var view: UIImageView?
 
     // MARK: - Initializers
@@ -26,7 +19,7 @@ private final class TaskManager {
     }
 
     deinit {
-        // TODO: cancel
+        self.cancellable?.cancel()
     }
 
     // MARK: - Methods
@@ -40,7 +33,20 @@ private final class TaskManager {
         return manager
     }
 
-    func loadImage() {
-        // TODO: load
+    func loadImage(_ request: ImageRequest, with pipeline: Pipeline) {
+        self.cancellable?.cancel()
+        self.cancellable = nil
+
+        self.cancellable = pipeline.loadImage(request) { image in
+            self.view?.image = image
+        }
+    }
+}
+
+extension UIImageView: SmoothieCompatible {}
+
+public extension Smoothie where Base: UIImageView {
+    func loadImage(_ request: ImageRequest, with pipeline: Pipeline) {
+        TaskManager.associateInstance(to: base).loadImage(request, with: pipeline)
     }
 }
