@@ -127,6 +127,7 @@
 		2C2BF7E5D3C1106814F228B2 /* PreviewLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F75B7A591C5F90A43113B6 /* PreviewLoader.swift */; };
 		2C35B748CF4BE8BDF81A27EA /* ClipSearchToken+Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFF4AD5E8E612524AE2B88A /* ClipSearchToken+Display.swift */; };
 		2C54655681E4DEF5F6649DB2 /* ClipCollectionViewRootState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B3C89AD856C4B6AFB7ABA0 /* ClipCollectionViewRootState.swift */; };
+		2C5BEAB926FCCDB600E3255D /* ImageRequestKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5BEAB826FCCDB600E3255D /* ImageRequestKey.swift */; };
 		2CF0C6419065C6BF826C7FE8 /* ClipItemInformationViewCacheAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC09A3AB46E8330C793859CA /* ClipItemInformationViewCacheAction.swift */; };
 		2D10BD19B1BB1AAB68E78C8F /* ThumbnailLoadQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED77FA4ED65238C71BD917D /* ThumbnailLoadQueue.swift */; };
 		2D158E14BE00F753009FAD0E /* ImageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA53A6D42844408165B1C8C /* ImageType.swift */; };
@@ -1160,6 +1161,7 @@
 		2BC66194AB7250168F2BBC18 /* UserSettingsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsStorage.swift; sourceTree = "<group>"; };
 		2BE35B9192D5565ED74A673B /* ImageExtensionResolverSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageExtensionResolverSpec.swift; sourceTree = "<group>"; };
 		2C550077F48AB5F05C05A16F /* ClipSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
+		2C5BEAB826FCCDB600E3255D /* ImageRequestKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRequestKey.swift; sourceTree = "<group>"; };
 		2C8EAB84BE7BDCF013FEBF41 /* CommonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonTests.swift; sourceTree = "<group>"; };
 		2CCBDA1AEFE0D933CB1066B8 /* ModalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalController.swift; sourceTree = "<group>"; };
 		2D6545FFB2F072EFE1F29F95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsViewController.storyboard; sourceTree = "<group>"; };
@@ -2250,6 +2252,7 @@
 			children = (
 				C8402A828AD65459EE8800C2 /* ImageDataProviding.swift */,
 				221C767AB5D22CF2A632D62B /* ImageRequest.swift */,
+				2C5BEAB826FCCDB600E3255D /* ImageRequestKey.swift */,
 				200D1651923C2DF97E1F0150 /* ImageSource.swift */,
 			);
 			path = Request;
@@ -5767,6 +5770,7 @@
 				1D72A5E3AD26C7A84493BA75 /* MemoryCache.swift in Sources */,
 				8C3AA1AA57C6DF558290DA88 /* Smoothie.swift in Sources */,
 				DD4B6B19A52640E0C8F07586 /* String+SHA256.swift in Sources */,
+				2C5BEAB926FCCDB600E3255D /* ImageRequestKey.swift in Sources */,
 				B6AA3F6E025A0ED95463557A /* ThumbnailConfig.swift in Sources */,
 				2B1945A6555D358583004D55 /* ThumbnailLoadObserver.swift in Sources */,
 				2D10BD19B1BB1AAB68E78C8F /* ThumbnailLoadQueue.swift in Sources */,

@@ -5,9 +5,13 @@
 import CoreGraphics
 
 public struct ImageRequest {
+    // MARK: - Properties
+
     public let source: ImageSource
     public let size: CGSize
     public let scale: CGFloat
+
+    // MARK: - Initializers
 
     public init(source: ImageSource, size: CGSize, scale: CGFloat) {
         self.source = source
