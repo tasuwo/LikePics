@@ -7,6 +7,9 @@ import UIKit
 @objc
 public protocol ImageDisplayable {
     @objc
+    func smt_willLoad(userInfo: [AnyHashable: Any]?)
+
+    @objc
     func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?)
 }
 
@@ -44,6 +47,8 @@ final class ImageLoadTaskController {
     func loadImage(_ request: ImageRequest, with pipeline: Pipeline, userInfo: [AnyHashable: Any]?) {
         self.cancellable?.cancel()
         self.cancellable = nil
+
+        self.view?.smt_willLoad(userInfo: userInfo)
 
         self.cancellable = pipeline.loadImage(request) { image in
             self.view?.smt_display(image, userInfo: userInfo)
