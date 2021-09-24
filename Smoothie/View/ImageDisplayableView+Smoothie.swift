@@ -4,18 +4,18 @@
 
 import UIKit
 
-public func loadImage(_ request: ImageRequest, with pipeline: Pipeline, on view: ImageDisplayableView) {
-    ImageLoadTaskController.associateInstance(to: view).loadImage(request, with: pipeline)
+public func loadImage(_ request: ImageRequest, with pipeline: Pipeline, on view: ImageDisplayableView, userInfo: [AnyHashable: Any]? = nil) {
+    ImageLoadTaskController.associateInstance(to: view).loadImage(request, with: pipeline, userInfo: userInfo)
 }
 
 public extension Smoothie where Base: UIImageView {
-    func loadImage(_ request: ImageRequest, with pipeline: Pipeline) {
-        ImageLoadTaskController.associateInstance(to: base).loadImage(request, with: pipeline)
+    func loadImage(_ request: ImageRequest, with pipeline: Pipeline, userInfo: [AnyHashable: Any]? = nil) {
+        ImageLoadTaskController.associateInstance(to: base).loadImage(request, with: pipeline, userInfo: userInfo)
     }
 }
 
 extension UIImageView: ImageDisplayable {
-    public func smt_display(_ image: UIImage?) {
+    public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
         self.image = image
     }
 }

@@ -7,7 +7,13 @@ import UIKit
 @objc
 public protocol ImageDisplayable {
     @objc
-    func smt_display(_ image: UIImage?)
+    func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?)
+}
+
+public extension ImageDisplayable {
+    func smt_display(_ image: UIImage?) {
+        smt_display(image, userInfo: nil)
+    }
 }
 
 public typealias ImageDisplayableView = UIView & ImageDisplayable
@@ -41,12 +47,12 @@ final class ImageLoadTaskController {
         return manager
     }
 
-    func loadImage(_ request: ImageRequest, with pipeline: Pipeline) {
+    func loadImage(_ request: ImageRequest, with pipeline: Pipeline, userInfo: [AnyHashable: Any]?) {
         self.cancellable?.cancel()
         self.cancellable = nil
 
         self.cancellable = pipeline.loadImage(request) { image in
-            self.view?.smt_display(image)
+            self.view?.smt_display(image, userInfo: userInfo)
         }
     }
 }
