@@ -4,17 +4,25 @@
 
 import UIKit
 
-private final class TaskManager {
+@objc
+public protocol ImageDisplayable {
+    @objc
+    func smt_display(_ image: UIImage?)
+}
+
+public typealias ImageDisplayableView = UIView & ImageDisplayable
+
+final class ImageLoadTaskController {
     // MARK: - Properties
 
-    static var associatedKey = "TaskManager.AssociatedKey"
+    static var associatedKey = "ImageLoadTaskController.AssociatedKey"
 
     private var cancellable: ImageLoadTaskCancellable?
-    private weak var view: UIImageView?
+    private weak var view: ImageDisplayableView?
 
     // MARK: - Initializers
 
-    init(_ view: UIImageView) {
+    init(_ view: ImageDisplayableView) {
         self.view = view
     }
 
@@ -24,11 +32,11 @@ private final class TaskManager {
 
     // MARK: - Methods
 
-    static func associateInstance(to view: UIImageView) -> TaskManager {
-        if let manager = objc_getAssociatedObject(view, &associatedKey) as? TaskManager {
+    static func associateInstance(to view: ImageDisplayableView) -> ImageLoadTaskController {
+        if let manager = objc_getAssociatedObject(view, &associatedKey) as? ImageLoadTaskController {
             return manager
         }
-        let manager = TaskManager(view)
+        let manager = ImageLoadTaskController(view)
         objc_setAssociatedObject(view, &associatedKey, manager, .OBJC_ASSOCIATION_RETAIN)
         return manager
     }
@@ -38,15 +46,7 @@ private final class TaskManager {
         self.cancellable = nil
 
         self.cancellable = pipeline.loadImage(request) { image in
-            self.view?.image = image
+            self.view?.smt_display(image)
         }
-    }
-}
-
-extension UIImageView: SmoothieCompatible {}
-
-public extension Smoothie where Base: UIImageView {
-    func loadImage(_ request: ImageRequest, with pipeline: Pipeline) {
-        TaskManager.associateInstance(to: base).loadImage(request, with: pipeline)
     }
 }

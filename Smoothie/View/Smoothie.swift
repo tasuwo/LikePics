@@ -2,20 +2,20 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-public struct Smoothie<Base> {
-    public let base: Base
-
-    public init(_ base: Base) {
-        self.base = base
-    }
-}
-
 public protocol SmoothieCompatible {
     associatedtype SmoothieBase
 
     static var smt: Smoothie<SmoothieBase>.Type { get }
 
     var smt: Smoothie<SmoothieBase> { get }
+}
+
+public struct Smoothie<Base> {
+    public let base: Base
+
+    public init(_ base: Base) {
+        self.base = base
+    }
 }
 
 public extension SmoothieCompatible {
