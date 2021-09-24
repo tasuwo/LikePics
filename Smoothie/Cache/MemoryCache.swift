@@ -40,7 +40,6 @@ public final class MemoryCache {
         return cache
     }()
 
-    private let lock = NSLock()
     private let config: Configuration
 
     // MARK: - Lifecycle
@@ -55,23 +54,19 @@ extension MemoryCache: MemoryCaching {
 
     public func insert(_ image: UIImage?, forKey key: String) {
         guard let image = image else { return remove(forKey: key) }
-        lock.lock(); defer { lock.unlock() }
         cache.setObject(image, forKey: key as NSString)
     }
 
     public func remove(forKey key: String) {
-        lock.lock(); defer { lock.unlock() }
         cache.removeObject(forKey: key as NSString)
     }
 
     public func removeAll() {
-        lock.lock(); defer { lock.unlock() }
         cache.removeAllObjects()
     }
 
     public subscript(key: String) -> UIImage? {
         get {
-            lock.lock(); defer { lock.unlock() }
             return cache.object(forKey: key as NSString)
         }
         set {
