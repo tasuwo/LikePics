@@ -10,12 +10,6 @@ public protocol ImageDisplayable {
     func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?)
 }
 
-public extension ImageDisplayable {
-    func smt_display(_ image: UIImage?) {
-        smt_display(image, userInfo: nil)
-    }
-}
-
 public typealias ImageDisplayableView = UIView & ImageDisplayable
 
 final class ImageLoadTaskController {
