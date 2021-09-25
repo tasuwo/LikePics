@@ -73,7 +73,7 @@ extension Pipeline {
                     return
                 }
 
-                self.enqueueDecompressingOperation(task, data: data)
+                self.enqueueDownsamplingCacheOperation(task, data: data)
             }
         }
         task.ongoingOperation = operation
@@ -172,6 +172,30 @@ extension Pipeline {
             log.log(.end, name: "Decompress Data")
 
             self.queue.async {
+                self.config.memoryCache.insert(image, forKey: task.request.source.cacheKey)
+                task.didLoad(image)
+            }
+        }
+        config.imageDecompressingQueue.addOperation(operation)
+    }
+
+    private func enqueueDownsamplingCacheOperation(_ task: ImageLoadTask, data: Data) {
+        let operation = BlockOperation { [weak self] in
+            guard let self = self else { return }
+
+            let log = Log(logger: self.logger)
+            log.log(.begin, name: "Downsample Data")
+            let thumbnail = self.thumbnail(data: data,
+                                           size: task.request.size,
+                                           scale: task.request.scale)
+            log.log(.end, name: "Downsample Data")
+
+            self.queue.async {
+                guard let thumbnail = thumbnail else {
+                    task.didLoad(nil)
+                    return
+                }
+                let image = UIImage(cgImage: thumbnail)
                 self.config.memoryCache.insert(image, forKey: task.request.source.cacheKey)
                 task.didLoad(image)
             }
