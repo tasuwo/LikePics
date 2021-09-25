@@ -36,7 +36,7 @@ class ClipCollectionViewController: UIViewController {
     // MARK: Service
 
     private let router: Router
-    private let thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable
+    private let thumbnailPipeline: Pipeline
     private let menuBuilder: ClipCollectionMenuBuildable
     private let imageQueryService: ImageQueryServiceProtocol
 
@@ -61,11 +61,11 @@ class ClipCollectionViewController: UIViewController {
 
     init(state: ClipCollectionViewRootState,
          dependency: ClipCollectionViewRootDependency,
-         thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable,
+         thumbnailPipeline: Pipeline,
          menuBuilder: ClipCollectionMenuBuildable)
     {
         self.router = dependency.router
-        self.thumbnailLoader = thumbnailLoader
+        self.thumbnailPipeline = thumbnailPipeline
         self.menuBuilder = menuBuilder
         self.imageQueryService = dependency.imageQueryService
         self.rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipCollectionViewRootReducer)
@@ -531,7 +531,9 @@ extension ClipCollectionViewController {
 
     private func configureDataSource() {
         collectionView.delegate = self
-        dataSource = Layout.configureDataSource(collectionView: collectionView, thumbnailLoader: thumbnailLoader)
+        dataSource = Layout.configureDataSource(collectionView: collectionView,
+                                                thumbnailPipeline: thumbnailPipeline,
+                                                imageQueryService: imageQueryService)
         selectionApplier = UICollectionViewSelectionLazyApplier(collectionView: collectionView,
                                                                 dataSource: dataSource,
                                                                 itemBuilder: { .init($0) })
@@ -831,7 +833,7 @@ extension ClipCollectionViewController: Restorable {
 
         return ClipCollectionViewController(state: nextState,
                                             dependency: rootStore.dependency,
-                                            thumbnailLoader: thumbnailLoader,
+                                            thumbnailPipeline: thumbnailPipeline,
                                             menuBuilder: menuBuilder)
     }
 }

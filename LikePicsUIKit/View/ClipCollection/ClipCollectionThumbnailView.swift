@@ -2,10 +2,11 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import Smoothie
 import UIKit
 
 @IBDesignable
-class ClipCollectionThumbnailView: UIView {
+public class ClipCollectionThumbnailView: UIView {
     enum ThumbnailLoadResult: Equatable {
         case success(UIImage)
         case failure
@@ -108,5 +109,22 @@ extension ClipCollectionThumbnailView {
     private func updateLoadingState() {
         imageView.isHidden = isLoading
         updateOverlayAppearance()
+    }
+}
+
+extension ClipCollectionThumbnailView: ImageDisplayable {
+    public func smt_willLoad(userInfo: [AnyHashable: Any]?) {
+        thumbnail = .none
+    }
+
+    public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
+        DispatchQueue.main.async {
+            if let image = image {
+                self.thumbnail = .success(image)
+                // TODO: Invalidate
+            } else {
+                self.thumbnail = .failure
+            }
+        }
     }
 }

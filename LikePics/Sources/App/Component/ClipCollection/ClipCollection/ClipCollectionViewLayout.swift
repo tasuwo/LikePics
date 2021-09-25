@@ -124,9 +124,10 @@ extension ClipCollection.Layout {
 
 extension ClipCollectionViewLayout {
     static func configureDataSource(collectionView: UICollectionView,
-                                    thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable) -> DataSource
+                                    thumbnailPipeline: Pipeline,
+                                    imageQueryService: ImageQueryServiceProtocol) -> DataSource
     {
-        let cellRegistration = configureCell(collectionView: collectionView, thumbnailLoader: thumbnailLoader)
+        let cellRegistration = configureCell(collectionView: collectionView, thumbnailPipeline: thumbnailPipeline, imageQueryService: imageQueryService)
 
         return .init(collectionView: collectionView) { collectionView, indexPath, item in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
@@ -134,15 +135,11 @@ extension ClipCollectionViewLayout {
     }
 
     private static func configureCell(collectionView: UICollectionView,
-                                      thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable) -> UICollectionView.CellRegistration<ClipCollectionViewCell, Item>
+                                      thumbnailPipeline: Pipeline,
+                                      imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<ClipCollectionViewCell, Item>
     {
-        return .init(cellNib: ClipCollectionViewCell.nib) { [weak collectionView, weak thumbnailLoader] cell, _, clip in
+        return .init(cellNib: ClipCollectionViewCell.nib) { [weak collectionView, weak thumbnailPipeline] cell, _, clip in
             cell.resetContent()
-
-            let requestId = UUID().uuidString
-
-            cell.identifier = requestId
-            cell.invalidator = thumbnailLoader
 
             cell.sizeDescription = .make(by: clip.clip)
             cell.isEditing = collectionView?.isEditing ?? false
@@ -151,49 +148,32 @@ extension ClipCollectionViewLayout {
             cell.setHiddenIconVisibility(true, animated: false)
             cell.setClipHiding(clip.isHidden, animated: false)
 
-            let scale = cell.traitCollection.displayScale
-            var requests: [ThumbnailRequest] = []
+            guard let pipeline = thumbnailPipeline else { return }
 
             if let item = clip.primaryItem {
-                let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
-                requests.append(self.makeRequest(for: item, id: requestId, size: size, scale: scale, context: .primary))
+                let request = makeRequest(item: item, cell: cell, imageQueryService: imageQueryService)
+                loadImage(request, with: pipeline, on: cell.primaryThumbnailView, userInfo: ["originalSize": item.imageSize.cgSize])
+                cell.overallThumbnailView.smt.loadImage(request, with: pipeline)
             }
             if let item = clip.secondaryItem {
-                let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
-                requests.append(self.makeRequest(for: item, id: requestId, size: size, scale: scale, context: .secondary))
+                let request = makeRequest(item: item, cell: cell, imageQueryService: imageQueryService)
+                loadImage(request, with: pipeline, on: cell.secondaryThumbnailView, userInfo: ["originalSize": item.imageSize.cgSize])
             }
             if let item = clip.tertiaryItem {
-                let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
-                requests.append(self.makeRequest(for: item, id: requestId, size: size, scale: scale, context: .tertiary))
+                let request = makeRequest(item: item, cell: cell, imageQueryService: imageQueryService)
+                loadImage(request, with: pipeline, on: cell.tertiaryThumbnailView, userInfo: ["originalSize": item.imageSize.cgSize])
             }
-
-            cell.onReuse = { [weak thumbnailLoader] identifier in
-                guard identifier == requestId else { return }
-                requests.forEach { thumbnailLoader?.cancel($0) }
-            }
-
-            requests.forEach { thumbnailLoader?.load($0, observer: cell) }
         }
     }
 
-    private static func makeRequest(for item: ClipItem,
-                                    id: String,
-                                    size: CGSize,
-                                    scale: CGFloat,
-                                    context: ClipCollectionViewCell.ThumbnailOrder) -> ThumbnailRequest
-    {
+    private static func makeRequest(item: ClipItem, cell: ClipCollectionViewCell, imageQueryService: ImageQueryServiceProtocol) -> ImageRequest {
+        let scale = cell.traitCollection.displayScale
+        let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
         // - SeeAlso: PreviewLoader
-        let info = ThumbnailConfig(cacheKey: "clip-collection-\(item.identity.uuidString)",
-                                   size: size,
-                                   scale: scale)
-        let imageRequest = ImageDataLoadRequest(imageId: item.imageId)
-        return ThumbnailRequest(requestId: id,
-                                originalImageRequest: imageRequest,
-                                config: info,
-                                userInfo: [
-                                    .clipThumbnailOrder: context.rawValue,
-                                    .originalImageSize: item.imageSize.cgSize
-                                ])
+        let provider = ImageDataProvider(imageId: item.imageId,
+                                         cacheKey: "clip-collection-\(item.identity.uuidString)",
+                                         imageQueryService: imageQueryService)
+        return ImageRequest(source: .provider(provider), size: size, scale: scale)
     }
 }
 

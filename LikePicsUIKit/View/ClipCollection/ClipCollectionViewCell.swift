@@ -18,10 +18,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     public static let tertiaryStickingOutMargin: CGFloat = 15
     public static let cornerRadius: CGFloat = 16
 
-    public var identifier: String?
-    public var onReuse: ((String?) -> Void)?
-    public weak var invalidator: ThumbnailInvalidatable?
-
     public var sizeDescription: ClipCollectionViewCellSizeDescription? {
         didSet {
             updateThumbnailConstraints()
@@ -67,17 +63,17 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     public private(set) var visibleHiddenIcon = false
     public private(set) var isHiddenClip = false
 
-    @IBOutlet var primaryThumbnailView: ClipCollectionThumbnailView!
-    @IBOutlet var secondaryThumbnailView: ClipCollectionThumbnailView!
-    @IBOutlet var tertiaryThumbnailView: ClipCollectionThumbnailView!
+    @IBOutlet public var overallThumbnailView: UIImageView!
+
+    @IBOutlet public var primaryThumbnailView: ClipCollectionThumbnailView!
+    @IBOutlet public var secondaryThumbnailView: ClipCollectionThumbnailView!
+    @IBOutlet public var tertiaryThumbnailView: ClipCollectionThumbnailView!
 
     @IBOutlet var secondaryThumbnailDisplayConstraint: NSLayoutConstraint!
     @IBOutlet var tertiaryThumbnailDisplayConstraint: NSLayoutConstraint!
 
     @IBOutlet var hiddenIconBottomToThumbnailConstraint: NSLayoutConstraint!
     @IBOutlet var hiddenIconTrailingToThumbnailConstraint: NSLayoutConstraint!
-
-    @IBOutlet var overallThumbnailView: UIImageView!
 
     @IBOutlet var overallOverlayView: UIView!
 
@@ -88,11 +84,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     @IBOutlet var hiddenIcon: HiddenIconView!
 
     // MARK: - Lifecycle
-
-    override public func prepareForReuse() {
-        super.prepareForReuse()
-        onReuse?(self.identifier)
-    }
 
     override public func awakeFromNib() {
         super.awakeFromNib()
@@ -226,54 +217,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
             hiddenIcon.setHiding(!isHiddenClip, animated: animated)
         } else {
             hiddenIcon.setHiding(true, animated: animated)
-        }
-    }
-
-    // MARK: Resolve UI Element
-
-    private func setResult(_ result: ClipCollectionThumbnailView.ThumbnailLoadResult, at order: ThumbnailOrder) {
-        switch order {
-        case .primary:
-            overallThumbnailView.image = result.image
-            primaryThumbnailView.thumbnail = result
-
-        case .secondary:
-            secondaryThumbnailView.thumbnail = result
-
-        case .tertiary:
-            tertiaryThumbnailView.thumbnail = result
-        }
-    }
-}
-
-extension ClipCollectionViewCell: ThumbnailLoadObserver {
-    // MARK: - ThumbnailLoadObserver
-
-    public func didStartLoading(_ request: ThumbnailRequest) {
-        // NOP
-    }
-
-    public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
-        DispatchQueue.main.async {
-            guard self.identifier == request.requestId else { return }
-            guard let value = request.userInfo?[.clipThumbnailOrder] as? String,
-                  let order = ThumbnailOrder(rawValue: value) else { return }
-            self.setResult(.success(image), at: order)
-
-            let displayScale = self.traitCollection.displayScale
-            let originalSize = request.userInfo?[.originalImageSize] as? CGSize
-            if self.shouldInvalidate(thumbnail: image, originalImageSize: originalSize, displayScale: displayScale) {
-                self.invalidator?.invalidateCache(having: request.config.cacheKey)
-            }
-        }
-    }
-
-    public func didFailedToLoad(_ request: ThumbnailRequest) {
-        DispatchQueue.main.async {
-            guard self.identifier == request.requestId else { return }
-            guard let value = request.userInfo?[.clipThumbnailOrder] as? String,
-                  let order = ThumbnailOrder(rawValue: value) else { return }
-            self.setResult(.failure, at: order)
         }
     }
 }

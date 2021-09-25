@@ -20,7 +20,7 @@ class DependencyContainer {
     // MARK: Image Loader
 
     let clipDiskCache: DiskCache
-    let clipThumbnailLoader: ThumbnailLoader
+    let clipThumbnailPipeline: Pipeline
     let albumThumbnailLoader: ThumbnailLoader
     let temporaryThumbnailLoader: ThumbnailLoader
     let _previewLoader: PreviewLoader
@@ -107,7 +107,7 @@ class DependencyContainer {
 
         let defaultCostLimit = Int(MemoryCache.Configuration.defaultCostLimit())
 
-        var clipCacheConfig = ThumbnailLoadQueue.Configuration(originalImageLoader: self._imageQueryService)
+        var clipCacheConfig = Pipeline.Configuration()
         let clipCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-thumbnails")
         self.clipDiskCache = try DiskCache(path: clipCacheDirectory,
                                            config: .init(sizeLimit: 1024 * 1024 * 1024, countLimit: Int.max))
@@ -115,7 +115,7 @@ class DependencyContainer {
         clipCacheConfig.compressionRatio = 0.5
         let clipMemoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 3 / 5, countLimit: Int.max))
         clipCacheConfig.memoryCache = clipMemoryCache
-        self.clipThumbnailLoader = ThumbnailLoader(queue: .init(config: clipCacheConfig))
+        self.clipThumbnailPipeline = .init(config: clipCacheConfig)
 
         var albumCacheConfig = ThumbnailLoadQueue.Configuration(originalImageLoader: self._imageQueryService)
         albumCacheConfig.compressionRatio = 0.5

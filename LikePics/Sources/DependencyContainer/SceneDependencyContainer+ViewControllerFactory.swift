@@ -19,14 +19,14 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                                 isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
         return ClipCollectionViewController(state: state,
                                             dependency: self,
-                                            thumbnailLoader: container.clipThumbnailLoader,
+                                            thumbnailPipeline: container.clipThumbnailPipeline,
                                             menuBuilder: ClipCollectionMenuBuilder(storage: container._userSettingStorage))
     }
 
     func makeClipCollectionViewController(_ state: ClipCollectionViewRootState) -> RestorableViewController & ViewLazyPresentable {
         return ClipCollectionViewController(state: state,
                                             dependency: self,
-                                            thumbnailLoader: container.clipThumbnailLoader,
+                                            thumbnailPipeline: container.clipThumbnailPipeline,
                                             menuBuilder: ClipCollectionMenuBuilder(storage: container._userSettingStorage))
     }
 
