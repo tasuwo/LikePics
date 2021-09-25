@@ -6,6 +6,18 @@ import Smoothie
 import UIKit
 
 public class ClipCollectionViewCell: UICollectionViewCell {
+    public class OverallThumbnailView: UIImageView {
+        override public func smt_willLoad(userInfo: [AnyHashable: Any]?) {
+            super.smt_willLoad(userInfo: userInfo)
+            backgroundColor = Asset.Color.secondaryBackground.color
+        }
+
+        override public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
+            backgroundColor = .clear
+            super.smt_display(image, userInfo: userInfo)
+        }
+    }
+
     public enum ThumbnailOrder: String {
         case primary
         case secondary
@@ -63,7 +75,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     public private(set) var visibleHiddenIcon = false
     public private(set) var isHiddenClip = false
 
-    @IBOutlet public var overallThumbnailView: UIImageView!
+    @IBOutlet public var overallThumbnailView: OverallThumbnailView!
 
     @IBOutlet public var primaryThumbnailView: ClipCollectionThumbnailView!
     @IBOutlet public var secondaryThumbnailView: ClipCollectionThumbnailView!

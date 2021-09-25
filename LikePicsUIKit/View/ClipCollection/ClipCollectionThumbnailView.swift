@@ -115,10 +115,12 @@ extension ClipCollectionThumbnailView {
 extension ClipCollectionThumbnailView: ImageDisplayable {
     public func smt_willLoad(userInfo: [AnyHashable: Any]?) {
         thumbnail = .none
+        backgroundColor = Asset.Color.secondaryBackground.color
     }
 
     public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
         DispatchQueue.main.async {
+            self.backgroundColor = .clear
             if let image = image {
                 self.thumbnail = .success(image)
                 // TODO: Invalidate
