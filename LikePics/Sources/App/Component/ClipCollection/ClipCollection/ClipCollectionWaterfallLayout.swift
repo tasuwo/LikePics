@@ -9,6 +9,21 @@ protocol ClipCollectionWaterfallLayoutDelegate: AnyObject {
 }
 
 class ClipCollectionWaterfallLayout: UICollectionViewLayout {
+    private struct Rect: Hashable {
+        private let rect: CGRect
+
+        init(_ rect: CGRect) {
+            self.rect = rect
+        }
+
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(rect.minX)
+            hasher.combine(rect.minY)
+            hasher.combine(rect.maxX)
+            hasher.combine(rect.maxY)
+        }
+    }
+
     private static let contentPadding: CGFloat = 8
     private static let cellPadding: CGFloat = 8
     private static let defaultContentHeight: CGFloat = 180
@@ -34,7 +49,13 @@ class ClipCollectionWaterfallLayout: UICollectionViewLayout {
         }
     }
 
-    private var cache: [UICollectionViewLayoutAttributes] = []
+    private var cache: [UICollectionViewLayoutAttributes] = [] {
+        didSet {
+            self.layoutAttributesForElementsCache = [:]
+        }
+    }
+
+    private var layoutAttributesForElementsCache: [Rect: [UICollectionViewLayoutAttributes]?] = [:]
 
     private var contentWidth: CGFloat {
         guard let collectionView = self.collectionView else { return 0 }
@@ -52,7 +73,13 @@ class ClipCollectionWaterfallLayout: UICollectionViewLayout {
     }
 
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        return self.cache.filter { $0.frame.intersects(rect) }
+        if let attributes = layoutAttributesForElementsCache[Rect(rect)] {
+            return attributes
+        } else {
+            let attributes = self.cache.filter { $0.frame.intersects(rect) }
+            layoutAttributesForElementsCache[Rect(rect)] = attributes
+            return attributes
+        }
     }
 
     override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
