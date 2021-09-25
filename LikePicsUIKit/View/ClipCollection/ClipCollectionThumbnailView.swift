@@ -31,7 +31,6 @@ public class ClipCollectionThumbnailView: UIView {
     var thumbnail: ThumbnailLoadResult? {
         didSet {
             imageView.image = thumbnail?.image
-            updateLoadingState()
         }
     }
 
@@ -41,7 +40,15 @@ public class ClipCollectionThumbnailView: UIView {
     }
 
     @IBInspectable var isOverlayHidden: Bool = false {
-        didSet { updateOverlayAppearance() }
+        didSet {
+            overlayView.isHidden = isOverlayHidden
+        }
+    }
+
+    @IBInspectable var overlayOpacity: CGFloat = 0.4 {
+        didSet {
+            overlayView.backgroundColor = .black.withAlphaComponent(overlayOpacity)
+        }
     }
 
     let imageView = UIImageView()
@@ -57,7 +64,6 @@ public class ClipCollectionThumbnailView: UIView {
         configureViewHierarchy()
 
         updateAspectRatioConstraint()
-        updateLoadingState()
     }
 
     required init?(coder: NSCoder) {
@@ -66,7 +72,6 @@ public class ClipCollectionThumbnailView: UIView {
         configureViewHierarchy()
 
         updateAspectRatioConstraint()
-        updateLoadingState()
     }
 }
 
@@ -84,7 +89,7 @@ extension ClipCollectionThumbnailView {
         addSubview(overlayView)
         overlayView.isHidden = true
         overlayView.translatesAutoresizingMaskIntoConstraints = false
-        overlayView.backgroundColor = .black.withAlphaComponent(0.4)
+        overlayView.backgroundColor = .black.withAlphaComponent(overlayOpacity)
         NSLayoutConstraint.activate(overlayView.constraints(fittingIn: self))
 
         clipsToBounds = true
@@ -103,25 +108,18 @@ extension ClipCollectionThumbnailView {
         }
         imageView.addAspectRatioConstraint(size: size)
     }
-
-    private func updateOverlayAppearance() {
-        overlayView.isHidden = isOverlayHidden || isLoading
-    }
-
-    private func updateLoadingState() {
-        imageView.isHidden = isLoading
-        updateOverlayAppearance()
-    }
 }
 
 extension ClipCollectionThumbnailView: ImageDisplayable {
     public func smt_willLoad(userInfo: [AnyHashable: Any]?) {
         thumbnail = .none
+        overlayView.alpha = 0
         backgroundColor = Asset.Color.secondaryBackground.color
     }
 
     public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
         DispatchQueue.main.async {
+            self.overlayView.alpha = 1
             self.backgroundColor = .clear
 
             guard let image = image else {
