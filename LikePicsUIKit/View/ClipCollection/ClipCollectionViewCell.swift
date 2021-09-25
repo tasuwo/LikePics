@@ -25,7 +25,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     public var sizeDescription: ClipCollectionViewCellSizeDescription? {
         didSet {
             updateThumbnailConstraints()
-            updateOverallOverlayView()
         }
     }
 
@@ -219,8 +218,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     }
 
     private func updateOverallOverlayView() {
-        overallOverlayView.isHidden = !((isSelected && isEditing) || isLoading)
-        selectionMark.isHidden = !(isEditing && !isLoading)
+        overallOverlayView.isHidden = !(isSelected && isEditing)
     }
 
     private func updateHiddenIconAppearance(animated: Bool) {
@@ -245,7 +243,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         case .tertiary:
             tertiaryThumbnailView.thumbnail = result
         }
-        updateOverallOverlayView()
     }
 }
 
@@ -253,9 +250,7 @@ extension ClipCollectionViewCell: ThumbnailLoadObserver {
     // MARK: - ThumbnailLoadObserver
 
     public func didStartLoading(_ request: ThumbnailRequest) {
-        DispatchQueue.main.async {
-            self.updateOverallOverlayView()
-        }
+        // NOP
     }
 
     public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
