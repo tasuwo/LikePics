@@ -85,7 +85,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     @IBOutlet var imagesContainerView: UIView!
 
     @IBOutlet var selectionMark: UIView!
-    @IBOutlet var indicator: UIActivityIndicatorView!
 
     @IBOutlet var hiddenIcon: HiddenIconView!
 
@@ -115,8 +114,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     private func setupAppearance() {
         overallThumbnailView.alpha = 0
         overallOverlayView.isHidden = true
-
-        indicator.hidesWhenStopped = true
 
         selectionMark.backgroundColor = .white
         selectionMark.layer.cornerRadius = selectionMark.bounds.width / 2.0
@@ -224,12 +221,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     private func updateOverallOverlayView() {
         overallOverlayView.isHidden = !((isSelected && isEditing) || isLoading)
         selectionMark.isHidden = !(isEditing && !isLoading)
-
-        if isLoading {
-            indicator.startAnimating()
-        } else {
-            indicator.stopAnimating()
-        }
     }
 
     private func updateHiddenIconAppearance(animated: Bool) {

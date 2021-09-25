@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -95,15 +96,10 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="MUZ-FQ-RAF">
-                                <rect key="frame" x="80" y="140" width="37" height="37"/>
-                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="MUZ-FQ-RAF" firstAttribute="centerX" secondItem="qJb-u8-3T5" secondAttribute="centerX" id="8PT-kX-TGv"/>
                             <constraint firstAttribute="trailing" secondItem="3SE-fc-NHX" secondAttribute="trailing" constant="12" id="9Jd-La-e4r"/>
-                            <constraint firstItem="MUZ-FQ-RAF" firstAttribute="centerY" secondItem="qJb-u8-3T5" secondAttribute="centerY" id="QK9-Qe-bE7"/>
                             <constraint firstItem="3SE-fc-NHX" firstAttribute="top" secondItem="qJb-u8-3T5" secondAttribute="top" constant="12" id="Y1B-Fd-pky"/>
                         </constraints>
                         <string key="userLabel">Overall Overlay View
@@ -136,7 +132,6 @@
                 <outlet property="hiddenIconBottomToThumbnailConstraint" destination="MrO-VU-0g4" id="sxD-Pr-4Ue"/>
                 <outlet property="hiddenIconTrailingToThumbnailConstraint" destination="jU3-Je-Ii2" id="Ubi-aB-C8s"/>
                 <outlet property="imagesContainerView" destination="Cof-mn-eeS" id="iPR-M6-EkV"/>
-                <outlet property="indicator" destination="MUZ-FQ-RAF" id="OKh-c3-twc"/>
                 <outlet property="overallOverlayView" destination="qJb-u8-3T5" id="ZQV-bp-1c8"/>
                 <outlet property="overallThumbnailView" destination="afu-7T-wNv" id="Xj9-ff-Wjk"/>
                 <outlet property="primaryThumbnailView" destination="Vf6-AM-fuo" id="Nak-XA-Mc0"/>
