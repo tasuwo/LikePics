@@ -47,6 +47,8 @@ public class ClipCollectionThumbnailView: UIView {
     let imageView = UIImageView()
     private let overlayView = UIView()
 
+    public weak var pipeline: Pipeline?
+
     // MARK: - Initializers
 
     override init(frame: CGRect) {
@@ -121,12 +123,42 @@ extension ClipCollectionThumbnailView: ImageDisplayable {
     public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
         DispatchQueue.main.async {
             self.backgroundColor = .clear
-            if let image = image {
-                self.thumbnail = .success(image)
-                // TODO: Invalidate
-            } else {
+
+            guard let image = image else {
                 self.thumbnail = .failure
+                return
             }
+
+            self.thumbnail = .success(image)
+
+            if let originalSize = userInfo?["originalSize"] as? CGSize,
+               let cacheKey = userInfo?["cacheKey"] as? String
+            {
+                let displayScale = self.traitCollection.displayScale
+                if self.shouldInvalidate(thumbnail: image, originalImageSize: originalSize, displayScale: displayScale) {
+                    self.pipeline?.config.diskCache?.remove(forKey: cacheKey)
+                    self.pipeline?.config.memoryCache.remove(forKey: cacheKey)
+                }
+            }
+        }
+    }
+}
+
+extension ClipCollectionThumbnailView: ThumbnailPresentable {
+    // MARK: - ThumbnailPresentable
+
+    public func calcThumbnailPointSize(originalPixelSize: CGSize?) -> CGSize {
+        // Note: frame.height は不定なので、計算に利用しない
+        if let originalSize = originalPixelSize {
+            if originalSize.width < originalSize.height {
+                return .init(width: frame.width,
+                             height: frame.width * (originalSize.height / originalSize.width))
+            } else {
+                return .init(width: frame.width * (originalSize.width / originalSize.height),
+                             height: frame.width)
+            }
+        } else {
+            return frame.size
         }
     }
 }

@@ -240,22 +240,3 @@ extension ClipCollectionViewCell: ClipPreviewPresentableCell {
         return isSingleThumbnail ? overallThumbnailView : primaryThumbnailView.imageView
     }
 }
-
-extension ClipCollectionViewCell: ThumbnailPresentable {
-    // MARK: - ThumbnailPresentable
-
-    public func calcThumbnailPointSize(originalPixelSize: CGSize?) -> CGSize {
-        // Note: frame.height は不定なので、計算に利用しない
-        if let originalSize = originalPixelSize {
-            if originalSize.width < originalSize.height {
-                return .init(width: frame.width,
-                             height: frame.width * (originalSize.height / originalSize.width))
-            } else {
-                return .init(width: frame.width * (originalSize.width / originalSize.height),
-                             height: frame.width)
-            }
-        } else {
-            return frame.size
-        }
-    }
-}

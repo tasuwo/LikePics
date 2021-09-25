@@ -151,24 +151,36 @@ extension ClipCollectionViewLayout {
             guard let pipeline = thumbnailPipeline else { return }
 
             if let item = clip.primaryItem {
-                let request = makeRequest(item: item, cell: cell, imageQueryService: imageQueryService)
-                loadImage(request, with: pipeline, on: cell.primaryThumbnailView, userInfo: ["originalSize": item.imageSize.cgSize])
+                let request = makeRequest(item: item, view: cell.primaryThumbnailView, imageQueryService: imageQueryService)
+                loadImage(request, with: pipeline, on: cell.primaryThumbnailView, userInfo: [
+                    "originalSize": item.imageSize.cgSize,
+                    "cacheKey": request.source.cacheKey
+                ])
+                cell.primaryThumbnailView.pipeline = pipeline
                 cell.overallThumbnailView.smt.loadImage(request, with: pipeline)
             }
             if let item = clip.secondaryItem {
-                let request = makeRequest(item: item, cell: cell, imageQueryService: imageQueryService)
-                loadImage(request, with: pipeline, on: cell.secondaryThumbnailView, userInfo: ["originalSize": item.imageSize.cgSize])
+                let request = makeRequest(item: item, view: cell.secondaryThumbnailView, imageQueryService: imageQueryService)
+                loadImage(request, with: pipeline, on: cell.secondaryThumbnailView, userInfo: [
+                    "originalSize": item.imageSize.cgSize,
+                    "cacheKey": request.source.cacheKey
+                ])
+                cell.secondaryThumbnailView.pipeline = pipeline
             }
             if let item = clip.tertiaryItem {
-                let request = makeRequest(item: item, cell: cell, imageQueryService: imageQueryService)
-                loadImage(request, with: pipeline, on: cell.tertiaryThumbnailView, userInfo: ["originalSize": item.imageSize.cgSize])
+                let request = makeRequest(item: item, view: cell.tertiaryThumbnailView, imageQueryService: imageQueryService)
+                loadImage(request, with: pipeline, on: cell.tertiaryThumbnailView, userInfo: [
+                    "originalSize": item.imageSize.cgSize,
+                    "cacheKey": request.source.cacheKey
+                ])
+                cell.tertiaryThumbnailView.pipeline = pipeline
             }
         }
     }
 
-    private static func makeRequest(item: ClipItem, cell: ClipCollectionViewCell, imageQueryService: ImageQueryServiceProtocol) -> ImageRequest {
-        let scale = cell.traitCollection.displayScale
-        let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
+    private static func makeRequest(item: ClipItem, view: ClipCollectionThumbnailView, imageQueryService: ImageQueryServiceProtocol) -> ImageRequest {
+        let scale = view.traitCollection.displayScale
+        let size = view.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
         // - SeeAlso: PreviewLoader
         let provider = ImageDataProvider(imageId: item.imageId,
                                          cacheKey: "clip-collection-\(item.identity.uuidString)",

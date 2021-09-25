@@ -5,7 +5,7 @@
 public enum ImageSource {
     case provider(ImageDataProviding)
 
-    var cacheKey: String {
+    public var cacheKey: String {
         switch self {
         case let .provider(provider):
             return provider.cacheKey
