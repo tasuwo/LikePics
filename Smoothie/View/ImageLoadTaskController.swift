@@ -50,8 +50,13 @@ final class ImageLoadTaskController {
 
         self.view?.smt_willLoad(userInfo: userInfo)
 
-        self.cancellable = pipeline.loadImage(request) { image in
-            self.view?.smt_display(image, userInfo: userInfo)
+        if let image = pipeline.config.memoryCache[request.source.cacheKey] {
+            view?.smt_display(image, userInfo: userInfo)
+            return
+        }
+
+        self.cancellable = pipeline.loadImage(request) { [weak self] image in
+            self?.view?.smt_display(image, userInfo: userInfo)
         }
     }
 }
