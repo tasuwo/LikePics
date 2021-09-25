@@ -208,6 +208,9 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
         secondaryThumbnailDisplayConstraint.isActive = description.containsSecondaryThumbnailSize
         tertiaryThumbnailDisplayConstraint.isActive = description.containsTertiaryThumbnailSize
+
+        secondaryThumbnailView.isHidden = description.secondaryThumbnailSize == nil
+        tertiaryThumbnailView.isHidden = description.tertiaryThumbnailSize == nil
     }
 
     private func updateOverallOverlayView() {
