@@ -139,8 +139,6 @@ extension ClipCollectionViewLayout {
                                       imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<ClipCollectionViewCell, Item>
     {
         return .init(cellNib: ClipCollectionViewCell.nib) { [weak collectionView, weak thumbnailPipeline] cell, _, clip in
-            cell.resetContent()
-
             cell.sizeDescription = .make(by: clip.clip)
             cell.isEditing = collectionView?.isEditing ?? false
             cell.setThumbnailType(toSingle: collectionView?.layout.isSingleThumbnail ?? false)

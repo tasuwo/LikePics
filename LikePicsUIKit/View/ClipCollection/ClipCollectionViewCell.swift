@@ -130,14 +130,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
     // MARK: Set Appearance
 
-    public func resetContent() {
-        sizeDescription = nil
-        overallThumbnailView.image = nil
-        primaryThumbnailView.thumbnail = nil
-        secondaryThumbnailView.thumbnail = nil
-        tertiaryThumbnailView.thumbnail = nil
-    }
-
     public func setHiddenIconVisibility(_ isVisible: Bool, animated: Bool) {
         visibleHiddenIcon = isVisible
         updateHiddenIconAppearance(animated: animated)
@@ -203,14 +195,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     // MARK: Update Appearance
 
     private func updateThumbnailConstraints() {
-        guard let description = sizeDescription else {
-            primaryThumbnailView.thumbnailSize = .init(width: 1, height: 1)
-            secondaryThumbnailView.thumbnailSize = nil
-            tertiaryThumbnailView.thumbnailSize = nil
-            secondaryThumbnailDisplayConstraint.isActive = false
-            tertiaryThumbnailDisplayConstraint.isActive = false
-            return
-        }
+        guard let description = sizeDescription else { return }
 
         primaryThumbnailView.thumbnailSize = description.primaryThumbnailSize
         secondaryThumbnailView.thumbnailSize = description.secondaryThumbnailSize
