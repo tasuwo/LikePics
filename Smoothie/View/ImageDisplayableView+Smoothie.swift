@@ -16,11 +16,15 @@ public extension Smoothie where Base: UIImageView {
 
 extension UIImageView: ImageDisplayable {
     public func smt_willLoad(userInfo: [AnyHashable: Any]?) {
-        self.image = nil
+        DispatchQueue.main.async {
+            self.image = nil
+        }
     }
 
     public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
-        self.image = image
+        DispatchQueue.main.async {
+            self.image = image
+        }
     }
 }
 
