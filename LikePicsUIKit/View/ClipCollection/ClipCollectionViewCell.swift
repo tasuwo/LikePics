@@ -109,7 +109,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         secondaryThumbnailView.isOverlayHidden = false
         secondaryThumbnailView.overlayOpacity = 0.4
         tertiaryThumbnailView.isOverlayHidden = false
-        tertiaryThumbnailView.overlayOpacity = 0.6
+        tertiaryThumbnailView.overlayOpacity = 0.5
 
         selectionMark.backgroundColor = .white
         selectionMark.layer.cornerRadius = selectionMark.bounds.width / 2.0
