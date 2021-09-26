@@ -25,7 +25,6 @@ class ClipCollectionViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var dataSource: Layout.DataSource!
     private var selectionApplier: UICollectionViewSelectionLazyApplier<Layout.Section, Layout.Item, Clip>!
-    private var preLoader: ClipCollectionPreLoader!
     private let emptyMessageView = EmptyMessageView()
 
     // MARK: Component

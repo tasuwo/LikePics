@@ -266,3 +266,15 @@ extension Pipeline {
         return mutableData as Data
     }
 }
+
+public extension CGImageAlphaInfo {
+    var hasAlphaChannel: Bool {
+        switch self {
+        case .none, .noneSkipLast, .noneSkipFirst:
+            return false
+
+        default:
+            return true
+        }
+    }
+}

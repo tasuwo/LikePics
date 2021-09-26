@@ -8,11 +8,3 @@ import Smoothie
 public protocol ImageQueryServiceProtocol: AnyObject {
     func read(having id: ImageContainer.Identity) throws -> Data?
 }
-
-public struct ImageDataLoadRequest: LegacyImageRequest {
-    public let imageId: UUID
-
-    public init(imageId: UUID) {
-        self.imageId = imageId
-    }
-}
