@@ -5,7 +5,7 @@
 import Smoothie
 
 /// @mockable
-public protocol ImageQueryServiceProtocol {
+public protocol ImageQueryServiceProtocol: AnyObject {
     func read(having id: ImageContainer.Identity) throws -> Data?
 }
 
