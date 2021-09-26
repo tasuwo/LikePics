@@ -56,7 +56,8 @@ public class ClipCreationViewController: UIViewController {
 
     // MARK: Services
 
-    private let thumbnailLoader: ThumbnailLoaderProtocol
+    private let thumbnailPipeline: Pipeline
+    private let imageSourceLoader: ImageSourceLoader
 
     // MARK: Store/Subscription
 
@@ -70,12 +71,14 @@ public class ClipCreationViewController: UIViewController {
     public init(factory: ViewControllerFactory,
                 state: ClipCreationViewState,
                 dependency: ClipCreationViewDependency,
-                thumbnailLoader: ThumbnailLoaderProtocol,
+                thumbnailPipeline: Pipeline,
+                imageSourceLoader: ImageSourceLoader,
                 delegate: ClipCreationDelegate)
     {
         self.factory = factory
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipCreationViewReducer())
-        self.thumbnailLoader = thumbnailLoader
+        self.thumbnailPipeline = thumbnailPipeline
+        self.imageSourceLoader = imageSourceLoader
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
     }
@@ -305,7 +308,8 @@ extension ClipCreationViewController {
     private func configureDataSource() {
         let (proxy, dataSource) = Layout.configureDataSource(collectionView: collectionView,
                                                              cellDataSource: self,
-                                                             thumbnailLoader: thumbnailLoader)
+                                                             thumbnailPipeline: thumbnailPipeline,
+                                                             imageSourceLoader: imageSourceLoader)
         self.dataSource = dataSource
         proxy.delegate = self
         self.proxy = proxy

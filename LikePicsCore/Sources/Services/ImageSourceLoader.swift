@@ -6,17 +6,8 @@ import Smoothie
 
 public class ImageSourceLoader {
     public init() {}
-}
 
-extension ImageSourceLoader: ImageLoadable {
-    // MARK: - ImageLoadable
-
-    public func load(for request: LegacyImageRequest, completion: @escaping (Data?) -> Void) {
-        guard let source = request as? ImageSource else {
-            completion(nil)
-            return
-        }
-
+    public func load(for source: ImageSource, completion: @escaping (Data?) -> Void) {
         switch source.value {
         case let .imageProvider(provider):
             provider.load(completion)
@@ -47,5 +38,3 @@ extension ImageSourceLoader: ImageLoadable {
         }
     }
 }
-
-extension ImageSource: LegacyImageRequest {}

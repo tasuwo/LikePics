@@ -25,7 +25,7 @@ class DependencyContainer {
     private let currentDateResolver = { Date() }
     private let tagCommandService: TagCommandService
     private let userSettingsStorage: UserSettingsStorage
-    private let thumbnailLoader: ThumbnailLoader
+    private let thumbnailPipeline: Pipeline
 
     init() throws {
         let mainBundleUrl = Bundle.main.bundleURL
@@ -54,10 +54,10 @@ class DependencyContainer {
 
         self.userSettingsStorage = UserSettingsStorage(bundle: mainBundle)
 
-        var config = ThumbnailLoadQueue.Configuration(originalImageLoader: ImageSourceLoader())
+        var config = Pipeline.Configuration()
         config.diskCache = nil
         config.memoryCache = MemoryCache(config: .default)
-        self.thumbnailLoader = ThumbnailLoader(queue: .init(config: config))
+        self.thumbnailPipeline = Pipeline(config: config)
     }
 }
 
@@ -87,7 +87,8 @@ extension DependencyContainer: ViewControllerFactory {
                                                        url: webUrl,
                                                        isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems()),
                                           dependency: dependency,
-                                          thumbnailLoader: thumbnailLoader,
+                                          thumbnailPipeline: thumbnailPipeline,
+                                          imageSourceLoader: ImageSourceLoader(),
                                           delegate: delegate)
     }
 
@@ -112,7 +113,8 @@ extension DependencyContainer: ViewControllerFactory {
                                                        url: nil,
                                                        isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems()),
                                           dependency: dependency,
-                                          thumbnailLoader: thumbnailLoader,
+                                          thumbnailPipeline: thumbnailPipeline,
+                                          imageSourceLoader: ImageSourceLoader(),
                                           delegate: delegate)
     }
 }

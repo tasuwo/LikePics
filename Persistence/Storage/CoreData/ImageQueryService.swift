@@ -37,16 +37,3 @@ extension ImageQueryService: ImageQueryServiceProtocol {
         }
     }
 }
-
-extension ImageQueryService: ImageLoadable {
-    // MARK: - ImageLoadable
-
-    public func load(for request: LegacyImageRequest, completion: @escaping (Data?) -> Void) {
-        guard let request = request as? ImageDataLoadRequest else {
-            logger.write(ConsoleLog(level: .error, message: "不正なリクエスト"))
-            completion(nil)
-            return
-        }
-        completion(try? self.read(having: request.imageId))
-    }
-}

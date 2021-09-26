@@ -11,7 +11,6 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
         return UINib(nibName: "ClipSelectionCollectionViewCell", bundle: Bundle(for: Self.self))
     }
 
-    public var identifier: String?
     public var selectionOrder: Int? {
         didSet {
             if let order = selectionOrder {
@@ -77,31 +76,27 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
     }
 }
 
-extension ClipSelectionCollectionViewCell: ThumbnailLoadObserver {
-    // MARK: - ThumbnailLoadObserver
+extension ClipSelectionCollectionViewCell: ImageDisplayable {
+    // MARK: - ImageDisplayable
 
-    public func didStartLoading(_ request: ThumbnailRequest) {
-        DispatchQueue.main.async {
-            guard self.identifier == request.requestId else { return }
-            self.imageView.image = nil
-        }
+    public func smt_willLoad(userInfo: [AnyHashable: Any]?) {
+        backgroundColor = Asset.Color.secondaryBackground.color
+        imageView.image = nil
     }
 
-    public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
+    public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
         DispatchQueue.main.async {
-            guard self.identifier == request.requestId else { return }
+            guard let image = image else {
+                self.backgroundColor = Asset.Color.secondaryBackground.color
+                self.imageView.image = nil
+                return
+            }
+
             UIView.transition(with: self.imageView,
                               duration: 0.2,
                               options: .transitionCrossDissolve,
                               animations: { self.imageView.image = image },
                               completion: nil)
-        }
-    }
-
-    public func didFailedToLoad(_ request: ThumbnailRequest) {
-        DispatchQueue.main.async {
-            guard self.identifier == request.requestId else { return }
-            self.imageView.image = nil
         }
     }
 }
