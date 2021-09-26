@@ -150,40 +150,54 @@ extension ClipCollectionViewLayout {
                   let imageQueryService = imageQueryService else { return }
 
             if let item = clip.primaryItem {
+                loadThumbnail(item: item, pipeline: pipeline, thumbnailView: cell.primaryThumbnailView, imageQueryService: imageQueryService)
+
                 let request = makeRequest(item: item, view: cell.primaryThumbnailView, imageQueryService: imageQueryService)
-                loadImage(request, with: pipeline, on: cell.primaryThumbnailView, userInfo: [
-                    "originalSize": item.imageSize.cgSize,
-                    "cacheKey": request.source.cacheKey
-                ])
-                cell.primaryThumbnailView.pipeline = pipeline
                 cell.singleThumbnailView.smt.loadImage(request, with: pipeline)
             } else {
                 cancelLoadImage(on: cell.primaryThumbnailView)
+
                 cell.singleThumbnailView.smt.cancelLoadImage()
             }
 
             if let item = clip.secondaryItem {
-                let request = makeRequest(item: item, view: cell.secondaryThumbnailView, imageQueryService: imageQueryService)
-                loadImage(request, with: pipeline, on: cell.secondaryThumbnailView, userInfo: [
-                    "originalSize": item.imageSize.cgSize,
-                    "cacheKey": request.source.cacheKey
-                ])
-                cell.secondaryThumbnailView.pipeline = pipeline
+                loadThumbnail(item: item, pipeline: pipeline, thumbnailView: cell.secondaryThumbnailView, imageQueryService: imageQueryService)
             } else {
                 cancelLoadImage(on: cell.secondaryThumbnailView)
             }
 
             if let item = clip.tertiaryItem {
-                let request = makeRequest(item: item, view: cell.tertiaryThumbnailView, imageQueryService: imageQueryService)
-                loadImage(request, with: pipeline, on: cell.tertiaryThumbnailView, userInfo: [
-                    "originalSize": item.imageSize.cgSize,
-                    "cacheKey": request.source.cacheKey
-                ])
-                cell.tertiaryThumbnailView.pipeline = pipeline
+                loadThumbnail(item: item, pipeline: pipeline, thumbnailView: cell.tertiaryThumbnailView, imageQueryService: imageQueryService)
             } else {
                 cancelLoadImage(on: cell.tertiaryThumbnailView)
             }
         }
+    }
+
+    private static func loadThumbnail(item: ClipItem,
+                                      pipeline: Pipeline,
+                                      thumbnailView: ClipCollectionThumbnailView,
+                                      imageQueryService: ImageQueryServiceProtocol)
+    {
+        let scale = thumbnailView.traitCollection.displayScale
+        let size = thumbnailView.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
+        // - SeeAlso: PreviewLoader
+        let provider = ImageDataProvider(imageId: item.imageId,
+                                         cacheKey: "clip-collection-\(item.identity.uuidString)",
+                                         imageQueryService: imageQueryService)
+        let request = ImageRequest(source: .provider(provider), size: size, scale: scale)
+
+        loadImage(request, with: pipeline, on: thumbnailView) { [weak pipeline] response in
+            guard let response = response, let diskCacheSize = response.diskCacheImageSize else { return }
+            let shouldInvalidate = ThumbnailInvalidationChecker.shouldInvalidate(originalImageSizeInPoint: item.imageSize.cgSize,
+                                                                                 thumbnailSizeInPoint: size,
+                                                                                 diskCacheSizeInPixel: diskCacheSize,
+                                                                                 displayScale: scale)
+            guard shouldInvalidate else { return }
+            pipeline?.config.diskCache?.remove(forKey: request.source.cacheKey)
+            pipeline?.config.memoryCache.remove(forKey: request.source.cacheKey)
+        }
+        thumbnailView.pipeline = pipeline
     }
 
     private static func makeRequest(item: ClipItem, view: ClipCollectionThumbnailView, imageQueryService: ImageQueryServiceProtocol) -> ImageRequest {

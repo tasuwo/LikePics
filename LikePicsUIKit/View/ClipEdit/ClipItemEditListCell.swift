@@ -32,26 +32,18 @@ extension ClipItemEditListCell: ThumbnailPresentable {
 // MARK: - ImageDisplayable
 
 extension ClipItemEditListCell: ImageDisplayable {
-    public func smt_willLoad(userInfo: [AnyHashable: Any]?) {
+    public func smt_display(_ image: UIImage?) {
         var configuration = self._contentConfiguration
-        configuration.thumbnail = nil
-        self.contentConfiguration = configuration
-    }
 
-    public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
-        DispatchQueue.main.async {
-            var configuration = self._contentConfiguration
-
-            defer {
-                self.contentConfiguration = configuration
-            }
-
-            guard let image = image else {
-                configuration.thumbnail = nil
-                return
-            }
-
-            configuration.thumbnail = image
+        defer {
+            self.contentConfiguration = configuration
         }
+
+        guard let image = image else {
+            configuration.thumbnail = nil
+            return
+        }
+
+        configuration.thumbnail = image
     }
 }

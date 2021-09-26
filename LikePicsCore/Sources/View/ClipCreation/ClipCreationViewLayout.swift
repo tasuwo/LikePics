@@ -247,7 +247,7 @@ extension ClipCreationViewLayout {
                                              cacheKey: "clip-creation-\(imageSourceId.uuidString)",
                                              loader: imageSourceLoader)
             let request = ImageRequest(source: .provider(provider), size: size, scale: scale)
-            loadImage(request, with: pipeline, on: cell, userInfo: nil)
+            loadImage(request, with: pipeline, on: cell)
         }
     }
 }

@@ -113,37 +113,17 @@ extension ClipCollectionThumbnailView {
 // MARK: - ImageDisplayable
 
 public extension ClipCollectionThumbnailView {
-    override func smt_willLoad(userInfo: [AnyHashable: Any]?) {
-        thumbnail = .none
-        overlayLayer.opacity = 0
-        backgroundColor = Asset.Color.secondaryBackground.color
-    }
-
-    override func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
-        DispatchQueue.main.async {
-            guard let image = image else {
-                self.thumbnail = .failure
-                self.overlayLayer.opacity = 0
-                self.backgroundColor = Asset.Color.secondaryBackground.color
-                return
-            }
-
-            self.thumbnail = .success(image)
-            self.overlayLayer.opacity = 1
-            self.backgroundColor = .clear
-
-            guard let originalSize = userInfo?["originalSize"] as? CGSize,
-                  let cacheKey = userInfo?["cacheKey"] as? String
-            else {
-                return
-            }
-
-            let displayScale = self.traitCollection.displayScale
-            if self.shouldInvalidate(thumbnail: image, originalImageSize: originalSize, displayScale: displayScale) {
-                self.pipeline?.config.diskCache?.remove(forKey: cacheKey)
-                self.pipeline?.config.memoryCache.remove(forKey: cacheKey)
-            }
+    override func smt_display(_ image: UIImage?) {
+        guard let image = image else {
+            self.thumbnail = .none
+            self.overlayLayer.opacity = 0
+            self.backgroundColor = Asset.Color.secondaryBackground.color
+            return
         }
+
+        self.thumbnail = .success(image)
+        self.overlayLayer.opacity = 1
+        self.backgroundColor = .clear
     }
 }
 

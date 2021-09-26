@@ -122,11 +122,16 @@ extension AlbumListViewLayout {
                                                  cacheKey: "album-list-\(item.identity.uuidString)",
                                                  imageQueryService: imageQueryService)
                 let request = ImageRequest(source: .provider(provider), size: size, scale: scale)
-                cell.pipeline = pipeline
-                loadImage(request, with: pipeline, on: cell, userInfo: [
-                    "originalSize": item.imageSize.cgSize,
-                    "cacheKey": request.source.cacheKey
-                ])
+                loadImage(request, with: pipeline, on: cell) { [weak pipeline] response in
+                    guard let response = response, let diskCacheSize = response.diskCacheImageSize else { return }
+                    let shouldInvalidate = ThumbnailInvalidationChecker.shouldInvalidate(originalImageSizeInPoint: item.imageSize.cgSize,
+                                                                                         thumbnailSizeInPoint: size,
+                                                                                         diskCacheSizeInPixel: diskCacheSize,
+                                                                                         displayScale: scale)
+                    guard shouldInvalidate else { return }
+                    pipeline?.config.diskCache?.remove(forKey: request.source.cacheKey)
+                    pipeline?.config.memoryCache.remove(forKey: request.source.cacheKey)
+                }
             } else {
                 cancelLoadImage(on: cell)
             }

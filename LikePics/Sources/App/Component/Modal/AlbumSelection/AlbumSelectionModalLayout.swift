@@ -75,7 +75,7 @@ extension AlbumSelectionModalLayout {
                                              cacheKey: "album-selection-list-\(thumbnailTarget.identity.uuidString)",
                                              imageQueryService: imageQueryService)
             let request = ImageRequest(source: .provider(provider), size: size, scale: scale)
-            cell.thumbnailImageView.smt.loadImage(request, with: pipeline, userInfo: nil)
+            cell.thumbnailImageView.smt.loadImage(request, with: pipeline)
         }
     }
 }

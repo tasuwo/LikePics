@@ -6,15 +6,8 @@ import Smoothie
 import UIKit
 
 public class ClipCollectionSingleThumbnailView: UIImageView {
-    override public func smt_willLoad(userInfo: [AnyHashable: Any]?) {
-        super.smt_willLoad(userInfo: userInfo)
-        backgroundColor = Asset.Color.secondaryBackground.color
-    }
-
-    override public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
-        DispatchQueue.main.async {
-            self.backgroundColor = .clear
-        }
-        super.smt_display(image, userInfo: userInfo)
+    override public func smt_display(_ image: UIImage?) {
+        super.smt_display(image)
+        backgroundColor = image == nil ? Asset.Color.secondaryBackground.color : .clear
     }
 }

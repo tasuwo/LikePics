@@ -45,7 +45,7 @@ public final class Pipeline {
 // MARK: Load
 
 extension Pipeline {
-    func loadImage(_ request: ImageRequest, completion: @escaping (UIImage?) -> Void) -> ImageLoadTaskCancellable {
+    func loadImage(_ request: ImageRequest, completion: @escaping (ImageResponse?) -> Void) -> ImageLoadTaskCancellable {
         return queue.sync {
             pool
                 .task(for: ImageRequestKey(request)) {
@@ -67,15 +67,25 @@ extension Pipeline {
         let operation = BlockOperation { [weak self, task] in
             guard let self = self else { return }
 
+            let log = Log(logger: self.logger)
+
+            log.log(.begin, name: "Read from DiskCache")
             let data = self.config.diskCache?[task.request.source.cacheKey]
+            log.log(.end, name: "Read from DiskCache")
+
+            guard let data = data else {
+                self.queue.async {
+                    self.enqueueDataLoadingOperation(task)
+                }
+                return
+            }
+
+            log.log(.begin, name: "Fetch pixel size of DiskCache data")
+            let imageSize = self.pixelSize(data)
+            log.log(.end, name: "Fetch pixel size of DiskCache data")
 
             self.queue.async {
-                guard let data = data else {
-                    self.enqueueDataLoadingOperation(task)
-                    return
-                }
-
-                self.enqueueDownsamplingCacheOperation(task, data: data)
+                self.enqueueDownsamplingDiskCacheOperation(task, data: data, diskCacheImageSize: imageSize)
             }
         }
         task.ongoingOperation = operation
@@ -175,13 +185,18 @@ extension Pipeline {
 
             self.queue.async {
                 self.config.memoryCache.insert(image, forKey: task.request.source.cacheKey)
-                task.didLoad(image)
+
+                if let image = image {
+                    task.didLoad(.init(image: image, diskCacheImageSize: nil))
+                } else {
+                    task.didLoad(nil)
+                }
             }
         }
         config.imageDecompressingQueue.addOperation(operation)
     }
 
-    private func enqueueDownsamplingCacheOperation(_ task: ImageLoadTask, data: Data) {
+    private func enqueueDownsamplingDiskCacheOperation(_ task: ImageLoadTask, data: Data, diskCacheImageSize: CGSize?) {
         let operation = BlockOperation { [weak self] in
             guard let self = self else { return }
 
@@ -199,7 +214,7 @@ extension Pipeline {
                 }
                 let image = UIImage(cgImage: thumbnail)
                 self.config.memoryCache.insert(image, forKey: task.request.source.cacheKey)
-                task.didLoad(image)
+                task.didLoad(ImageResponse(image: image, diskCacheImageSize: diskCacheImageSize))
             }
         }
         config.imageDecompressingQueue.addOperation(operation)
@@ -209,6 +224,22 @@ extension Pipeline {
 // MARK: Image Processing
 
 extension Pipeline {
+    private func pixelSize(_ data: Data) -> CGSize? {
+        let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions) else {
+            return nil
+        }
+
+        guard let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as Dictionary?,
+              let pixelWidth = imageProperties[kCGImagePropertyPixelWidth] as? CGFloat,
+              let pixelHeight = imageProperties[kCGImagePropertyPixelHeight] as? CGFloat
+        else {
+            return nil
+        }
+
+        return CGSize(width: pixelWidth, height: pixelHeight)
+    }
+
     private func decompress(_ data: Data) -> UIImage? {
         let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
         guard let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions) else {

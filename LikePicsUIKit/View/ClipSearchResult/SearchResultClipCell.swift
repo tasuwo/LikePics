@@ -34,25 +34,19 @@ public class SearchResultClipCell: UICollectionViewCell {
 // MARK: - ImageDisplayable
 
 extension SearchResultClipCell: ImageDisplayable {
-    public func smt_willLoad(userInfo: [AnyHashable: Any]?) {
-        backgroundColor = Asset.Color.secondaryBackground.color
-    }
-
-    public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
-        DispatchQueue.main.async {
-            guard let image = image else {
-                self.imageView.image = nil
-                self.backgroundColor = Asset.Color.secondaryBackground.color
-                return
-            }
-
-            self.backgroundColor = .clear
-            UIView.transition(with: self.imageView,
-                              duration: 0.25,
-                              options: .transitionCrossDissolve,
-                              animations: { [weak self] in self?.imageView.image = image },
-                              completion: nil)
+    public func smt_display(_ image: UIImage?) {
+        guard let image = image else {
+            self.imageView.image = nil
+            self.backgroundColor = Asset.Color.secondaryBackground.color
+            return
         }
+
+        self.backgroundColor = .clear
+        UIView.transition(with: self.imageView,
+                          duration: 0.25,
+                          options: .transitionCrossDissolve,
+                          animations: { [weak self] in self?.imageView.image = image },
+                          completion: nil)
     }
 }
 

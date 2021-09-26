@@ -4,8 +4,8 @@
 
 import UIKit
 
-public func loadImage(_ request: ImageRequest, with pipeline: Pipeline, on view: ImageDisplayableView, userInfo: [AnyHashable: Any]? = nil) {
-    ImageLoadTaskController.associateInstance(to: view).loadImage(request, with: pipeline, userInfo: userInfo)
+public func loadImage(_ request: ImageRequest, with pipeline: Pipeline, on view: ImageDisplayableView, completion: ((ImageResponse?) -> Void)? = nil) {
+    ImageLoadTaskController.associateInstance(to: view).loadImage(request, with: pipeline, completion: completion)
 }
 
 public func cancelLoadImage(on view: ImageDisplayableView) {
@@ -13,8 +13,8 @@ public func cancelLoadImage(on view: ImageDisplayableView) {
 }
 
 public extension Smoothie where Base: UIImageView {
-    func loadImage(_ request: ImageRequest, with pipeline: Pipeline, userInfo: [AnyHashable: Any]? = nil) {
-        ImageLoadTaskController.associateInstance(to: base).loadImage(request, with: pipeline, userInfo: userInfo)
+    func loadImage(_ request: ImageRequest, with pipeline: Pipeline, completion: ((ImageResponse?) -> Void)? = nil) {
+        ImageLoadTaskController.associateInstance(to: base).loadImage(request, with: pipeline, completion: completion)
     }
 
     func cancelLoadImage() {
@@ -23,16 +23,8 @@ public extension Smoothie where Base: UIImageView {
 }
 
 extension UIImageView: ImageDisplayable {
-    open func smt_willLoad(userInfo: [AnyHashable: Any]?) {
-        DispatchQueue.main.async {
-            self.image = nil
-        }
-    }
-
-    open func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
-        DispatchQueue.main.async {
-            self.image = image
-        }
+    open func smt_display(_ image: UIImage?) {
+        self.image = image
     }
 }
 

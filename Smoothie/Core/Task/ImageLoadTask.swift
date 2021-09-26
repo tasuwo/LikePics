@@ -7,7 +7,7 @@ import UIKit
 class ImageLoadTask {
     private struct Subscription {
         let id: UUID
-        let completion: (UIImage?) -> Void
+        let completion: (ImageResponse?) -> Void
     }
 
     // MARK: - Properties
@@ -34,7 +34,7 @@ class ImageLoadTask {
 
     // MARK: Subscribe/Unsubscribe
 
-    func subscribe(completion: @escaping (UIImage?) -> Void) -> ImageLoadTaskCancellable {
+    func subscribe(completion: @escaping (ImageResponse?) -> Void) -> ImageLoadTaskCancellable {
         let id = UUID()
 
         let subscription = Subscription(id: id, completion: completion)
@@ -70,8 +70,8 @@ class ImageLoadTask {
 
     // MARK: Event
 
-    func didLoad(_ image: UIImage?) {
-        subscriptions.values.forEach { $0.completion(image) }
+    func didLoad(_ response: ImageResponse?) {
+        subscriptions.values.forEach { $0.completion(response) }
         terminate(isCancelled: false)
     }
 

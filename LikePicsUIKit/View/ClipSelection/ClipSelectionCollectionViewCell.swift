@@ -79,25 +79,18 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
 extension ClipSelectionCollectionViewCell: ImageDisplayable {
     // MARK: - ImageDisplayable
 
-    public func smt_willLoad(userInfo: [AnyHashable: Any]?) {
-        backgroundColor = Asset.Color.secondaryBackground.color
-        imageView.image = nil
-    }
-
-    public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
-        DispatchQueue.main.async {
-            guard let image = image else {
-                self.backgroundColor = Asset.Color.secondaryBackground.color
-                self.imageView.image = nil
-                return
-            }
-
-            UIView.transition(with: self.imageView,
-                              duration: 0.2,
-                              options: .transitionCrossDissolve,
-                              animations: { self.imageView.image = image },
-                              completion: nil)
+    public func smt_display(_ image: UIImage?) {
+        guard let image = image else {
+            self.backgroundColor = Asset.Color.secondaryBackground.color
+            self.imageView.image = nil
+            return
         }
+
+        UIView.transition(with: self.imageView,
+                          duration: 0.2,
+                          options: .transitionCrossDissolve,
+                          animations: { self.imageView.image = image },
+                          completion: nil)
     }
 }
 

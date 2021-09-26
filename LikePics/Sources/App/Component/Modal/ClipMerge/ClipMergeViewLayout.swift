@@ -180,7 +180,7 @@ extension ClipMergeViewLayout {
                                              cacheKey: "clip-merge-\(item.identity.uuidString)",
                                              imageQueryService: imageQueryService)
             let request = ImageRequest(source: .provider(provider), size: size, scale: scale)
-            loadImage(request, with: pipeline, on: cell, userInfo: nil)
+            loadImage(request, with: pipeline, on: cell)
         }
     }
 }

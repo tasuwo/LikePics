@@ -6,8 +6,6 @@ import Smoothie
 import UIKit
 
 public class ClipItemCell: UICollectionViewListCell {
-    public weak var pipeline: Pipeline?
-
     private var _contentConfiguration: ClipItemContentConfiguration {
         return (contentConfiguration as? ClipItemContentConfiguration) ?? ClipItemContentConfiguration()
     }
@@ -39,35 +37,14 @@ extension ClipItemCell: ThumbnailPresentable {
 // MARK: - ImageDisplayable
 
 extension ClipItemCell: ImageDisplayable {
-    public func smt_willLoad(userInfo: [AnyHashable: Any]?) {
+    public func smt_display(_ image: UIImage?) {
         var configuration = self._contentConfiguration
-        configuration.image = nil
-        self.contentConfiguration = configuration
-    }
 
-    public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
-        DispatchQueue.main.async {
-            var configuration = self._contentConfiguration
-
-            defer {
-                self.contentConfiguration = configuration
-            }
-
-            configuration.image = image
-
-            guard let image = image,
-                  let originalSize = userInfo?["originalSize"] as? CGSize,
-                  let cacheKey = userInfo?["cacheKey"] as? String
-            else {
-                return
-            }
-
-            let displayScale = self.traitCollection.displayScale
-            if self.shouldInvalidate(thumbnail: image, originalImageSize: originalSize, displayScale: displayScale) {
-                self.pipeline?.config.diskCache?.remove(forKey: cacheKey)
-                self.pipeline?.config.memoryCache.remove(forKey: cacheKey)
-            }
+        defer {
+            self.contentConfiguration = configuration
         }
+
+        configuration.image = image
     }
 }
 

@@ -7,10 +7,7 @@ import UIKit
 @objc
 public protocol ImageDisplayable {
     @objc
-    func smt_willLoad(userInfo: [AnyHashable: Any]?)
-
-    @objc
-    func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?)
+    func smt_display(_ image: UIImage?)
 }
 
 public typealias ImageDisplayableView = UIView & ImageDisplayable
@@ -48,23 +45,26 @@ final class ImageLoadTaskController {
         return objc_getAssociatedObject(view, &associatedKey) as? ImageLoadTaskController
     }
 
-    func loadImage(_ request: ImageRequest, with pipeline: Pipeline, userInfo: [AnyHashable: Any]?) {
+    func loadImage(_ request: ImageRequest, with pipeline: Pipeline, completion: ((ImageResponse?) -> Void)?) {
         cancelLoadImage()
 
-        self.view?.smt_willLoad(userInfo: userInfo)
-
         if let image = pipeline.config.memoryCache[request.source.cacheKey] {
-            view?.smt_display(image, userInfo: userInfo)
+            view?.smt_display(image)
+            completion?(.init(image: image, diskCacheImageSize: nil))
             return
         }
 
-        self.cancellable = pipeline.loadImage(request) { [weak self] image in
-            self?.view?.smt_display(image, userInfo: userInfo)
+        self.cancellable = pipeline.loadImage(request) { [weak self] response in
+            DispatchQueue.main.async {
+                self?.view?.smt_display(response?.image)
+                completion?(response)
+            }
         }
     }
 
     func cancelLoadImage() {
         cancellable?.cancel()
         cancellable = nil
+        view?.smt_display(nil)
     }
 }

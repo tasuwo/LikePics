@@ -54,10 +54,7 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
     public private(set) var isEditing = false
     private var isDragging = false
 
-    public var onReuse: ((String?) -> Void)?
-
     public weak var delegate: AlbumListCollectionViewCellDelegate?
-    public weak var pipeline: Pipeline?
 
     @IBOutlet var thumbnailImageView: UIImageView!
     @IBOutlet var titleButton: UIButton!
@@ -213,31 +210,15 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
 // MARK: - ImageDisplayable
 
 extension AlbumListCollectionViewCell: ImageDisplayable {
-    public func smt_willLoad(userInfo: [AnyHashable: Any]?) {
-        backgroundColor = Asset.Color.secondaryBackground.color
-        thumbnail = nil
-    }
-
-    public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
-        DispatchQueue.main.async {
-            guard let image = image else {
-                self.backgroundColor = Asset.Color.secondaryBackground.color
-                self.thumbnail = .none
-                return
-            }
-
-            self.backgroundColor = .clear
-            self.thumbnail = image
-
-            guard let originalSize = userInfo?["originalSize"] as? CGSize,
-                  let cacheKey = userInfo?["cacheKey"] as? String else { return }
-
-            let displayScale = self.traitCollection.displayScale
-            if self.shouldInvalidate(thumbnail: image, originalImageSize: originalSize, displayScale: displayScale) {
-                self.pipeline?.config.diskCache?.remove(forKey: cacheKey)
-                self.pipeline?.config.memoryCache.remove(forKey: cacheKey)
-            }
+    public func smt_display(_ image: UIImage?) {
+        guard let image = image else {
+            self.backgroundColor = Asset.Color.secondaryBackground.color
+            self.thumbnail = .none
+            return
         }
+
+        self.backgroundColor = .clear
+        self.thumbnail = image
     }
 }
 
