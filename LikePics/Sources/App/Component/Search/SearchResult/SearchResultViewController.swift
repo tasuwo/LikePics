@@ -32,16 +32,19 @@ class SearchResultViewController: UIViewController {
 
     // MARK: Service
 
-    let thumbnailLoader: ThumbnailLoaderProtocol
+    let thumbnailPipeline: Pipeline
+    let imageQueryService: ImageQueryServiceProtocol
     private let filterMenuBuilder = SearchMenuBuilder()
 
     // MARK: - Initializers
 
     init(store: Store,
-         thumbnailLoader: ThumbnailLoaderProtocol)
+         thumbnailPipeline: Pipeline,
+         imageQueryService: ImageQueryServiceProtocol)
     {
         self.store = store
-        self.thumbnailLoader = thumbnailLoader
+        self.thumbnailPipeline = thumbnailPipeline
+        self.imageQueryService = imageQueryService
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -174,9 +177,9 @@ extension SearchResultViewController {
 
     private func configureDataSource() {
         // swiftlint:disable identifier_name
-        let _dataSource = Layout.createDataSource(collectionView: collectionView,
-                                                  thumbnailLoader: thumbnailLoader,
-                                                  seeAllButtonHandler: { [weak store] in store?.execute(.selectedSeeAllResultsButton) })
+        let _dataSource = Layout.createDataSource(collectionView, thumbnailPipeline, imageQueryService) { [weak store] in
+            store?.execute(.selectedSeeAllResultsButton)
+        }
         dataSource = _dataSource
         collectionView.delegate = self
     }

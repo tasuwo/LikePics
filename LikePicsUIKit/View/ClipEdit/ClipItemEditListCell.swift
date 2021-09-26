@@ -6,21 +6,12 @@ import Smoothie
 import UIKit
 
 public class ClipItemEditListCell: UICollectionViewListCell {
-    public var identifier: String?
-
-    public var onReuse: ((String?) -> Void)?
-
     private var _contentConfiguration: ClipItemEditContentConfiguration {
         return (contentConfiguration as? ClipItemEditContentConfiguration) ?? ClipItemEditContentConfiguration()
     }
 
     override public func updateConfiguration(using state: UICellConfigurationState) {
         contentConfiguration = _contentConfiguration.updated(for: state)
-    }
-
-    override public func prepareForReuse() {
-        super.prepareForReuse()
-        self.onReuse?(self.identifier)
     }
 }
 
@@ -38,28 +29,29 @@ extension ClipItemEditListCell: ThumbnailPresentable {
     }
 }
 
-extension ClipItemEditListCell: ThumbnailLoadObserver {
-    // MARK: - ThumbnailLoadObserver
+// MARK: - ImageDisplayable
 
-    public func didStartLoading(_ request: ThumbnailRequest) {
-        // NOP
+extension ClipItemEditListCell: ImageDisplayable {
+    public func smt_willLoad(userInfo: [AnyHashable: Any]?) {
+        var configuration = self._contentConfiguration
+        configuration.thumbnail = nil
+        self.contentConfiguration = configuration
     }
 
-    public func didFailedToLoad(_ request: ThumbnailRequest) {
+    public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
         DispatchQueue.main.async {
-            guard self.identifier == request.requestId else { return }
             var configuration = self._contentConfiguration
-            configuration.thumbnail = nil
-            self.contentConfiguration = configuration
-        }
-    }
 
-    public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
-        DispatchQueue.main.async {
-            guard self.identifier == request.requestId else { return }
-            var configuration = self._contentConfiguration
+            defer {
+                self.contentConfiguration = configuration
+            }
+
+            guard let image = image else {
+                configuration.thumbnail = nil
+                return
+            }
+
             configuration.thumbnail = image
-            self.contentConfiguration = configuration
         }
     }
 }

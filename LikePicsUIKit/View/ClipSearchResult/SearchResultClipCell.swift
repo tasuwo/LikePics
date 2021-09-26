@@ -14,24 +14,11 @@ public class SearchResultClipCell: UICollectionViewCell {
 
     @IBOutlet public var imageView: UIImageView!
 
-    public var identifier: String?
-    public var onReuse: ((String?) -> Void)?
-
     // MARK: - Lifecycle
 
     override public func awakeFromNib() {
         super.awakeFromNib()
         self.setupAppearance()
-    }
-
-    override public func prepareForReuse() {
-        super.prepareForReuse()
-
-        self.onReuse?(self.identifier)
-
-        self.identifier = nil
-        self.onReuse = nil
-        self.imageView.image = nil
     }
 
     // MARK: - Methods
@@ -44,28 +31,27 @@ public class SearchResultClipCell: UICollectionViewCell {
     }
 }
 
-extension SearchResultClipCell: ThumbnailLoadObserver {
-    // MARK: - ThumbnailLoadObserver
+// MARK: - ImageDisplayable
 
-    public func didStartLoading(_ request: ThumbnailRequest) {
-        // NOP
+extension SearchResultClipCell: ImageDisplayable {
+    public func smt_willLoad(userInfo: [AnyHashable: Any]?) {
+        backgroundColor = Asset.Color.secondaryBackground.color
     }
 
-    public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
+    public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
         DispatchQueue.main.async {
-            guard self.identifier == request.requestId else { return }
+            guard let image = image else {
+                self.imageView.image = nil
+                self.backgroundColor = Asset.Color.secondaryBackground.color
+                return
+            }
+
+            self.backgroundColor = .clear
             UIView.transition(with: self.imageView,
                               duration: 0.25,
                               options: .transitionCrossDissolve,
                               animations: { [weak self] in self?.imageView.image = image },
                               completion: nil)
-        }
-    }
-
-    public func didFailedToLoad(_ request: ThumbnailRequest) {
-        DispatchQueue.main.async {
-            guard self.identifier == request.requestId else { return }
-            self.imageView.image = nil
         }
     }
 }

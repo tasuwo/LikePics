@@ -41,7 +41,8 @@ class SearchEntryViewController: UIViewController {
 
     init(state: SearchViewRootState,
          dependency: SearchViewRootDependency,
-         temporaryThumbnailLoader: ThumbnailLoaderProtocol)
+         thumbnailPipeline: Pipeline,
+         imageQueryService: ImageQueryServiceProtocol)
     {
         rootStore = ForestKit.Store(initialState: state, dependency: dependency, reducer: searchViewRootReducer)
         store = rootStore
@@ -51,7 +52,8 @@ class SearchEntryViewController: UIViewController {
             .proxy(SearchViewRootState.resultMapping, SearchViewRootAction.resultMapping)
             .eraseToAnyStoring()
         resultsController = SearchResultViewController(store: resultStore,
-                                                       thumbnailLoader: temporaryThumbnailLoader)
+                                                       thumbnailPipeline: thumbnailPipeline,
+                                                       imageQueryService: imageQueryService)
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -259,6 +261,7 @@ extension SearchEntryViewController: Restorable {
         presentingAlert?.dismiss(animated: false, completion: nil)
         return SearchEntryViewController(state: rootStore.stateValue,
                                          dependency: rootStore.dependency,
-                                         temporaryThumbnailLoader: resultsController.thumbnailLoader)
+                                         thumbnailPipeline: resultsController.thumbnailPipeline,
+                                         imageQueryService: resultsController.imageQueryService)
     }
 }

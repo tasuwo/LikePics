@@ -185,7 +185,7 @@ extension SceneDependencyContainer: Router {
                                                                                      message: L10n.alertForEditClipItemsSiteUrlMessage,
                                                                                      placeholder: L10n.placeholderUrl),
                                                         dependency: self,
-                                                        thumbnailLoader: container.temporaryThumbnailLoader)
+                                                        thumbnailPipeline: container.temporaryThumbnailPipeline)
         viewController.transitioningDelegate = transitioningController
         viewController.modalPresentationStyle = .fullScreen
 
@@ -229,7 +229,8 @@ extension SceneDependencyContainer: Router {
         let viewController = AlbumSelectionModalController(state: state,
                                                            albumAdditionAlertState: albumAdditionAlertState,
                                                            dependency: self,
-                                                           thumbnailLoader: container.temporaryThumbnailLoader)
+                                                           thumbnailPipeline: container.temporaryThumbnailPipeline,
+                                                           imageQueryService: container._imageQueryService)
 
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
@@ -248,7 +249,8 @@ extension SceneDependencyContainer: Router {
         let state = ClipMergeViewState(id: id, clips: clips)
         let viewController = ClipMergeViewController(state: state,
                                                      dependency: self,
-                                                     thumbnailLoader: container.temporaryThumbnailLoader)
+                                                     thumbnailPipeline: container.temporaryThumbnailPipeline,
+                                                     imageQueryService: container._imageQueryService)
 
         let navigationViewController = UINavigationController(rootViewController: viewController)
 

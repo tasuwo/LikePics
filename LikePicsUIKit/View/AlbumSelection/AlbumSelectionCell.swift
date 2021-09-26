@@ -11,23 +11,12 @@ public class AlbumSelectionCell: UICollectionViewCell {
         return UINib(nibName: "AlbumSelectionCell", bundle: Bundle(for: Self.self))
     }
 
-    public var identifier: String?
-
     public var title: String? {
         get {
             return self.titleLabel.text
         }
         set {
             self.titleLabel.text = newValue
-        }
-    }
-
-    public var thumbnail: UIImage? {
-        get {
-            self.thumbnailImageView.image
-        }
-        set {
-            self.thumbnailImageView.image = newValue
         }
     }
 
@@ -43,9 +32,7 @@ public class AlbumSelectionCell: UICollectionViewCell {
         }
     }
 
-    public var onReuse: ((String?) -> Void)?
-
-    @IBOutlet var thumbnailImageView: UIImageView!
+    @IBOutlet public private(set) var thumbnailImageView: UIImageView!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var countLabel: UILabel!
 
@@ -59,42 +46,12 @@ public class AlbumSelectionCell: UICollectionViewCell {
         self.setupAppearance()
     }
 
-    override public func prepareForReuse() {
-        super.prepareForReuse()
-        self.onReuse?(self.identifier)
-    }
-
     func setupAppearance() {
         self.thumbnailImageView.layer.cornerRadius = 10
         self.thumbnailImageView.layer.cornerCurve = .continuous
         self.thumbnailImageView.contentMode = .scaleAspectFill
         self.thumbnailImageView.clipsToBounds = true
         self.clipCount = nil
-    }
-}
-
-extension AlbumSelectionCell: ThumbnailLoadObserver {
-    // MARK: - ThumbnailLoadObserver
-
-    public func didStartLoading(_ request: ThumbnailRequest) {
-        DispatchQueue.main.async {
-            guard self.identifier == request.requestId else { return }
-            self.thumbnail = nil
-        }
-    }
-
-    public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
-        DispatchQueue.main.async {
-            guard self.identifier == request.requestId else { return }
-            self.thumbnail = image
-        }
-    }
-
-    public func didFailedToLoad(_ request: ThumbnailRequest) {
-        DispatchQueue.main.async {
-            guard self.identifier == request.requestId else { return }
-            self.thumbnail = nil
-        }
     }
 }
 

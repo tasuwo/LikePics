@@ -105,12 +105,14 @@ extension SearchResultViewLayout {
 // MARK: - DataSource
 
 extension SearchResultViewLayout {
-    static func createDataSource(collectionView: UICollectionView,
-                                 thumbnailLoader: ThumbnailLoaderProtocol,
+    static func createDataSource(_ collectionView: UICollectionView,
+                                 _ thumbnailPipeline: Pipeline,
+                                 _ imageQueryService: ImageQueryServiceProtocol,
                                  seeAllButtonHandler: @escaping () -> Void) -> DataSource
     {
         let candidateCellRegistration = self.configureCandidateCell()
-        let resultCellRegistration = self.configureResultCell(thumbnailLoader: thumbnailLoader)
+        let resultCellRegistration = self.configureResultCell(thumbnailPipeline: thumbnailPipeline,
+                                                              imageQueryService: imageQueryService)
 
         let dataSource: DataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
             switch item {
@@ -169,39 +171,25 @@ extension SearchResultViewLayout {
         }
     }
 
-    private static func configureResultCell(thumbnailLoader: ThumbnailLoaderProtocol) -> UICollectionView.CellRegistration<SearchResultClipCell, Clip> {
-        return .init(cellNib: SearchResultClipCell.nib) { [weak thumbnailLoader] cell, _, clip in
-            guard let thumbnailLoader = thumbnailLoader,
+    private static func configureResultCell(thumbnailPipeline: Pipeline,
+                                            imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<SearchResultClipCell, Clip>
+    {
+        return .init(cellNib: SearchResultClipCell.nib) { [weak thumbnailPipeline, weak imageQueryService] cell, _, clip in
+            guard let pipeline = thumbnailPipeline,
+                  let imageQueryService = imageQueryService,
                   let item = clip.primaryItem
             else {
                 cell.imageView.image = nil
                 return
             }
 
-            let requestId = UUID().uuidString
-
-            cell.identifier = requestId
-
             let scale = cell.traitCollection.displayScale
             let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
-            let request = self.makeRequest(for: item, id: requestId, size: size, scale: scale)
-            cell.onReuse = { [weak thumbnailLoader] identifier in
-                guard identifier == requestId else { return }
-                thumbnailLoader?.cancel(request)
-            }
-
-            thumbnailLoader.load(request, observer: cell)
+            let provider = ImageDataProvider(imageId: item.imageId,
+                                             cacheKey: "search-result-\(item.identity.uuidString)",
+                                             imageQueryService: imageQueryService)
+            let request = ImageRequest(source: .provider(provider), size: size, scale: scale)
+            loadImage(request, with: pipeline, on: cell, userInfo: nil)
         }
-    }
-
-    private static func makeRequest(for item: ClipItem, id: String, size: CGSize, scale: CGFloat) -> ThumbnailRequest {
-        let info = ThumbnailConfig(cacheKey: "search-result-\(item.identity.uuidString)",
-                                   size: size,
-                                   scale: scale)
-        let imageRequest = ImageDataLoadRequest(imageId: item.imageId)
-        return ThumbnailRequest(requestId: id,
-                                originalImageRequest: imageRequest,
-                                config: info,
-                                userInfo: nil)
     }
 }

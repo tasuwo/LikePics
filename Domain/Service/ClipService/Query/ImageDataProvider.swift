@@ -7,7 +7,7 @@ import Smoothie
 public class ImageDataProvider {
     private let imageId: UUID
     private let _cacheKey: String
-    private let imageQueryService: ImageQueryServiceProtocol
+    private weak var imageQueryService: ImageQueryServiceProtocol?
 
     public init(imageId: UUID,
                 cacheKey: String,
@@ -23,6 +23,10 @@ extension ImageDataProvider: ImageDataProviding {
     public var cacheKey: String { _cacheKey }
 
     public func load(completion: @escaping (Data?) -> Void) {
-        completion(try? imageQueryService.read(having: imageId))
+        guard let service = self.imageQueryService else {
+            completion(nil)
+            return
+        }
+        completion(try? service.read(having: imageId))
     }
 }

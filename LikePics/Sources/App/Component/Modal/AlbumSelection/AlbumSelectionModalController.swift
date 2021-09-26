@@ -28,7 +28,8 @@ class AlbumSelectionModalController: UIViewController {
 
     // MARK: Service
 
-    private let thumbnailLoader: ThumbnailLoaderProtocol
+    private let thumbnailPipeline: Pipeline
+    private let imageQueryService: ImageQueryServiceProtocol
 
     // MARK: Store
 
@@ -41,11 +42,13 @@ class AlbumSelectionModalController: UIViewController {
     init(state: AlbumSelectionModalState,
          albumAdditionAlertState: TextEditAlertState,
          dependency: AlbumSelectionModalDependency,
-         thumbnailLoader: ThumbnailLoaderProtocol)
+         thumbnailPipeline: Pipeline,
+         imageQueryService: ImageQueryServiceProtocol)
     {
         self.store = .init(initialState: state, dependency: dependency, reducer: AlbumSelectionModalReducer())
         self.albumAdditionAlert = .init(state: albumAdditionAlertState)
-        self.thumbnailLoader = thumbnailLoader
+        self.thumbnailPipeline = thumbnailPipeline
+        self.imageQueryService = imageQueryService
         super.init(nibName: nil, bundle: nil)
 
         albumAdditionAlert.textEditAlertDelegate = self
@@ -178,8 +181,7 @@ extension AlbumSelectionModalController {
         collectionView.delegate = self
         collectionView.allowsSelection = true
         collectionView.allowsMultipleSelection = true
-        dataSource = Layout.createDataSource(collectionView: collectionView,
-                                             thumbnailLoader: thumbnailLoader)
+        dataSource = Layout.createDataSource(collectionView, thumbnailPipeline, imageQueryService)
     }
 
     private func configureSearchBar() {

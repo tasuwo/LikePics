@@ -104,14 +104,17 @@ extension ClipMergeViewLayout {
             + items.map({ Item.item($0) })
     }
 
-    static func createDataSource(collectionView: UICollectionView,
-                                 thumbnailLoader: ThumbnailLoaderProtocol) -> (DataSource, Proxy)
+    static func createDataSource(_ collectionView: UICollectionView,
+                                 _ thumbnailPipeline: Pipeline,
+                                 _ imageQueryService: ImageQueryServiceProtocol) -> (DataSource, Proxy)
     {
         let proxy = Proxy()
 
         let tagAdditionCellRegistration = self.configureTagAdditionCell(delegate: proxy)
         let tagCellRegistration = self.configureTagCell(delegate: proxy)
-        let itemCellRegistration = self.configureItemCell(proxy: proxy, thumbnailLoader: thumbnailLoader)
+        let itemCellRegistration = self.configureItemCell(proxy: proxy,
+                                                          thumbnailPipeline: thumbnailPipeline,
+                                                          imageQueryService: imageQueryService)
 
         let dataSource = DataSource(collectionView: collectionView) { collectionView, indexPath, item in
             switch item {
@@ -147,8 +150,11 @@ extension ClipMergeViewLayout {
         }
     }
 
-    private static func configureItemCell(proxy: Proxy, thumbnailLoader: ThumbnailLoaderProtocol) -> UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem> {
-        return UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem> { [weak proxy, weak thumbnailLoader] cell, _, item in
+    private static func configureItemCell(proxy: Proxy,
+                                          thumbnailPipeline: Pipeline,
+                                          imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem>
+    {
+        return UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem> { [weak proxy, weak thumbnailPipeline, weak imageQueryService] cell, _, item in
             var contentConfiguration = ClipItemEditContentConfiguration()
             contentConfiguration.siteUrl = item.url
             contentConfiguration.isSiteUrlEditable = false
@@ -165,22 +171,16 @@ extension ClipMergeViewLayout {
 
             cell.accessories = [.reorder(displayed: .always)]
 
-            let requestId = UUID().uuidString
-            cell.identifier = requestId
+            guard let pipeline = thumbnailPipeline,
+                  let imageQueryService = imageQueryService else { return }
+
+            let scale = cell.traitCollection.displayScale
             let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
-            let info = ThumbnailConfig(cacheKey: "clip-merge-\(item.identity.uuidString)",
-                                       size: size,
-                                       scale: cell.traitCollection.displayScale)
-            let imageRequest = ImageDataLoadRequest(imageId: item.imageId)
-            let request = ThumbnailRequest(requestId: requestId,
-                                           originalImageRequest: imageRequest,
-                                           config: info,
-                                           userInfo: nil)
-            cell.onReuse = { identifier in
-                guard identifier == requestId else { return }
-                thumbnailLoader?.cancel(request)
-            }
-            thumbnailLoader?.load(request, observer: cell)
+            let provider = ImageDataProvider(imageId: item.imageId,
+                                             cacheKey: "clip-merge-\(item.identity.uuidString)",
+                                             imageQueryService: imageQueryService)
+            let request = ImageRequest(source: .provider(provider), size: size, scale: scale)
+            loadImage(request, with: pipeline, on: cell, userInfo: nil)
         }
     }
 }

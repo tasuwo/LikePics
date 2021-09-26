@@ -21,8 +21,8 @@ class DependencyContainer {
 
     let clipDiskCache: DiskCache
     let clipThumbnailPipeline: Pipeline
-    let albumThumbnailLoader: ThumbnailLoader
-    let temporaryThumbnailLoader: ThumbnailLoader
+    let albumThumbnailPipeline: Pipeline
+    let temporaryThumbnailPipeline: Pipeline
     let _previewLoader: PreviewLoader
 
     // MARK: Storage
@@ -117,19 +117,19 @@ class DependencyContainer {
         clipCacheConfig.memoryCache = clipMemoryCache
         self.clipThumbnailPipeline = .init(config: clipCacheConfig)
 
-        var albumCacheConfig = ThumbnailLoadQueue.Configuration(originalImageLoader: self._imageQueryService)
+        var albumCacheConfig = Pipeline.Configuration()
         albumCacheConfig.compressionRatio = 0.5
         let albumCacheDirectory = Self.resolveCacheDirectoryUrl(name: "album-thumbnails")
         let albumDiskCache = try DiskCache(path: albumCacheDirectory,
                                            config: .init(sizeLimit: 1024 * 1024 * 512, countLimit: 1000))
         albumCacheConfig.diskCache = albumDiskCache
         albumCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: Int.max))
-        self.albumThumbnailLoader = ThumbnailLoader(queue: .init(config: albumCacheConfig))
+        self.albumThumbnailPipeline = Pipeline(config: albumCacheConfig)
 
-        var temporaryCacheConfig = ThumbnailLoadQueue.Configuration(originalImageLoader: self._imageQueryService)
+        var temporaryCacheConfig = Pipeline.Configuration()
         temporaryCacheConfig.diskCache = nil
         temporaryCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: 50))
-        self.temporaryThumbnailLoader = ThumbnailLoader(queue: .init(config: temporaryCacheConfig))
+        self.temporaryThumbnailPipeline = Pipeline(config: temporaryCacheConfig)
 
         let previewMemoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: 100))
         self._previewLoader = PreviewLoader(thumbnailCache: clipMemoryCache,

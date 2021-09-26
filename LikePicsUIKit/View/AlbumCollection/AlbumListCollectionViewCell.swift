@@ -16,9 +16,7 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         return UINib(nibName: "AlbumListCollectionViewCell", bundle: Bundle(for: Self.self))
     }
 
-    public var identifier: String?
     public var albumId: Album.Identity?
-    public weak var invalidator: ThumbnailInvalidatable?
 
     public var thumbnail: UIImage? {
         get {
@@ -59,6 +57,7 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
     public var onReuse: ((String?) -> Void)?
 
     public weak var delegate: AlbumListCollectionViewCellDelegate?
+    public weak var pipeline: Pipeline?
 
     @IBOutlet var thumbnailImageView: UIImageView!
     @IBOutlet var titleButton: UIButton!
@@ -75,11 +74,6 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
     override public func awakeFromNib() {
         super.awakeFromNib()
         self.setupAppearance()
-    }
-
-    override public func prepareForReuse() {
-        super.prepareForReuse()
-        self.onReuse?(self.identifier)
     }
 
     override public func dragStateDidChange(_ dragState: UICollectionViewCell.DragState) {
@@ -216,33 +210,33 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
     }
 }
 
-extension AlbumListCollectionViewCell: ThumbnailLoadObserver {
-    // MARK: - ThumbnailLoadObserver
+// MARK: - ImageDisplayable
 
-    public func didStartLoading(_ request: ThumbnailRequest) {
-        DispatchQueue.main.async {
-            guard self.identifier == request.requestId else { return }
-            self.thumbnail = nil
-        }
+extension AlbumListCollectionViewCell: ImageDisplayable {
+    public func smt_willLoad(userInfo: [AnyHashable: Any]?) {
+        backgroundColor = Asset.Color.secondaryBackground.color
+        thumbnail = nil
     }
 
-    public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
+    public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
         DispatchQueue.main.async {
-            guard self.identifier == request.requestId else { return }
+            guard let image = image else {
+                self.backgroundColor = Asset.Color.secondaryBackground.color
+                self.thumbnail = .none
+                return
+            }
+
+            self.backgroundColor = .clear
             self.thumbnail = image
 
-            let displayScale = self.traitCollection.displayScale
-            let originalSize = request.userInfo?[.originalImageSize] as? CGSize
-            if self.shouldInvalidate(thumbnail: image, originalImageSize: originalSize, displayScale: displayScale) {
-                self.invalidator?.invalidateCache(having: request.config.cacheKey)
-            }
-        }
-    }
+            guard let originalSize = userInfo?["originalSize"] as? CGSize,
+                  let cacheKey = userInfo?["cacheKey"] as? String else { return }
 
-    public func didFailedToLoad(_ request: ThumbnailRequest) {
-        DispatchQueue.main.async {
-            guard self.identifier == request.requestId else { return }
-            self.thumbnail = nil
+            let displayScale = self.traitCollection.displayScale
+            if self.shouldInvalidate(thumbnail: image, originalImageSize: originalSize, displayScale: displayScale) {
+                self.pipeline?.config.diskCache?.remove(forKey: cacheKey)
+                self.pipeline?.config.memoryCache.remove(forKey: cacheKey)
+            }
         }
     }
 }

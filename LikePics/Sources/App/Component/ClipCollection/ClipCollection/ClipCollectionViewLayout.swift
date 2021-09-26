@@ -138,7 +138,7 @@ extension ClipCollectionViewLayout {
                                       thumbnailPipeline: Pipeline,
                                       imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<ClipCollectionViewCell, Item>
     {
-        return .init(cellNib: ClipCollectionViewCell.nib) { [weak collectionView, weak thumbnailPipeline] cell, _, clip in
+        return .init(cellNib: ClipCollectionViewCell.nib) { [weak collectionView, weak thumbnailPipeline, weak imageQueryService] cell, _, clip in
             cell.sizeDescription = .make(by: clip.clip)
             cell.isEditing = collectionView?.isEditing ?? false
             cell.setThumbnailType(toSingle: collectionView?.layout.isSingleThumbnail ?? false)
@@ -146,7 +146,8 @@ extension ClipCollectionViewLayout {
             cell.setHiddenIconVisibility(true, animated: false)
             cell.setClipHiding(clip.isHidden, animated: false)
 
-            guard let pipeline = thumbnailPipeline else { return }
+            guard let pipeline = thumbnailPipeline,
+                  let imageQueryService = imageQueryService else { return }
 
             if let item = clip.primaryItem {
                 let request = makeRequest(item: item, view: cell.primaryThumbnailView, imageQueryService: imageQueryService)
@@ -156,7 +157,11 @@ extension ClipCollectionViewLayout {
                 ])
                 cell.primaryThumbnailView.pipeline = pipeline
                 cell.singleThumbnailView.smt.loadImage(request, with: pipeline)
+            } else {
+                cancelLoadImage(on: cell.primaryThumbnailView)
+                cell.singleThumbnailView.smt.cancelLoadImage()
             }
+
             if let item = clip.secondaryItem {
                 let request = makeRequest(item: item, view: cell.secondaryThumbnailView, imageQueryService: imageQueryService)
                 loadImage(request, with: pipeline, on: cell.secondaryThumbnailView, userInfo: [
@@ -164,7 +169,10 @@ extension ClipCollectionViewLayout {
                     "cacheKey": request.source.cacheKey
                 ])
                 cell.secondaryThumbnailView.pipeline = pipeline
+            } else {
+                cancelLoadImage(on: cell.secondaryThumbnailView)
             }
+
             if let item = clip.tertiaryItem {
                 let request = makeRequest(item: item, view: cell.tertiaryThumbnailView, imageQueryService: imageQueryService)
                 loadImage(request, with: pipeline, on: cell.tertiaryThumbnailView, userInfo: [
@@ -172,6 +180,8 @@ extension ClipCollectionViewLayout {
                     "cacheKey": request.source.cacheKey
                 ])
                 cell.tertiaryThumbnailView.pipeline = pipeline
+            } else {
+                cancelLoadImage(on: cell.tertiaryThumbnailView)
             }
         }
     }

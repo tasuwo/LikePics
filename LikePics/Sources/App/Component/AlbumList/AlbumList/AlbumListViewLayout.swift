@@ -97,52 +97,50 @@ extension AlbumListViewLayout {
         }
     }
 
-    static func configureAlbumCell(thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable,
+    static func configureAlbumCell(thumbnailPipeline: Pipeline,
+                                   queryService: ImageQueryServiceProtocol,
                                    delegate: AlbumListCollectionViewCellDelegate) -> UICollectionView.CellRegistration<AlbumListCollectionViewCell, Item>
     {
-        return .init(cellNib: AlbumListCollectionViewCell.nib) { [weak thumbnailLoader, weak delegate] cell, _, item in
+        return .init(cellNib: AlbumListCollectionViewCell.nib) { [weak thumbnailPipeline, weak queryService, weak delegate] cell, _, item in
             cell.albumId = item.album.id
             cell.title = item.album.title
             cell.clipCount = item.album.clips.count
             cell.delegate = delegate
-
-            cell.invalidator = thumbnailLoader
 
             cell.setEditing(item.isEditing, animated: false)
 
             cell.setHiddenIconVisibility(true, animated: false)
             cell.setAlbumHiding(item.album.isHidden, animated: false)
 
-            let requestId = UUID().uuidString
-            cell.identifier = requestId
+            guard let pipeline = thumbnailPipeline,
+                  let imageQueryService = queryService else { return }
 
-            if let thumbnailTarget = item.album.clips.first?.primaryItem {
-                let size = cell.calcThumbnailPointSize(originalPixelSize: thumbnailTarget.imageSize.cgSize)
-                let info = ThumbnailConfig(cacheKey: "album-list-\(thumbnailTarget.identity.uuidString)",
-                                           size: size,
-                                           scale: cell.traitCollection.displayScale)
-                let imageRequest = ImageDataLoadRequest(imageId: thumbnailTarget.imageId)
-                let request = ThumbnailRequest(requestId: requestId,
-                                               originalImageRequest: imageRequest,
-                                               config: info,
-                                               userInfo: [.originalImageSize: thumbnailTarget.imageSize.cgSize])
-                thumbnailLoader?.load(request, observer: cell)
-                cell.onReuse = { identifier in
-                    guard identifier == requestId else { return }
-                    thumbnailLoader?.cancel(request)
-                }
+            if let item = item.album.clips.first?.primaryItem {
+                let scale = cell.traitCollection.displayScale
+                let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
+                let provider = ImageDataProvider(imageId: item.imageId,
+                                                 cacheKey: "album-list-\(item.identity.uuidString)",
+                                                 imageQueryService: imageQueryService)
+                let request = ImageRequest(source: .provider(provider), size: size, scale: scale)
+                cell.pipeline = pipeline
+                loadImage(request, with: pipeline, on: cell, userInfo: [
+                    "originalSize": item.imageSize.cgSize,
+                    "cacheKey": request.source.cacheKey
+                ])
             } else {
-                cell.thumbnail = nil
-                cell.onReuse = nil
+                cancelLoadImage(on: cell)
             }
         }
     }
 
     static func configureDataSource(collectionView: UICollectionView,
-                                    thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable,
+                                    thumbnailPipeline: Pipeline,
+                                    queryService: ImageQueryServiceProtocol,
                                     delegate: AlbumListCollectionViewCellDelegate) -> DataSource
     {
-        let albumCellRegistration = self.configureAlbumCell(thumbnailLoader: thumbnailLoader, delegate: delegate)
+        let albumCellRegistration = self.configureAlbumCell(thumbnailPipeline: thumbnailPipeline,
+                                                            queryService: queryService,
+                                                            delegate: delegate)
 
         return .init(collectionView: collectionView) { collectionView, indexPath, item in
             return collectionView.dequeueConfiguredReusableCell(using: albumCellRegistration, for: indexPath, item: item)

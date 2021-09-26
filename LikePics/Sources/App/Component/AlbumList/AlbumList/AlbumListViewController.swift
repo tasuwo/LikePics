@@ -29,7 +29,8 @@ class AlbumListViewController: UIViewController {
 
     // MARK: Service
 
-    private let thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable
+    private let thumbnailPipeline: Pipeline
+    private let imageQueryService: ImageQueryServiceProtocol
     private let menuBuilder: AlbumListMenuBuildable.Type
 
     // MARK: Store/Subscription
@@ -49,14 +50,16 @@ class AlbumListViewController: UIViewController {
          albumAdditionAlertState: TextEditAlertState,
          albumEditAlertState: TextEditAlertState,
          dependency: AlbumListViewDependency,
-         thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable,
+         thumbnailPipeline: Pipeline,
+         imageQueryService: ImageQueryServiceProtocol,
          menuBuilder: AlbumListMenuBuildable.Type)
     {
         self.store = Store(initialState: state, dependency: dependency, reducer: AlbumListViewReducer())
         self.albumAdditionAlert = .init(state: albumAdditionAlertState)
         self.albumEditAlert = .init(state: albumEditAlertState)
 
-        self.thumbnailLoader = thumbnailLoader
+        self.thumbnailPipeline = thumbnailPipeline
+        self.imageQueryService = imageQueryService
         self.menuBuilder = menuBuilder
 
         super.init(nibName: nil, bundle: nil)
@@ -265,7 +268,8 @@ extension AlbumListViewController {
     private func configureDataSource() {
         collectionView.delegate = self
         dataSource = Layout.configureDataSource(collectionView: collectionView,
-                                                thumbnailLoader: thumbnailLoader,
+                                                thumbnailPipeline: thumbnailPipeline,
+                                                queryService: imageQueryService,
                                                 delegate: self)
     }
 
@@ -555,7 +559,8 @@ extension AlbumListViewController: Restorable {
                                        albumAdditionAlertState: albumAdditionAlert.store.stateValue,
                                        albumEditAlertState: albumEditAlert.store.stateValue,
                                        dependency: store.dependency,
-                                       thumbnailLoader: thumbnailLoader,
+                                       thumbnailPipeline: thumbnailPipeline,
+                                       imageQueryService: imageQueryService,
                                        menuBuilder: menuBuilder)
     }
 }

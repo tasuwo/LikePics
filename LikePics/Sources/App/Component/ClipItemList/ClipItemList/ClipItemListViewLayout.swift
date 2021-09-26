@@ -98,9 +98,12 @@ extension ClipItemListViewLayout {
 
 extension ClipItemListViewLayout {
     static func configureDataSource(_ collectionView: UICollectionView,
-                                    _ thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable) -> DataSource
+                                    _ thumbnailPipeline: Pipeline,
+                                    _ imageQueryService: ImageQueryServiceProtocol) -> DataSource
     {
-        let cellRegistration = configureCell(collectionView: collectionView, thumbnailLoader: thumbnailLoader)
+        let cellRegistration = configureCell(collectionView: collectionView,
+                                             thumbnailPipeline: thumbnailPipeline,
+                                             imageQueryService: imageQueryService)
 
         return .init(collectionView: collectionView) { collectionView, indexPath, item in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
@@ -108,9 +111,10 @@ extension ClipItemListViewLayout {
     }
 
     private static func configureCell(collectionView: UICollectionView,
-                                      thumbnailLoader: ThumbnailLoaderProtocol & ThumbnailInvalidatable) -> UICollectionView.CellRegistration<ClipItemCell, Item>
+                                      thumbnailPipeline: Pipeline,
+                                      imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<ClipItemCell, Item>
     {
-        return UICollectionView.CellRegistration<ClipItemCell, Item> { [weak thumbnailLoader] cell, _, item in
+        return UICollectionView.CellRegistration<ClipItemCell, Item> { [weak thumbnailPipeline, weak imageQueryService] cell, _, item in
             var configuration = ClipItemContentConfiguration()
             configuration.fileName = item.imageFileName
             configuration.dataSize = item.imageDataSize
@@ -122,27 +126,23 @@ extension ClipItemListViewLayout {
             backgroundConfiguration.backgroundColor = .clear
             cell.backgroundConfiguration = backgroundConfiguration
 
-            let requestId = UUID().uuidString
-
-            cell.identifier = requestId
-            cell.invalidator = thumbnailLoader
-
-            let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize)
-            let info = ThumbnailConfig(cacheKey: "clip-info-\(item.itemId.uuidString)",
-                                       size: size,
-                                       scale: cell.traitCollection.displayScale)
-            let imageRequest = ImageDataLoadRequest(imageId: item.imageId)
-            let request = ThumbnailRequest(requestId: requestId,
-                                           originalImageRequest: imageRequest,
-                                           config: info,
-                                           userInfo: [
-                                               .originalImageSize: item.imageSize
-                                           ])
-            cell.onReuse = { identifier in
-                guard identifier == requestId else { return }
-                thumbnailLoader?.cancel(request)
+            guard let pipeline = thumbnailPipeline,
+                  let imageQueryService = imageQueryService
+            else {
+                return
             }
-            thumbnailLoader?.load(request, observer: cell)
+
+            let scale = cell.traitCollection.displayScale
+            let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize)
+            let provider = ImageDataProvider(imageId: item.imageId,
+                                             cacheKey: "clip-info-\(item.itemId.uuidString)",
+                                             imageQueryService: imageQueryService)
+            let request = ImageRequest(source: .provider(provider), size: size, scale: scale)
+            cell.pipeline = pipeline
+            loadImage(request, with: pipeline, on: cell, userInfo: [
+                "originalSize": item.imageSize,
+                "cacheKey": request.source.cacheKey
+            ])
         }
     }
 }

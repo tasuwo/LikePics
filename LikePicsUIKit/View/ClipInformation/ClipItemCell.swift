@@ -6,10 +6,7 @@ import Smoothie
 import UIKit
 
 public class ClipItemCell: UICollectionViewListCell {
-    public var identifier: String?
-    public weak var invalidator: ThumbnailInvalidatable?
-
-    public var onReuse: ((String?) -> Void)?
+    public weak var pipeline: Pipeline?
 
     private var _contentConfiguration: ClipItemContentConfiguration {
         return (contentConfiguration as? ClipItemContentConfiguration) ?? ClipItemContentConfiguration()
@@ -17,11 +14,6 @@ public class ClipItemCell: UICollectionViewListCell {
 
     override public func updateConfiguration(using state: UICellConfigurationState) {
         contentConfiguration = _contentConfiguration.updated(for: state)
-    }
-
-    override public func prepareForReuse() {
-        super.prepareForReuse()
-        self.onReuse?(self.identifier)
     }
 }
 
@@ -44,34 +36,36 @@ extension ClipItemCell: ThumbnailPresentable {
     }
 }
 
-extension ClipItemCell: ThumbnailLoadObserver {
-    // MARK: - ThumbnailLoadObserver
+// MARK: - ImageDisplayable
 
-    public func didStartLoading(_ request: ThumbnailRequest) {
-        // NOP
+extension ClipItemCell: ImageDisplayable {
+    public func smt_willLoad(userInfo: [AnyHashable: Any]?) {
+        var configuration = self._contentConfiguration
+        configuration.image = nil
+        self.contentConfiguration = configuration
     }
 
-    public func didFailedToLoad(_ request: ThumbnailRequest) {
+    public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
         DispatchQueue.main.async {
-            guard self.identifier == request.requestId else { return }
             var configuration = self._contentConfiguration
-            configuration.image = nil
-            self.contentConfiguration = configuration
-        }
-    }
 
-    public func didSuccessToLoad(_ request: ThumbnailRequest, image: UIImage) {
-        DispatchQueue.main.async {
-            guard self.identifier == request.requestId else { return }
-            var configuration = self._contentConfiguration
+            defer {
+                self.contentConfiguration = configuration
+            }
+
             configuration.image = image
-            self.contentConfiguration = configuration
 
-            guard let image = configuration.image else { return }
+            guard let image = image,
+                  let originalSize = userInfo?["originalSize"] as? CGSize,
+                  let cacheKey = userInfo?["cacheKey"] as? String
+            else {
+                return
+            }
+
             let displayScale = self.traitCollection.displayScale
-            let originalSize = request.userInfo?[.originalImageSize] as? CGSize
             if self.shouldInvalidate(thumbnail: image, originalImageSize: originalSize, displayScale: displayScale) {
-                self.invalidator?.invalidateCache(having: request.config.cacheKey)
+                self.pipeline?.config.diskCache?.remove(forKey: cacheKey)
+                self.pipeline?.config.memoryCache.remove(forKey: cacheKey)
             }
         }
     }

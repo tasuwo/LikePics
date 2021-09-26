@@ -73,7 +73,8 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                                      albumAdditionAlertState: addAlbumAlertState,
                                                      albumEditAlertState: editAlbumAlertState,
                                                      dependency: self,
-                                                     thumbnailLoader: container.albumThumbnailLoader,
+                                                     thumbnailPipeline: container.albumThumbnailPipeline,
+                                                     imageQueryService: container._imageQueryService,
                                                      menuBuilder: AlbumListMenuBuilder.self)
 
         return UINavigationController(rootViewController: viewController)
@@ -89,7 +90,8 @@ extension SceneDependencyContainer: ViewControllerFactory {
         }()
         let viewController = SearchEntryViewController(state: state,
                                                        dependency: self,
-                                                       temporaryThumbnailLoader: container.temporaryThumbnailLoader)
+                                                       thumbnailPipeline: container.temporaryThumbnailPipeline,
+                                                       imageQueryService: container._imageQueryService)
 
         return UINavigationController(rootViewController: viewController)
     }

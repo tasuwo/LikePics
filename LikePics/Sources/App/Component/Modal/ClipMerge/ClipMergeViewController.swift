@@ -29,7 +29,8 @@ class ClipMergeViewController: UIViewController {
     // MARK: Service
 
     private let router: Router
-    private let thumbnailLoader: ThumbnailLoaderProtocol
+    private let thumbnailPipeline: Pipeline
+    private let imageQueryService: ImageQueryServiceProtocol
 
     // MARK: Store
 
@@ -42,11 +43,13 @@ class ClipMergeViewController: UIViewController {
 
     init(state: ClipMergeViewState,
          dependency: ClipMergeViewDependency,
-         thumbnailLoader: ThumbnailLoaderProtocol)
+         thumbnailPipeline: Pipeline,
+         imageQueryService: ImageQueryServiceProtocol)
     {
         self.store = .init(initialState: state, dependency: dependency, reducer: ClipMergeViewReducer())
         self.router = dependency.router
-        self.thumbnailLoader = thumbnailLoader
+        self.thumbnailPipeline = thumbnailPipeline
+        self.imageQueryService = imageQueryService
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -163,7 +166,7 @@ extension ClipMergeViewController {
     }
 
     private func configureDataSource() {
-        let (dataSource, proxy) = Layout.createDataSource(collectionView: collectionView, thumbnailLoader: thumbnailLoader)
+        let (dataSource, proxy) = Layout.createDataSource(collectionView, thumbnailPipeline, imageQueryService)
         self.dataSource = dataSource
         self.proxy = proxy
         self.proxy.delegate = self
