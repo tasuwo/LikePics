@@ -27,11 +27,13 @@ public final class Pipeline {
         }
     }
 
+    // MARK: - Properties
+
     public let config: Configuration
 
-    let logger = Logger()
-    let queue = DispatchQueue(label: "net.tasuwo.TBox.Smoothie.Pipeline", target: .global(qos: .userInitiated))
-    let pool = ImageLoadTaskPool()
+    private let logger = Logger()
+    private let queue = DispatchQueue(label: "net.tasuwo.TBox.Smoothie.Pipeline", target: .global(qos: .userInitiated))
+    private let pool = ImageLoadTaskPool()
 
     // MARK: - Initializers
 
