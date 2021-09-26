@@ -18,12 +18,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    public enum ThumbnailOrder: String {
-        case primary
-        case secondary
-        case tertiary
-    }
-
     public static var nib: UINib { UINib(nibName: "ClipCollectionViewCell", bundle: Bundle(for: Self.self)) }
 
     public static let secondaryStickingOutMargin: CGFloat = 20
@@ -81,15 +75,10 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     @IBOutlet public var secondaryThumbnailView: ClipCollectionThumbnailView!
     @IBOutlet public var tertiaryThumbnailView: ClipCollectionThumbnailView!
 
-    @IBOutlet var secondaryThumbnailDisplayConstraint: NSLayoutConstraint!
-    @IBOutlet var tertiaryThumbnailDisplayConstraint: NSLayoutConstraint!
-
     @IBOutlet var hiddenIconBottomToThumbnailConstraint: NSLayoutConstraint!
     @IBOutlet var hiddenIconTrailingToThumbnailConstraint: NSLayoutConstraint!
 
     @IBOutlet var overallOverlayView: UIView!
-
-    @IBOutlet var imagesContainerView: UIView!
 
     @IBOutlet var selectionMark: UIView!
 
@@ -206,11 +195,8 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         secondaryThumbnailView.thumbnailSize = description.secondaryThumbnailSize
         tertiaryThumbnailView.thumbnailSize = description.tertiaryThumbnailSize
 
-        secondaryThumbnailDisplayConstraint.isActive = description.containsSecondaryThumbnailSize
-        tertiaryThumbnailDisplayConstraint.isActive = description.containsTertiaryThumbnailSize
-
-        secondaryThumbnailView.isHidden = description.secondaryThumbnailSize == nil
-        tertiaryThumbnailView.isHidden = description.tertiaryThumbnailSize == nil
+        secondaryThumbnailView.isHidden = !description.containsSecondaryThumbnailSize
+        tertiaryThumbnailView.isHidden = !description.containsTertiaryThumbnailSize
     }
 
     private func updateOverallOverlayView() {

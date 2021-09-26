@@ -48,12 +48,10 @@
                             <constraint firstItem="yEC-tO-dj3" firstAttribute="bottom" secondItem="wm7-YZ-VcK" secondAttribute="bottom" constant="15" id="IYU-uM-58V"/>
                             <constraint firstItem="wm7-YZ-VcK" firstAttribute="bottom" secondItem="Vf6-AM-fuo" secondAttribute="bottom" constant="20" id="NbU-7N-Xuq"/>
                             <constraint firstAttribute="trailing" secondItem="wm7-YZ-VcK" secondAttribute="trailing" id="SGh-gJ-UpP"/>
-                            <constraint firstAttribute="bottom" secondItem="wm7-YZ-VcK" secondAttribute="bottom" priority="251" id="UZq-Xl-MnH"/>
                             <constraint firstAttribute="trailing" secondItem="yEC-tO-dj3" secondAttribute="trailing" id="VUP-kN-AMM"/>
                             <constraint firstItem="yEC-tO-dj3" firstAttribute="top" secondItem="Cof-mn-eeS" secondAttribute="top" priority="250" id="XyN-Gd-Q3i"/>
                             <constraint firstItem="yEC-tO-dj3" firstAttribute="leading" secondItem="Cof-mn-eeS" secondAttribute="leading" id="ehH-PG-gAA"/>
                             <constraint firstItem="Vf6-AM-fuo" firstAttribute="top" secondItem="Cof-mn-eeS" secondAttribute="top" id="kgm-AJ-I8j"/>
-                            <constraint firstAttribute="bottom" secondItem="yEC-tO-dj3" secondAttribute="bottom" priority="252" id="ohd-bp-QaP"/>
                             <constraint firstItem="wm7-YZ-VcK" firstAttribute="leading" secondItem="Cof-mn-eeS" secondAttribute="leading" id="suX-Om-6eh"/>
                             <constraint firstAttribute="trailing" secondItem="Vf6-AM-fuo" secondAttribute="trailing" id="u5h-Nf-eK8"/>
                         </constraints>
@@ -131,14 +129,11 @@
                 <outlet property="hiddenIcon" destination="CXg-BU-H4i" id="wgw-tS-Wke"/>
                 <outlet property="hiddenIconBottomToThumbnailConstraint" destination="MrO-VU-0g4" id="sxD-Pr-4Ue"/>
                 <outlet property="hiddenIconTrailingToThumbnailConstraint" destination="jU3-Je-Ii2" id="Ubi-aB-C8s"/>
-                <outlet property="imagesContainerView" destination="Cof-mn-eeS" id="iPR-M6-EkV"/>
                 <outlet property="overallOverlayView" destination="qJb-u8-3T5" id="ZQV-bp-1c8"/>
                 <outlet property="overallThumbnailView" destination="afu-7T-wNv" id="Xj9-ff-Wjk"/>
                 <outlet property="primaryThumbnailView" destination="Vf6-AM-fuo" id="Nak-XA-Mc0"/>
-                <outlet property="secondaryThumbnailDisplayConstraint" destination="NbU-7N-Xuq" id="bfO-qL-daI"/>
                 <outlet property="secondaryThumbnailView" destination="wm7-YZ-VcK" id="n7e-p2-GDH"/>
                 <outlet property="selectionMark" destination="3SE-fc-NHX" id="ctZ-15-Yf8"/>
-                <outlet property="tertiaryThumbnailDisplayConstraint" destination="IYU-uM-58V" id="t2N-hx-vX0"/>
                 <outlet property="tertiaryThumbnailView" destination="yEC-tO-dj3" id="sWq-fx-gNe"/>
             </connections>
             <point key="canvasLocation" x="147.10144927536234" y="73.325892857142847"/>
