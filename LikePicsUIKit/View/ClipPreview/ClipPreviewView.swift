@@ -98,14 +98,6 @@ public class ClipPreviewView: UIView {
         return doubleTapGestureRecognizer
     }
 
-    public var isDisplayingLoadingIndicator = false {
-        didSet { updateLoadingState() }
-    }
-
-    public var isLoadingIndicatorHidden = false {
-        didSet { updateLoadingState() }
-    }
-
     public weak var delegate: ClipPreviewPageViewDelegate?
 
     private var doubleTapGestureRecognizer: UITapGestureRecognizer!
@@ -113,7 +105,6 @@ public class ClipPreviewView: UIView {
     @IBOutlet var baseView: UIView!
     @IBOutlet var scrollView: UIScrollView!
     @IBOutlet var imageView: UIImageView!
-    @IBOutlet var indicator: UIActivityIndicatorView!
 
     @IBOutlet var leftInsetConstraint: NSLayoutConstraint!
     @IBOutlet var bottomInsetConstraint: NSLayoutConstraint!
@@ -234,9 +225,6 @@ extension ClipPreviewView {
         addSubview(baseView)
         sendSubviewToBack(baseView)
 
-        indicator.hidesWhenStopped = true
-        indicator.stopAnimating()
-
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.alwaysBounceVertical = false
@@ -287,22 +275,6 @@ extension ClipPreviewView {
             return
         }
         _isInitialZoomScale.send(scrollView.zoomScale == source.size.scale(fittingIn: bounds.size))
-    }
-
-    private func updateLoadingState() {
-        guard !isLoadingIndicatorHidden else {
-            imageView.alpha = 1.0
-            indicator.stopAnimating()
-            return
-        }
-
-        if isDisplayingLoadingIndicator {
-            imageView.alpha = 0.8
-            indicator.startAnimating()
-        } else {
-            imageView.alpha = 1.0
-            indicator.stopAnimating()
-        }
     }
 }
 

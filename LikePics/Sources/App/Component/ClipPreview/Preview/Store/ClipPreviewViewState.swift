@@ -13,8 +13,6 @@ struct ClipPreviewViewState: Equatable {
 
     var source: ClipPreviewView.Source?
 
-    var isDisplayingLoadingIndicator: Bool
-    var isUserInteractionEnabled: Bool
     var isDismissed: Bool
 }
 
@@ -26,8 +24,6 @@ extension ClipPreviewViewState {
 
         source = nil
 
-        isDisplayingLoadingIndicator = false
-        isUserInteractionEnabled = true
         isDismissed = false
     }
 }

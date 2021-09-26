@@ -26,8 +26,6 @@ struct ClipPreviewViewReducer: Reducer {
         // MARK: Load Completion
 
         case let .imageLoaded(image):
-            nextState.isDisplayingLoadingIndicator = false
-            nextState.isUserInteractionEnabled = true
             guard let image = image else { return (nextState, .none) }
             nextState.source = .image(image)
             return (nextState, .none)
@@ -43,8 +41,6 @@ extension ClipPreviewViewReducer {
 
         if let preview = dependency.previewLoader.readThumbnail(forItemId: state.itemId) {
             nextState.source = .thumbnail(preview, originalSize: state.imageSize)
-            nextState.isDisplayingLoadingIndicator = true
-            nextState.isUserInteractionEnabled = false
             let stream = Deferred {
                 Future<Action?, Never> { promise in
                     if let preview = dependency.previewLoader.readCache(forImageId: state.imageId) {
@@ -68,8 +64,6 @@ extension ClipPreviewViewReducer {
             return (nextState, [])
         }
 
-        nextState.isDisplayingLoadingIndicator = true
-        nextState.isUserInteractionEnabled = false
         let stream = Deferred {
             Future<Action?, Never> { promise in
                 dependency.previewLoader.loadPreview(forImageId: state.imageId) { image in

@@ -71,14 +71,6 @@ extension ClipPreviewViewController {
             .store(in: &subscriptions)
 
         store.state
-            .debounce(for: 0.5, scheduler: RunLoop.main)
-            .bind(\.isDisplayingLoadingIndicator, to: \.isDisplayingLoadingIndicator, on: previewView)
-            .store(in: &subscriptions)
-        store.state
-            .bind(\.isUserInteractionEnabled, to: \.isUserInteractionEnabled, on: previewView)
-            .store(in: &subscriptions)
-
-        store.state
             .bind(\.isDismissed) { [weak self] isDismissed in
                 guard isDismissed else { return }
                 self?.dismiss(animated: true, completion: nil)

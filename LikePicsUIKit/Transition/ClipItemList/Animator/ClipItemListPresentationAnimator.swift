@@ -71,7 +71,6 @@ extension ClipItemListPresentationAnimator: UIViewControllerAnimatedTransitionin
         // HACK: subViewが遅れて追加されるとalphaが効かないようなので、alphaではなくisHiddenを利用する
         toCell.isHidden = true
         fromImageView.isHidden = true
-        fromPreviewView.isLoadingIndicatorHidden = true
 
         toViewBaseView.addSubview(fromViewBackgroundView)
         toViewBaseView.insertSubview(animatingImageView, aboveSubview: fromViewBackgroundView)
@@ -79,7 +78,6 @@ extension ClipItemListPresentationAnimator: UIViewControllerAnimatedTransitionin
         let postprocess = { (completion: @escaping () -> Void) in
             from.view.backgroundColor = fromViewBackgroundView.backgroundColor
             fromImageView.isHidden = false
-            fromPreviewView.isLoadingIndicatorHidden = false
 
             UIView.animate(withDuration: 0.15, animations: {
                 toCell.isHidden = false

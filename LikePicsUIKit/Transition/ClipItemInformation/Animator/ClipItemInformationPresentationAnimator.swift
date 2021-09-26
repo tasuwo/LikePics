@@ -94,7 +94,6 @@ extension ClipItemInformationPresentationAnimator: UIViewControllerAnimatedTrans
 
         targetInformationView.imageView.isHidden = true
         selectedImageView.isHidden = true
-        selectedPreviewView.isLoadingIndicatorHidden = true
         from.view.backgroundColor = .clear
 
         fromViewBaseView.insertSubview(animatingImageView, aboveSubview: to.view)
@@ -102,7 +101,6 @@ extension ClipItemInformationPresentationAnimator: UIViewControllerAnimatedTrans
         let postprocess = {
             targetInformationView.imageView.isHidden = false
             selectedImageView.isHidden = false
-            selectedPreviewView.isLoadingIndicatorHidden = false
             from.view.backgroundColor = toViewBackgroundColor
 
             animatingImageView.removeFromSuperview()
