@@ -36,7 +36,7 @@ final class ImageLoadTaskController {
     // MARK: - Methods
 
     static func associateInstance(to view: ImageDisplayableView) -> ImageLoadTaskController {
-        if let manager = objc_getAssociatedObject(view, &associatedKey) as? ImageLoadTaskController {
+        if let manager = associatingInstance(to: view) {
             return manager
         }
         let manager = ImageLoadTaskController(view)
@@ -44,9 +44,12 @@ final class ImageLoadTaskController {
         return manager
     }
 
+    static func associatingInstance(to view: ImageDisplayableView) -> ImageLoadTaskController? {
+        return objc_getAssociatedObject(view, &associatedKey) as? ImageLoadTaskController
+    }
+
     func loadImage(_ request: ImageRequest, with pipeline: Pipeline, userInfo: [AnyHashable: Any]?) {
-        self.cancellable?.cancel()
-        self.cancellable = nil
+        cancelLoadImage()
 
         self.view?.smt_willLoad(userInfo: userInfo)
 
@@ -58,5 +61,10 @@ final class ImageLoadTaskController {
         self.cancellable = pipeline.loadImage(request) { [weak self] image in
             self?.view?.smt_display(image, userInfo: userInfo)
         }
+    }
+
+    func cancelLoadImage() {
+        cancellable?.cancel()
+        cancellable = nil
     }
 }

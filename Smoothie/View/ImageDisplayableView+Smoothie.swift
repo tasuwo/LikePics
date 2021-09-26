@@ -8,9 +8,17 @@ public func loadImage(_ request: ImageRequest, with pipeline: Pipeline, on view:
     ImageLoadTaskController.associateInstance(to: view).loadImage(request, with: pipeline, userInfo: userInfo)
 }
 
+public func cancelLoadImage(on view: ImageDisplayableView) {
+    ImageLoadTaskController.associatingInstance(to: view)?.cancelLoadImage()
+}
+
 public extension Smoothie where Base: UIImageView {
     func loadImage(_ request: ImageRequest, with pipeline: Pipeline, userInfo: [AnyHashable: Any]? = nil) {
         ImageLoadTaskController.associateInstance(to: base).loadImage(request, with: pipeline, userInfo: userInfo)
+    }
+
+    func cancelLoadImage() {
+        ImageLoadTaskController.associatingInstance(to: base)?.cancelLoadImage()
     }
 }
 
