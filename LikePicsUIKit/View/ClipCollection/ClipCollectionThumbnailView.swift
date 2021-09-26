@@ -6,7 +6,7 @@ import Smoothie
 import UIKit
 
 @IBDesignable
-public class ClipCollectionThumbnailView: UIView {
+public class ClipCollectionThumbnailView: UIImageView {
     enum ThumbnailLoadResult: Equatable {
         case success(UIImage)
         case failure
@@ -30,7 +30,7 @@ public class ClipCollectionThumbnailView: UIView {
 
     var thumbnail: ThumbnailLoadResult? {
         didSet {
-            imageView.image = thumbnail?.image
+            image = thumbnail?.image
         }
     }
 
@@ -41,18 +41,17 @@ public class ClipCollectionThumbnailView: UIView {
 
     @IBInspectable var isOverlayHidden: Bool = false {
         didSet {
-            overlayView.isHidden = isOverlayHidden
+            overlayLayer.isHidden = isOverlayHidden
         }
     }
 
     @IBInspectable var overlayOpacity: CGFloat = 0.4 {
         didSet {
-            overlayView.backgroundColor = .black.withAlphaComponent(overlayOpacity)
+            overlayLayer.backgroundColor = UIColor.black.withAlphaComponent(overlayOpacity).cgColor
         }
     }
 
-    let imageView = UIImageView()
-    private let overlayView = UIView()
+    private let overlayLayer = CALayer()
 
     public weak var pipeline: Pipeline?
 
@@ -73,6 +72,13 @@ public class ClipCollectionThumbnailView: UIView {
 
         updateAspectRatioConstraint()
     }
+
+    // MARK: - View Life-Cycle Methods
+
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        overlayLayer.frame = bounds
+    }
 }
 
 // MARK: - Configure
@@ -81,16 +87,10 @@ extension ClipCollectionThumbnailView {
     private func configureViewHierarchy() {
         backgroundColor = .clear
 
-        addSubview(imageView)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        NSLayoutConstraint.activate(imageView.constraints(fittingIn: self))
-
-        addSubview(overlayView)
-        overlayView.isHidden = true
-        overlayView.translatesAutoresizingMaskIntoConstraints = false
-        overlayView.backgroundColor = .black.withAlphaComponent(overlayOpacity)
-        NSLayoutConstraint.activate(overlayView.constraints(fittingIn: self))
+        overlayLayer.frame = bounds
+        layer.addSublayer(overlayLayer)
+        overlayLayer.isHidden = true
+        overlayLayer.backgroundColor = UIColor.black.withAlphaComponent(overlayOpacity).cgColor
 
         clipsToBounds = true
         layer.masksToBounds = true
@@ -103,23 +103,25 @@ extension ClipCollectionThumbnailView {
 extension ClipCollectionThumbnailView {
     private func updateAspectRatioConstraint() {
         guard let size = thumbnailSize else {
-            imageView.removeAspectRatioConstraint()
+            removeAspectRatioConstraint()
             return
         }
-        imageView.addAspectRatioConstraint(size: size)
+        addAspectRatioConstraint(size: size)
     }
 }
 
-extension ClipCollectionThumbnailView: ImageDisplayable {
-    public func smt_willLoad(userInfo: [AnyHashable: Any]?) {
+// MARK: - ImageDisplayable
+
+public extension ClipCollectionThumbnailView {
+    override func smt_willLoad(userInfo: [AnyHashable: Any]?) {
         thumbnail = .none
-        overlayView.alpha = 0
+        overlayLayer.opacity = 0
         backgroundColor = Asset.Color.secondaryBackground.color
     }
 
-    public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
+    override func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
         DispatchQueue.main.async {
-            self.overlayView.alpha = 1
+            self.overlayLayer.opacity = 1
             self.backgroundColor = .clear
 
             guard let image = image else {

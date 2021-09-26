@@ -56,7 +56,7 @@
                             <constraint firstAttribute="trailing" secondItem="Vf6-AM-fuo" secondAttribute="trailing" id="u5h-Nf-eK8"/>
                         </constraints>
                     </view>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="afu-7T-wNv" userLabel="Overall Thumbnail View">
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="afu-7T-wNv" userLabel="Overall Thumbnail View" customClass="ClipCollectionSingleThumbnailView" customModule="LikePicsUIKit" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="197" height="317"/>
                     </imageView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CXg-BU-H4i" userLabel="Hidden Icon" customClass="HiddenIconView" customModule="LikePicsUIKit" customModuleProvider="target">
@@ -130,10 +130,10 @@
                 <outlet property="hiddenIconBottomToThumbnailConstraint" destination="MrO-VU-0g4" id="sxD-Pr-4Ue"/>
                 <outlet property="hiddenIconTrailingToThumbnailConstraint" destination="jU3-Je-Ii2" id="Ubi-aB-C8s"/>
                 <outlet property="overallOverlayView" destination="qJb-u8-3T5" id="ZQV-bp-1c8"/>
-                <outlet property="overallThumbnailView" destination="afu-7T-wNv" id="Xj9-ff-Wjk"/>
                 <outlet property="primaryThumbnailView" destination="Vf6-AM-fuo" id="Nak-XA-Mc0"/>
                 <outlet property="secondaryThumbnailView" destination="wm7-YZ-VcK" id="n7e-p2-GDH"/>
                 <outlet property="selectionMark" destination="3SE-fc-NHX" id="ctZ-15-Yf8"/>
+                <outlet property="singleThumbnailView" destination="afu-7T-wNv" id="Xj9-ff-Wjk"/>
                 <outlet property="tertiaryThumbnailView" destination="yEC-tO-dj3" id="sWq-fx-gNe"/>
             </connections>
             <point key="canvasLocation" x="147.10144927536234" y="73.325892857142847"/>

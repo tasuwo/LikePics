@@ -6,18 +6,6 @@ import Smoothie
 import UIKit
 
 public class ClipCollectionViewCell: UICollectionViewCell {
-    public class OverallThumbnailView: UIImageView {
-        override public func smt_willLoad(userInfo: [AnyHashable: Any]?) {
-            super.smt_willLoad(userInfo: userInfo)
-            backgroundColor = Asset.Color.secondaryBackground.color
-        }
-
-        override public func smt_display(_ image: UIImage?, userInfo: [AnyHashable: Any]?) {
-            backgroundColor = .clear
-            super.smt_display(image, userInfo: userInfo)
-        }
-    }
-
     public static var nib: UINib { UINib(nibName: "ClipCollectionViewCell", bundle: Bundle(for: Self.self)) }
 
     public static let secondaryStickingOutMargin: CGFloat = 20
@@ -69,7 +57,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     public private(set) var visibleHiddenIcon = false
     public private(set) var isHiddenClip = false
 
-    @IBOutlet public var overallThumbnailView: OverallThumbnailView!
+    @IBOutlet public var singleThumbnailView: ClipCollectionSingleThumbnailView!
 
     @IBOutlet public var primaryThumbnailView: ClipCollectionThumbnailView!
     @IBOutlet public var secondaryThumbnailView: ClipCollectionThumbnailView!
@@ -103,7 +91,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     }
 
     private func setupAppearance() {
-        overallThumbnailView.alpha = 0
+        singleThumbnailView.alpha = 0
         overallOverlayView.isHidden = true
 
         secondaryThumbnailView.isOverlayHidden = false
@@ -136,7 +124,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
     public func setThumbnailType(toSingle: Bool) {
         isSingleThumbnail = toSingle
-        overallThumbnailView.alpha = toSingle ? 1 : 0
+        singleThumbnailView.alpha = toSingle ? 1 : 0
         primaryThumbnailView.alpha = toSingle ? 0 : 1
         secondaryThumbnailView.alpha = toSingle ? 0 : 1
         tertiaryThumbnailView.alpha = toSingle ? 0 : 1
@@ -152,15 +140,15 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
         isSingleThumbnail = toSingle
 
-        let animatingImageView = UIImageView(image: primaryThumbnailView.imageView.image)
+        let animatingImageView = UIImageView(image: primaryThumbnailView.image)
         animatingImageView.contentMode = .scaleAspectFill
         animatingImageView.clipsToBounds = true
         animatingImageView.layer.cornerRadius = Self.cornerRadius
         animatingImageView.layer.cornerCurve = .continuous
-        animatingImageView.frame = toSingle ? primaryThumbnailView.frame : overallThumbnailView.frame
+        animatingImageView.frame = toSingle ? primaryThumbnailView.frame : singleThumbnailView.frame
         addSubview(animatingImageView)
 
-        overallThumbnailView.alpha = 0
+        singleThumbnailView.alpha = 0
         primaryThumbnailView.alpha = 0
         hiddenIcon.alpha = 0
 
@@ -169,11 +157,11 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
         return {
             UIView.animate(withDuration: 0.25) {
-                animatingImageView.frame = toSingle ? self.overallThumbnailView.frame : self.primaryThumbnailView.frame
+                animatingImageView.frame = toSingle ? self.singleThumbnailView.frame : self.primaryThumbnailView.frame
                 self.secondaryThumbnailView.alpha = toSingle ? 0 : 1
                 self.tertiaryThumbnailView.alpha = toSingle ? 0 : 1
             } completion: { _ in
-                self.overallThumbnailView.alpha = toSingle ? 1 : 0
+                self.singleThumbnailView.alpha = toSingle ? 1 : 0
                 self.primaryThumbnailView.alpha = toSingle ? 0 : 1
                 self.secondaryThumbnailView.alpha = toSingle ? 0 : 1
                 self.tertiaryThumbnailView.alpha = toSingle ? 0 : 1
@@ -216,6 +204,6 @@ extension ClipCollectionViewCell: ClipPreviewPresentableCell {
     // MARK: - ClipPreviewPresentableCell
 
     public func thumbnail() -> UIImageView {
-        return isSingleThumbnail ? overallThumbnailView : primaryThumbnailView.imageView
+        return isSingleThumbnail ? singleThumbnailView : primaryThumbnailView
     }
 }

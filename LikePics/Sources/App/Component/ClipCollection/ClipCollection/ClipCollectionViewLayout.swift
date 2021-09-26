@@ -155,7 +155,7 @@ extension ClipCollectionViewLayout {
                     "cacheKey": request.source.cacheKey
                 ])
                 cell.primaryThumbnailView.pipeline = pipeline
-                cell.overallThumbnailView.smt.loadImage(request, with: pipeline)
+                cell.singleThumbnailView.smt.loadImage(request, with: pipeline)
             }
             if let item = clip.secondaryItem {
                 let request = makeRequest(item: item, view: cell.secondaryThumbnailView, imageQueryService: imageQueryService)
