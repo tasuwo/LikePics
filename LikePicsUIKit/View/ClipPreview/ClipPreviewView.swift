@@ -26,7 +26,23 @@ public class ClipPreviewView: UIView {
         }
 
         var size: CGSize {
-            return uiImage.size
+            switch self {
+            case let .image(image):
+                return image.size
+
+            case let .thumbnail(_, size):
+                return size
+            }
+        }
+
+        var originalSize: CGSize? {
+            switch self {
+            case .image:
+                return nil
+
+            case let .thumbnail(_, originalSize: size):
+                return size
+            }
         }
 
         var originalSizeInPixel: CGSize {
@@ -44,13 +60,14 @@ public class ClipPreviewView: UIView {
     public var source: Source? {
         didSet {
             guard let source = source else { return }
+
+            imageView.originalSize = source.originalSize
             imageView.image = source.uiImage
 
             // HACK: 参照タイミングによってはbounds.sizeがゼロになるので、強制的に描画する
             layoutIfNeeded()
 
             updateZoomScaleLimits()
-            resetToInitialZoomScale()
             updateInitialZoomScaleFlag()
 
             updateInsetsForCurrentScale()
@@ -104,7 +121,7 @@ public class ClipPreviewView: UIView {
 
     @IBOutlet var baseView: UIView!
     @IBOutlet var scrollView: UIScrollView!
-    @IBOutlet var imageView: UIImageView!
+    @IBOutlet var imageView: PreviewImageView!
 
     @IBOutlet var leftInsetConstraint: NSLayoutConstraint!
     @IBOutlet var bottomInsetConstraint: NSLayoutConstraint!

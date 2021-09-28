@@ -27,7 +27,7 @@
                 <scrollView multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sye-px-Tdy">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <subviews>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="400" placeholderIntrinsicHeight="600" translatesAutoresizingMaskIntoConstraints="NO" id="S18-Kz-fUW">
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="400" placeholderIntrinsicHeight="600" translatesAutoresizingMaskIntoConstraints="NO" id="S18-Kz-fUW" customClass="PreviewImageView" customModule="LikePicsUIKit" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="400" height="600"/>
                         </imageView>
                     </subviews>

@@ -176,6 +176,7 @@
 		3EE679A4E273A09797BC8D2D /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 529703F475966B531FFC639C /* TestHelper.framework */; };
 		3F21830371F3DDA3317B0652 /* CloudStackObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DD3DA46759EA5CA9F06D97 /* CloudStackObserver.swift */; };
 		400FC7577AAC467724F6AABA /* HasClipQueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77F9B656A665BE90F14C73D /* HasClipQueryService.swift */; };
+		40305EE28177E7797CC9B05E /* PreviewImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3962842FEEA3F689FBDA5880 /* PreviewImageView.swift */; };
 		40948649D9299F16DD570C75 /* HasPasteboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62373FDEA5D1FC6425CC31E3 /* HasPasteboard.swift */; };
 		409EB9C301B07AA2F690A068 /* ImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4166E1AF7B4735C57133E55A /* ImageProvider.swift */; };
 		40EAB00D6440235017F9297C /* CloudAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4266CB2425F0090618C4974 /* CloudAvailability.swift */; };
@@ -1184,6 +1185,7 @@
 		387BE9107FA641A2B04BCF8C /* AlbumSelectionTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSelectionTableView.swift; sourceTree = "<group>"; };
 		3883E884C7E1449907D96FC8 /* ThumbnailPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailPresentable.swift; sourceTree = "<group>"; };
 		3897294921CC537D2745CDFF /* AlbumSelectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSelectionCell.swift; sourceTree = "<group>"; };
+		3962842FEEA3F689FBDA5880 /* PreviewImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewImageView.swift; sourceTree = "<group>"; };
 		3982482D868966FDDA5ADED3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		39B83197DF728351F84388C7 /* ClipCommandService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCommandService.swift; sourceTree = "<group>"; };
 		39E6F82B6AAB59DA11654E12 /* ClipsIntegrityValidatorReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipsIntegrityValidatorReducer.swift; sourceTree = "<group>"; };
@@ -1965,6 +1967,7 @@
 			children = (
 				1583BD53121B6F3DC203564D /* ClipPreviewView.swift */,
 				DBB08C08E46B668A821EEC98 /* ClipPreviewView.xib */,
+				3962842FEEA3F689FBDA5880 /* PreviewImageView.swift */,
 				76AAACCE9EF2B51132503BBF /* Transition */,
 			);
 			path = ClipPreview;
@@ -5648,6 +5651,7 @@
 				76D2EB9D2D030C1A6811373F /* MultiLineButton.swift in Sources */,
 				2A417B802F05A232BECC66F6 /* NoFoundMessageView.swift in Sources */,
 				496AAA7766858812A6EEF757 /* PaddingTextField.swift in Sources */,
+				40305EE28177E7797CC9B05E /* PreviewImageView.swift in Sources */,
 				D15782090F45CA7A03E8B3D4 /* PreviewingClipItem.swift in Sources */,
 				FE91FF683066B57428C8202B /* RoundedButton.swift in Sources */,
 				08399B42994FC25FEECA9399 /* SearchEntrySectionFooterView.swift in Sources */,
