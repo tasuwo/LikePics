@@ -22,7 +22,14 @@ public class ClipPreviewView: UIView {
             layoutIfNeeded()
 
             updateZoomScaleLimits()
-            resetToInitialZoomScale()
+
+            // サムネ > 元画像 の順で source が設定されるケースが多い
+            // 元画像設定時にスケールがリセットされることを防ぐため、リセットは初回に限定する
+            // 初回にリセットしないと、初期スケールが画面に収まらない不正なスケールになる
+            if oldValue == nil {
+                resetToInitialZoomScale()
+            }
+
             updateInitialZoomScaleFlag()
 
             updateInsetsForCurrentScale()
