@@ -11,7 +11,7 @@ struct ClipPreviewViewState: Equatable {
     let imageId: ImageContainer.Identity
     let imageSize: CGSize
 
-    var source: ClipPreviewView.Source?
+    var source: ClipPreviewSource?
 
     var isDismissed: Bool
 }

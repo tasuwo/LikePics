@@ -41,16 +41,6 @@ class ClipPreviewViewController: UIViewController {
 
     // MARK: - View Life-Cycle Methods
 
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        previewView.viewDidLayoutSubviews()
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        previewView.viewDidAppear()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
