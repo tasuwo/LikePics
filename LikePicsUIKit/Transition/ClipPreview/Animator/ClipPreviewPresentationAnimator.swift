@@ -109,14 +109,13 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
 
         let animatingImageView = UIImageView(image: selectedImage)
         animatingImageView.layer.cornerRadius = from.animatingCellCornerRadius(self)
+        animatingImageView.layer.masksToBounds = true
         animatingImageView.contentMode = .scaleAspectFill
-        animatingImageView.clipsToBounds = true
         animatingImageView.frame = from.thumbnailFrame(self, id: previewingClipItem.cellIdentity, needsScroll: false, on: containerView)
         containerView.insertSubview(animatingImageView, aboveSubview: toViewBackgroundView)
 
         containerView.insertSubview(to.view, aboveSubview: animatingImageView)
 
-        to.view.alpha = 0
         toViewBackgroundView.alpha = 0
 
         CATransaction.begin()
@@ -128,11 +127,8 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
             from.componentsOverBaseView(self).forEach { $0.alpha = 1.0 }
             to.view.backgroundColor = toViewBackgroundView.backgroundColor
 
-            // HACK: 性能が低い端末だとここの切り替え時に若干背景色がチラついてしまう問題があったため、一瞬削除を遅らせる
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
-                animatingImageView.removeFromSuperview()
-                toViewBackgroundView.removeFromSuperview()
-            }
+            animatingImageView.removeFromSuperview()
+            toViewBackgroundView.removeFromSuperview()
 
             transitionContext.completeTransition(true)
         }
@@ -154,7 +150,6 @@ extension ClipPreviewPresentationAnimator: UIViewControllerAnimatedTransitioning
         ) {
             animatingImageView.frame = to.clipPreviewAnimator(self, imageFrameOnContainerView: containerView)
 
-            to.view.alpha = 1.0
             toViewBackgroundView.alpha = 1.0
         }
 

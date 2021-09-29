@@ -92,9 +92,9 @@ extension ClipCollectionThumbnailView {
         overlayLayer.isHidden = true
         overlayLayer.backgroundColor = UIColor.black.withAlphaComponent(overlayOpacity).cgColor
 
-        clipsToBounds = true
         layer.masksToBounds = true
         layer.cornerRadius = Self.thumbnailCornerRadius
+        layer.cornerCurve = .continuous
     }
 }
 

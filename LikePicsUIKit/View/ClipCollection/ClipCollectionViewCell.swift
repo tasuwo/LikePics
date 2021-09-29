@@ -86,8 +86,8 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     static func setupAppearance(imageView: UIImageView) {
         imageView.layer.cornerRadius = Self.cornerRadius
         imageView.layer.cornerCurve = .continuous
+        imageView.layer.masksToBounds = true
         imageView.contentMode = .scaleAspectFit
-        imageView.clipsToBounds = true
     }
 
     private func setupAppearance() {
@@ -101,11 +101,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
         selectionMark.backgroundColor = .white
         selectionMark.layer.cornerRadius = selectionMark.bounds.width / 2.0
-
-        clipsToBounds = true
-        layer.masksToBounds = true
-        layer.cornerRadius = Self.cornerRadius
-        layer.cornerCurve = .continuous
 
         updateOverallOverlayView()
     }
