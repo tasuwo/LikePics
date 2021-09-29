@@ -53,9 +53,6 @@ extension ClipPreviewViewReducer {
                 }
             }
             let effect = Effect(stream)
-                // アニメーション中に画像が再読み込みされるとアニメーションがかくつくので、
-                // あえて読み込みを遅延させる
-                .delay(for: 0.3, scheduler: DispatchQueue.global())
             return (nextState, [effect])
         }
 
