@@ -185,7 +185,8 @@ extension ClipCollectionViewLayout {
         let provider = ImageDataProvider(imageId: item.imageId,
                                          cacheKey: "clip-collection-\(item.identity.uuidString)",
                                          imageQueryService: imageQueryService)
-        let request = ImageRequest(source: .provider(provider), size: size, scale: scale)
+        let request = ImageRequest(source: .provider(provider),
+                                   resize: .init(size: size, scale: scale))
 
         loadImage(request, with: pipeline, on: thumbnailView) { [weak pipeline] response in
             guard let response = response, let diskCacheSize = response.diskCacheImageSize else { return }
@@ -207,7 +208,8 @@ extension ClipCollectionViewLayout {
         let provider = ImageDataProvider(imageId: item.imageId,
                                          cacheKey: "clip-collection-\(item.identity.uuidString)",
                                          imageQueryService: imageQueryService)
-        return ImageRequest(source: .provider(provider), size: size, scale: scale)
+        return ImageRequest(source: .provider(provider),
+                            resize: .init(size: size, scale: scale))
     }
 }
 

@@ -123,9 +123,7 @@ extension Pipeline {
 
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Downsample Data")
-            let thumbnail = self.thumbnail(data: data,
-                                           size: task.request.size,
-                                           scale: task.request.scale)
+            let thumbnail = self.downsample(data: data, resize: task.request.resize)
             log.log(.end, name: "Downsample Data")
 
             self.queue.async {
@@ -202,9 +200,7 @@ extension Pipeline {
 
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Downsample Data")
-            let thumbnail = self.thumbnail(data: data,
-                                           size: task.request.size,
-                                           scale: task.request.scale)
+            let thumbnail = self.downsample(data: data, resize: task.request.resize)
             log.log(.end, name: "Downsample Data")
 
             self.queue.async {
@@ -258,20 +254,24 @@ extension Pipeline {
         return UIImage(cgImage: cgImage)
     }
 
-    private func thumbnail(data: Data, size: CGSize, scale: CGFloat) -> CGImage? {
+    private func downsample(data: Data, resize: ImageRequest.Resize? = nil) -> CGImage? {
         let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
         guard let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions) else {
             return nil
         }
 
-        let maxDimensionInPixels = max(size.width, size.height) * scale
-        let options = [
+        var options: [AnyHashable: Any] = [
             kCGImageSourceCreateThumbnailFromImageAlways: true,
             kCGImageSourceShouldCacheImmediately: true,
             kCGImageSourceCreateThumbnailWithTransform: true,
-            kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels
-        ] as CFDictionary
-        guard let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, options) else {
+        ]
+
+        if let resize = resize {
+            let maxDimensionInPixels = max(resize.size.width, resize.size.height) * resize.scale
+            options[kCGImageSourceThumbnailMaxPixelSize] = maxDimensionInPixels
+        }
+
+        guard let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, options as CFDictionary) else {
             return nil
         }
 

@@ -179,7 +179,8 @@ extension ClipMergeViewLayout {
             let provider = ImageDataProvider(imageId: item.imageId,
                                              cacheKey: "clip-merge-\(item.identity.uuidString)",
                                              imageQueryService: imageQueryService)
-            let request = ImageRequest(source: .provider(provider), size: size, scale: scale)
+            let request = ImageRequest(source: .provider(provider),
+                                       resize: .init(size: size, scale: scale))
             loadImage(request, with: pipeline, on: cell)
         }
     }

@@ -5,17 +5,27 @@
 import CoreGraphics
 
 public struct ImageRequest {
+    public struct Resize {
+        public let size: CGSize
+        public let scale: CGFloat
+
+        public init(size: CGSize, scale: CGFloat) {
+            self.size = size
+            self.scale = scale
+        }
+    }
+
     // MARK: - Properties
 
     public let source: ImageSource
-    public let size: CGSize
-    public let scale: CGFloat
+    public let resize: Resize?
 
     // MARK: - Initializers
 
-    public init(source: ImageSource, size: CGSize, scale: CGFloat) {
+    public init(source: ImageSource,
+                resize: Resize? = nil)
+    {
         self.source = source
-        self.size = size
-        self.scale = scale
+        self.resize = resize
     }
 }
