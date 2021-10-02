@@ -271,7 +271,7 @@ extension Pipeline {
         var options: [AnyHashable: Any] = [
             kCGImageSourceCreateThumbnailFromImageAlways: true,
             kCGImageSourceShouldCacheImmediately: true,
-            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceCreateThumbnailWithTransform: true
         ]
 
         if let resize = resize {
