@@ -96,7 +96,9 @@ extension ClipItemListDismissalAnimator: UIViewControllerAnimatedTransitioning {
         // HACK: Set new frame for updating the view to current orientation.
         to.view.frame = from.view.frame
 
-        targetPreviewView.viewWillStartTransition(frame: from.view.frame, thumbnail: selectedImage)
+        targetPreviewView.viewWillStartTransition(frame: from.view.frame,
+                                                  thumbnail: selectedImage,
+                                                  originalImageSize: previewingClipItem.imageSize.cgSize)
 
         targetPreviewView.isHidden = true
         selectedImageView.isHidden = true

@@ -388,6 +388,7 @@ extension ClipPreviewPageViewController: ClipPreviewPresenting {
               let item = store.stateValue.currentItem else { return nil }
         return .init(clipId: clip.id,
                      itemId: item.id,
+                     imageSize: item.imageSize,
                      isItemPrimary: clip.items.first == item)
     }
 
@@ -413,6 +414,7 @@ extension ClipPreviewPageViewController: ClipItemListPresentable {
               let item = store.stateValue.currentItem else { return nil }
         return .init(clipId: clip.id,
                      itemId: item.id,
+                     imageSize: item.imageSize,
                      isItemPrimary: clip.items.first == item)
     }
 

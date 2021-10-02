@@ -6,30 +6,42 @@ import Combine
 import Domain
 import ForestKit
 import LikePicsUIKit
+import Smoothie
 import UIKit
 
 class ClipPreviewViewController: UIViewController {
-    typealias Store = ForestKit.Store<ClipPreviewViewState, ClipPreviewViewAction, ClipPreviewViewDependency>
-
     // MARK: - Properties
 
     // MARK: View
 
     let previewView = ClipPreviewView()
 
+    // MARK: Service
+
+    private let imageQueryService: ImageQueryServiceProtocol
+    private let thumbnailMemoryCache: MemoryCaching
+    private let thumbnailDiskCache: DiskCaching
+    private let pipeline: Pipeline
+
     // MARK: Store
 
-    var itemId: ClipItem.Identity { store.stateValue.itemId }
-
-    private var store: Store
-    private var subscriptions: Set<AnyCancellable> = .init()
+    private let state: ClipPreviewViewState
+    var itemId: ClipItem.Identity { state.itemId }
 
     // MARK: - Initializers
 
     init(state: ClipPreviewViewState,
-         dependency: ClipPreviewViewDependency)
+         imageQueryService: ImageQueryServiceProtocol,
+         thumbnailMemoryCache: MemoryCaching,
+         thumbnailDiskCache: DiskCaching,
+         pipeline: Pipeline)
     {
-        self.store = Store(initialState: state, dependency: dependency, reducer: ClipPreviewViewReducer())
+        self.imageQueryService = imageQueryService
+        self.thumbnailMemoryCache = thumbnailMemoryCache
+        self.thumbnailDiskCache = thumbnailDiskCache
+        self.pipeline = pipeline
+
+        self.state = state
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -46,26 +58,7 @@ class ClipPreviewViewController: UIViewController {
 
         configureViewHierarchy()
 
-        bind(to: store)
-
-        store.execute(.viewDidLoad)
-    }
-}
-
-// MARK: - Bind
-
-extension ClipPreviewViewController {
-    private func bind(to store: Store) {
-        store.state
-            .bind(\.source, to: \.source, on: previewView)
-            .store(in: &subscriptions)
-
-        store.state
-            .bind(\.isDismissed) { [weak self] isDismissed in
-                guard isDismissed else { return }
-                self?.dismiss(animated: true, completion: nil)
-            }
-            .store(in: &subscriptions)
+        loadPreview()
     }
 }
 
@@ -79,5 +72,35 @@ extension ClipPreviewViewController {
         previewView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(previewView)
         NSLayoutConstraint.activate(previewView.constraints(fittingIn: view))
+    }
+}
+
+// MARK: - Load Image
+
+extension ClipPreviewViewController {
+    private func loadPreview() {
+        if let image = readThumbnail(forItemId: itemId) {
+            previewView.source = .thumbnail(image, originalSize: state.imageSize)
+        }
+
+        let provider = ImageDataProvider(imageId: state.imageId,
+                                         cacheKey: "preview-\(itemId.uuidString)",
+                                         imageQueryService: imageQueryService)
+        let request = ImageRequest(source: .provider(provider))
+        loadImage(request, with: pipeline, on: previewView)
+    }
+
+    private func readThumbnail(forItemId itemId: ClipItem.Identity) -> UIImage? {
+        // - SeeAlso: ClipCollectionViewLayout
+        if let image = thumbnailMemoryCache["clip-collection-\(itemId.uuidString)"] {
+            return image
+        }
+
+        // Note: 一時的な表示に利用するものなので、表示速度を優先し decompress はしない
+        if let data = thumbnailDiskCache["clip-collection-\(itemId.uuidString)"] {
+            return UIImage(data: data)
+        }
+
+        return nil
     }
 }

@@ -10,7 +10,6 @@ typealias ClipPreviewPageViewDependency = HasRouter
     & HasClipCommandService
     & HasClipQueryService
     & HasClipItemInformationTransitioningController
-    & HasPreviewLoader
     & HasTransitionLock
     & HasUserSettingStorage
 

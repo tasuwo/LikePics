@@ -128,7 +128,6 @@ extension SceneDependencyContainer: ViewControllerFactory {
             let clipQueryService: ClipQueryServiceProtocol
             let clipItemInformationTransitioningController: ClipItemInformationTransitioningController?
             let imageQueryService: ImageQueryServiceProtocol
-            let previewLoader: PreviewLoader
             let transitionLock: TransitionLock
             let userSettingStorage: UserSettingsStorageProtocol
         }
@@ -144,7 +143,6 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                     clipQueryService: container._clipQueryService,
                                     clipItemInformationTransitioningController: informationTransitionController,
                                     imageQueryService: container._imageQueryService,
-                                    previewLoader: container._previewLoader,
                                     transitionLock: container.transitionLock,
                                     userSettingStorage: container._userSettingStorage)
 
@@ -169,8 +167,11 @@ extension SceneDependencyContainer: ViewControllerFactory {
     }
 
     func makeClipPreviewViewController(for item: ClipItem) -> ClipPreviewViewController? {
-        let store = ClipPreviewViewState(item: item)
-        let viewController = ClipPreviewViewController(state: store, dependency: self)
+        let viewController = ClipPreviewViewController(state: .init(item: item),
+                                                       imageQueryService: container._imageQueryService,
+                                                       thumbnailMemoryCache: container.clipThumbnailPipeline.config.memoryCache,
+                                                       thumbnailDiskCache: container.clipDiskCache,
+                                                       pipeline: container.previewPipeline)
         return viewController
     }
 }

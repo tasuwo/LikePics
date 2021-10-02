@@ -4,6 +4,7 @@
 
 import Combine
 import Common
+import Smoothie
 import UIKit
 
 public protocol ClipPreviewPageViewDelegate: AnyObject {
@@ -17,9 +18,7 @@ public class ClipPreviewView: UIView {
 
             imageView.originalSize = source.originalSize
             imageView.image = source.uiImage
-
-            // HACK: 参照タイミングによってはbounds.sizeがゼロになるので、強制的に描画する
-            layoutIfNeeded()
+            imageView.invalidateIntrinsicContentSize()
 
             updateZoomScaleLimits()
 
@@ -155,11 +154,11 @@ public class ClipPreviewView: UIView {
 // MARK: - View Life-Cycle Methods
 
 public extension ClipPreviewView {
-    func viewWillStartTransition(frame: CGRect, thumbnail: UIImage) {
+    func viewWillStartTransition(frame: CGRect, thumbnail: UIImage, originalImageSize: CGSize) {
         self.frame = frame
 
         if source == nil {
-            source = .thumbnail(thumbnail, originalSize: thumbnail.size)
+            source = .thumbnail(thumbnail, originalSize: originalImageSize)
         } else {
             updateZoomScaleLimits()
             resetToInitialZoomScale()
@@ -291,5 +290,13 @@ extension ClipPreviewView: UIScrollViewDelegate {
 
     public func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
         delegate?.clipPreviewPageViewWillBeginZoom(self)
+    }
+}
+
+extension ClipPreviewView: ImageDisplayable {
+    @objc
+    public func smt_display(_ image: UIImage?) {
+        guard let image = image else { return }
+        source = .image(image)
     }
 }

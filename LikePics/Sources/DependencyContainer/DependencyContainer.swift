@@ -23,7 +23,7 @@ class DependencyContainer {
     let clipThumbnailPipeline: Pipeline
     let albumThumbnailPipeline: Pipeline
     let temporaryThumbnailPipeline: Pipeline
-    let _previewLoader: PreviewLoader
+    let previewPipeline: Pipeline
 
     // MARK: Storage
 
@@ -131,11 +131,12 @@ class DependencyContainer {
         temporaryCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: 50))
         self.temporaryThumbnailPipeline = Pipeline(config: temporaryCacheConfig)
 
-        let previewMemoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: 100))
-        self._previewLoader = PreviewLoader(thumbnailCache: clipMemoryCache,
-                                            thumbnailDiskCache: self.clipDiskCache,
-                                            imageQueryService: self._imageQueryService,
-                                            memoryCache: previewMemoryCache)
+        var previewCacheConfig = Pipeline.Configuration()
+        previewCacheConfig.dataCachingQueue.maxConcurrentOperationCount = 1
+        previewCacheConfig.downsamplingQueue.maxConcurrentOperationCount = 1
+        previewCacheConfig.imageDecompressingQueue.maxConcurrentOperationCount = 1
+        previewCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: 10))
+        self.previewPipeline = Pipeline(config: previewCacheConfig)
 
         self._clipCommandService = ClipCommandService(clipStorage: clipStorage,
                                                       referenceClipStorage: referenceClipStorage,

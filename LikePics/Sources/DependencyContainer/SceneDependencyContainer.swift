@@ -57,10 +57,6 @@ extension SceneDependencyContainer: HasImageQueryService {
     var imageQueryService: ImageQueryServiceProtocol { container._imageQueryService }
 }
 
-extension SceneDependencyContainer: HasPreviewLoader {
-    var previewLoader: PreviewLoader { container._previewLoader }
-}
-
 extension SceneDependencyContainer: HasTransitionLock {
     var transitionLock: TransitionLock { container.transitionLock }
 }
