@@ -134,7 +134,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
             let userSettingStorage: UserSettingsStorageProtocol
         }
 
-        let informationViewCacheState = ClipItemInformationViewCacheState(isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+        let informationViewCacheState = ClipItemInformationViewCacheState()
         let informationViewCacheController = ClipItemInformationViewCacheController(state: informationViewCacheState,
                                                                                     dependency: self)
 

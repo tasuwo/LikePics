@@ -8,7 +8,8 @@ import ForestKit
 enum ClipItemInformationViewCacheAction: Action {
     // MARK: Life-Cycle
 
-    case loaded(Clip.Identity, ClipItem.Identity)
+    case pageChanged(clipId: Clip.Identity, itemId: ClipItem.Identity)
+    case load(clipId: Clip.Identity, itemId: ClipItem.Identity)
 
     // MARK: State Observation
 

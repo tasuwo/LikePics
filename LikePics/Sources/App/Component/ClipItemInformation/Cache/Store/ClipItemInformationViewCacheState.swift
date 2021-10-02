@@ -5,22 +5,38 @@
 import Domain
 
 struct ClipItemInformationViewCacheState: Equatable {
-    var clip: Clip?
-    var tags: EntityCollectionSnapshot<Tag>
-    var albums: EntityCollectionSnapshot<ListingAlbum>
-    var item: ClipItem?
-    var isSomeItemsHidden: Bool
+    struct Information: Equatable {
+        var clip: Clip?
+        var tags: EntityCollectionSnapshot<Tag>
+        var albums: EntityCollectionSnapshot<ListingAlbum>
+        var item: ClipItem?
+        var isSomeItemsHidden: Bool
+    }
+
+    var clipId: Clip.Identity?
+    var itemId: ClipItem.Identity?
+
+    var information: Information?
 
     var isInvalidated: Bool
 }
 
 extension ClipItemInformationViewCacheState {
-    init(isSomeItemsHidden: Bool) {
-        clip = nil
-        tags = .init()
-        albums = .init()
-        item = nil
-        self.isSomeItemsHidden = isSomeItemsHidden
+    init() {
         isInvalidated = false
+    }
+}
+
+extension ClipItemInformationViewCacheState {
+    func cleared() -> Self {
+        return .init()
+    }
+}
+
+extension ClipItemInformationViewCacheState.Information {
+    init() {
+        self.tags = .init()
+        self.albums = .init()
+        self.isSomeItemsHidden = true
     }
 }

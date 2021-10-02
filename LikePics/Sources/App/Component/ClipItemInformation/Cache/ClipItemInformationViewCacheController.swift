@@ -12,10 +12,6 @@ protocol ClipItemInformationViewCaching: AnyObject {
     func readCachingView() -> ClipItemInformationView
 }
 
-protocol ClipItemInformationViewCachingDelegate: AnyObject {
-    func didInvalidateCache(_ caching: ClipItemInformationViewCaching)
-}
-
 class ClipItemInformationViewCacheController {
     typealias Store = ForestKit.Store<ClipItemInformationViewCacheState, ClipItemInformationViewCacheAction, ClipItemInformationViewCacheDependency>
     typealias Layout = ClipItemInformationLayout
@@ -26,7 +22,6 @@ class ClipItemInformationViewCacheController {
 
     let baseView = UIView()
     let informationView = ClipItemInformationView()
-    weak var delegate: ClipItemInformationViewCachingDelegate?
 
     // MARK: Store
 
@@ -43,21 +38,26 @@ class ClipItemInformationViewCacheController {
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipItemInformationViewCacheReducer())
 
         configureViewHierarchy()
+
+        bind(to: store)
     }
 
     // MARK: - View Life-Cycle Methods
 
     func viewWillDisappear() {
-        stopUpdating()
+        subscriptions.forEach { $0.cancel() }
     }
 
-    func viewDidAppear() {
+    func viewDidAppear(clipId: Clip.Identity?, itemId: ClipItem.Identity?) {
         insertCachingViewHierarchyIfNeeded()
-        // TODO: 必要であればclipId,itemIdを更新する
+
+        if let clipId = clipId, let itemId = itemId {
+            store.execute(.pageChanged(clipId: clipId, itemId: itemId))
+        }
     }
 
     func pageChanged(clipId: Clip.Identity, itemId: ClipItem.Identity) {
-        startUpdating(clipId: clipId, itemId: itemId)
+        store.execute(.pageChanged(clipId: clipId, itemId: itemId))
     }
 }
 
@@ -66,19 +66,20 @@ class ClipItemInformationViewCacheController {
 extension ClipItemInformationViewCacheController {
     private func bind(to store: Store) {
         store.state
-            .bind(\.isInvalidated) { [weak self] isInvalidated in
-                guard isInvalidated == true, let self = self else { return }
-                self.delegate?.didInvalidateCache(self)
+            .removeDuplicates(by: { $0.itemId == $1.itemId && $0.clipId == $0.clipId })
+            .debounce(for: 0.3, scheduler: DispatchQueue.global())
+            .sink { [weak self] state in
+                guard let clipId = state.clipId, let itemId = state.itemId else { return }
+                self?.store.execute(.load(clipId: clipId, itemId: itemId))
             }
             .store(in: &subscriptions)
 
         store.state
-            .dropFirst()
+            .map(\.information)
+            .compactMap { $0 }
             .removeDuplicates()
             .receive(on: DispatchQueue.global())
-            .sink { [weak self] state in
-                self?.informationView.setInfo(Layout.Information(state), animated: false)
-            }
+            .sink { [weak self] in self?.informationView.setInfo(Layout.Information($0), animated: false) }
             .store(in: &subscriptions)
     }
 }
@@ -100,19 +101,6 @@ extension ClipItemInformationViewCacheController {
 // MARK: - Caching
 
 extension ClipItemInformationViewCacheController {
-    private func startUpdating(clipId: Clip.Identity, itemId: ClipItem.Identity) {
-        stopUpdating()
-        store = Store(initialState: .init(isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems()),
-                      dependency: dependency,
-                      reducer: ClipItemInformationViewCacheReducer())
-        bind(to: store)
-        store.execute(.loaded(clipId, itemId))
-    }
-
-    private func stopUpdating() {
-        subscriptions.forEach { $0.cancel() }
-    }
-
     private func insertCachingViewHierarchyIfNeeded() {
         guard !baseView.subviews.contains(informationView) else { return }
         informationView.alpha = 0
@@ -132,10 +120,10 @@ extension ClipItemInformationViewCacheController: ClipItemInformationViewCaching
 }
 
 extension ClipItemInformationLayout.Information {
-    init(_ state: ClipItemInformationViewCacheState) {
-        self.init(clip: state.clip,
-                  tags: state.tags.orderedFilteredEntities(),
-                  albums: state.albums.orderedFilteredEntities(),
-                  item: state.item)
+    init(_ info: ClipItemInformationViewCacheState.Information) {
+        self.init(clip: info.clip,
+                  tags: info.tags.orderedFilteredEntities(),
+                  albums: info.albums.orderedFilteredEntities(),
+                  item: info.item)
     }
 }
