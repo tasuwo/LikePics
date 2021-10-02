@@ -128,15 +128,10 @@ extension SceneDependencyContainer: ViewControllerFactory {
             let clipQueryService: ClipQueryServiceProtocol
             let clipItemInformationTransitioningController: ClipItemInformationTransitioningController?
             let imageQueryService: ImageQueryServiceProtocol
-            let informationViewCache: ClipItemInformationViewCaching?
             let previewLoader: PreviewLoader
             let transitionLock: TransitionLock
             let userSettingStorage: UserSettingsStorageProtocol
         }
-
-        let informationViewCacheState = ClipItemInformationViewCacheState()
-        let informationViewCacheController = ClipItemInformationViewCacheController(state: informationViewCacheState,
-                                                                                    dependency: self)
 
         let previewTransitioningController = ClipPreviewTransitioningController(lock: container.transitionLock, logger: container.logger)
         let informationTransitionController = ClipItemInformationTransitioningController(lock: container.transitionLock, logger: container.logger)
@@ -149,7 +144,6 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                     clipQueryService: container._clipQueryService,
                                     clipItemInformationTransitioningController: informationTransitionController,
                                     imageQueryService: container._imageQueryService,
-                                    informationViewCache: informationViewCacheController,
                                     previewLoader: container._previewLoader,
                                     transitionLock: container.transitionLock,
                                     userSettingStorage: container._userSettingStorage)
@@ -160,7 +154,6 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                                  isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems(),
                                                  indexPath: indexPath)
         let viewController = ClipPreviewPageViewController(state: state,
-                                                           cacheController: informationViewCacheController,
                                                            dependency: dependency,
                                                            factory: self,
                                                            transitionDispatcher: transitionDispatcher,

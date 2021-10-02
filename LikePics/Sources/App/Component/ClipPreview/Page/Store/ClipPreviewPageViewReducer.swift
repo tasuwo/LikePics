@@ -10,7 +10,6 @@ typealias ClipPreviewPageViewDependency = HasRouter
     & HasClipCommandService
     & HasClipQueryService
     & HasClipItemInformationTransitioningController
-    & HasClipItemInformationViewCaching
     & HasPreviewLoader
     & HasTransitionLock
     & HasUserSettingStorage
@@ -66,12 +65,10 @@ struct ClipPreviewPageViewReducer: Reducer {
         case .clipInformationViewPresented:
             if let currentClipId = state.currentClip?.id,
                let currentItemId = state.currentItem?.id,
-               let cache = dependency.informationViewCache,
                let transitioningController = dependency.clipItemInformationTransitioningController
             {
                 dependency.router.showClipInformationView(clipId: currentClipId,
                                                           itemId: currentItemId,
-                                                          clipInformationViewCache: cache,
                                                           transitioningController: transitioningController)
             }
             return (nextState, .none)
@@ -325,12 +322,10 @@ extension ClipPreviewPageViewReducer {
         case .infoRequested:
             if let currentClipId = state.currentClip?.id,
                let currentItemId = state.currentItem?.id,
-               let cache = dependency.informationViewCache,
                let transitioningController = dependency.clipItemInformationTransitioningController
             {
                 dependency.router.showClipInformationView(clipId: currentClipId,
                                                           itemId: currentItemId,
-                                                          clipInformationViewCache: cache,
                                                           transitioningController: transitioningController)
             }
             return (nextState, .none)

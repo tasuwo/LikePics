@@ -146,7 +146,6 @@ extension SceneDependencyContainer: Router {
 
     func showClipInformationView(clipId: Clip.Identity,
                                  itemId: ClipItem.Identity,
-                                 clipInformationViewCache: ClipItemInformationViewCaching,
                                  transitioningController: ClipItemInformationTransitioningControllable) -> Bool
     {
         let state = ClipItemInformationViewState(clipId: clipId,
@@ -158,7 +157,6 @@ extension SceneDependencyContainer: Router {
         let viewController = ClipItemInformationViewController(state: state,
                                                                siteUrlEditAlertState: siteUrlEditAlertState,
                                                                dependency: self,
-                                                               clipInformationViewCache: clipInformationViewCache,
                                                                transitioningController: transitioningController)
         viewController.transitioningDelegate = transitioningController
         viewController.modalPresentationStyle = .fullScreen

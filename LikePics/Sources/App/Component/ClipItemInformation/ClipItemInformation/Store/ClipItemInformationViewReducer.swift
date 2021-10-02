@@ -27,7 +27,6 @@ struct ClipItemInformationViewReducer: Reducer {
             return (nextState, .none)
 
         case .viewDidAppear:
-            nextState.shouldCollectionViewUpdateWithAnimation = true
             nextState.isSuspendedCollectionViewUpdate = false
             return (nextState, .none)
 
@@ -36,7 +35,6 @@ struct ClipItemInformationViewReducer: Reducer {
             return (nextState, .none)
 
         case .viewDidLoad:
-            nextState.shouldCollectionViewUpdateWithAnimation = false
             nextState.isSuspendedCollectionViewUpdate = true
             return Self.prepare(state: nextState, dependency: dependency)
 

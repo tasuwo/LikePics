@@ -37,7 +37,6 @@ class ClipPreviewPageViewController: UIPageViewController {
     // MARK: Component
 
     private var barController: ClipPreviewPageBarController!
-    private let cacheController: ClipItemInformationViewCacheController
 
     // MARK: Service
 
@@ -51,8 +50,6 @@ class ClipPreviewPageViewController: UIPageViewController {
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
 
-    private var cacheSubscriptions: Set<AnyCancellable> = .init()
-
     private var previewViewSubscriptions: Set<AnyCancellable> = .init()
     private var modalSubscription: Cancellable?
 
@@ -61,7 +58,6 @@ class ClipPreviewPageViewController: UIPageViewController {
     // MARK: - Initializers
 
     init(state: ClipPreviewPageViewRootState,
-         cacheController: ClipItemInformationViewCacheController,
          dependency: ClipPreviewPageViewRootDependency,
          factory: ViewControllerFactory,
          transitionDispatcher: ClipPreviewPageTransitionDispatcherType,
@@ -78,7 +74,6 @@ class ClipPreviewPageViewController: UIPageViewController {
             .eraseToAnyStoring()
         self.barController = ClipPreviewPageBarController(store: barStore, imageQueryService: dependency.imageQueryService)
 
-        self.cacheController = cacheController
         self.transitionDispatcher = transitionDispatcher
         self.factory = factory
 
@@ -108,17 +103,9 @@ class ClipPreviewPageViewController: UIPageViewController {
         }
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        cacheController.viewWillDisappear()
-    }
-
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         barController.viewDidAppear()
-
-        cacheController.viewDidAppear(clipId: store.stateValue.currentClip?.id,
-                                      itemId: store.stateValue.currentItem?.id)
 
         // HACK: 別画面表示 > rotate > この画面に戻る、といった操作をすると、SizeClassの不整合が生じるため、表示時に同期させる
         barController.traitCollectionDidChange(to: self.view.traitCollection)
@@ -238,10 +225,6 @@ extension ClipPreviewPageViewController {
             }
             .store(in: &previewViewSubscriptions)
         transitionDispatcher.inputs.previewPanGestureRecognizer.send(viewController.previewView.panGestureRecognizer)
-
-        if let clip = store.stateValue.clip(of: viewController.itemId) {
-            cacheController.pageChanged(clipId: clip.id, itemId: viewController.itemId)
-        }
     }
 
     // MARK: Alert
@@ -349,9 +332,6 @@ extension ClipPreviewPageViewController {
     private func configureViewHierarchy() {
         navigationItem.title = ""
         modalTransitionStyle = .crossDissolve
-
-        view.insertSubview(cacheController.baseView, at: 0)
-        NSLayoutConstraint.activate(cacheController.baseView.constraints(fittingIn: view))
     }
 
     private func configureGestureRecognizer() {

@@ -23,7 +23,6 @@ struct ClipItemInformationViewState: Equatable {
     var item: ClipItem?
     var albums: EntityCollectionSnapshot<ListingAlbum>
 
-    var shouldCollectionViewUpdateWithAnimation: Bool
     var isSuspendedCollectionViewUpdate: Bool
     var isSomeItemsHidden: Bool
     var isHiddenStatusBar: Bool
@@ -42,7 +41,6 @@ extension ClipItemInformationViewState {
         tags = .init()
         item = nil
         albums = .init()
-        shouldCollectionViewUpdateWithAnimation = false
         isSuspendedCollectionViewUpdate = true
         self.isSomeItemsHidden = isSomeItemsHidden
         isHiddenStatusBar = false

@@ -18,7 +18,7 @@ class ClipItemInformationViewController: UIViewController {
 
     override var prefersStatusBarHidden: Bool { store.stateValue.isHiddenStatusBar }
 
-    private let informationView: ClipItemInformationView
+    private let informationView = ClipItemInformationView()
     private let transitioningController: ClipItemInformationTransitioningControllable
     private var panGestureRecognizer: UIPanGestureRecognizer!
 
@@ -46,13 +46,11 @@ class ClipItemInformationViewController: UIViewController {
     init(state: ClipItemInformationViewState,
          siteUrlEditAlertState: TextEditAlertState,
          dependency: ClipItemInformationViewDependency,
-         clipInformationViewCache: ClipItemInformationViewCaching,
          transitioningController: ClipItemInformationTransitioningControllable)
     {
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipItemInformationViewReducer())
         self.siteUrlEditAlert = .init(state: siteUrlEditAlertState)
         self.transitioningController = transitioningController
-        self.informationView = clipInformationViewCache.readCachingView()
         self.router = dependency.router
 
         super.init(nibName: nil, bundle: nil)
@@ -165,7 +163,7 @@ extension ClipItemInformationViewController {
                                                      tags: state.tags.orderedFilteredEntities(),
                                                      albums: state.albums.orderedFilteredEntities(),
                                                      item: state.item)
-                self?.informationView.setInfo(information, animated: state.shouldCollectionViewUpdateWithAnimation)
+                self?.informationView.setInfo(information, animated: true)
             }
             .store(in: &subscriptions)
 
