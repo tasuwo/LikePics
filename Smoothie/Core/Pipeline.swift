@@ -128,7 +128,15 @@ extension Pipeline {
 
             self.queue.async {
                 if let thumbnail = thumbnail {
-                    self.enqueueEncodingOperation(task, thumbnail: thumbnail)
+                    if task.request.resize == nil {
+                        // リサイズが不要なら、エンコードは行わない
+                        // FIXME: 必要ならディスクキャッシュを行う
+                        let image = UIImage(cgImage: thumbnail)
+                        self.config.memoryCache.insert(image, forKey: task.request.source.cacheKey)
+                        task.didLoad(.init(image: image, diskCacheImageSize: nil))
+                    } else {
+                        self.enqueueEncodingOperation(task, thumbnail: thumbnail)
+                    }
                 } else {
                     task.didLoad(nil)
                 }
