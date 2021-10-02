@@ -6,9 +6,9 @@ import UIKit
 
 public enum ClipPreviewSource: Equatable {
     case image(UIImage)
-    case thumbnail(UIImage, originalSize: CGSize)
+    case thumbnail(UIImage?, originalSize: CGSize)
 
-    var uiImage: UIImage {
+    var uiImage: UIImage? {
         switch self {
         case let .image(image):
             return image

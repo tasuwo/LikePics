@@ -19,6 +19,9 @@ public class ClipPreviewView: UIView {
             imageView.originalSize = source.originalSize
             imageView.image = source.uiImage
             imageView.invalidateIntrinsicContentSize()
+            imageView.backgroundColor = source.uiImage == nil
+                ? Asset.Color.secondaryBackground.color
+                : .clear
 
             updateZoomScaleLimits()
 

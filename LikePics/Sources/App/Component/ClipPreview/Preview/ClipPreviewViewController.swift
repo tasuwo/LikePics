@@ -81,6 +81,8 @@ extension ClipPreviewViewController {
     private func loadPreview() {
         if let image = readThumbnail(forItemId: itemId) {
             previewView.source = .thumbnail(image, originalSize: state.imageSize)
+        } else {
+            previewView.source = .thumbnail(nil, originalSize: state.imageSize)
         }
 
         let provider = ImageDataProvider(imageId: state.imageId,
