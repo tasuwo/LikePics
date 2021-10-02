@@ -91,7 +91,7 @@ extension SceneRoot {
             let viewController: RestorableViewController
             switch self {
             case .top:
-                let rootViewController: RestorableViewController
+                let rootViewController: RestorableViewController & ViewLazyPresentable
                 if let homeViewState = intent?.homeViewState {
                     rootViewController = factory.makeClipCollectionViewController(homeViewState)
                 } else {
@@ -99,7 +99,20 @@ extension SceneRoot {
                 }
                 let navigationController = UINavigationController(rootViewController: rootViewController)
                 navigationController.tabBarItem = tabBarItem
-                viewController = navigationController
+
+                if case let .clips(state, preview: indexPath) = intent,
+                   state.clipCollectionState.source.mapToTabBarItem() == self
+                {
+                    if let indexPath = indexPath {
+                        let previewPageViewController = factory.makeClipPreviewPageViewController(filteredClipIds: .init(),
+                                                                                                  clips: [],
+                                                                                                  query: .clips(state.clipCollectionState.source),
+                                                                                                  indexPath: indexPath)
+                        rootViewController.presentAfterLoad(previewPageViewController, animated: false, completion: nil)
+                    }
+                }
+
+                return navigationController
 
             case .search:
                 // swiftlint:disable:next force_unwrapping
