@@ -14,16 +14,19 @@ public final class DiskCache {
         public static let `default` = Configuration(
             sizeLimit: 1024 * 1024 * 150, // 150MB
             countLimit: 1000,
+            dateLimit: 60,
             fileNameResolver: { $0.sha256() }
         )
 
         public let sizeLimit: Int
         public let countLimit: Int
+        public let dateLimit: Int
         public let fileNameResolver: (_ key: String) -> String?
 
-        public init(sizeLimit: Int, countLimit: Int, fileNameResolver: @escaping ((_ key: String) -> String?) = { $0.sha256() }) {
+        public init(sizeLimit: Int, countLimit: Int, dateLimit: Int, fileNameResolver: @escaping ((_ key: String) -> String?) = { $0.sha256() }) {
             self.sizeLimit = sizeLimit
             self.countLimit = countLimit
+            self.dateLimit = dateLimit
             self.fileNameResolver = fileNameResolver
         }
     }
@@ -32,6 +35,7 @@ public final class DiskCache {
 
     private let url: URL
     private let config: Configuration
+    private let currentDateResolver: () -> Date
     private let ioQueue = DispatchQueue(label: "net.tasuwo.TBox.Domain.DiskCache.IOQueue", target: .global(qos: .utility))
 
     // MARK: Sweep
@@ -48,9 +52,10 @@ public final class DiskCache {
 
     // MARK: - Initializers
 
-    public init(path: URL, config: Configuration = .default) throws {
+    public init(path: URL, config: Configuration = .default, currentDateResolver: @escaping () -> Date = { Date() }) throws {
         self.url = path
         self.config = config
+        self.currentDateResolver = currentDateResolver
         self.staging = Staging()
         try self.setup()
     }
@@ -118,19 +123,26 @@ extension DiskCache {
     private func performSweep() {
         dispatchPrecondition(condition: .onQueue(ioQueue))
 
-        let contents = self.contents()
+        var contents = self.contents()
         guard !contents.isEmpty else { return }
 
         let needsSweep = config.countLimit < contents.count || config.sizeLimit < contents.totalSize
-        guard needsSweep else { return }
+        if needsSweep {
+            var totalSize = contents.totalSize
+            var count = contents.count
+            for (index, content) in zip(contents.indices, contents.sorted(by: { $0.accessDate > $1.accessDate })) {
+                if count <= config.countLimit, totalSize <= config.sizeLimit { break }
+                contents.remove(at: index)
+                totalSize -= content.fileSize
+                count -= 1
+                try? FileManager.default.removeItem(at: content.url)
+            }
+        }
 
-        var totalSize = contents.totalSize
-        var count = contents.count
-        for content in contents.sorted(by: { $0.accessDate > $1.accessDate }) {
-            if count <= config.countLimit, totalSize <= config.sizeLimit { break }
-            totalSize -= content.fileSize
-            count -= 1
-            try? FileManager.default.removeItem(at: content.url)
+        for content in contents {
+            if content.accessDate.addingTimeInterval(60 * 60 * 24 * TimeInterval(config.dateLimit)) < currentDateResolver() {
+                try? FileManager.default.removeItem(at: content.url)
+            }
         }
     }
 }

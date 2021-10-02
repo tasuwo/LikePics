@@ -110,7 +110,9 @@ class DependencyContainer {
         var clipCacheConfig = Pipeline.Configuration()
         let clipCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-thumbnails")
         self.clipDiskCache = try DiskCache(path: clipCacheDirectory,
-                                           config: .init(sizeLimit: 1024 * 1024 * 1024, countLimit: Int.max))
+                                           config: .init(sizeLimit: 1024 * 1024 * 1024,
+                                                         countLimit: Int.max,
+                                                         dateLimit: 30))
         clipCacheConfig.diskCache = self.clipDiskCache
         clipCacheConfig.compressionRatio = 0.5
         let clipMemoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 3 / 5, countLimit: Int.max))
@@ -121,7 +123,9 @@ class DependencyContainer {
         albumCacheConfig.compressionRatio = 0.5
         let albumCacheDirectory = Self.resolveCacheDirectoryUrl(name: "album-thumbnails")
         let albumDiskCache = try DiskCache(path: albumCacheDirectory,
-                                           config: .init(sizeLimit: 1024 * 1024 * 512, countLimit: 1000))
+                                           config: .init(sizeLimit: 1024 * 1024 * 512,
+                                                         countLimit: 1000,
+                                                         dateLimit: 30))
         albumCacheConfig.diskCache = albumDiskCache
         albumCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: Int.max))
         self.albumThumbnailPipeline = Pipeline(config: albumCacheConfig)
