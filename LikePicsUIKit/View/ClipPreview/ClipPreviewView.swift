@@ -23,6 +23,11 @@ public class ClipPreviewView: UIView {
                 ? Asset.Color.secondaryBackground.color
                 : .clear
 
+            // HACK: 参照タイミングによってはbounds.sizeがゼロになる
+            //       サイズがゼロだと `resetToInitialZoomScaleFlag()` 等、スケール計算に
+            //       bounds.sizeを計算に利用している箇所がおかしくなってしまうので、再描画する
+            layoutIfNeeded()
+
             updateZoomScaleLimits()
 
             // サムネ > 元画像 の順で source が設定されるケースが多い
