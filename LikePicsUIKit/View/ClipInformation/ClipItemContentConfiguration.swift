@@ -7,6 +7,7 @@ import UIKit
 public struct ClipItemContentConfiguration {
     public var image: UIImage?
     public var fileName: String
+    public var imageSize: CGSize
     public var dataSize: Int
     public var page: Int
     public var numberOfPage: Int
@@ -25,6 +26,7 @@ public struct ClipItemContentConfiguration {
     public init() {
         self.image = nil
         self.fileName = ""
+        self.imageSize = .zero
         self.dataSize = 0
         self.page = 0
         self.numberOfPage = 0
