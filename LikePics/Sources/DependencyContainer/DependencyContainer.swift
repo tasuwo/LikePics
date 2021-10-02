@@ -77,9 +77,13 @@ class DependencyContainer {
             ConsoleLogger(scopes: [.default, .transition])
         ])
 
+        // MARK: Storage
+
         self.tmpImageStorage = try TemporaryImageStorage(configuration: .resolve(for: Bundle.main, kind: .group))
         self.tmpClipStorage = try TemporaryClipStorage(config: .resolve(for: Bundle.main, kind: .group), logger: self.logger)
         self.referenceClipStorage = try ReferenceClipStorage(config: .resolve(for: Bundle.main), logger: self.logger)
+
+        // MARK: CoreData
 
         self.monitor = ICloudSyncMonitor(logger: self.logger)
 
@@ -103,9 +107,11 @@ class DependencyContainer {
         self._clipSearchHistoryService = Persistence.ClipSearchHistoryService()
         self._clipSearchSettingService = Persistence.ClipSearchSettingService()
 
+        // MARK: Image Loader
+
         Self.sweepLegacyThumbnailCachesIfExists()
 
-        let defaultCostLimit = Int(MemoryCache.Configuration.defaultCostLimit())
+        let memoryCache = MemoryCache(config: .default)
 
         var clipCacheConfig = Pipeline.Configuration()
         let clipCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-thumbnails")
@@ -115,8 +121,7 @@ class DependencyContainer {
                                                          dateLimit: 30))
         clipCacheConfig.diskCache = self.clipDiskCache
         clipCacheConfig.compressionRatio = 0.5
-        let clipMemoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 3 / 5, countLimit: Int.max))
-        clipCacheConfig.memoryCache = clipMemoryCache
+        clipCacheConfig.memoryCache = memoryCache
         self.clipThumbnailPipeline = .init(config: clipCacheConfig)
 
         var albumCacheConfig = Pipeline.Configuration()
@@ -127,20 +132,22 @@ class DependencyContainer {
                                                          countLimit: 1000,
                                                          dateLimit: 30))
         albumCacheConfig.diskCache = albumDiskCache
-        albumCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: Int.max))
+        albumCacheConfig.memoryCache = memoryCache
         self.albumThumbnailPipeline = Pipeline(config: albumCacheConfig)
 
         var temporaryCacheConfig = Pipeline.Configuration()
         temporaryCacheConfig.diskCache = nil
-        temporaryCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: 50))
+        temporaryCacheConfig.memoryCache = memoryCache
         self.temporaryThumbnailPipeline = Pipeline(config: temporaryCacheConfig)
 
         var previewCacheConfig = Pipeline.Configuration()
         previewCacheConfig.dataCachingQueue.maxConcurrentOperationCount = 1
         previewCacheConfig.downsamplingQueue.maxConcurrentOperationCount = 1
         previewCacheConfig.imageDecompressingQueue.maxConcurrentOperationCount = 1
-        previewCacheConfig.memoryCache = MemoryCache(config: .init(costLimit: defaultCostLimit * 1 / 5, countLimit: 10))
+        previewCacheConfig.memoryCache = memoryCache
         self.previewPipeline = Pipeline(config: previewCacheConfig)
+
+        // MARK: Service
 
         self._clipCommandService = ClipCommandService(clipStorage: clipStorage,
                                                       referenceClipStorage: referenceClipStorage,
