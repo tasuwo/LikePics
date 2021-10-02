@@ -144,8 +144,6 @@ class ClipPreviewPageViewController: UIPageViewController {
         delegate = self
         dataSource = self
 
-        cacheController.informationView.dataSource = self
-
         bind(to: store)
         barController.viewDidLoad()
 
@@ -484,17 +482,5 @@ extension ClipPreviewPageViewController: ClipItemInformationPresentable {
 
     func set(_ animator: ClipItemInformationAnimator, isUserInteractionEnabled: Bool) {
         view.isUserInteractionEnabled = isUserInteractionEnabled
-    }
-}
-
-extension ClipPreviewPageViewController: ClipItemInformationViewDataSource {
-    // MARK: - ClipItemInformationViewDataSource
-
-    func previewImage(_ view: ClipItemInformationView) -> UIImage? {
-        return self.currentViewController?.previewView.image
-    }
-
-    func previewPageBounds(_ view: ClipItemInformationView) -> CGRect {
-        return self.currentViewController?.previewView.bounds ?? .zero
     }
 }

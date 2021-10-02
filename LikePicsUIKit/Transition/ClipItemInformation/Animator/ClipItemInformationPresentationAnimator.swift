@@ -82,6 +82,9 @@ extension ClipItemInformationPresentationAnimator: UIViewControllerAnimatedTrans
         // HACK: Set new frame for updating the view to current orientation.
         to.view.frame = from.view.frame
 
+        targetInformationView.imageView.image = selectedImage
+        targetInformationView.updateImageViewFrame(for: from.view.frame.size)
+
         containerView.backgroundColor = to.view.backgroundColor
         containerView.insertSubview(to.view, belowSubview: from.view)
 

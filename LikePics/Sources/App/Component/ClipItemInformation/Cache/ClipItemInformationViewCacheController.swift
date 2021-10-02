@@ -103,7 +103,6 @@ extension ClipItemInformationViewCacheController: ClipItemInformationViewCaching
 
     func readCachingView() -> ClipItemInformationView {
         informationView.alpha = 1
-        informationView.loadImageView()
         informationView.removeFromSuperview()
         return informationView
     }

@@ -30,9 +30,8 @@ public class ClipItemInformationView: UIView {
     }
 
     public weak var delegate: ClipItemInformationViewDelegate?
-    public weak var dataSource: ClipItemInformationViewDataSource?
 
-    var imageView: UIImageView!
+    private(set) var imageView: UIImageView!
     private var collectionViewDataSource: Factory.DataSource!
 
     @IBOutlet var baseView: UIView!
@@ -59,9 +58,6 @@ public class ClipItemInformationView: UIView {
 
     override public func layoutSubviews() {
         super.layoutSubviews()
-
-        // HACK: 描画直後にズレが生じるケースがあるので、再調整をかける
-        self.updateImageViewFrame()
 
         // HACK: 複数行あるセルの描画が少しずれるため、再描画をかける
         self.collectionView.layoutIfNeeded()
@@ -114,27 +110,16 @@ public class ClipItemInformationView: UIView {
 
     // MARK: Image View
 
-    public func loadImageView() {
-        self.imageView.image = self.dataSource?.previewImage(self)
-        self.updateImageViewFrame()
-    }
-
     public func updateImageViewFrame(for size: CGSize) {
         self.imageView.frame = self.calcInitialFrame(for: size)
     }
 
     public func calcInitialFrame() -> CGRect {
-        guard let dataSource = self.dataSource else { return .zero }
-        let bounds = dataSource.previewPageBounds(self)
-        return self.calcInitialFrame(for: bounds.size)
-    }
-
-    private func updateImageViewFrame() {
-        self.imageView.frame = self.calcInitialFrame()
+        calcInitialFrame(for: bounds.size)
     }
 
     private func calcInitialFrame(for size: CGSize) -> CGRect {
-        guard let dataSource = self.dataSource, let image = dataSource.previewImage(self) else { return .zero }
+        guard let image = imageView.image else { return .zero }
         let scale = image.size.scale(fittingIn: size)
         let resizedImageSize = image.size.scaled(by: scale)
         return CGRect(origin: .init(x: (frame.size.width - resizedImageSize.width) / 2,
