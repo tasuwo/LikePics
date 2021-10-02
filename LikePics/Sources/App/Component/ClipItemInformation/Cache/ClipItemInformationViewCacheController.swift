@@ -102,7 +102,7 @@ extension ClipItemInformationViewCacheController {
 extension ClipItemInformationViewCacheController {
     private func startUpdating(clipId: Clip.Identity, itemId: ClipItem.Identity) {
         stopUpdating()
-        store = Store(initialState: .init(isSomeItemsHidden: true),
+        store = Store(initialState: .init(isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems()),
                       dependency: dependency,
                       reducer: ClipItemInformationViewCacheReducer())
         bind(to: store)
