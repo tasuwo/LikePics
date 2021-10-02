@@ -15,7 +15,6 @@ class ClipPreviewPageViewController: UIPageViewController {
     typealias RootStore = ForestKit.Store<RootState, RootAction, RootDependency>
 
     typealias Store = AnyStoring<ClipPreviewPageViewState, ClipPreviewPageViewAction, ClipPreviewPageViewDependency>
-    typealias CacheStore = AnyStoring<ClipPreviewPageViewCacheState, ClipPreviewPageViewCacheAction, ClipPreviewPageViewCacheDependency>
 
     // MARK: - Properties
 
@@ -52,7 +51,6 @@ class ClipPreviewPageViewController: UIPageViewController {
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
 
-    private var cacheStore: CacheStore
     private var cacheSubscriptions: Set<AnyCancellable> = .init()
 
     private var previewViewSubscriptions: Set<AnyCancellable> = .init()
@@ -69,18 +67,11 @@ class ClipPreviewPageViewController: UIPageViewController {
          transitionDispatcher: ClipPreviewPageTransitionDispatcherType,
          itemListTransitionController: ClipItemListTransitioningControllable)
     {
-        struct CacheDependency: ClipPreviewPageViewCacheDependency {
-            weak var informationViewCache: ClipItemInformationViewCaching?
-        }
-
         let rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipPreviewPageViewRootReducer)
         self.rootStore = rootStore
 
         self.store = rootStore
             .proxy(RootState.mappingToPage, RootAction.pageMapping)
-            .eraseToAnyStoring()
-        self.cacheStore = rootStore
-            .proxy(RootState.cacheMapping, RootAction.cacheMapping)
             .eraseToAnyStoring()
         let barStore: ClipPreviewPageBarController.Store = rootStore
             .proxy(RootState.mappingToBar, RootAction.barMapping)
@@ -119,14 +110,14 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        cacheStore.execute(.viewWillDisappear)
+        cacheController.viewWillDisappear()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         barController.viewDidAppear()
 
-        cacheStore.execute(.viewDidAppear)
+        cacheController.viewDidAppear()
 
         // HACK: 別画面表示 > rotate > この画面に戻る、といった操作をすると、SizeClassの不整合が生じるため、表示時に同期させる
         barController.traitCollectionDidChange(to: self.view.traitCollection)
@@ -248,7 +239,7 @@ extension ClipPreviewPageViewController {
         transitionDispatcher.inputs.previewPanGestureRecognizer.send(viewController.previewView.panGestureRecognizer)
 
         if let clip = store.stateValue.clip(of: viewController.itemId) {
-            cacheStore.execute(.pageChanged(clip.id, viewController.itemId))
+            cacheController.pageChanged(clipId: clip.id, itemId: viewController.itemId)
         }
     }
 

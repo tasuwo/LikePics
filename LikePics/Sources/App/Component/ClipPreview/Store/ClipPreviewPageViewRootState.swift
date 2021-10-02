@@ -29,10 +29,4 @@ extension ClipPreviewPageViewRootState {
 extension ClipPreviewPageViewRootState {
     static let mappingToPage: StateMapping<Self, ClipPreviewPageViewState> = .init(keyPath: \.pageViewState)
     static let mappingToBar: StateMapping<Self, ClipPreviewPageBarState> = .init(keyPath: \.barState)
-    static let cacheMapping: StateMapping<Self, ClipPreviewPageViewCacheState> = .init(get: {
-        .init(clipId: $0.pageViewState.currentClip?.id, itemId: $0.pageViewState.currentItem?.id)
-    }, set: {
-        // Read only
-        return $1
-    })
 }

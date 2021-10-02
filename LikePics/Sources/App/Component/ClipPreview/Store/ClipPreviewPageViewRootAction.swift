@@ -7,7 +7,6 @@ import ForestKit
 enum ClipPreviewPageViewRootAction: Action {
     case page(ClipPreviewPageViewAction)
     case bar(ClipPreviewPageBarAction)
-    case cache(ClipPreviewPageViewCacheAction)
 }
 
 extension ClipPreviewPageViewRootAction {
@@ -21,9 +20,6 @@ extension ClipPreviewPageViewRootAction {
         case let .bar(action):
             guard let event = action.mapToEvent() else { return nil }
             return .barEventOccurred(event)
-
-        default:
-            return nil
         }
     })
 
@@ -31,12 +27,6 @@ extension ClipPreviewPageViewRootAction {
         .bar($0)
     }, get: {
         guard case let .bar(action) = $0 else { return nil }; return action
-    })
-
-    static let cacheMapping: ActionMapping<Self, ClipPreviewPageViewCacheAction> = .init(build: {
-        .cache($0)
-    }, get: {
-        guard case let .cache(action) = $0 else { return nil }; return action
     })
 }
 

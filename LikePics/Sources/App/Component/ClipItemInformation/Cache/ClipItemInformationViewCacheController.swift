@@ -9,10 +9,7 @@ import LikePicsUIKit
 import UIKit
 
 protocol ClipItemInformationViewCaching: AnyObject {
-    func startUpdating(clipId: Clip.Identity, itemId: ClipItem.Identity)
-    func stopUpdating()
     func readCachingView() -> ClipItemInformationView
-    func insertCachingViewHierarchyIfNeeded()
 }
 
 protocol ClipItemInformationViewCachingDelegate: AnyObject {
@@ -46,6 +43,21 @@ class ClipItemInformationViewCacheController {
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipItemInformationViewCacheReducer())
 
         configureViewHierarchy()
+    }
+
+    // MARK: - View Life-Cycle Methods
+
+    func viewWillDisappear() {
+        stopUpdating()
+    }
+
+    func viewDidAppear() {
+        insertCachingViewHierarchyIfNeeded()
+        // TODO: 必要であればclipId,itemIdを更新する
+    }
+
+    func pageChanged(clipId: Clip.Identity, itemId: ClipItem.Identity) {
+        startUpdating(clipId: clipId, itemId: itemId)
     }
 }
 
@@ -85,10 +97,10 @@ extension ClipItemInformationViewCacheController {
     }
 }
 
-extension ClipItemInformationViewCacheController: ClipItemInformationViewCaching {
-    // MARK: - ClipItemInformationViewCaching
+// MARK: - Caching
 
-    func startUpdating(clipId: Clip.Identity, itemId: ClipItem.Identity) {
+extension ClipItemInformationViewCacheController {
+    private func startUpdating(clipId: Clip.Identity, itemId: ClipItem.Identity) {
         stopUpdating()
         store = Store(initialState: .init(isSomeItemsHidden: true),
                       dependency: dependency,
@@ -97,21 +109,25 @@ extension ClipItemInformationViewCacheController: ClipItemInformationViewCaching
         store.execute(.loaded(clipId, itemId))
     }
 
-    func stopUpdating() {
+    private func stopUpdating() {
         subscriptions.forEach { $0.cancel() }
     }
+
+    private func insertCachingViewHierarchyIfNeeded() {
+        guard !baseView.subviews.contains(informationView) else { return }
+        informationView.alpha = 0
+        baseView.insertSubview(informationView, at: 0)
+        NSLayoutConstraint.activate(informationView.constraints(fittingIn: baseView))
+    }
+}
+
+extension ClipItemInformationViewCacheController: ClipItemInformationViewCaching {
+    // MARK: - ClipItemInformationViewCaching
 
     func readCachingView() -> ClipItemInformationView {
         informationView.alpha = 1
         informationView.removeFromSuperview()
         return informationView
-    }
-
-    func insertCachingViewHierarchyIfNeeded() {
-        guard !baseView.subviews.contains(informationView) else { return }
-        informationView.alpha = 0
-        baseView.insertSubview(informationView, at: 0)
-        NSLayoutConstraint.activate(informationView.constraints(fittingIn: baseView))
     }
 }
 
