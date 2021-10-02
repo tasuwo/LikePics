@@ -125,29 +125,6 @@ extension ClipPreviewPageViewState {
             return nil
         }
     }
-
-    func currentPreloadTargets() -> [UUID] {
-        guard let currentItem = currentItem else { return [] }
-
-        var forwards: [UUID] = []
-        var backwards: [UUID] = []
-
-        var baseItem = currentItem
-        for _ in 0 ..< 6 {
-            guard let nextItem = item(after: baseItem.id) else { break }
-            forwards.append(nextItem.imageId)
-            baseItem = nextItem
-        }
-
-        baseItem = currentItem
-        for _ in 0 ..< 6 {
-            guard let previousItem = item(before: baseItem.id) else { break }
-            backwards.append(previousItem.imageId)
-            baseItem = previousItem
-        }
-
-        return forwards + backwards
-    }
 }
 
 extension ClipPreviewPageViewState.PageChange {

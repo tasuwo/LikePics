@@ -43,12 +43,12 @@ struct ClipPreviewPageViewReducer: Reducer {
             }
             nextState.indexByClipId = indexByClipId
             nextState.indexPathByClipItemId = indexPathByClipItemId
-            return (nextState, [Self.preloadEffect(state: nextState, dependency: dependency)])
+            return (nextState, .none)
 
         case let .pageChanged(indexPath: indexPath):
             nextState.pageChange = nil
             nextState.currentIndexPath = indexPath
-            return (nextState, [Self.preloadEffect(state: nextState, dependency: dependency)])
+            return (nextState, .none)
 
         case .failedToLoadClip:
             nextState.isDismissed = true
@@ -431,7 +431,7 @@ extension ClipPreviewPageViewReducer {
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtRemoveItemFromClip)
             }
-            return (nextState, [Self.preloadEffect(state: nextState, dependency: dependency)])
+            return (nextState, .none)
         }
     }
 
@@ -452,24 +452,5 @@ extension ClipPreviewPageViewReducer {
             nextState.isDismissed = true
         }
         return nextState
-    }
-}
-
-// MARK: - Preload
-
-extension ClipPreviewPageViewReducer {
-    private static func preloadEffect(state: State, dependency: Dependency) -> Effect<Action> {
-        let stream = Deferred {
-            Future<Action?, Never> { promise in
-                state.currentPreloadTargets().forEach {
-                    dependency.previewLoader.preloadPreview(imageId: $0)
-                    promise(.success(nil))
-                }
-            }
-        }
-        return Effect(stream)
-            // アニメーション中に画像が再読み込みされるとアニメーションがかくつくので、
-            // あえて読み込みを遅延させる
-            .delay(for: 0.3, scheduler: DispatchQueue.global())
     }
 }

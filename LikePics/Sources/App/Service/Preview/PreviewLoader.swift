@@ -10,7 +10,6 @@ protocol PreviewLoaderProtocol {
     func readThumbnail(forItemId itemId: ClipItem.Identity) -> UIImage?
     func readCache(forImageId imageId: UUID) -> UIImage?
     func loadPreview(forImageId imageId: UUID, completion: @escaping (UIImage?) -> Void)
-    func preloadPreview(imageId: UUID)
 }
 
 class PreviewLoader {
@@ -162,22 +161,6 @@ extension PreviewLoader: PreviewLoaderProtocol {
             }
 
             self.pool.append(imageId: imageId, completion: completion)
-
-            self.addDecompressOperation(imageId: imageId)
-        }
-    }
-
-    func preloadPreview(imageId: UUID) {
-        queue.async {
-            guard self.memoryCache["preview-\(imageId.uuidString)"] == nil else {
-                return
-            }
-
-            if self.pool.isLoading(imageId: imageId) {
-                return
-            }
-
-            self.pool.append(imageId: imageId)
 
             self.addDecompressOperation(imageId: imageId)
         }
