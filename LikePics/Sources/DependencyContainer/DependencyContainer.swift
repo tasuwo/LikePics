@@ -22,6 +22,7 @@ class DependencyContainer {
     let clipDiskCache: DiskCache
     let clipThumbnailPipeline: Pipeline
     let albumThumbnailPipeline: Pipeline
+    let clipItemThumbnailPipeline: Pipeline
     let temporaryThumbnailPipeline: Pipeline
     let previewPipeline: Pipeline
 
@@ -113,6 +114,8 @@ class DependencyContainer {
 
         let memoryCache = MemoryCache(config: .default)
 
+        // Clip
+
         var clipCacheConfig = Pipeline.Configuration()
         let clipCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-thumbnails")
         self.clipDiskCache = try DiskCache(path: clipCacheDirectory,
@@ -123,6 +126,8 @@ class DependencyContainer {
         clipCacheConfig.compressionRatio = 0.5
         clipCacheConfig.memoryCache = memoryCache
         self.clipThumbnailPipeline = .init(config: clipCacheConfig)
+
+        // Album
 
         var albumCacheConfig = Pipeline.Configuration()
         albumCacheConfig.compressionRatio = 0.5
@@ -135,15 +140,32 @@ class DependencyContainer {
         albumCacheConfig.memoryCache = memoryCache
         self.albumThumbnailPipeline = Pipeline(config: albumCacheConfig)
 
+        // Clip Item
+
+        var clipItemCacheConfig = Pipeline.Configuration()
+        let clipItemCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-item-thumbnails")
+        let clipItemDiskCache = try DiskCache(path: clipItemCacheDirectory,
+                                              config: .init(sizeLimit: 1024 * 1024 * 512,
+                                                            countLimit: 100,
+                                                            dateLimit: 30))
+        clipItemCacheConfig.diskCache = clipItemDiskCache
+        clipItemCacheConfig.memoryCache = memoryCache
+        self.clipItemThumbnailPipeline = Pipeline(config: clipItemCacheConfig)
+
+        // Temporary
+
         var temporaryCacheConfig = Pipeline.Configuration()
         temporaryCacheConfig.diskCache = nil
         temporaryCacheConfig.memoryCache = memoryCache
         self.temporaryThumbnailPipeline = Pipeline(config: temporaryCacheConfig)
 
+        // Preview
+
         var previewCacheConfig = Pipeline.Configuration()
         previewCacheConfig.dataCachingQueue.maxConcurrentOperationCount = 1
         previewCacheConfig.downsamplingQueue.maxConcurrentOperationCount = 1
         previewCacheConfig.imageDecompressingQueue.maxConcurrentOperationCount = 1
+        previewCacheConfig.diskCache = nil
         previewCacheConfig.memoryCache = memoryCache
         self.previewPipeline = Pipeline(config: previewCacheConfig)
 

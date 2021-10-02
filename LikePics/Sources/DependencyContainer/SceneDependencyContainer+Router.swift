@@ -183,7 +183,7 @@ extension SceneDependencyContainer: Router {
                                                                                      message: L10n.alertForEditClipItemsSiteUrlMessage,
                                                                                      placeholder: L10n.placeholderUrl),
                                                         dependency: self,
-                                                        thumbnailPipeline: container.temporaryThumbnailPipeline)
+                                                        thumbnailPipeline: container.clipItemThumbnailPipeline)
         viewController.transitioningDelegate = transitioningController
         viewController.modalPresentationStyle = .fullScreen
 
