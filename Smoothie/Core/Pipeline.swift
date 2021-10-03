@@ -81,7 +81,7 @@ extension Pipeline {
             }
 
             log.log(.begin, name: "Fetch pixel size of DiskCache data")
-            let imageSize = self.pixelSize(data)
+            let imageSize = data.pixelSize()
             log.log(.end, name: "Fetch pixel size of DiskCache data")
 
             self.queue.async {
@@ -123,7 +123,8 @@ extension Pipeline {
 
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Downsample Data")
-            let thumbnail = self.downsample(data: data, resize: task.request.resize)
+            let thumbnail = data.downsample(size: task.request.resize?.size,
+                                            scale: task.request.resize?.scale)
             log.log(.end, name: "Downsample Data")
 
             self.queue.async {
@@ -152,7 +153,7 @@ extension Pipeline {
 
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Encode CGImage")
-            let encodedImage = self.encode(thumbnail, compressionRatio: self.config.compressionRatio)
+            let encodedImage = thumbnail.encode(compressionRatio: self.config.compressionRatio)
             log.log(.end, name: "Encode CGImage")
 
             self.queue.async {
@@ -186,7 +187,10 @@ extension Pipeline {
 
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Decompress Data")
-            let image = self.decompress(data)
+            let image: UIImage? = {
+                guard let image = data.downsample() else { return nil }
+                return UIImage(cgImage: image)
+            }()
             log.log(.end, name: "Decompress Data")
 
             self.queue.async {
@@ -208,7 +212,8 @@ extension Pipeline {
 
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Downsample Data")
-            let thumbnail = self.downsample(data: data, resize: task.request.resize)
+            let thumbnail = data.downsample(size: task.request.resize?.size,
+                                            scale: task.request.resize?.scale)
             log.log(.end, name: "Downsample Data")
 
             self.queue.async {
@@ -227,10 +232,10 @@ extension Pipeline {
 
 // MARK: Image Processing
 
-extension Pipeline {
-    private func pixelSize(_ data: Data) -> CGSize? {
+private extension Data {
+    func pixelSize() -> CGSize? {
         let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
-        guard let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions) else {
+        guard let imageSource = CGImageSourceCreateWithData(self as CFData, imageSourceOptions) else {
             return nil
         }
 
@@ -244,27 +249,9 @@ extension Pipeline {
         return CGSize(width: pixelWidth, height: pixelHeight)
     }
 
-    private func decompress(_ data: Data) -> UIImage? {
+    func downsample(size: CGSize? = nil, scale: CGFloat? = nil) -> CGImage? {
         let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
-        guard let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions) else {
-            return nil
-        }
-
-        let options = [
-            kCGImageSourceCreateThumbnailFromImageAlways: true,
-            kCGImageSourceShouldCacheImmediately: true,
-            kCGImageSourceCreateThumbnailWithTransform: true
-        ] as CFDictionary
-        guard let cgImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, options) else {
-            return nil
-        }
-
-        return UIImage(cgImage: cgImage)
-    }
-
-    private func downsample(data: Data, resize: ImageRequest.Resize? = nil) -> CGImage? {
-        let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
-        guard let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions) else {
+        guard let imageSource = CGImageSourceCreateWithData(self as CFData, imageSourceOptions) else {
             return nil
         }
 
@@ -274,8 +261,8 @@ extension Pipeline {
             kCGImageSourceCreateThumbnailWithTransform: true
         ]
 
-        if let resize = resize {
-            let maxDimensionInPixels = max(resize.size.width, resize.size.height) * resize.scale
+        if let size = size {
+            let maxDimensionInPixels = Swift.max(size.width, size.height) * (scale ?? 1)
             options[kCGImageSourceThumbnailMaxPixelSize] = maxDimensionInPixels
         }
 
@@ -285,10 +272,12 @@ extension Pipeline {
 
         return downsampledImage
     }
+}
 
-    public func encode(_ image: CGImage, compressionRatio: Float) -> Data? {
+private extension CGImage {
+    func encode(compressionRatio: Float) -> Data? {
         let type: ImageType = {
-            return image.alphaInfo.hasAlphaChannel ? .png : .jpeg
+            return self.alphaInfo.hasAlphaChannel ? .png : .jpeg
         }()
 
         let mutableData = NSMutableData()
@@ -299,14 +288,14 @@ extension Pipeline {
         guard let destination = CGImageDestinationCreateWithData(mutableData as CFMutableData, type.uniformTypeIdentifier as CFString, 1, nil) else {
             return nil
         }
-        CGImageDestinationAddImage(destination, image, options)
+        CGImageDestinationAddImage(destination, self, options)
         CGImageDestinationFinalize(destination)
 
         return mutableData as Data
     }
 }
 
-public extension CGImageAlphaInfo {
+private extension CGImageAlphaInfo {
     var hasAlphaChannel: Bool {
         switch self {
         case .none, .noneSkipLast, .noneSkipFirst:
