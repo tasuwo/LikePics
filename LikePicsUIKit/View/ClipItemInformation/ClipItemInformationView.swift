@@ -59,6 +59,9 @@ public class ClipItemInformationView: UIView {
     override public func layoutSubviews() {
         super.layoutSubviews()
 
+        // HACK: iPhone等で、画像の描画範囲が想定位置と若干ズレるケースがあったため、再描画をかける
+        self.updateImageViewFrame(for: bounds.size)
+
         // HACK: 複数行あるセルの描画が少しずれるため、再描画をかける
         self.collectionView.layoutIfNeeded()
     }
