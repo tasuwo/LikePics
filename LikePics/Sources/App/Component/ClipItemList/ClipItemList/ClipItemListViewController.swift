@@ -280,14 +280,14 @@ extension ClipItemListViewController {
             navigationBar.heightAnchor.constraint(equalToConstant: 44)
         ])
 
-        let toolBar = UIToolbar(frame: .init(x: 0, y: 0, width: view.window?.screen.bounds.width ?? 0, height: 44))
+        let toolBar = UIToolbar(frame: .init(x: 0, y: 0, width: view.bounds.width, height: 44))
+        toolBar.translatesAutoresizingMaskIntoConstraints = false
         toolBar.isTranslucent = true
         toolBar.delegate = self
         toolBarController.toolBar = toolBar
         self.toolBar = toolBar
 
         view.addSubview(toolBar)
-        toolBar.translatesAutoresizingMaskIntoConstraints = false
         toolBarTopConstraint = toolBar.topAnchor.constraint(equalTo: view.bottomAnchor, constant: 8) // borderがはみ出すため、やや下に配置する
         toolBarBottomConstraint = toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         toolBarBottomConstraint.priority = .init(999)
