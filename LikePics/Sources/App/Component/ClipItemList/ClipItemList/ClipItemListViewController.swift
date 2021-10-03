@@ -57,6 +57,8 @@ class ClipItemListViewController: UIViewController {
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
 
+    private var isViewAppeared = false
+
     // MARK: - Initializers
 
     init(state: ClipItemListRootState,
@@ -96,6 +98,11 @@ class ClipItemListViewController: UIViewController {
 
         store.execute(.viewDidLoad)
     }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        isViewAppeared = true
+    }
 }
 
 // MARK: - Bind
@@ -106,12 +113,12 @@ extension ClipItemListViewController {
             .removeDuplicates(by: {
                 $0.items.filteredOrderedEntities() == $1.items.filteredOrderedEntities()
             })
-            .receive(on: RunLoop.main)
             .sink { [weak self] state in
+                guard let self = self else { return }
                 let snapshot = Self.createSnapshot(items: state.items.orderedFilteredEntities())
-                self?.dataSource.apply(snapshot, animatingDifferences: true)
-                self?.updateCellAppearance()
-                self?.selectionApplier.didApplyDataSource(snapshot: state.items)
+                self.dataSource.apply(snapshot, animatingDifferences: self.isViewAppeared)
+                self.updateCellAppearance()
+                self.selectionApplier.didApplyDataSource(snapshot: state.items)
             }
             .store(in: &subscriptions)
 
