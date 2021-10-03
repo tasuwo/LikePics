@@ -212,12 +212,9 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
 extension AlbumListCollectionViewCell: ImageDisplayable {
     public func smt_display(_ image: UIImage?) {
         guard let image = image else {
-            self.backgroundColor = Asset.Color.secondaryBackground.color
             self.thumbnail = .none
             return
         }
-
-        self.backgroundColor = .clear
         self.thumbnail = image
     }
 }
