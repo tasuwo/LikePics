@@ -42,6 +42,22 @@ public final class Pipeline {
     }
 }
 
+// MARK: Preload
+
+public extension Pipeline {
+    func preload(_ request: ImageRequest, completion: @escaping () -> Void) -> ImageLoadTaskCancellable {
+        return queue.sync {
+            pool
+                .task(for: ImageRequestKey(request)) {
+                    ImageLoadTask(request: request, isPreload: true, pipeline: self)
+                }
+                .subscribe { _ in
+                    completion()
+                }
+        }
+    }
+}
+
 // MARK: Load
 
 extension Pipeline {
@@ -49,7 +65,7 @@ extension Pipeline {
         return queue.sync {
             pool
                 .task(for: ImageRequestKey(request)) {
-                    ImageLoadTask(request: request, pipeline: self)
+                    ImageLoadTask(request: request, isPreload: false, pipeline: self)
                 }
                 .subscribe(completion: completion)
         }
@@ -67,7 +83,33 @@ extension Pipeline {
             return
         }
 
-        enqueueCheckDiskCacheOperation(task)
+        if task.isPreload {
+            enqueueCheckDiskCacheExistenceOperation(task)
+        } else {
+            enqueueCheckDiskCacheOperation(task)
+        }
+    }
+
+    private func enqueueCheckDiskCacheExistenceOperation(_ task: ImageLoadTask) {
+        let operation = BlockOperation { [weak self, task] in
+            guard let self = self else { return }
+
+            let log = Log(logger: self.logger)
+
+            log.log(.begin, name: "Check DiskCache")
+            let existsDiskCache = self.config.diskCache?.exists(forKey: task.request.source.cacheKey)
+            log.log(.end, name: "Check DiskCache")
+
+            self.queue.async {
+                if existsDiskCache == true {
+                    task.didLoad(nil)
+                } else {
+                    self.enqueueDataLoadingOperation(task)
+                }
+            }
+        }
+        task.ongoingOperation = operation
+        config.dataCachingQueue.addOperation(operation)
     }
 
     private func enqueueCheckDiskCacheOperation(_ task: ImageLoadTask) {
@@ -142,7 +184,11 @@ extension Pipeline {
                     // リサイズが不要なら、エンコードは行わない
                     // FIXME: 必要ならディスクキャッシュを行う
                     let image = UIImage(cgImage: thumbnail)
-                    self.config.memoryCache.insert(image, forKey: task.request.source.cacheKey)
+
+                    if !task.isPreload {
+                        self.config.memoryCache.insert(image, forKey: task.request.source.cacheKey)
+                    }
+
                     task.didLoad(.init(image: image, diskCacheImageSize: nil))
                 } else {
                     self.enqueueEncodingOperation(task, thumbnail: thumbnail)
@@ -167,8 +213,14 @@ extension Pipeline {
                     task.didLoad(nil)
                     return
                 }
+
                 self.enqueueDiskCachingOperation(for: task.request.source.cacheKey, data: encodedImage)
-                self.enqueueDecompressingOperation(task, data: encodedImage)
+
+                if !task.isPreload {
+                    self.enqueueDecompressingOperation(task, data: encodedImage)
+                } else {
+                    task.didLoad(nil)
+                }
             }
         }
         task.ongoingOperation = operation
