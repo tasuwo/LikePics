@@ -15,7 +15,7 @@ public class WebImageSourceProvider {
     private var urlFinderDelayMs: Int = 0
     private var subscriptions = Set<AnyCancellable>()
 
-    public var viewDidLoad: PassthroughSubject<UIView, Never> = .init()
+    public var loadedView: PassthroughSubject<UIView, Never> = .init()
 
     // MARK: - Lifecycle
 
@@ -28,7 +28,7 @@ public class WebImageSourceProvider {
     // MARK: - Methods
 
     private func bind() {
-        self.viewDidLoad
+        self.loadedView
             .sink { [weak self] view in
                 guard let self = self else { return }
                 // HACK: Add WebView to view hierarchy for loading page.

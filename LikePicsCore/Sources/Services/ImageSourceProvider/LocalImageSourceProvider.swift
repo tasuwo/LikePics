@@ -6,7 +6,7 @@ import Combine
 import UIKit
 
 public class LocalImageSourceProvider {
-    public var viewDidLoad: PassthroughSubject<UIView, Never> = .init()
+    public var loadedView: PassthroughSubject<UIView, Never> = .init()
     private let providers: [ImageProvider]
     private let fileUrls: [URL]
 
