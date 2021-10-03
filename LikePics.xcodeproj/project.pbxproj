@@ -647,7 +647,7 @@
 		FCDD9EC7FAA37ACBCA1124AD /* TemporaryClipStorageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9374ED987F1A4F2D170C18E /* TemporaryClipStorageSpec.swift */; };
 		FD7A627A06E883D8EEDC1110 /* SceneRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F89E9F1665A17B5A22E43E2 /* SceneRootViewController.swift */; };
 		FD8B2092A1BA485E62F638A4 /* HasClipSearchHistoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ADB55C382698BDEAADAD2E /* HasClipSearchHistoryService.swift */; };
-		FDDDAC6582C053D7F65E69B8 /* DisplayableImageMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B02B0B056D5E05B9CE46B6B /* DisplayableImageMeta.swift */; };
+		FDDDAC6582C053D7F65E69B8 /* SelectableImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B02B0B056D5E05B9CE46B6B /* SelectableImage.swift */; };
 		FDF61DF4E02A9260DB3E8FC9 /* ReferenceClipStorage_Configuration+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131F78658B834403E6D23DD5 /* ReferenceClipStorage_Configuration+Constants.swift */; };
 		FE16FD0E42852E419B57BA7A /* UserInterfaceStyleSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE74A6381986DA5FA0012970 /* UserInterfaceStyleSelectionViewController.swift */; };
 		FE2E09534F07929EA4E19267 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F3FA9EB9C9018835329E9C03 /* Localizable.strings */; };
@@ -1220,7 +1220,7 @@
 		48FFDA93EAEBDBFB0F65D481 /* TextEditAlertDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditAlertDelegate.swift; sourceTree = "<group>"; };
 		4A5A1CA90095274B99E8221C /* Publisher+bind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+bind.swift"; sourceTree = "<group>"; };
 		4A797AE2B3CD6C0CA8C1C851 /* AnyReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyReducer.swift; sourceTree = "<group>"; };
-		4B02B0B056D5E05B9CE46B6B /* DisplayableImageMeta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayableImageMeta.swift; sourceTree = "<group>"; };
+		4B02B0B056D5E05B9CE46B6B /* SelectableImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableImage.swift; sourceTree = "<group>"; };
 		4B2AB01D75A41E3263AE08BB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4B423993F020373D8058445E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		4B46E6FF12B81F84E10C8EEB /* ClipItemListTransitioningControllable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemListTransitioningControllable.swift; sourceTree = "<group>"; };
@@ -2283,7 +2283,7 @@
 		35AB18F01104AB91BC106F40 /* ValueObject */ = {
 			isa = PBXGroup;
 			children = (
-				4B02B0B056D5E05B9CE46B6B /* DisplayableImageMeta.swift */,
+				4B02B0B056D5E05B9CE46B6B /* SelectableImage.swift */,
 				FB16F9F7F4AAD91BBEE54E45 /* TransferringClip.swift */,
 				E6A8254D1874C3AD9215EE81 /* WebImageUrlSet.swift */,
 				33DEB92301D49C30A0C2A530 /* Source */,
@@ -5748,7 +5748,7 @@
 				ADF1133FEE5B511A6CFAF8D7 /* DarwinNotification.swift in Sources */,
 				662AD2D2B994D967679FF553 /* DarwinNotificationCenter.swift in Sources */,
 				24E9ED4EC6C66F1C0D917245 /* DarwinNotification_Name.swift in Sources */,
-				FDDDAC6582C053D7F65E69B8 /* DisplayableImageMeta.swift in Sources */,
+				FDDDAC6582C053D7F65E69B8 /* SelectableImage.swift in Sources */,
 				15F10EDD5D3A1DE932135B7F /* ImageDataProvider.swift in Sources */,
 				AC9E2B1F6B1B659C0133B641 /* ImageLoader.swift in Sources */,
 				9D9EB20A576BCE36923B6327 /* ImageLoaderError.swift in Sources */,
