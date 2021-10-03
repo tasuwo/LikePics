@@ -60,6 +60,13 @@ extension Pipeline {
 
 extension Pipeline {
     func startLoading(_ task: ImageLoadTask) {
+        dispatchPrecondition(condition: .onQueue(queue))
+
+        if let image = config.memoryCache[task.request.source.cacheKey] {
+            task.didLoad(.init(image: image, diskCacheImageSize: nil))
+            return
+        }
+
         enqueueCheckDiskCacheOperation(task)
     }
 

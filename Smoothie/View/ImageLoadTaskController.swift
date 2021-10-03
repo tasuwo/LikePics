@@ -48,13 +48,7 @@ final class ImageLoadTaskController {
     func loadImage(_ request: ImageRequest, with pipeline: Pipeline, completion: ((ImageResponse?) -> Void)?) {
         cancelLoadImage()
 
-        if let image = pipeline.config.memoryCache[request.source.cacheKey] {
-            view?.smt_display(image)
-            completion?(.init(image: image, diskCacheImageSize: nil))
-            return
-        }
-
-        self.cancellable = pipeline.loadImage(request) { [weak self] response in
+        cancellable = pipeline.loadImage(request) { [weak self] response in
             DispatchQueue.main.async {
                 self?.view?.smt_display(response?.image)
                 completion?(response)
