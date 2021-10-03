@@ -7,10 +7,6 @@ import Common
 import Domain
 import UIKit
 
-public protocol ImageLoaderProtocol {
-    func load(from source: ImageSource) -> Future<ImageLoaderResult, ImageLoaderError>
-}
-
 public class ImageLoader {
     private var subscriptions = Set<AnyCancellable>()
     private static let fallbackFileExtension = "jpeg"
@@ -55,19 +51,50 @@ public class ImageLoader {
     }
 }
 
-extension ImageLoader: ImageLoaderProtocol {
-    // MARK: - ImageLoaderProtocol
+extension ImageLoader: ImageLoadable {
+    // MARK: - ImageLoadable
 
-    public func load(from source: ImageSource) -> Future<ImageLoaderResult, ImageLoaderError> {
+    public func loadData(for source: ImageLoadSource, completion: @escaping (Data?) -> Void) {
         switch source.value {
-        case let .imageProvider(provider):
+        case let .lazyLoader(loader):
+            loader.load(completion)
+
+        case let .fileUrl(url):
+            guard let data = try? Data(contentsOf: url) else {
+                completion(nil)
+                return
+            }
+            completion(data)
+
+        case let .urlSet(urlSet):
+            let semaphore = DispatchSemaphore(value: 0)
+
+            var result: Data?
+            let task = URLSession.shared.dataTask(with: urlSet.url) { data, _, _ in
+                result = data
+                semaphore.signal()
+            }
+            task.resume()
+
+            if semaphore.wait(timeout: .now() + 5) == .timedOut {
+                completion(nil)
+                return
+            }
+
+            completion(result)
+        }
+    }
+
+    public func load(from source: ImageLoadSource) -> Future<ImageLoaderResult, ImageLoaderError> {
+        switch source.value {
+        case let .lazyLoader(loader):
             return Future { promise in
-                provider.load { data in
+                loader.load { data in
                     guard let data = data else {
                         promise(.failure(.internalError))
                         return
                     }
-                    provider.resolveFilename { filename in
+                    loader.resolveFilename { filename in
                         promise(.success(ImageLoaderResult(usedUrl: nil,
                                                            mimeType: nil,
                                                            fileName: filename,

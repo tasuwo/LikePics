@@ -14,7 +14,7 @@ class ImageProvider {
     }
 }
 
-extension ImageProvider: LikePicsCore.ImageProvider {
+extension ImageProvider: ImageLazyLoadable {
     // MARK: - ImageProvider
 
     func resolveFilename(_ completion: @escaping (String?) -> Void) {

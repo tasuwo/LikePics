@@ -57,7 +57,7 @@ public class ClipCreationViewController: UIViewController {
     // MARK: Services
 
     private let thumbnailPipeline: Pipeline
-    private let imageSourceLoader: ImageSourceLoader
+    private let imageLoader: ImageLoadable
 
     // MARK: Store/Subscription
 
@@ -72,13 +72,13 @@ public class ClipCreationViewController: UIViewController {
                 state: ClipCreationViewState,
                 dependency: ClipCreationViewDependency,
                 thumbnailPipeline: Pipeline,
-                imageSourceLoader: ImageSourceLoader,
+                imageLoader: ImageLoadable,
                 delegate: ClipCreationDelegate)
     {
         self.factory = factory
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipCreationViewReducer())
         self.thumbnailPipeline = thumbnailPipeline
-        self.imageSourceLoader = imageSourceLoader
+        self.imageLoader = imageLoader
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
     }
@@ -181,7 +181,7 @@ extension ClipCreationViewController {
             .store(in: &subscriptions)
 
         store.state
-            .removeDuplicates(by: \.imageSources.selections)
+            .removeDuplicates(by: \.imageLoadSources.selections)
             .sink { [weak self] state in self?.applySelection(state) }
             .store(in: &subscriptions)
 
@@ -238,7 +238,7 @@ extension ClipCreationViewController {
         ])
 
         snapshot.appendSections([.image])
-        snapshot.appendItems(state.imageSources.order.map({ Layout.Item.image($0) }))
+        snapshot.appendItems(state.imageLoadSources.order.map({ Layout.Item.image($0) }))
 
         return snapshot
     }
@@ -246,7 +246,7 @@ extension ClipCreationViewController {
     // MARK: Selection
 
     private func applySelection(_ state: ClipCreationViewState) {
-        state.imageSources
+        state.imageLoadSources
             .selections
             .enumerated()
             .forEach { index, id in
@@ -309,7 +309,7 @@ extension ClipCreationViewController {
         let (proxy, dataSource) = Layout.configureDataSource(collectionView: collectionView,
                                                              cellDataSource: self,
                                                              thumbnailPipeline: thumbnailPipeline,
-                                                             imageSourceLoader: imageSourceLoader)
+                                                             imageLoader: imageLoader)
         self.dataSource = dataSource
         proxy.delegate = self
         self.proxy = proxy
@@ -319,10 +319,10 @@ extension ClipCreationViewController {
 extension ClipCreationViewController: ClipSelectionCollectionViewCellDataSource {
     // MARK: ClipSelectionCollectionViewCellDataSource
 
-    public var imageSources: [UUID: ImageSource] { store.stateValue.imageSources.imageSourceById }
+    public var imageSources: [UUID: ImageLoadSource] { store.stateValue.imageLoadSources.imageLoadSourceById }
 
     public func selectionOrder(of id: UUID) -> Int? {
-        return store.stateValue.imageSources.selections.firstIndex(of: id)
+        return store.stateValue.imageLoadSources.selections.firstIndex(of: id)
     }
 
     public func shouldSaveAsClip() -> Bool {

@@ -5,12 +5,12 @@
 import Combine
 import UIKit
 
-public class WebImageSourceProvider {
+public class WebImageLoadSourceResolver {
     private static let maxDelayMs = 5000
     private static let incrementalDelayMs = 1000
 
     private let url: URL
-    private let finder = WebImageUrlFinder()
+    private let finder = WebImageUrlSetFinder()
 
     private var urlFinderDelayMs: Int = 0
     private var subscriptions = Set<AnyCancellable>()
@@ -40,10 +40,10 @@ public class WebImageSourceProvider {
     }
 }
 
-extension WebImageSourceProvider: ImageSourceProvider {
-    // MARK: - ImageSourceProvider
+extension WebImageLoadSourceResolver: ImageLoadSourceResolver {
+    // MARK: - ImageLoadSourceResolver
 
-    public func resolveSources() -> Future<[ImageSource], ImageSourceProviderError> {
+    public func resolveSources() -> Future<[ImageLoadSource], ImageLoadSourceResolverError> {
         return Future { [weak self] promise in
             guard let self = self else {
                 promise(.failure(.internalError))
@@ -53,7 +53,7 @@ extension WebImageSourceProvider: ImageSourceProvider {
             self.finder.findImageUrls(inWebSiteAt: self.url, delay: self.urlFinderDelayMs) { result in
                 switch result {
                 case let .success(urls):
-                    promise(.success(urls.map({ ImageSource(urlSet: $0) })))
+                    promise(.success(urls.map({ ImageLoadSource(urlSet: $0) })))
 
                 case let .failure(error):
                     promise(.failure(.init(finderError: error)))

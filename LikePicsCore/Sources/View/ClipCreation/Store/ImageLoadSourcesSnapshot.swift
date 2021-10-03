@@ -2,23 +2,23 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-struct ImageSourcesSnapshot: Equatable {
+struct ImageLoadSourcesSnapshot: Equatable {
     let order: [UUID]
     let selections: [UUID]
-    let imageSourceById: [UUID: ImageSource]
+    let imageLoadSourceById: [UUID: ImageLoadSource]
 
     // MARK: - Initializers
 
-    init(order: [UUID], selections: [UUID], imageSourceById: [UUID: ImageSource]) {
+    init(order: [UUID], selections: [UUID], imageSourceById: [UUID: ImageLoadSource]) {
         self.order = order
         self.selections = selections
-        self.imageSourceById = imageSourceById
+        self.imageLoadSourceById = imageSourceById
     }
 
-    init(_ imageSources: [ImageSource], selectAll: Bool) {
+    init(_ imageSources: [ImageLoadSource], selectAll: Bool) {
         self.order = imageSources.map { $0.identifier }
         self.selections = selectAll ? imageSources.map { $0.identifier } : []
-        self.imageSourceById = imageSources.reduce(into: [UUID: ImageSource](), { $0[$1.identifier] = $1 })
+        self.imageLoadSourceById = imageSources.reduce(into: [UUID: ImageLoadSource](), { $0[$1.identifier] = $1 })
     }
 
     // MARK: - Methods
@@ -26,12 +26,12 @@ struct ImageSourcesSnapshot: Equatable {
     func selected(_ id: UUID) -> Self {
         return .init(order: order,
                      selections: selections + [id],
-                     imageSourceById: imageSourceById)
+                     imageSourceById: imageLoadSourceById)
     }
 
     func deselected(_ id: UUID) -> Self {
         return .init(order: order,
                      selections: selections.filter { $0 != id },
-                     imageSourceById: imageSourceById)
+                     imageSourceById: imageLoadSourceById)
     }
 }

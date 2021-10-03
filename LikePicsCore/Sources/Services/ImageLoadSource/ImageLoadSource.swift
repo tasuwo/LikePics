@@ -6,11 +6,11 @@ import Common
 import CoreGraphics
 import Domain
 
-public struct ImageSource: Hashable {
+public struct ImageLoadSource: Hashable {
     enum Value {
         case urlSet(WebImageUrlSet)
         case fileUrl(URL)
-        case imageProvider(ImageProvider)
+        case lazyLoader(ImageLazyLoadable)
     }
 
     let identifier: UUID
@@ -28,9 +28,9 @@ public struct ImageSource: Hashable {
         self.value = .fileUrl(fileUrl)
     }
 
-    init(provider: ImageProvider) {
+    init(lazyLoader: ImageLazyLoadable) {
         self.identifier = UUID()
-        self.value = .imageProvider(provider)
+        self.value = .lazyLoader(lazyLoader)
     }
 
     // MARK: - Methods
@@ -50,10 +50,10 @@ public struct ImageSource: Hashable {
     }
 }
 
-public extension ImageSource {
+public extension ImageLoadSource {
     // MARK: - Equatable
 
-    static func == (lhs: ImageSource, rhs: ImageSource) -> Bool {
+    static func == (lhs: ImageLoadSource, rhs: ImageLoadSource) -> Bool {
         return lhs.identifier == rhs.identifier
     }
 

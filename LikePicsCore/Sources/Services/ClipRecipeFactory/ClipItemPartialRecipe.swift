@@ -5,7 +5,7 @@
 import Common
 import Domain
 
-public struct ClipItemSource {
+public struct ClipItemPartialRecipe {
     enum InitializeError: Error {
         case failedToResolveSize
     }

@@ -16,7 +16,7 @@ public protocol ClipCreationViewDelegate: AnyObject {
 }
 
 public protocol ClipSelectionCollectionViewCellDataSource: AnyObject {
-    var imageSources: [UUID: ImageSource] { get }
+    var imageSources: [UUID: ImageLoadSource] { get }
     func selectionOrder(of id: UUID) -> Int?
     func shouldSaveAsClip() -> Bool
 }
@@ -131,7 +131,7 @@ extension ClipCreationViewLayout {
     static func configureDataSource(collectionView: UICollectionView,
                                     cellDataSource: ClipSelectionCollectionViewCellDataSource,
                                     thumbnailPipeline: Pipeline,
-                                    imageSourceLoader: ImageSourceLoader) -> (Proxy, DataSource)
+                                    imageLoader: ImageLoadable) -> (Proxy, DataSource)
     {
         let proxy = Proxy()
 
@@ -140,7 +140,7 @@ extension ClipCreationViewLayout {
         let metaCellRegistration = self.configureMetaCell(proxy: proxy)
         let imageCellRegistration = self.configureImageCell(dataSource: cellDataSource,
                                                             thumbnailPipeline: thumbnailPipeline,
-                                                            imageSourceLoader: imageSourceLoader)
+                                                            imageLoader: imageLoader)
 
         let dataSource: DataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
             switch item {
@@ -220,9 +220,9 @@ extension ClipCreationViewLayout {
 
     private static func configureImageCell(dataSource: ClipSelectionCollectionViewCellDataSource,
                                            thumbnailPipeline: Pipeline,
-                                           imageSourceLoader: ImageSourceLoader) -> UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, UUID>
+                                           imageLoader: ImageLoadable) -> UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, UUID>
     {
-        return .init(cellNib: ClipSelectionCollectionViewCell.nib) { [weak dataSource, weak thumbnailPipeline, weak imageSourceLoader] cell, _, imageSourceId in
+        return .init(cellNib: ClipSelectionCollectionViewCell.nib) { [weak dataSource, weak thumbnailPipeline, weak imageLoader] cell, _, imageSourceId in
             guard let dataSource = dataSource,
                   let imageSource = dataSource.imageSources[imageSourceId] else { return }
 
@@ -235,7 +235,7 @@ extension ClipCreationViewLayout {
             }
 
             guard let pipeline = thumbnailPipeline,
-                  let imageSourceLoader = imageSourceLoader
+                  let imageLoader = imageLoader
             else {
                 return
             }
@@ -245,7 +245,7 @@ extension ClipCreationViewLayout {
             let size = cell.calcThumbnailPointSize(originalPixelSize: nil)
             let provider = ImageDataProvider(source: imageSource,
                                              cacheKey: "clip-creation-\(imageSourceId.uuidString)",
-                                             loader: imageSourceLoader)
+                                             loader: imageLoader)
             let request = ImageRequest(source: .provider(provider),
                                        resize: .init(size: size, scale: scale))
             loadImage(request, with: pipeline, on: cell)

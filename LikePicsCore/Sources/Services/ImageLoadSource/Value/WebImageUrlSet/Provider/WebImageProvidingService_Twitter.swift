@@ -44,61 +44,61 @@ public extension WebImageProvidingService {
         }
 
         enum StateMachine {
-            static func start(on browser: Erik) -> AnyPublisher<Void, WebImageUrlFinderError> {
+            static func start(on browser: Erik) -> AnyPublisher<Void, WebImageUrlSetFinderError> {
                 return self.transition(browser, from: .`init`, withContext: nil)
             }
 
-            static func transition(_ browser: Erik, from state: State, withContext context: Context?) -> AnyPublisher<Void, WebImageUrlFinderError> {
+            static func transition(_ browser: Erik, from state: State, withContext context: Context?) -> AnyPublisher<Void, WebImageUrlSetFinderError> {
                 return Self.currentContext(browser, withState: state, previousContext: context)
-                    .flatMap { context -> AnyPublisher<(State, Context), WebImageUrlFinderError> in
+                    .flatMap { context -> AnyPublisher<(State, Context), WebImageUrlSetFinderError> in
                         guard let nextState = self.nextState(from: state, withContext: context) else {
-                            return Fail(error: WebImageUrlFinderError.internalError)
+                            return Fail(error: WebImageUrlSetFinderError.internalError)
                                 .eraseToAnyPublisher()
                         }
 
                         switch nextState {
                         case .`init`:
-                            return Fail(error: WebImageUrlFinderError.internalError)
+                            return Fail(error: WebImageUrlSetFinderError.internalError)
                                 .eraseToAnyPublisher()
 
                         case .initialLoading:
                             return Just((nextState, context))
-                                .setFailureType(to: WebImageUrlFinderError.self)
+                                .setFailureType(to: WebImageUrlSetFinderError.self)
                                 .delay(for: 0.2, scheduler: RunLoop.main)
                                 .eraseToAnyPublisher()
 
                         case .revealing:
                             guard let button = context.displayElement.sensitiveContentRevealButton else {
-                                return Fail(error: WebImageUrlFinderError.internalError)
+                                return Fail(error: WebImageUrlSetFinderError.internalError)
                                     .eraseToAnyPublisher()
                             }
                             button.click()
                             return Just((nextState, context))
-                                .setFailureType(to: WebImageUrlFinderError.self)
+                                .setFailureType(to: WebImageUrlSetFinderError.self)
                                 .delay(for: 0.2, scheduler: RunLoop.main)
                                 .eraseToAnyPublisher()
 
                         case .loadingForReveal:
                             return Just((nextState, context))
-                                .setFailureType(to: WebImageUrlFinderError.self)
+                                .setFailureType(to: WebImageUrlSetFinderError.self)
                                 .delay(for: 0.1, scheduler: RunLoop.main)
                                 .eraseToAnyPublisher()
 
                         case .finish, .timeout:
                             return Just((nextState, context))
-                                .setFailureType(to: WebImageUrlFinderError.self)
+                                .setFailureType(to: WebImageUrlSetFinderError.self)
                                 .eraseToAnyPublisher()
                         }
                     }
-                    .flatMap { nextState, context -> AnyPublisher<Void, WebImageUrlFinderError> in
+                    .flatMap { nextState, context -> AnyPublisher<Void, WebImageUrlSetFinderError> in
                         return nextState.isEnd
-                            ? Just(()).setFailureType(to: WebImageUrlFinderError.self).eraseToAnyPublisher()
+                            ? Just(()).setFailureType(to: WebImageUrlSetFinderError.self).eraseToAnyPublisher()
                             : self.transition(browser, from: nextState, withContext: context)
                     }
                     .eraseToAnyPublisher()
             }
 
-            static func currentContext(_ browser: Erik, withState state: State, previousContext: Context?) -> Future<Context, WebImageUrlFinderError> {
+            static func currentContext(_ browser: Erik, withState state: State, previousContext: Context?) -> Future<Context, WebImageUrlSetFinderError> {
                 return Future { [weak browser] promise in
                     guard let browser = browser else {
                         promise(.failure(.internalError))
@@ -211,7 +211,7 @@ public extension WebImageProvidingService.Twitter {
         return url.host?.contains("twitter") == true
     }
 
-    static func preprocess(_ browser: Erik, document: Document) -> AnyPublisher<Void, WebImageUrlFinderError> {
+    static func preprocess(_ browser: Erik, document: Document) -> AnyPublisher<Void, WebImageUrlSetFinderError> {
         return StateMachine.start(on: browser)
     }
 

@@ -10,16 +10,16 @@ public protocol HasClipStore {
     var clipStore: ClipStorable { get }
 }
 
-public protocol HasClipBuilder {
-    var clipBuilder: ClipBuildable { get }
+public protocol HasClipRecipeFactory {
+    var clipRecipeFactory: ClipRecipeFactoryProtocol { get }
 }
 
 public protocol HasImageSourceProvider {
-    var imageSourceProvider: ImageSourceProvider { get }
+    var imageSourceProvider: ImageLoadSourceResolver { get }
 }
 
 public protocol HasImageLoader {
-    var imageLoader: ImageLoaderProtocol { get }
+    var imageLoader: ImageLoadable { get }
 }
 
 public protocol HasUserSettingsStorage {
@@ -27,7 +27,7 @@ public protocol HasUserSettingsStorage {
 }
 
 public typealias ClipCreationViewDependency = HasClipStore
-    & HasClipBuilder
+    & HasClipRecipeFactory
     & HasImageSourceProvider
     & HasImageLoader
     & HasUserSettingsStorage
@@ -50,8 +50,8 @@ struct ClipCreationViewReducer: Reducer {
 
         // MARK: State Observation
 
-        case let .imagesLoaded(imageSources):
-            nextState.imageSources = .init(imageSources, selectAll: state.source.fromLocal)
+        case let .imagesLoaded(sources):
+            nextState.imageLoadSources = .init(sources, selectAll: state.source.fromLocal)
             nextState.displayState = .loaded
             return (nextState, .none)
 
@@ -96,13 +96,13 @@ struct ClipCreationViewReducer: Reducer {
             return (nextState, .none)
 
         case let .selected(id):
-            guard !state.imageSources.selections.contains(id) else { return (nextState, .none) }
-            nextState.imageSources = state.imageSources.selected(id)
+            guard !state.imageLoadSources.selections.contains(id) else { return (nextState, .none) }
+            nextState.imageLoadSources = state.imageLoadSources.selected(id)
             return (nextState, .none)
 
         case let .deselected(id):
-            guard state.imageSources.selections.contains(id) else { return (nextState, .none) }
-            nextState.imageSources = state.imageSources.deselected(id)
+            guard state.imageLoadSources.selections.contains(id) else { return (nextState, .none) }
+            nextState.imageLoadSources = state.imageLoadSources.deselected(id)
             return (nextState, .none)
 
         // MARK: Modal Completion
@@ -154,11 +154,11 @@ extension ClipCreationViewReducer {
         let stream = Deferred { dependency.imageSourceProvider.resolveSources() }
             .map { sources in sources.filter { $0.isValid } }
             .tryMap { sources -> Action? in
-                guard !sources.isEmpty else { throw ImageSourceProviderError.notFound }
+                guard !sources.isEmpty else { throw ImageLoadSourceResolverError.notFound }
                 return Action.imagesLoaded(sources)
             }
             .catch { error -> AnyPublisher<Action?, Never> in
-                let error = (error as? ImageSourceProviderError) ?? ImageSourceProviderError.internalError
+                let error = (error as? ImageLoadSourceResolverError) ?? ImageLoadSourceResolverError.internalError
                 return Just(Action.failedToLoadImages(error))
                     .eraseToAnyPublisher()
             }
@@ -169,7 +169,7 @@ extension ClipCreationViewReducer {
     }
 }
 
-private extension ImageSourceProviderError {
+private extension ImageLoadSourceResolverError {
     var displayTitle: String {
         switch self {
         case .notFound:
@@ -243,7 +243,7 @@ extension ClipCreationViewReducer {
     enum DownloadError: Error {
         case failedToSave(ClipStorageError)
         case failedToDownloadImage(ImageLoaderError)
-        case failedToCreateClipItemSource(ClipItemSource.InitializeError)
+        case failedToCreateClipItemSource(ClipItemPartialRecipe.InitializeError)
         case internalError
     }
 
@@ -252,18 +252,18 @@ extension ClipCreationViewReducer {
 
         nextState.displayState = .saving
 
-        let selections = state.imageSources.selections
-            .compactMap { state.imageSources.imageSourceById[$0] }
+        let selections = state.imageLoadSources.selections
+            .compactMap { state.imageLoadSources.imageLoadSourceById[$0] }
             .enumerated()
-            .reduce(into: [(Int, ImageSource)]()) { $0.append(($1.offset, $1.element)) }
+            .reduce(into: [(Int, ImageLoadSource)]()) { $0.append(($1.offset, $1.element)) }
 
         let stream = self.fetchImages(for: selections, dependency: dependency)
-            .flatMap { [dependency] sources -> AnyPublisher<Action?, DownloadError> in
+            .flatMap { [dependency] partialRecipes -> AnyPublisher<Action?, DownloadError> in
                 return Self.save(url: state.url,
                                  shouldSaveAsClip: state.shouldSaveAsClip,
                                  shouldSaveAsHiddenItem: state.shouldSaveAsHiddenItem,
                                  tagIds: Array(state.tags._filteredIds),
-                                 sources: sources,
+                                 partialRecipes: partialRecipes,
                                  dependency: dependency)
                     .publisher
                     .eraseToAnyPublisher()
@@ -278,16 +278,16 @@ extension ClipCreationViewReducer {
         return (nextState, [effect])
     }
 
-    private static func fetchImages(for selections: [(index: Int, source: ImageSource)], dependency: Dependency) -> AnyPublisher<[ClipItemSource], DownloadError> {
-        let publishers: [AnyPublisher<ClipItemSource, DownloadError>] = selections
+    private static func fetchImages(for selections: [(index: Int, source: ImageLoadSource)], dependency: Dependency) -> AnyPublisher<[ClipItemPartialRecipe], DownloadError> {
+        let publishers: [AnyPublisher<ClipItemPartialRecipe, DownloadError>] = selections
             .map { [dependency] selection in
                 return dependency.imageLoader.load(from: selection.source)
                     .mapError { DownloadError.failedToDownloadImage($0) }
-                    .tryMap { try ClipItemSource(index: selection.index, result: $0) }
+                    .tryMap { try ClipItemPartialRecipe(index: selection.index, result: $0) }
                     .mapError { err in
                         if let error = err as? DownloadError {
                             return error
-                        } else if let error = err as? ClipItemSource.InitializeError {
+                        } else if let error = err as? ClipItemPartialRecipe.InitializeError {
                             return DownloadError.failedToCreateClipItemSource(error)
                         } else {
                             return DownloadError.internalError
@@ -305,14 +305,14 @@ extension ClipCreationViewReducer {
                              shouldSaveAsClip: Bool,
                              shouldSaveAsHiddenItem: Bool,
                              tagIds: [Tag.Identity],
-                             sources: [ClipItemSource],
+                             partialRecipes: [ClipItemPartialRecipe],
                              dependency: Dependency) -> Result<Action?, DownloadError>
     {
         if shouldSaveAsClip {
-            let result = dependency.clipBuilder.build(url: url,
-                                                      hidesClip: shouldSaveAsHiddenItem,
-                                                      sources: sources,
-                                                      tagIds: tagIds)
+            let result = dependency.clipRecipeFactory.make(url: url,
+                                                           hidesClip: shouldSaveAsHiddenItem,
+                                                           partialRecipes: partialRecipes,
+                                                           tagIds: tagIds)
             switch dependency.clipStore.create(clip: result.0, withContainers: result.1, forced: false) {
             case .success:
                 return .success(.imagesSaved)
@@ -322,11 +322,11 @@ extension ClipCreationViewReducer {
             }
         } else {
             var results: [Result<Clip.Identity, ClipStorageError>] = []
-            for source in sources {
-                let result = dependency.clipBuilder.build(url: url,
-                                                          hidesClip: shouldSaveAsHiddenItem,
-                                                          sources: [source],
-                                                          tagIds: tagIds)
+            for partialRecipe in partialRecipes {
+                let result = dependency.clipRecipeFactory.make(url: url,
+                                                               hidesClip: shouldSaveAsHiddenItem,
+                                                               partialRecipes: [partialRecipe],
+                                                               tagIds: tagIds)
                 results.append(dependency.clipStore.create(clip: result.0, withContainers: result.1, forced: false))
             }
             if let firstError = results.compactMap({ $0.failureValue }).first {

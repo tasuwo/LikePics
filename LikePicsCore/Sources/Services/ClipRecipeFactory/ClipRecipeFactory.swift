@@ -4,11 +4,11 @@
 
 import Domain
 
-public protocol ClipBuildable {
-    func build(url: URL?, hidesClip: Bool, sources: [ClipItemSource], tagIds: [Tag.Identity]) -> (ClipRecipe, [ImageContainer])
+public protocol ClipRecipeFactoryProtocol {
+    func make(url: URL?, hidesClip: Bool, partialRecipes: [ClipItemPartialRecipe], tagIds: [Tag.Identity]) -> (ClipRecipe, [ImageContainer])
 }
 
-public struct ClipBuilder {
+public struct ClipRecipeFactory {
     private let currentDateResolver: () -> Date
     private let uuidIssuer: () -> UUID
 
@@ -24,27 +24,27 @@ public struct ClipBuilder {
     }
 }
 
-extension ClipBuilder: ClipBuildable {
-    // MARK: - ClipBuildable
+extension ClipRecipeFactory: ClipRecipeFactoryProtocol {
+    // MARK: - ClipRecipeFactoryProtocol
 
-    public func build(url: URL?,
-                      hidesClip: Bool,
-                      sources: [ClipItemSource],
-                      tagIds: [Tag.Identity]) -> (ClipRecipe, [ImageContainer])
+    public func make(url: URL?,
+                     hidesClip: Bool,
+                     partialRecipes: [ClipItemPartialRecipe],
+                     tagIds: [Tag.Identity]) -> (ClipRecipe, [ImageContainer])
     {
         let currentDate = self.currentDateResolver()
         let clipId = self.uuidIssuer()
-        let itemAndContainers: [(ClipItemRecipe, ImageContainer)] = sources.map { source in
+        let itemAndContainers: [(ClipItemRecipe, ImageContainer)] = partialRecipes.map { partialRecipe in
             let imageId = self.uuidIssuer()
             let item = ClipItemRecipe(id: self.uuidIssuer(),
                                       url: url,
                                       clipId: clipId,
-                                      index: source.index,
+                                      index: partialRecipe.index,
                                       imageId: imageId,
-                                      imageDataSize: source.data.count,
-                                      source: source,
+                                      imageDataSize: partialRecipe.data.count,
+                                      partialRecipe: partialRecipe,
                                       currentDate: currentDate)
-            let container = ImageContainer(id: imageId, data: source.data)
+            let container = ImageContainer(id: imageId, data: partialRecipe.data)
             return (item, container)
         }
         let clip = ClipRecipe(clipId: clipId,
@@ -72,15 +72,15 @@ private extension ClipRecipe {
 }
 
 private extension ClipItemRecipe {
-    init(id: ClipItem.Identity, url: URL?, clipId: Clip.Identity, index: Int, imageId: ImageContainer.Identity, imageDataSize: Int, source: ClipItemSource, currentDate: Date) {
+    init(id: ClipItem.Identity, url: URL?, clipId: Clip.Identity, index: Int, imageId: ImageContainer.Identity, imageDataSize: Int, partialRecipe: ClipItemPartialRecipe, currentDate: Date) {
         self.init(id: id,
                   url: url,
                   clipId: clipId,
                   clipIndex: index,
                   imageId: imageId,
-                  imageFileName: source.fileName,
-                  imageUrl: source.url,
-                  imageSize: ImageSize(height: source.height, width: source.width),
+                  imageFileName: partialRecipe.fileName,
+                  imageUrl: partialRecipe.url,
+                  imageSize: ImageSize(height: partialRecipe.height, width: partialRecipe.width),
                   imageDataSize: imageDataSize,
                   registeredDate: currentDate,
                   updatedDate: currentDate)

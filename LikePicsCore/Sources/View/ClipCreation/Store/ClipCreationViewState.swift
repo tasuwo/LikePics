@@ -40,7 +40,7 @@ public struct ClipCreationViewState: Equatable {
 
     var url: URL?
     var tags: EntityCollectionSnapshot<Tag>
-    var imageSources: ImageSourcesSnapshot
+    var imageLoadSources: ImageLoadSourcesSnapshot
     var shouldSaveAsHiddenItem: Bool
     var shouldSaveAsClip: Bool
 
@@ -59,7 +59,7 @@ public extension ClipCreationViewState {
         self.source = source
         self.url = url
         self.tags = .init()
-        self.imageSources = .init(order: [], selections: [], imageSourceById: [:])
+        self.imageLoadSources = .init(order: [], selections: [], imageSourceById: [:])
         self.shouldSaveAsHiddenItem = false
         self.shouldSaveAsClip = false
         self.displayState = .loading
@@ -123,6 +123,6 @@ extension ClipCreationViewState {
 
     var isOverlayHidden: Bool { !isLoading }
     var isReloadItemEnabled: Bool { !isLoading && !source.fromLocal }
-    var isDoneItemEnabled: Bool { !isLoading && !imageSources.selections.isEmpty }
+    var isDoneItemEnabled: Bool { !isLoading && !imageLoadSources.selections.isEmpty }
     var displayReloadButton: Bool { !source.fromLocal }
 }

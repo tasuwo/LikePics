@@ -22,9 +22,9 @@ public extension WebImageProvidingService {
             return false
         }
 
-        public static func preprocess(_ browser: Erik, document: Document) -> AnyPublisher<Void, WebImageUrlFinderError> {
+        public static func preprocess(_ browser: Erik, document: Document) -> AnyPublisher<Void, WebImageUrlSetFinderError> {
             return Just(())
-                .setFailureType(to: WebImageUrlFinderError.self)
+                .setFailureType(to: WebImageUrlSetFinderError.self)
                 .eraseToAnyPublisher()
         }
 

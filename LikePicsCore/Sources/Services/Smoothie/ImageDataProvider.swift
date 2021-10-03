@@ -5,13 +5,13 @@
 import Smoothie
 
 public class ImageDataProvider {
-    private let source: ImageSource
+    private let source: ImageLoadSource
     private let _cacheKey: String
-    private weak var loader: ImageSourceLoader?
+    private weak var loader: ImageLoadable?
 
-    public init(source: ImageSource,
+    public init(source: ImageLoadSource,
                 cacheKey: String,
-                loader: ImageSourceLoader)
+                loader: ImageLoadable)
     {
         self.source = source
         self._cacheKey = cacheKey
@@ -27,6 +27,6 @@ extension ImageDataProvider: ImageDataProviding {
             completion(nil)
             return
         }
-        loader.load(for: source, completion: completion)
+        loader.loadData(for: source, completion: completion)
     }
 }

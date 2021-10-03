@@ -13,7 +13,7 @@ import UIKit
 protocol ViewControllerFactory {
     func makeShareNavigationRootViewController() -> ShareNavigationRootViewController
     func makeClipTargetCollectionViewController(webUrl: URL, delegate: ClipCreationDelegate) -> ClipCreationViewController
-    func makeClipTargetCollectionViewController(imageProviders: [LikePicsCore.ImageProvider],
+    func makeClipTargetCollectionViewController(loaders: [ImageLazyLoadable],
                                                 fileUrls: [URL],
                                                 delegate: ClipCreationDelegate) -> ClipCreationViewController
 }
@@ -71,16 +71,17 @@ extension DependencyContainer: ViewControllerFactory {
 
     func makeClipTargetCollectionViewController(webUrl: URL, delegate: ClipCreationDelegate) -> ClipCreationViewController {
         struct Dependency: ClipCreationViewDependency {
-            var clipBuilder: ClipBuildable
+            var clipRecipeFactory: ClipRecipeFactoryProtocol
             var clipStore: ClipStorable
-            var imageLoader: ImageLoaderProtocol
-            var imageSourceProvider: ImageSourceProvider
+            var imageLoader: ImageLoadable
+            var imageSourceProvider: ImageLoadSourceResolver
             var userSettingsStorage: UserSettingsStorageProtocol
         }
-        let dependency = Dependency(clipBuilder: ClipBuilder(),
+        let imageLoader = ImageLoader()
+        let dependency = Dependency(clipRecipeFactory: ClipRecipeFactory(),
                                     clipStore: clipStore,
-                                    imageLoader: ImageLoader(),
-                                    imageSourceProvider: WebImageSourceProvider(url: webUrl),
+                                    imageLoader: imageLoader,
+                                    imageSourceProvider: WebImageLoadSourceResolver(url: webUrl),
                                     userSettingsStorage: userSettingsStorage)
         return ClipCreationViewController(factory: self,
                                           state: .init(source: .webImage,
@@ -88,25 +89,26 @@ extension DependencyContainer: ViewControllerFactory {
                                                        isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems()),
                                           dependency: dependency,
                                           thumbnailPipeline: thumbnailPipeline,
-                                          imageSourceLoader: ImageSourceLoader(),
+                                          imageLoader: imageLoader,
                                           delegate: delegate)
     }
 
-    func makeClipTargetCollectionViewController(imageProviders: [LikePicsCore.ImageProvider],
+    func makeClipTargetCollectionViewController(loaders: [ImageLazyLoadable],
                                                 fileUrls: [URL],
                                                 delegate: ClipCreationDelegate) -> ClipCreationViewController
     {
         struct Dependency: ClipCreationViewDependency {
-            var clipBuilder: ClipBuildable
+            var clipRecipeFactory: ClipRecipeFactoryProtocol
             var clipStore: ClipStorable
-            var imageLoader: ImageLoaderProtocol
-            var imageSourceProvider: ImageSourceProvider
+            var imageLoader: ImageLoadable
+            var imageSourceProvider: ImageLoadSourceResolver
             var userSettingsStorage: UserSettingsStorageProtocol
         }
-        let dependency = Dependency(clipBuilder: ClipBuilder(),
+        let imageLoader = ImageLoader()
+        let dependency = Dependency(clipRecipeFactory: ClipRecipeFactory(),
                                     clipStore: clipStore,
-                                    imageLoader: ImageLoader(),
-                                    imageSourceProvider: LocalImageSourceProvider(providers: imageProviders, fileUrls: fileUrls),
+                                    imageLoader: imageLoader,
+                                    imageSourceProvider: LocalImageLoadSourceResolver(loaders: loaders, fileUrls: fileUrls),
                                     userSettingsStorage: userSettingsStorage)
         return ClipCreationViewController(factory: self,
                                           state: .init(source: .localImage,
@@ -114,7 +116,7 @@ extension DependencyContainer: ViewControllerFactory {
                                                        isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems()),
                                           dependency: dependency,
                                           thumbnailPipeline: thumbnailPipeline,
-                                          imageSourceLoader: ImageSourceLoader(),
+                                          imageLoader: imageLoader,
                                           delegate: delegate)
     }
 }
