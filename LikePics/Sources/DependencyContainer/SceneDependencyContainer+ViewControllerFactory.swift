@@ -155,7 +155,8 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                                            dependency: dependency,
                                                            factory: self,
                                                            transitionDispatcher: transitionDispatcher,
-                                                           itemListTransitionController: itemListTransitionController)
+                                                           itemListTransitionController: itemListTransitionController,
+                                                           previewPrefetcher: container.previewPrefetcher)
 
         transitionDispatcher.setup(baseViewController: viewController)
 

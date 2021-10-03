@@ -25,6 +25,7 @@ class DependencyContainer {
     let clipItemThumbnailPipeline: Pipeline
     let temporaryThumbnailPipeline: Pipeline
     let previewPipeline: Pipeline
+    let previewPrefetcher: PreviewPrefetcher
 
     // MARK: Storage
 
@@ -168,6 +169,10 @@ class DependencyContainer {
         previewCacheConfig.diskCache = nil
         previewCacheConfig.memoryCache = memoryCache
         self.previewPipeline = Pipeline(config: previewCacheConfig)
+
+        self.previewPrefetcher = PreviewPrefetcher(pipeline: clipThumbnailPipeline,
+                                                   imageQueryService: _imageQueryService,
+                                                   scale: UIScreen.main.scale)
 
         // MARK: Service
 

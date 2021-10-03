@@ -55,13 +55,18 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private let itemListTransitionController: ClipItemListTransitioningControllable
 
+    // MARK: Image Loader
+
+    private let previewPrefetcher: PreviewPrefetchable
+
     // MARK: - Initializers
 
     init(state: ClipPreviewPageViewRootState,
          dependency: ClipPreviewPageViewRootDependency,
          factory: ViewControllerFactory,
          transitionDispatcher: ClipPreviewPageTransitionDispatcherType,
-         itemListTransitionController: ClipItemListTransitioningControllable)
+         itemListTransitionController: ClipItemListTransitioningControllable,
+         previewPrefetcher: PreviewPrefetchable)
     {
         let rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipPreviewPageViewRootReducer)
         self.rootStore = rootStore
@@ -80,6 +85,8 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.router = dependency.router
 
         self.itemListTransitionController = itemListTransitionController
+
+        self.previewPrefetcher = previewPrefetcher
 
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [.interPageSpacing: 40])
     }
@@ -186,6 +193,12 @@ extension ClipPreviewPageViewController {
             .bind(\.currentClip) { [weak self] currentClip in
                 guard let items = currentClip?.items else { return }
                 self?.barController.store.execute(.updatedClipItems(items))
+            }
+            .store(in: &subscriptions)
+
+        store.state
+            .bind(\.currentClip) { [weak self] currentClip in
+                self?.previewPrefetcher.clip.send(currentClip)
             }
             .store(in: &subscriptions)
 
