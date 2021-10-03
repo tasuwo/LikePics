@@ -60,10 +60,10 @@ extension Pipeline {
 
 extension Pipeline {
     func startLoading(_ task: ImageLoadTask) {
-        enqueueCheckCacheOperation(task)
+        enqueueCheckDiskCacheOperation(task)
     }
 
-    private func enqueueCheckCacheOperation(_ task: ImageLoadTask) {
+    private func enqueueCheckDiskCacheOperation(_ task: ImageLoadTask) {
         let operation = BlockOperation { [weak self, task] in
             guard let self = self else { return }
 
@@ -73,19 +73,18 @@ extension Pipeline {
             let data = self.config.diskCache?[task.request.source.cacheKey]
             log.log(.end, name: "Read from DiskCache")
 
-            guard let data = data else {
+            if let data = data {
+                log.log(.begin, name: "Fetch pixel size of DiskCache data")
+                let imageSize = data.pixelSize()
+                log.log(.end, name: "Fetch pixel size of DiskCache data")
+
+                self.queue.async {
+                    self.enqueueDownsamplingDiskCacheOperation(task, data: data, diskCacheImageSize: imageSize)
+                }
+            } else {
                 self.queue.async {
                     self.enqueueDataLoadingOperation(task)
                 }
-                return
-            }
-
-            log.log(.begin, name: "Fetch pixel size of DiskCache data")
-            let imageSize = data.pixelSize()
-            log.log(.end, name: "Fetch pixel size of DiskCache data")
-
-            self.queue.async {
-                self.enqueueDownsamplingDiskCacheOperation(task, data: data, diskCacheImageSize: imageSize)
             }
         }
         task.ongoingOperation = operation
@@ -105,7 +104,7 @@ extension Pipeline {
 
                     self.queue.async {
                         if let data = data {
-                            self.enqueueDownsamplingOperation(task, data: data)
+                            self.enqueueDownsampleOperation(task, data: data)
                         } else {
                             task.didLoad(nil)
                         }
@@ -117,7 +116,7 @@ extension Pipeline {
         config.dataLoadingQueue.addOperation(operation)
     }
 
-    private func enqueueDownsamplingOperation(_ task: ImageLoadTask, data: Data) {
+    private func enqueueDownsampleOperation(_ task: ImageLoadTask, data: Data) {
         let operation = BlockOperation { [weak self, task] in
             guard let self = self else { return }
 
@@ -128,18 +127,18 @@ extension Pipeline {
             log.log(.end, name: "Downsample Data")
 
             self.queue.async {
-                if let thumbnail = thumbnail {
-                    if task.request.resize == nil {
-                        // リサイズが不要なら、エンコードは行わない
-                        // FIXME: 必要ならディスクキャッシュを行う
-                        let image = UIImage(cgImage: thumbnail)
-                        self.config.memoryCache.insert(image, forKey: task.request.source.cacheKey)
-                        task.didLoad(.init(image: image, diskCacheImageSize: nil))
-                    } else {
-                        self.enqueueEncodingOperation(task, thumbnail: thumbnail)
-                    }
-                } else {
+                guard let thumbnail = thumbnail else {
                     task.didLoad(nil)
+                    return
+                }
+                if task.request.resize == nil {
+                    // リサイズが不要なら、エンコードは行わない
+                    // FIXME: 必要ならディスクキャッシュを行う
+                    let image = UIImage(cgImage: thumbnail)
+                    self.config.memoryCache.insert(image, forKey: task.request.source.cacheKey)
+                    task.didLoad(.init(image: image, diskCacheImageSize: nil))
+                } else {
+                    self.enqueueEncodingOperation(task, thumbnail: thumbnail)
                 }
             }
         }
