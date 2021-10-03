@@ -6,6 +6,7 @@ public protocol DiskCaching: AnyObject {
     func store(_ data: Data?, forKey key: String)
     func remove(forKey key: String)
     func removeAll()
+    func exists(forKey: String) -> Bool
     subscript(_ key: String) -> Data? { get set }
 }
 
@@ -253,6 +254,32 @@ extension DiskCache: DiskCaching {
         scheduleFlushNonAtomically()
     }
 
+    public func exists(forKey key: String) -> Bool {
+        let change: Staging.Change?
+        stagingLock.lock()
+        change = staging.change(for: key)
+        stagingLock.unlock()
+
+        switch change {
+        case .add:
+            return true
+
+        case .remove:
+            return false
+
+        case .none:
+            break
+        }
+
+        guard let url = resolveCacheUrl(for: key) else {
+            return false
+        }
+
+        return ioQueue.sync {
+            FileManager.default.fileExists(atPath: url.path)
+        }
+    }
+
     public subscript(_ key: String) -> Data? {
         get {
             let change: Staging.Change?
@@ -275,7 +302,9 @@ extension DiskCache: DiskCaching {
                 return nil
             }
 
-            return try? Data(contentsOf: url)
+            return ioQueue.sync {
+                try? Data(contentsOf: url)
+            }
         }
         set {
             store(newValue, forKey: key)
