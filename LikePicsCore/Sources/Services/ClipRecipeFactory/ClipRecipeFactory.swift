@@ -39,9 +39,7 @@ extension ClipRecipeFactory: ClipRecipeFactoryProtocol {
             let item = ClipItemRecipe(id: self.uuidIssuer(),
                                       url: url,
                                       clipId: clipId,
-                                      index: partialRecipe.index,
                                       imageId: imageId,
-                                      imageDataSize: partialRecipe.data.count,
                                       partialRecipe: partialRecipe,
                                       currentDate: currentDate)
             let container = ImageContainer(id: imageId, data: partialRecipe.data)
@@ -72,16 +70,16 @@ private extension ClipRecipe {
 }
 
 private extension ClipItemRecipe {
-    init(id: ClipItem.Identity, url: URL?, clipId: Clip.Identity, index: Int, imageId: ImageContainer.Identity, imageDataSize: Int, partialRecipe: ClipItemPartialRecipe, currentDate: Date) {
+    init(id: ClipItem.Identity, url: URL?, clipId: Clip.Identity, imageId: ImageContainer.Identity, partialRecipe: ClipItemPartialRecipe, currentDate: Date) {
         self.init(id: id,
                   url: url,
                   clipId: clipId,
-                  clipIndex: index,
+                  clipIndex: partialRecipe.index,
                   imageId: imageId,
                   imageFileName: partialRecipe.fileName,
                   imageUrl: partialRecipe.url,
                   imageSize: ImageSize(height: partialRecipe.height, width: partialRecipe.width),
-                  imageDataSize: imageDataSize,
+                  imageDataSize: partialRecipe.data.count,
                   registeredDate: currentDate,
                   updatedDate: currentDate)
     }
