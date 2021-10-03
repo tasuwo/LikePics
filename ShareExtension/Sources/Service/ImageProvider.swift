@@ -17,8 +17,17 @@ class ImageProvider {
 extension ImageProvider: LikePicsCore.ImageProvider {
     // MARK: - ImageProvider
 
-    var fileName: String? {
-        underlyingProvider.suggestedName
+    func resolveFilename(_ completion: @escaping (String?) -> Void) {
+        if let name = underlyingProvider.suggestedName {
+            completion(name)
+        }
+        underlyingProvider.loadItem(forTypeIdentifier: kUTTypeImage as String, options: nil) { data, _ in
+            guard let url = data as? URL else {
+                completion(nil)
+                return
+            }
+            completion(url.lastPathComponent)
+        }
     }
 
     func load(_ completion: @escaping (Data?) -> Void) {

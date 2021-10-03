@@ -3,6 +3,6 @@
 //
 
 public protocol ImageProvider: AnyObject {
-    var fileName: String? { get }
+    func resolveFilename(_ completion: @escaping (String?) -> Void)
     func load(_ completion: @escaping (Data?) -> Void)
 }

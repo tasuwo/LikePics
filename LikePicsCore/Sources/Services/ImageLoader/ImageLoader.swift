@@ -67,7 +67,12 @@ extension ImageLoader: ImageLoaderProtocol {
                         promise(.failure(.internalError))
                         return
                     }
-                    promise(.success(ImageLoaderResult(usedUrl: nil, mimeType: nil, fileName: provider.fileName, data: data)))
+                    provider.resolveFilename { filename in
+                        promise(.success(ImageLoaderResult(usedUrl: nil,
+                                                           mimeType: nil,
+                                                           fileName: filename,
+                                                           data: data)))
+                    }
                 }
             }
 
