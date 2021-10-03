@@ -5,5 +5,6 @@
 public struct ImageLoaderResult {
     let usedUrl: URL?
     let mimeType: String?
+    let fileName: String?
     let data: Data
 }

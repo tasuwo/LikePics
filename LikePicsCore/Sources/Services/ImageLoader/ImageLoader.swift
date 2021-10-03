@@ -4,6 +4,7 @@
 
 import Combine
 import Common
+import Domain
 import UIKit
 
 public protocol ImageLoaderProtocol {
@@ -12,6 +13,7 @@ public protocol ImageLoaderProtocol {
 
 public class ImageLoader {
     private var subscriptions = Set<AnyCancellable>()
+    private static let fallbackFileExtension = "jpeg"
 
     // MARK: - Initializers
 
@@ -31,10 +33,25 @@ public class ImageLoader {
 
         return URLSession.shared.dataTaskPublisher(for: request)
             .map { data, response in
-                return ImageLoaderResult(usedUrl: url, mimeType: response.mimeType, data: data)
+                let fileName = resolveFileName(mimeType: response.mimeType, url: url)
+                return ImageLoaderResult(usedUrl: url, mimeType: response.mimeType, fileName: fileName, data: data)
             }
             .mapError { ImageLoaderError.networkError($0) }
             .eraseToAnyPublisher()
+    }
+
+    private static func resolveFileName(mimeType: String?, url: URL) -> String? {
+        let ext: String = {
+            if let mimeType = mimeType {
+                return ImageExtensionResolver.resolveFileExtension(forMimeType: mimeType) ?? Self.fallbackFileExtension
+            } else {
+                return Self.fallbackFileExtension
+            }
+        }()
+        guard let name = ImageNameResolver.resolveFileName(from: url) else {
+            return nil
+        }
+        return "\(name).\(ext)"
     }
 }
 
@@ -50,7 +67,7 @@ extension ImageLoader: ImageLoaderProtocol {
                         promise(.failure(.internalError))
                         return
                     }
-                    promise(.success(ImageLoaderResult(usedUrl: nil, mimeType: nil, data: data)))
+                    promise(.success(ImageLoaderResult(usedUrl: nil, mimeType: nil, fileName: provider.fileName, data: data)))
                 }
             }
 
@@ -60,7 +77,7 @@ extension ImageLoader: ImageLoaderProtocol {
                     promise(.failure(.internalError))
                     return
                 }
-                promise(.success(ImageLoaderResult(usedUrl: nil, mimeType: nil, data: data)))
+                promise(.success(ImageLoaderResult(usedUrl: nil, mimeType: nil, fileName: url.lastPathComponent, data: data)))
             }
 
         case let .urlSet(urlSet):

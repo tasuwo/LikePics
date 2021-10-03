@@ -10,26 +10,17 @@ public struct ClipItemSource {
         case failedToResolveSize
     }
 
-    static let fallbackFileExtension = "jpeg"
-
     let index: Int
     let url: URL?
     let data: Data
     let mimeType: String?
     let height: Double
     let width: Double
+    private let _fileName: String?
 
     var fileName: String {
-        guard let url = url else { return "\(UUID().uuidString).\(Self.fallbackFileExtension)" }
-        let ext: String = {
-            if let mimeType = self.mimeType {
-                return ImageExtensionResolver.resolveFileExtension(forMimeType: mimeType) ?? Self.fallbackFileExtension
-            } else {
-                return Self.fallbackFileExtension
-            }
-        }()
-        let name = ImageNameResolver.resolveFileName(from: url) ?? UUID().uuidString
-        return "\(name).\(ext)"
+        // Note: タイトル無しの場合は空文字にする
+        _fileName ?? ""
     }
 
     // MARK: - Lifecycle
@@ -39,6 +30,7 @@ public struct ClipItemSource {
         self.url = result.usedUrl
         self.data = result.data
         self.mimeType = result.mimeType
+        self._fileName = result.fileName
 
         guard let size = ImageUtility.resolveSize(for: result.data) else {
             throw InitializeError.failedToResolveSize
