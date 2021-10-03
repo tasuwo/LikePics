@@ -473,22 +473,14 @@ extension ClipItemListViewController: UICollectionViewDropDelegate {
 extension ClipItemListViewController: ClipItemListPresenting {
     // MARK: - ClipItemListPresenting
 
-    func animatingCell(_ animator: ClipItemListAnimator, id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool) -> ClipItemListPresentingCell? {
+    func animatingCell(_ animator: ClipItemListAnimator, id: ClipPreviewPresentableCellIdentifier) -> ClipItemListPresentingCell? {
         guard let item = store.stateValue.items._entities[id.itemId],
               let indexPath = dataSource.indexPath(for: .init(item.value, at: 0, of: 0)) else { return nil }
-
-        if needsScroll {
-            // セルが画面外だとインスタンスを取り出せないので、表示する
-            displayAnimatingCell(animator, id: id)
-        }
-
-        let cell = collectionView.cellForItem(at: indexPath) as? ClipItemCell
-
-        return cell
+        return collectionView.cellForItem(at: indexPath) as? ClipItemCell
     }
 
-    func animatingCellFrame(_ animator: ClipItemListAnimator, id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool, on containerView: UIView) -> CGRect {
-        guard let selectedCell = animatingCell(animator, id: id, needsScroll: needsScroll) else { return .zero }
+    func animatingCellFrame(_ animator: ClipItemListAnimator, id: ClipPreviewPresentableCellIdentifier, on containerView: UIView) -> CGRect {
+        guard let selectedCell = animatingCell(animator, id: id) else { return .zero }
         return view.convert(selectedCell.frame, to: containerView)
     }
 
@@ -496,14 +488,20 @@ extension ClipItemListViewController: ClipItemListPresenting {
         return 8
     }
 
-    func displayAnimatingCell(_ animator: ClipItemListAnimator, id: ClipPreviewPresentableCellIdentifier) {
+    func displayAnimatingCell(_ animator: ClipItemListAnimator, id: ClipPreviewPresentableCellIdentifier, containerView: UIView) {
         guard let item = store.stateValue.items._entities[id.itemId],
               let indexPath = dataSource.indexPath(for: .init(item.value, at: 0, of: 0)) else { return }
+
+        // HACK: SplitModeで不正なframeになってしまう問題を解消する
+        //       frameだけ設定してもダメで、reloadDataもしないとcellのframeが更新されない
+        view.frame = containerView.frame
+        collectionView.frame = containerView.frame
 
         // collectionViewのみでなくviewも再描画しないとセルの座標系がおかしくなる
         // また、scrollToItem呼び出し前に一度再描画しておかないと、正常にスクロールができないケースがある
         view.layoutIfNeeded()
         collectionView.layoutIfNeeded()
+        collectionView.reloadData()
 
         collectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
 
@@ -512,9 +510,9 @@ extension ClipItemListViewController: ClipItemListPresenting {
         collectionView.layoutIfNeeded()
     }
 
-    func thumbnailFrame(_ animator: ClipItemListAnimator, id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool, on containerView: UIView) -> CGRect {
+    func thumbnailFrame(_ animator: ClipItemListAnimator, id: ClipPreviewPresentableCellIdentifier, on containerView: UIView) -> CGRect {
         guard let item = store.stateValue.items._entities[id.itemId] else { return .zero }
-        guard let selectedCell = animatingCell(animator, id: id, needsScroll: needsScroll) else { return .zero }
+        guard let selectedCell = animatingCell(animator, id: id) else { return .zero }
         return selectedCell.convert(selectedCell.calcImageFrame(size: item.value.imageSize.cgSize), to: containerView)
     }
 

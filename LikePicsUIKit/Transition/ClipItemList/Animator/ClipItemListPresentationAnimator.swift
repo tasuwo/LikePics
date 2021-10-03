@@ -37,7 +37,6 @@ extension ClipItemListPresentationAnimator: UIViewControllerAnimatedTransitionin
             let fromImageView = fromPreviewView.imageView,
             let fromImage = fromImageView.image,
             let previewingClipItem = from.previewingClipItem(self),
-            let toCell = to.animatingCell(self, id: previewingClipItem.cellIdentity, needsScroll: true),
             let toViewBaseView = to.baseView(self)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
@@ -48,6 +47,16 @@ extension ClipItemListPresentationAnimator: UIViewControllerAnimatedTransitionin
         to.view.frame = from.view.frame
 
         containerView.insertSubview(to.view, belowSubview: from.view)
+
+        // 内部的にはreloadDataが呼ばれる
+        // reloadDataが呼ばれるとセルのインスタンスが一度再利用のキューに戻ってしまうため、
+        // cellの取り出し操作の前に呼んでおく必要がある
+        to.displayAnimatingCell(self, id: previewingClipItem.cellIdentity, containerView: containerView)
+
+        guard let toCell = to.animatingCell(self, id: previewingClipItem.cellIdentity) else {
+            self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
+            return
+        }
 
         let fromViewBackgroundView = UIView()
         fromViewBackgroundView.frame = toViewBaseView.frame
@@ -60,10 +69,6 @@ extension ClipItemListPresentationAnimator: UIViewControllerAnimatedTransitionin
         animatingImageView.frame = from.clipItemListAnimator(self, imageFrameOnContainerView: containerView)
         animatingImageView.layer.cornerCurve = .continuous
         animatingImageView.layer.masksToBounds = true
-
-        // Display Cell
-
-        to.displayAnimatingCell(self, id: previewingClipItem.cellIdentity)
 
         // Preprocess
 
@@ -111,7 +116,7 @@ extension ClipItemListPresentationAnimator: UIViewControllerAnimatedTransitionin
             delay: 0,
             options: [.curveEaseIn]
         ) {
-            let frame = to.thumbnailFrame(self, id: previewingClipItem.cellIdentity, needsScroll: false, on: containerView)
+            let frame = to.thumbnailFrame(self, id: previewingClipItem.cellIdentity, on: containerView)
             animatingImageView.frame = frame
 
             from.view.alpha = 0

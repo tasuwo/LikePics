@@ -35,7 +35,7 @@ extension ClipItemListDismissalAnimator: UIViewControllerAnimatedTransitioning {
             let to = transitionContext.viewController(forKey: .to) as? (ClipItemListPresentable & UIViewController),
             let previewingClipItem = to.previewingClipItem(self),
             let targetPreviewView = to.previewView(self),
-            let selectedCell = from.animatingCell(self, id: previewingClipItem.cellIdentity, needsScroll: false)
+            let selectedCell = from.animatingCell(self, id: previewingClipItem.cellIdentity)
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
             return
@@ -113,7 +113,7 @@ extension ClipItemListDismissalAnimator: UIViewControllerAnimatedTransitioning {
         animatingImageView.layer.cornerRadius = from.animatingCellCornerRadius(self)
         animatingImageView.contentMode = .scaleAspectFill
         animatingImageView.clipsToBounds = true
-        animatingImageView.frame = from.thumbnailFrame(self, id: previewingClipItem.cellIdentity, needsScroll: false, on: containerView)
+        animatingImageView.frame = from.thumbnailFrame(self, id: previewingClipItem.cellIdentity, on: containerView)
         containerView.insertSubview(animatingImageView, aboveSubview: toViewBackgroundView)
 
         containerView.insertSubview(to.view, aboveSubview: animatingImageView)
