@@ -130,14 +130,6 @@ extension ClipCreationViewController {
             .store(in: &subscriptions)
 
         store.state
-            .bind(\.shouldSaveAsClip) { [weak self] shouldSaveAsClip in
-                self?.collectionView.visibleCells
-                    .compactMap { $0 as? ClipSelectionCollectionViewCell }
-                    .forEach { $0.displaySelectionOrder = shouldSaveAsClip }
-            }
-            .store(in: &subscriptions)
-
-        store.state
             .bind(\.isLoading) { [weak self] isLoading in
                 if isLoading {
                     self?.indicator.startAnimating()
@@ -246,14 +238,13 @@ extension ClipCreationViewController {
     // MARK: Selection
 
     private func applySelection(_ state: ClipCreationViewState) {
-        state.imageLoadSources
-            .selections
-            .enumerated()
+        zip(state.imageLoadSources.selections.indices, state.imageLoadSources.selections)
             .forEach { index, id in
                 guard let indexPath = dataSource.indexPath(for: .image(id)) else { return }
                 collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
                 guard let cell = collectionView.cellForItem(at: indexPath) as? ClipSelectionCollectionViewCell else { return }
                 cell.selectionOrder = index + 1
+                cell.displaySelectionOrder = state.shouldSaveAsClip
             }
     }
 }

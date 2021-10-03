@@ -232,6 +232,8 @@ extension ClipCreationViewLayout {
             // selectionOrderについてはPushではなくPull方式を取る
             if let index = dataSource.selectionOrder(of: imageSourceId) {
                 cell.selectionOrder = index + 1
+            } else {
+                cell.selectionOrder = nil
             }
 
             guard let pipeline = thumbnailPipeline,
