@@ -116,7 +116,7 @@ extension ClipItemListViewLayout {
     {
         return UICollectionView.CellRegistration<ClipItemCell, Item> { [weak thumbnailPipeline, weak imageQueryService] cell, _, item in
             var configuration = ClipItemContentConfiguration()
-            configuration.fileName = item.imageFileName
+            configuration.fileName = (item.imageFileName as NSString).deletingPathExtension
             configuration.imageSize = item.imageSize
             configuration.dataSize = item.imageDataSize
             configuration.page = item.order
