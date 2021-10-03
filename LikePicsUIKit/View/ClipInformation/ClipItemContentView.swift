@@ -110,18 +110,20 @@ extension ClipItemContentView {
             thumbnailImageAspectConstraint = nil
         }
 
-        let ratio = configuration.imageSize.height / configuration.imageSize.width
+        if configuration.imageSize != .zero {
+            let ratio = configuration.imageSize.height / configuration.imageSize.width
 
-        if configuration.imageSize.height > configuration.imageSize.width {
-            thumbnailHeightConstraint.isActive = true
-            thumbnailWidthConstraint.isActive = false
-        } else {
-            thumbnailHeightConstraint.isActive = false
-            thumbnailWidthConstraint.isActive = true
+            if configuration.imageSize.height > configuration.imageSize.width {
+                thumbnailHeightConstraint.isActive = true
+                thumbnailWidthConstraint.isActive = false
+            } else {
+                thumbnailHeightConstraint.isActive = false
+                thumbnailWidthConstraint.isActive = true
+            }
+
+            thumbnailImageAspectConstraint = thumbnailImageView.heightAnchor.constraint(equalTo: thumbnailImageView.widthAnchor,
+                                                                                        multiplier: ratio)
         }
-
-        thumbnailImageAspectConstraint = thumbnailImageView.heightAnchor.constraint(equalTo: thumbnailImageView.widthAnchor,
-                                                                                    multiplier: ratio)
 
         pageNumberLabel.text = "\(configuration.page)/\(configuration.numberOfPage)"
         fileNameLabel.text = configuration.displayFileName
