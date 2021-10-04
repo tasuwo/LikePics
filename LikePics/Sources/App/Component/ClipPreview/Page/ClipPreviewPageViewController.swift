@@ -179,7 +179,7 @@ extension ClipPreviewPageViewController {
         store.state
             .bind(\.isDismissed) { [weak self] isDismissed in
                 guard isDismissed else { return }
-                self?.dismiss(animated: true, completion: nil)
+                self?.dismissAll(completion: nil)
             }
             .store(in: &subscriptions)
 
