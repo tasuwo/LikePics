@@ -12,11 +12,11 @@ public final class Pipeline {
         public var diskCache: DiskCaching?
         public var compressionRatio: Float = 0.8
 
-        public let dataLoadingQueue = OperationQueue()
-        public let dataCachingQueue = OperationQueue()
-        public let downsamplingQueue = OperationQueue()
-        public let imageEncodingQueue = OperationQueue()
-        public let imageDecompressingQueue = OperationQueue()
+        public var dataLoadingQueue = OperationQueue()
+        public var dataCachingQueue = OperationQueue()
+        public var downsamplingQueue = OperationQueue()
+        public var imageEncodingQueue = OperationQueue()
+        public var imageDecompressingQueue = OperationQueue()
 
         public init() {
             self.dataLoadingQueue.maxConcurrentOperationCount = 1

@@ -57,6 +57,16 @@ class DependencyContainer {
         var config = Pipeline.Configuration()
         config.diskCache = nil
         config.memoryCache = MemoryCache(config: .default)
+
+        // 発熱させないことを優先し、なるだけ並列処理をさせない
+        let singleQueue = OperationQueue()
+        singleQueue.maxConcurrentOperationCount = 1
+        config.dataLoadingQueue = singleQueue
+        config.dataCachingQueue = singleQueue
+        config.downsamplingQueue = singleQueue
+        config.imageEncodingQueue = singleQueue
+        config.imageDecompressingQueue = singleQueue
+
         self.thumbnailPipeline = Pipeline(config: config)
     }
 }
