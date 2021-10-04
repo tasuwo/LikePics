@@ -175,7 +175,6 @@ extension ClipCollectionViewController {
     private func bind(to store: Store) {
         store.state
             .filter { !$0.clips.isEmpty() }
-            .removeDuplicates(by: \.clips)
             .throttle(for: 0.5, scheduler: RunLoop.main, latest: true)
             .receive(on: clipsUpdateQueue)
             .removeDuplicates(by: { $0.clips.filteredOrderedEntities() == $1.clips.filteredOrderedEntities() })
