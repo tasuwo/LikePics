@@ -77,7 +77,8 @@ struct ClipCollectionToolBarReducer: Reducer {
 private extension ClipCollectionToolBarState {
     func updatingAppearance() -> Self {
         var nextState = self
-        let isEnabled = !parentState.clips.selectedIds().isEmpty
+        // `selectedIds()`だと負荷が大きいため、`_selectedIds`を参照する
+        let isEnabled = !parentState.clips._selectedIds.isEmpty
 
         nextState.isHidden = operation != .selecting
         nextState.items = [
@@ -85,7 +86,8 @@ private extension ClipCollectionToolBarState {
             Item(kind: .changeVisibility, isEnabled: isEnabled),
             Item(kind: .share, isEnabled: isEnabled),
             Item(kind: .delete, isEnabled: isEnabled),
-            Item(kind: .merge, isEnabled: isEnabled && parentState.clips.selectedIds().count > 1)
+            // `selectedIds()`だと負荷が大きいため、`_selectedIds`を参照する
+            Item(kind: .merge, isEnabled: isEnabled && parentState.clips._selectedIds.count > 1)
         ]
 
         return nextState
