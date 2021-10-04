@@ -253,6 +253,14 @@ extension ClipItemInformationInteractiveDismissalAnimator: UIViewControllerInter
             return
         }
 
+        guard let infoViewingClipItem = from.clipItem(self),
+              to.isPreviewing(self, clipItem: infoViewingClipItem) == true
+        else {
+            logger.write(ConsoleLog(level: .debug, message: "Start fallback transition for ClipItemInformationView dismissal", scope: .transition))
+            self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
+            return
+        }
+
         // HACK: Set new frame for updating the view to current orientation.
         to.view.frame = from.view.frame
 

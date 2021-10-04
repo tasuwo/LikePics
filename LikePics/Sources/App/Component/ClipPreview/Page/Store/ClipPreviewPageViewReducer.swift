@@ -268,9 +268,17 @@ extension ClipPreviewPageViewReducer {
                 }
             }
         } else {
-            // 元々フォーカスしていた Clip が存在しなかった場合
-            // 上手く遷移する方法がないため、閉じる
-            nextState.isDismissed = true
+            let previousClipIndex = previousState.currentIndexPath.clipIndex
+            if nextState.clips.indices.contains(previousClipIndex),
+               nextState.filteredClipIds.contains(nextState.clips[previousClipIndex].id)
+            {
+                // 前回の位置に該当するクリップが表示可能だった
+                nextState.currentIndexPath = .init(clipIndex: previousClipIndex, itemIndex: 0)
+                nextState.pageChange = .forward
+            } else {
+                // 前回の位置に該当するクリップが表示不可だった
+                nextState = transitToClip(around: previousClipIndex, state: nextState)
+            }
         }
 
         return (nextState, [Effect(calcStream)])

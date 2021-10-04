@@ -364,6 +364,11 @@ extension ClipItemInformationViewController: UIGestureRecognizerDelegate {
 extension ClipItemInformationViewController: ClipItemInformationPresenting {
     // MARK: - ClipItemInformationPresenting
 
+    func clipItem(_ animator: ClipItemInformationAnimator) -> InfoViewingClipItem? {
+        return .init(clipId: store.stateValue.clipId,
+                     itemId: store.stateValue.itemId)
+    }
+
     func clipInformationView(_ animator: ClipItemInformationAnimator) -> ClipItemInformationView? {
         return informationView
     }

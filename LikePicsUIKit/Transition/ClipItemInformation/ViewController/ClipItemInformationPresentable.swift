@@ -5,6 +5,7 @@
 import UIKit
 
 public protocol ClipItemInformationPresentable {
+    func isPreviewing(_ animator: ClipItemInformationAnimator, clipItem: InfoViewingClipItem) -> Bool
     func previewView(_ animator: ClipItemInformationAnimator) -> ClipPreviewView?
     func baseView(_ animator: ClipItemInformationAnimator) -> UIView?
     func componentsOverBaseView(_ animator: ClipItemInformationAnimator) -> [UIView]

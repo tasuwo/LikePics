@@ -74,6 +74,10 @@ extension ClipPreviewNavigationController: ClipItemListPresentable {
 extension ClipPreviewNavigationController: ClipItemInformationPresentable {
     // MARK: - ClipItemInformationPresentable
 
+    func isPreviewing(_ animator: ClipItemInformationAnimator, clipItem: InfoViewingClipItem) -> Bool {
+        return pageViewController?.isPreviewing(animator, clipItem: clipItem) == true
+    }
+
     func previewView(_ animator: ClipItemInformationAnimator) -> ClipPreviewView? {
         return pageViewController?.previewView(animator)
     }

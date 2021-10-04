@@ -448,6 +448,13 @@ extension ClipPreviewPageViewController: ClipItemListPresentable {
 extension ClipPreviewPageViewController: ClipItemInformationPresentable {
     // MARK: - ClipItemInformationPresentable
 
+    func isPreviewing(_ animator: ClipItemInformationAnimator, clipItem: InfoViewingClipItem) -> Bool {
+        guard let indexPath = store.stateValue.indexPathByClipItemId[clipItem.itemId] else {
+            return false
+        }
+        return store.stateValue.currentIndexPath == indexPath
+    }
+
     func previewView(_ animator: ClipItemInformationAnimator) -> ClipPreviewView? {
         view.layoutIfNeeded()
         return currentViewController?.previewView
