@@ -113,6 +113,7 @@ extension ClipItemListViewController {
             .removeDuplicates(by: {
                 $0.items.filteredOrderedEntities() == $1.items.filteredOrderedEntities()
             })
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
                 guard let self = self else { return }
                 let snapshot = Self.createSnapshot(items: state.items.orderedFilteredEntities())
