@@ -25,9 +25,9 @@ class ClipItemInformationInteractivePresentationAnimator: NSObject {
     private static let fromComponentsStartingAlpha: CGFloat = 1.0
     private static let fromComponentsFinalAlpha: CGFloat = 0.0
 
-    private static let cancelAnimateDuration: TimeInterval = 0.2
-    private static let endAnimateDuration: TimeInterval = 0.2
-    private static let fallbackAnimateDuration: TimeInterval = 0.2
+    private static let cancelAnimateDuration: TimeInterval = 0.15
+    private static let endAnimateDuration: TimeInterval = 0.15
+    private static let fallbackAnimateDuration: TimeInterval = 0.15
 
     private let fallbackAnimator: FadeTransitionAnimatorProtocol
 
@@ -104,7 +104,6 @@ class ClipItemInformationInteractivePresentationAnimator: NSObject {
         // Middle Animation
 
         from.componentsOverBaseView(self).forEach { $0.alpha = Self.calcFromComponentsAlpha(in: from.view, verticalDelta: verticalDelta) }
-        to.view.alpha = Self.calcToViewAlpha(in: from.view, verticalDelta: verticalDelta)
 
         let initialAnchorPoint = CGPoint(x: initialImageFrame.midX, y: initialImageFrame.midY)
         let nextAnchorPoint = CGPoint(x: initialAnchorPoint.x, y: nextMidY)
@@ -169,7 +168,6 @@ class ClipItemInformationInteractivePresentationAnimator: NSObject {
             options: [.curveEaseInOut]
         ) {
             params.innerContext.animatingImageView.frame = params.innerContext.initialImageFrame
-            params.to.view.alpha = 0.0
         }
 
         UIView.animate(
@@ -204,11 +202,10 @@ class ClipItemInformationInteractivePresentationAnimator: NSObject {
         UIView.animate(
             withDuration: Self.endAnimateDuration,
             delay: 0,
-            options: [.curveEaseInOut]
+            options: [.curveEaseOut]
         ) {
             let containerView = params.innerContext.transitionContext.containerView
             params.innerContext.animatingImageView.frame = params.to.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
-            params.to.view.alpha = 1.0
         }
 
         UIView.animate(
@@ -317,8 +314,6 @@ extension ClipItemInformationInteractivePresentationAnimator: UIViewControllerIn
 
             animatingImageView.removeFromSuperview()
         }
-
-        to.view.alpha = 0
 
         let innerContext = InnerContext(
             transitionContext: transitionContext,
