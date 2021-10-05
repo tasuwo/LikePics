@@ -36,6 +36,10 @@ class ClipPreviewNavigationController: UINavigationController {
         setToolbarHidden(false, animated: false)
 
         view.backgroundColor = Asset.Color.background.color
+        if #available(iOS 15.0, *) {
+            // NavigationBarの背景色が透明になるのを避ける
+            navigationBar.scrollEdgeAppearance = UINavigationBarAppearance()
+        }
     }
 }
 
