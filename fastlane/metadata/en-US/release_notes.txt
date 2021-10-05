@@ -1,3 +1,4 @@
-- You can transition between images of different clips by swipe at preview.
-- Fix buttons color on share image view.
-- Fixed some issues
+- Improve rendering performance.
+- Fixed an issue that images saved with wrong file name.
+- Fixed a bug sometimes exists an extra Home view in navigation stack.
+- Fixed minor bugs.
