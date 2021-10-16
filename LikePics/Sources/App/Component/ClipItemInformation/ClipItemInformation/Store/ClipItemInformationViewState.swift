@@ -3,6 +3,7 @@
 //
 
 import Domain
+import Foundation
 
 struct ClipItemInformationViewState: Equatable {
     enum Alert: Equatable {

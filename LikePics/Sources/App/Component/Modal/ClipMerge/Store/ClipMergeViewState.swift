@@ -3,6 +3,7 @@
 //
 
 import Domain
+import Foundation
 
 struct ClipMergeViewState: Equatable {
     enum Alert: Equatable {

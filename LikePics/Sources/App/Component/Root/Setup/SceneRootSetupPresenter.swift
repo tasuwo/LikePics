@@ -4,6 +4,7 @@
 
 import Combine
 import Domain
+import Foundation
 
 protocol SceneRootSetupViewProtocol: AnyObject {
     func startLoading()

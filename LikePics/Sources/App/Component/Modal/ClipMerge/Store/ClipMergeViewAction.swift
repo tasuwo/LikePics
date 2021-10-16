@@ -4,6 +4,7 @@
 
 import Domain
 import ForestKit
+import Foundation
 
 enum ClipMergeViewAction: Action {
     // MARK: View Life-Cycle

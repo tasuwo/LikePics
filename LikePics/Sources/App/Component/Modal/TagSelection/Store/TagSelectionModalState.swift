@@ -4,6 +4,7 @@
 
 import CoreGraphics
 import Domain
+import Foundation
 
 struct TagSelectionModalState: Equatable {
     enum Alert: Equatable {

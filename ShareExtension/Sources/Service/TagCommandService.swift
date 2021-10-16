@@ -4,6 +4,7 @@
 
 import Common
 import Domain
+import Foundation
 
 class TagCommandService {
     private let storage: ReferenceClipStorageProtocol

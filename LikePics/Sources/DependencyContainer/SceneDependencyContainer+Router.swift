@@ -4,6 +4,7 @@
 
 import Common
 import Domain
+import Foundation
 import LikePicsUIKit
 import UIKit
 

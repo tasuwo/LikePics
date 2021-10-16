@@ -5,6 +5,7 @@
 import Combine
 import Domain
 import ForestKit
+import Foundation
 
 typealias ClipItemListDependency = HasClipQueryService
     & HasClipCommandService

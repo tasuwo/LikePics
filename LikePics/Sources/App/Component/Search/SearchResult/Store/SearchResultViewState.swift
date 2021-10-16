@@ -4,6 +4,7 @@
 
 import CoreGraphics
 import Domain
+import Foundation
 
 struct SearchResultViewState: Equatable {
     struct SearchedTokenCandidates: Equatable {

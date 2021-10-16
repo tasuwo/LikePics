@@ -4,6 +4,7 @@
 
 import CoreGraphics
 import Domain
+import Foundation
 
 struct ClipCollectionState: Equatable {
     enum Alert: Equatable {

@@ -3,6 +3,7 @@
 //
 
 import Domain
+import Foundation
 
 extension ClipSearchQuery {
     var displayTitle: String {

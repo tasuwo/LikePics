@@ -9,6 +9,10 @@ let package = Package(
     ],
     products: [
         .library(
+            name: "Domain",
+            targets: ["Domain"]
+        ),
+        .library(
             name: "ForestKit",
             targets: ["ForestKit"]
         ),
@@ -20,6 +24,10 @@ let package = Package(
     dependencies: [],
     targets: [
         .target(
+            name: "Domain",
+            dependencies: ["Common"]
+        ),
+        .target(
             name: "ForestKit",
             dependencies: []
         ),
@@ -27,5 +35,10 @@ let package = Package(
             name: "Common",
             dependencies: []
         ),
+        // TODO:
+        // .testTarget(
+        //     name: "DomainTests",
+        //     dependencies: []
+        // ),
     ]
 )
