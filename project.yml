@@ -257,7 +257,6 @@ targets:
     dependencies:
       - package: LikePicsKit
         product: Common
-      - target: Smoothie
     settings:
       base:
         APPLICATION_EXTENSION_API_ONLY: YES
