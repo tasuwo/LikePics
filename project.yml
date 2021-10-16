@@ -12,7 +12,6 @@ options:
       - LikePicsCore
       - ShareExtension
       - TestHelper
-      - Smoothie
 packages:
   LikePicsKit:
     path: ./LikePicsKit
@@ -245,7 +244,8 @@ targets:
       - path: ShareExtension
     dependencies:
       - target: LikePicsCore
-      - target: Smoothie
+      - package: LikePicsKit
+        product: Smoothie
       - package: LikePicsKit
         product: Persistence
       - package: LikePicsKit
@@ -277,21 +277,6 @@ targets:
           CODE_SIGN_IDENTITY: iPhone Distribution
           PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBox.dev.ShareExtension
           PROVISIONING_PROFILE_SPECIFIER: match AppStore net.tasuwo.TBox.dev.ShareExtension
-  Smoothie:
-    type: framework
-    platform: iOS
-    sources:
-      - path: Smoothie
-    settings:
-      base:
-        APPLICATION_EXTENSION_API_ONLY: YES
-        DEVELOPMENT_TEAM: RY2377PP7S
-        INFOPLIST_FILE: Smoothie/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.Smoothie
-        PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]:
-        PROVISIONING_PROFILE_SPECIFIER:
-        PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
-        SUPPORTS_MACCATALYST: NO
   LikePics:
     type: application
     platform: iOS
@@ -301,7 +286,8 @@ targets:
       - target: ShareExtension
       - target: LikePicsUIKit
       - target: LikePicsCore
-      - target: Smoothie
+      - package: LikePicsKit
+        product: Smoothie
       - package: LikePicsKit
         product: Persistence
       - package: LikePicsKit
@@ -352,7 +338,8 @@ targets:
       - path: LikePicsCore
     dependencies:
       - target: LikePicsUIKit
-      - target: Smoothie
+      - package: LikePicsKit
+        product: Smoothie
       - package: LikePicsKit
         product: Domain
       - package: LikePicsKit
@@ -394,7 +381,8 @@ targets:
     sources:
       - path: LikePicsUIKit
     dependencies:
-      - target: Smoothie
+      - package: LikePicsKit
+        product: Smoothie
       - package: LikePicsKit
         product: Domain
       - package: LikePicsKit

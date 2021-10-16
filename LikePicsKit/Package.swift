@@ -21,6 +21,10 @@ let package = Package(
             targets: ["ForestKit"]
         ),
         .library(
+            name: "Smoothie",
+            targets: ["Smoothie"]
+        ),
+        .library(
             name: "Common",
             targets: ["Common"]
         ),
@@ -44,6 +48,10 @@ let package = Package(
         ),
         .target(
             name: "ForestKit",
+            dependencies: []
+        ),
+        .target(
+            name: "Smoothie",
             dependencies: []
         ),
         .target(
