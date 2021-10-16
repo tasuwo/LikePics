@@ -19,8 +19,9 @@ options:
       - ShareExtension
       - TestHelper
       - Smoothie
-      - ForestKit
 packages:
+  LikePicsKit:
+    path: ./LikePicsKit
   Realm:
     url: https://github.com/realm/realm-cocoa
     exactVersion: 10.15.1
@@ -370,6 +371,7 @@ targets:
       - target: Domain
       - target: Persistence
       - target: LikePicsCore
+      - target: Smoothie
     settings:
       base:
         CODE_SIGN_ENTITLEMENTS: ShareExtension/ShareExtension.entitlements
@@ -410,21 +412,6 @@ targets:
         PROVISIONING_PROFILE_SPECIFIER:
         PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
         SUPPORTS_MACCATALYST: NO
-  ForestKit:
-    type: framework
-    platform: iOS
-    sources:
-      - path: ForestKit
-    settings:
-      base:
-        APPLICATION_EXTENSION_API_ONLY: YES
-        DEVELOPMENT_TEAM: RY2377PP7S
-        INFOPLIST_FILE: ForestKit/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.ForestKit
-        PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]:
-        PROVISIONING_PROFILE_SPECIFIER:
-        PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
-        SUPPORTS_MACCATALYST: NO
   LikePics:
     type: application
     platform: iOS
@@ -438,7 +425,8 @@ targets:
       - target: LikePicsCore
       - target: Common
       - target: Smoothie
-      - target: ForestKit
+      - package: LikePicsKit
+        product: ForestKit
     postbuildScripts:
       - name: Copy App Data
         runOnlyWhenInstalling: false
@@ -483,7 +471,9 @@ targets:
       - target: Domain
       - target: LikePicsUIKit
       - target: Common
-      - target: ForestKit
+      - target: Smoothie
+      - package: LikePicsKit
+        product: ForestKit
       - package: Erik
     settings:
       base:
@@ -520,6 +510,9 @@ targets:
       - path: LikePicsUIKit
     dependencies:
       - target: Domain
+      - target: Smoothie
+      - package: LikePicsKit
+        product: ForestKit
     settings:
       base:
         APPLICATION_EXTENSION_API_ONLY: YES
