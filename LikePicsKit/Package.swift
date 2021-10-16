@@ -12,11 +12,19 @@ let package = Package(
             name: "ForestKit",
             targets: ["ForestKit"]
         ),
+        .library(
+            name: "Common",
+            targets: ["Common"]
+        ),
     ],
     dependencies: [],
     targets: [
         .target(
             name: "ForestKit",
+            dependencies: []
+        ),
+        .target(
+            name: "Common",
             dependencies: []
         ),
     ]

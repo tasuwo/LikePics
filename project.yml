@@ -13,8 +13,6 @@ options:
       - DomainTests
       - Persistence
       - PersistenceTests
-      - Common
-      - CommonTests
       - LikePicsCore
       - ShareExtension
       - TestHelper
@@ -114,7 +112,6 @@ schemes:
         - PersistenceTests
         - DomainTests
         - LikePicsUIKitTests
-        - CommonTests
   LikePicsDev:
     analyze:
       config: DebugDev
@@ -142,7 +139,6 @@ schemes:
         - PersistenceTests
         - DomainTests
         - LikePicsUIKitTests
-        - CommonTests
 settings:
   base:
     APP_VERSION: '2.11'
@@ -253,46 +249,14 @@ settings:
       SWIFT_OPTIMIZATION_LEVEL: -O
       VALIDATE_PRODUCT: YES
 targets:
-  Common:
-    type: framework
-    platform: iOS
-    sources:
-      - path: Common
-    settings:
-      base:
-        APPLICATION_EXTENSION_API_ONLY: YES
-        DEVELOPMENT_TEAM: RY2377PP7S
-        INFOPLIST_FILE: Common/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.Common
-        PROVISIONING_PROFILE_SPECIFIER:
-        PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
-  CommonTests:
-    type: bundle.unit-test
-    platform: iOS
-    sources:
-      - path: CommonTests
-    dependencies:
-      - target: Common
-      - target: LikePics
-      - target: TestHelper
-      - package: Nimble
-      - package: Quick
-    settings:
-      base:
-        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
-        DEVELOPMENT_TEAM: RY2377PP7S
-        INFOPLIST_FILE: CommonTests/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.CommonTests
-        PROVISIONING_PROFILE_SPECIFIER:
-        PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
-        TEST_HOST: $(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics
   Domain:
     type: framework
     platform: iOS
     sources:
       - path: Domain
     dependencies:
-      - target: Common
+      - package: LikePicsKit
+        product: Common
       - target: Smoothie
     settings:
       base:
@@ -329,7 +293,8 @@ targets:
       - path: Persistence
     dependencies:
       - target: Domain
-      - target: Common
+      - package: LikePicsKit
+        product: Common
       - package: Realm
         product: Realm
       - package: Realm
@@ -372,6 +337,8 @@ targets:
       - target: Persistence
       - target: LikePicsCore
       - target: Smoothie
+      - package: LikePicsKit
+        product: Common
     settings:
       base:
         CODE_SIGN_ENTITLEMENTS: ShareExtension/ShareExtension.entitlements
@@ -423,8 +390,9 @@ targets:
       - target: ShareExtension
       - target: LikePicsUIKit
       - target: LikePicsCore
-      - target: Common
       - target: Smoothie
+      - package: LikePicsKit
+        product: Common
       - package: LikePicsKit
         product: ForestKit
     postbuildScripts:
@@ -470,8 +438,9 @@ targets:
     dependencies:
       - target: Domain
       - target: LikePicsUIKit
-      - target: Common
       - target: Smoothie
+      - package: LikePicsKit
+        product: Common
       - package: LikePicsKit
         product: ForestKit
       - package: Erik
@@ -511,6 +480,8 @@ targets:
     dependencies:
       - target: Domain
       - target: Smoothie
+      - package: LikePicsKit
+        product: Common
       - package: LikePicsKit
         product: ForestKit
     settings:
