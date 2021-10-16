@@ -13,6 +13,10 @@ let package = Package(
             targets: ["Domain"]
         ),
         .library(
+            name: "Persistence",
+            targets: ["Persistence"]
+        ),
+        .library(
             name: "ForestKit",
             targets: ["ForestKit"]
         ),
@@ -21,11 +25,22 @@ let package = Package(
             targets: ["Common"]
         ),
     ],
-    dependencies: [],
+    dependencies: [
+        .package(name: "Realm", url: "https://github.com/realm/realm-cocoa", .exact("10.15.1"))
+    ],
     targets: [
         .target(
             name: "Domain",
             dependencies: ["Common"]
+        ),
+        .target(
+            name: "Persistence",
+            dependencies: [
+                "Common",
+                "Domain",
+                .product(name: "Realm", package: "Realm"),
+                .product(name: "RealmSwift", package: "Realm"),
+            ]
         ),
         .target(
             name: "ForestKit",
@@ -38,6 +53,11 @@ let package = Package(
         // TODO:
         // .testTarget(
         //     name: "DomainTests",
+        //     dependencies: []
+        // ),
+        // TODO:
+        // .testTarget(
+        //     name: "PersistenceTests",
         //     dependencies: []
         // ),
     ]

@@ -44,16 +44,6 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "93050D57DB26394862A2A01F"
-               BuildableName = "PersistenceTests.xctest"
-               BlueprintName = "PersistenceTests"
-               ReferencedContainer = "container:LikePics.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "5327A07BF22981F7655B4DD8"
                BuildableName = "LikePicsUIKitTests.xctest"
                BlueprintName = "LikePicsUIKitTests"

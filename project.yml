@@ -9,8 +9,6 @@ options:
       - LikePicsUIKit
       - LikePicsUIKitTests
       - LikePicsUITests
-      - Persistence
-      - PersistenceTests
       - LikePicsCore
       - ShareExtension
       - TestHelper
@@ -18,9 +16,6 @@ options:
 packages:
   LikePicsKit:
     path: ./LikePicsKit
-  Realm:
-    url: https://github.com/realm/realm-cocoa
-    exactVersion: 10.15.1
   Erik:
     url: https://github.com/phimage/Erik
     exactVersion: 5.1.0
@@ -107,7 +102,6 @@ schemes:
       config: Debug
       targets:
         - LikePicsTests
-        - PersistenceTests
         - LikePicsUIKitTests
   LikePicsDev:
     analyze:
@@ -133,7 +127,6 @@ schemes:
       config: DebugDev
       targets:
         - LikePicsTests
-        - PersistenceTests
         - LikePicsUIKitTests
 settings:
   base:
@@ -245,57 +238,16 @@ settings:
       SWIFT_OPTIMIZATION_LEVEL: -O
       VALIDATE_PRODUCT: YES
 targets:
-  Persistence:
-    type: framework
-    platform: iOS
-    sources:
-      - path: Persistence
-    dependencies:
-      - package: LikePicsKit
-        product: Domain
-      - package: LikePicsKit
-        product: Common
-      - package: Realm
-        product: Realm
-      - package: Realm
-        product: RealmSwift
-    settings:
-      base:
-        APPLICATION_EXTENSION_API_ONLY: YES
-        DEVELOPMENT_TEAM: RY2377PP7S
-        INFOPLIST_FILE: Persistence/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.Persistence
-        PROVISIONING_PROFILE_SPECIFIER:
-        SUPPORTS_MACCATALYST: NO
-  PersistenceTests:
-    type: bundle.unit-test
-    platform: iOS
-    sources:
-      - path: PersistenceTests
-    dependencies:
-      - target: Persistence
-      - target: LikePics
-      - target: TestHelper
-      - package: Nimble
-      - package: Quick
-    settings:
-      base:
-        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
-        DEVELOPMENT_TEAM: RY2377PP7S
-        INFOPLIST_FILE: PersistenceTests/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.PersistenceTests
-        PROVISIONING_PROFILE_SPECIFIER:
-        PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
-        TEST_HOST: $(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics
   ShareExtension:
     type: app-extension
     platform: iOS
     sources:
       - path: ShareExtension
     dependencies:
-      - target: Persistence
       - target: LikePicsCore
       - target: Smoothie
+      - package: LikePicsKit
+        product: Persistence
       - package: LikePicsKit
         product: Domain
       - package: LikePicsKit
@@ -346,11 +298,12 @@ targets:
     sources:
       - path: LikePics
     dependencies:
-      - target: Persistence
       - target: ShareExtension
       - target: LikePicsUIKit
       - target: LikePicsCore
       - target: Smoothie
+      - package: LikePicsKit
+        product: Persistence
       - package: LikePicsKit
         product: Domain
       - package: LikePicsKit
@@ -500,7 +453,8 @@ targets:
     sources:
       - path: TestHelper
     dependencies:
-      - target: Persistence
+      - package: LikePicsKit
+        product: Persistence
     settings:
       base:
         DEVELOPMENT_TEAM:
