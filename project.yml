@@ -6,18 +6,12 @@ options:
     - order:
       - LikePics
       - LikePicsTests
-      - LikePicsUIKit
-      - LikePicsUIKitTests
       - LikePicsUITests
-      - LikePicsCore
       - ShareExtension
       - TestHelper
 packages:
   LikePicsKit:
     path: ./LikePicsKit
-  Erik:
-    url: https://github.com/phimage/Erik
-    exactVersion: 5.1.0
   Quick:
     url: https://github.com/Quick/Quick
     exactVersion: 4.0.0
@@ -101,7 +95,6 @@ schemes:
       config: Debug
       targets:
         - LikePicsTests
-        - LikePicsUIKitTests
   LikePicsDev:
     analyze:
       config: DebugDev
@@ -126,7 +119,6 @@ schemes:
       config: DebugDev
       targets:
         - LikePicsTests
-        - LikePicsUIKitTests
 settings:
   base:
     APP_VERSION: '2.11'
@@ -243,7 +235,8 @@ targets:
     sources:
       - path: ShareExtension
     dependencies:
-      - target: LikePicsCore
+      - package: LikePicsKit
+        product: LikePicsCore
       - package: LikePicsKit
         product: Smoothie
       - package: LikePicsKit
@@ -284,8 +277,10 @@ targets:
       - path: LikePics
     dependencies:
       - target: ShareExtension
-      - target: LikePicsUIKit
-      - target: LikePicsCore
+      - package: LikePicsKit
+        product: LikePicsUIKit
+      - package: LikePicsKit
+        product: LikePicsCore
       - package: LikePicsKit
         product: Smoothie
       - package: LikePicsKit
@@ -331,30 +326,6 @@ targets:
           CODE_SIGN_IDENTITY: iPhone Distribution
           PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBox.dev
           PROVISIONING_PROFILE_SPECIFIER: match AppStore net.tasuwo.TBox.dev
-  LikePicsCore:
-    type: framework
-    platform: iOS
-    sources:
-      - path: LikePicsCore
-    dependencies:
-      - target: LikePicsUIKit
-      - package: LikePicsKit
-        product: Smoothie
-      - package: LikePicsKit
-        product: Domain
-      - package: LikePicsKit
-        product: Common
-      - package: LikePicsKit
-        product: ForestKit
-      - package: Erik
-    settings:
-      base:
-        APPLICATION_EXTENSION_API_ONLY: YES
-        DEVELOPMENT_TEAM: RY2377PP7S
-        INFOPLIST_FILE: LikePicsCore/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.LikePicsCore
-        PROVISIONING_PROFILE_SPECIFIER:
-        SUPPORTS_MACCATALYST: NO
   LikePicsTests:
     type: bundle.unit-test
     platform: iOS
@@ -372,48 +343,6 @@ targets:
         DEVELOPMENT_TEAM: RY2377PP7S
         INFOPLIST_FILE: LikePicsTests/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.LikePicsTests
-        PROVISIONING_PROFILE_SPECIFIER:
-        PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
-        TEST_HOST: $(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics
-  LikePicsUIKit:
-    type: framework
-    platform: iOS
-    sources:
-      - path: LikePicsUIKit
-    dependencies:
-      - package: LikePicsKit
-        product: Smoothie
-      - package: LikePicsKit
-        product: Domain
-      - package: LikePicsKit
-        product: Common
-      - package: LikePicsKit
-        product: ForestKit
-    settings:
-      base:
-        APPLICATION_EXTENSION_API_ONLY: YES
-        DEVELOPMENT_TEAM: RY2377PP7S
-        INFOPLIST_FILE: LikePicsUIKit/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.LikePicsUIKit
-        PROVISIONING_PROFILE_SPECIFIER:
-        SUPPORTS_MACCATALYST: NO
-  LikePicsUIKitTests:
-    type: bundle.unit-test
-    platform: iOS
-    sources:
-      - path: LikePicsUIKitTests
-    dependencies:
-      - target: LikePicsUIKit
-      - target: LikePics
-      - target: TestHelper
-      - package: Nimble
-      - package: Quick
-    settings:
-      base:
-        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
-        DEVELOPMENT_TEAM: RY2377PP7S
-        INFOPLIST_FILE: LikePicsUIKitTests/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.LikePicsUIKitTests
         PROVISIONING_PROFILE_SPECIFIER:
         PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
         TEST_HOST: $(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics

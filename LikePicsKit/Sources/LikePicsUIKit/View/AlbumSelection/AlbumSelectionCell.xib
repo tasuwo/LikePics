@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="7Id-WH-VUd" customClass="AlbumSelectionCell" customModule="LikePicsUIKit">
+            <rect key="frame" x="0.0" y="0.0" width="365" height="155"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Hd3-nQ-hV8">
+                <rect key="frame" x="0.0" y="0.0" width="365" height="155"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="Avt-PV-s6M">
+                        <rect key="frame" x="16" y="16" width="333" height="123"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ihv-1D-gbx" userLabel="Thumbnail Container">
+                                <rect key="frame" x="0.0" y="0.0" width="120" height="123"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5xk-7P-2zc">
+                                        <rect key="frame" x="0.0" y="0.0" width="120" height="120"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="5xk-7P-2zc" secondAttribute="height" multiplier="1:1" id="U2P-90-UOn"/>
+                                            <constraint firstAttribute="width" constant="120" id="hzu-f9-gJO"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="5xk-7P-2zc" firstAttribute="top" secondItem="ihv-1D-gbx" secondAttribute="top" id="1hU-dM-t3e"/>
+                                    <constraint firstAttribute="trailing" secondItem="5xk-7P-2zc" secondAttribute="trailing" id="ObM-T7-tVc"/>
+                                    <constraint firstItem="5xk-7P-2zc" firstAttribute="leading" secondItem="ihv-1D-gbx" secondAttribute="leading" id="b5U-gK-Gos"/>
+                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="5xk-7P-2zc" secondAttribute="bottom" id="eZd-G3-Qkp"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ac4-GX-ohp" userLabel="Info Container">
+                                <rect key="frame" x="136" y="0.0" width="197" height="123"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tJM-Zh-IBb">
+                                        <rect key="frame" x="0.0" y="0.0" width="197" height="123"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pua-bk-kDd" userLabel="Title Label">
+                                                <rect key="frame" x="0.0" y="0.0" width="197" height="17"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                <color key="highlightedColor" systemColor="labelColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Count" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2KS-Ov-ROE" userLabel="Count Label">
+                                                <rect key="frame" x="0.0" y="25" width="197" height="16"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <view contentMode="scaleToFill" horizontalHuggingPriority="249" verticalHuggingPriority="249" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="gU5-Gm-ENm" userLabel="Spacer">
+                                                <rect key="frame" x="0.0" y="49" width="197" height="74"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" priority="249" id="y30-Zn-Vy8"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="tJM-Zh-IBb" firstAttribute="top" secondItem="ac4-GX-ohp" secondAttribute="top" id="7I1-uV-bXR"/>
+                                    <constraint firstAttribute="trailing" secondItem="tJM-Zh-IBb" secondAttribute="trailing" id="OUt-we-Pnr"/>
+                                    <constraint firstAttribute="bottom" secondItem="tJM-Zh-IBb" secondAttribute="bottom" id="WWL-Mq-fMM"/>
+                                    <constraint firstItem="tJM-Zh-IBb" firstAttribute="leading" secondItem="ac4-GX-ohp" secondAttribute="leading" id="cmu-Ij-1cC"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="Avt-PV-s6M" secondAttribute="bottom" priority="999" constant="16" id="buf-Hz-Gzy"/>
+                    <constraint firstAttribute="trailing" secondItem="Avt-PV-s6M" secondAttribute="trailing" priority="999" constant="16" id="ky0-HX-GAA"/>
+                    <constraint firstItem="Avt-PV-s6M" firstAttribute="leading" secondItem="Hd3-nQ-hV8" secondAttribute="leading" constant="16" id="lsW-r5-pIM"/>
+                    <constraint firstItem="Avt-PV-s6M" firstAttribute="top" secondItem="Hd3-nQ-hV8" secondAttribute="top" constant="16" id="peP-cj-i4S"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <size key="customSize" width="365" height="155"/>
+            <connections>
+                <outlet property="countLabel" destination="2KS-Ov-ROE" id="vHY-c6-jDS"/>
+                <outlet property="thumbnailImageView" destination="5xk-7P-2zc" id="rhR-g2-bev"/>
+                <outlet property="thumbnailWidthConstraint" destination="hzu-f9-gJO" id="4Lm-CO-O26"/>
+                <outlet property="titleLabel" destination="Pua-bk-kDd" id="OEJ-SC-3qz"/>
+            </connections>
+            <point key="canvasLocation" x="-452.89855072463774" y="148.32589285714286"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

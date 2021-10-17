@@ -17,6 +17,14 @@ let package = Package(
             targets: ["Persistence"]
         ),
         .library(
+            name: "LikePicsCore",
+            targets: ["LikePicsCore"]
+        ),
+        .library(
+            name: "LikePicsUIKit",
+            targets: ["LikePicsUIKit"]
+        ),
+        .library(
             name: "ForestKit",
             targets: ["ForestKit"]
         ),
@@ -30,7 +38,8 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(name: "Realm", url: "https://github.com/realm/realm-cocoa", .exact("10.15.1"))
+        .package(name: "Realm", url: "https://github.com/realm/realm-cocoa", .exact("10.15.1")),
+        .package(name: "Erik", url: "https://github.com/phimage/Erik", .exact("5.1.0"))
     ],
     targets: [
         .target(
@@ -44,6 +53,26 @@ let package = Package(
                 "Domain",
                 .product(name: "Realm", package: "Realm"),
                 .product(name: "RealmSwift", package: "Realm"),
+            ]
+        ),
+        .target(
+            name: "LikePicsCore",
+            dependencies: [
+                "LikePicsUIKit",
+                "Smoothie",
+                "Domain",
+                "Common",
+                "ForestKit",
+                .product(name: "Erik", package: "Erik")
+            ]
+        ),
+        .target(
+            name: "LikePicsUIKit",
+            dependencies: [
+                "Smoothie",
+                "Domain",
+                "Common",
+                "ForestKit",
             ]
         ),
         .target(

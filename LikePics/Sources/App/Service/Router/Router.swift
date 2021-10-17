@@ -3,6 +3,7 @@
 //
 
 import Domain
+import Foundation
 import LikePicsUIKit
 
 protocol Router {

@@ -14,7 +14,7 @@ import Quick
 
 class ClipStorageSpec: QuickSpec {
     func coreDataStack() -> NSPersistentContainer {
-        let bundle = Bundle(for: PersistentContainerLoader.Class.self)
+        let bundle = Bundle.module
         guard let url = bundle.url(forResource: "Model", withExtension: "momd"),
               let model = NSManagedObjectModel(contentsOf: url)
         else {

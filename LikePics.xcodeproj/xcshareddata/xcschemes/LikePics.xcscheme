@@ -40,16 +40,6 @@
                ReferencedContainer = "container:LikePics.xcodeproj">
             </BuildableReference>
          </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5327A07BF22981F7655B4DD8"
-               BuildableName = "LikePicsUIKitTests.xctest"
-               BlueprintName = "LikePicsUIKitTests"
-               ReferencedContainer = "container:LikePics.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference

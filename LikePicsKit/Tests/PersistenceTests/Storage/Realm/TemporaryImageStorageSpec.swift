@@ -18,7 +18,7 @@ class TemporaryImageStorageSpec: QuickSpec {
 
     override func spec() {
         var storage: TemporaryImageStorage!
-        let sampleImage = UIImage(named: "SampleImageBlack", in: Bundle(for: Self.self), with: nil)!
+        let sampleImage = UIImage(named: "SampleImageBlack", in: Bundle.module, with: nil)!
         let sampleClipId = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6111")!
         let expectedClipDirectoryUrl = Self.testDirectory
             .appendingPathComponent("E621E1F8-C36C-495A-93FC-0C247A3E6111", isDirectory: true)
