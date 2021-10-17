@@ -5,19 +5,11 @@ options:
   groupOrdering:
     - order:
       - LikePics
-      - LikePicsTests
       - LikePicsUITests
       - ShareExtension
-      - TestHelper
 packages:
   LikePicsKit:
     path: ./LikePicsKit
-  Quick:
-    url: https://github.com/Quick/Quick
-    exactVersion: 4.0.0
-  Nimble:
-    url: https://github.com/Quick/Nimble
-    exactVersion: 9.2.1
 attributes:
   ORGANIZATIONNAME: Tasuku Tozawa
 configs:
@@ -94,7 +86,6 @@ schemes:
     test:
       config: Debug
       targets:
-        - LikePicsTests
   LikePicsDev:
     analyze:
       config: DebugDev
@@ -118,7 +109,6 @@ schemes:
     test:
       config: DebugDev
       targets:
-        - LikePicsTests
 settings:
   base:
     APP_VERSION: '2.11'
@@ -326,26 +316,6 @@ targets:
           CODE_SIGN_IDENTITY: iPhone Distribution
           PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TBox.dev
           PROVISIONING_PROFILE_SPECIFIER: match AppStore net.tasuwo.TBox.dev
-  LikePicsTests:
-    type: bundle.unit-test
-    platform: iOS
-    sources:
-      - path: LikePicsTests
-    dependencies:
-      - target: LikePics
-      - target: TestHelper
-      - package: Nimble
-      - package: Quick
-    settings:
-      base:
-        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
-        BUNDLE_LOADER: $(TEST_HOST)
-        DEVELOPMENT_TEAM: RY2377PP7S
-        INFOPLIST_FILE: LikePicsTests/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.LikePicsTests
-        PROVISIONING_PROFILE_SPECIFIER:
-        PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
-        TEST_HOST: $(BUILT_PRODUCTS_DIR)/LikePics.app/LikePics
   LikePicsUITests:
     type: bundle.ui-testing
     platform: iOS
@@ -353,9 +323,8 @@ targets:
       - path: LikePicsUITests
     dependencies:
       - target: LikePics
-      - target: TestHelper
-      - package: Nimble
-      - package: Quick
+      - package: LikePicsKit
+        product: TestHelper
     settings:
       base:
         DEVELOPMENT_TEAM:
@@ -364,18 +333,3 @@ targets:
         PROVISIONING_PROFILE_SPECIFIER:
         PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:
         TEST_TARGET_NAME: LikePics
-  TestHelper:
-    type: framework
-    platform: iOS
-    sources:
-      - path: TestHelper
-    dependencies:
-      - package: LikePicsKit
-        product: Persistence
-    settings:
-      base:
-        DEVELOPMENT_TEAM:
-        INFOPLIST_FILE: TestHelper/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: net.tasuwo.TestHelper
-        PROVISIONING_PROFILE_SPECIFIER:
-        PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]:

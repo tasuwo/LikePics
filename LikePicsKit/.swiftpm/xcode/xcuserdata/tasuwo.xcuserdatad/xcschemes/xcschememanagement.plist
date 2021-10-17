@@ -7,37 +7,209 @@
 		<key>Common.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>6</integer>
+			<integer>1</integer>
 		</dict>
 		<key>Domain.xcscheme_^#shared#^_</key>
 		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>DomainTests.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>25</integer>
+		</dict>
+		<key>FileKit (Playground) 1.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>9</integer>
+		</dict>
+		<key>FileKit (Playground) 2.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>10</integer>
+		</dict>
+		<key>FileKit (Playground) 3.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>14</integer>
+		</dict>
+		<key>FileKit (Playground) 4.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>15</integer>
+		</dict>
+		<key>FileKit (Playground) 5.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>16</integer>
+		</dict>
+		<key>FileKit (Playground).xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
 			<key>orderHint</key>
 			<integer>8</integer>
 		</dict>
 		<key>ForestKit.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>4</integer>
+			<integer>3</integer>
+		</dict>
+		<key>GettingStarted (Playground) 1.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>12</integer>
+		</dict>
+		<key>GettingStarted (Playground) 2.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>13</integer>
+		</dict>
+		<key>GettingStarted (Playground) 3.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>17</integer>
+		</dict>
+		<key>GettingStarted (Playground) 4.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>18</integer>
+		</dict>
+		<key>GettingStarted (Playground) 5.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>19</integer>
+		</dict>
+		<key>GettingStarted (Playground).xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>11</integer>
 		</dict>
 		<key>LikePicsCore.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>10</integer>
+			<integer>4</integer>
+		</dict>
+		<key>LikePicsKit-Package.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>0</integer>
 		</dict>
 		<key>LikePicsUIKit.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>11</integer>
+			<integer>5</integer>
 		</dict>
 		<key>Persistence.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>7</integer>
+			<integer>6</integer>
+		</dict>
+		<key>PersistenceTests.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>22</integer>
 		</dict>
 		<key>Smoothie.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>9</integer>
+			<integer>7</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>Common</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>Domain</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DomainTests</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>ForestKit</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>LikePicsCore</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>LikePicsKit_LikePicsCore</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>LikePicsKit_LikePicsUIKit</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>LikePicsKit_Persistence</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>LikePicsKit_PersistenceTests</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>LikePicsUIKit</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>Persistence</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>PersistenceTests</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>Smoothie</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>TestHelper</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

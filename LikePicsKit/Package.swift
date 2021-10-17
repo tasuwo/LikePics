@@ -39,7 +39,9 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "Realm", url: "https://github.com/realm/realm-cocoa", .exact("10.15.1")),
-        .package(name: "Erik", url: "https://github.com/phimage/Erik", .exact("5.1.0"))
+        .package(name: "Erik", url: "https://github.com/phimage/Erik", .exact("5.1.0")),
+        .package(name: "Quick", url: "https://github.com/Quick/Quick", .exact("4.0.0")),
+        .package(name: "Nimble", url: "https://github.com/Quick/Nimble", .exact("9.2.1"))
     ],
     targets: [
         .target(
@@ -87,15 +89,33 @@ let package = Package(
             name: "Common",
             dependencies: []
         ),
-        // TODO:
-        // .testTarget(
-        //     name: "DomainTests",
-        //     dependencies: []
-        // ),
-        // TODO:
-        // .testTarget(
-        //     name: "PersistenceTests",
-        //     dependencies: []
-        // ),
+        .target(
+            name: "TestHelper",
+            dependencies: [
+                "Persistence",
+                "LikePicsUIKit"
+            ]
+        ),
+        .testTarget(
+            name: "DomainTests",
+            dependencies: [
+                "Domain",
+                "TestHelper",
+                .product(name: "Quick", package: "Quick"),
+                .product(name: "Nimble", package: "Nimble")
+            ]
+        ),
+        .testTarget(
+            name: "PersistenceTests",
+            dependencies: [
+                "Persistence",
+                "TestHelper",
+                .product(name: "Quick", package: "Quick"),
+                .product(name: "Nimble", package: "Nimble")
+            ],
+            resources: [
+                .process("Resources/")
+            ]
+        ),
     ]
 )
