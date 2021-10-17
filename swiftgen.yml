@@ -5,15 +5,15 @@ strings:
         - templateName: structured-swift5
           output: LikePics/Sources/Generated/String.swift
     - inputs:
-        - LikePicsCore/Resources/ja.lproj
+        - LikePicsKit/Sources/LikePicsCore/Resources/ja.lproj
       outputs:
         - templateName: structured-swift5
-          output: LikePicsCore/Sources/Generated/String.swift
+          output: LikePicsKit/Sources/LikePicsCore/Sources/Generated/String.swift
     - inputs:
-        - LikePicsUIKit/Resources/ja.lproj
+        - LikePicsKit/Sources/LikePicsUIKit/Resources/ja.lproj
       outputs:
         - templateName: structured-swift5
-          output: LikePicsUIKit/Generated/String.swift
+          output: LikePicsKit/Sources/LikePicsUIKit/Generated/String.swift
     - inputs:
         - ShareExtension/Resources/ja.lproj
       outputs:
@@ -21,10 +21,10 @@ strings:
           output: ShareExtension/Sources/Generated/String.swift
 xcassets:
     - inputs:
-        - LikePicsUIKit/Resources/Assets.xcassets
+        - LikePicsKit/Sources/LikePicsUIKit/Resources/Assets.xcassets
       outputs:
         - templateName: swift5
-          output: LikePicsUIKit/Generated/AssetCatalog.swift
+          output: LikePicsKit/Sources/LikePicsUIKit/Generated/AssetCatalog.swift
           params:
             forceProvidesNamespaces: true
             publicAccess: true

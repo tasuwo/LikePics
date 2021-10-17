@@ -24,39 +24,39 @@ sourcery_generate: ## Sourceryによるモック自動生成を行う
 		"https://raw.githubusercontent.com/tasuwo/SwiftTemplates/master/Templates/AutoDefaultValue.extension.swifttemplate"; \
 	fi
 	./Pods/Sourcery/bin/sourcery \
-		--sources ./Domain \
+		--sources ./LikePicsKit/Sources/Domain \
 		--templates ./templates \
-		--output ./TestHelper/Mocks/Struct/Domain.AutoDefaultValue.generated.swift \
+		--output ./LikePicsKit/Sources/TestHelper/Mocks/Struct/Domain.AutoDefaultValue.generated.swift \
 		--args testable_import=Domain
 	./Pods/Sourcery/bin/sourcery \
-		--sources ./Persistence \
+		--sources ./LikePicsKit/Sources/Persistence \
 		--templates ./templates \
-		--output ./TestHelper/Mocks/Struct/Persistence.AutoDefaultValue.generated.swift \
+		--output ./LikePicsKit/Sources/TestHelper/Mocks/Struct/Persistence.AutoDefaultValue.generated.swift \
 		--args testable_import=Persistence
 	./Pods/Sourcery/bin/sourcery \
-		--sources ./LikePicsUIKit \
+		--sources ./LikePicsKit/Sources/LikePicsUIKit \
 		--templates ./templates \
-		--output ./TestHelper/Mocks/Struct/LikePicsUIKit.AutoDefaultValue.generated.swift \
+		--output ./LikePicsKit/Sources/TestHelper/Mocks/Struct/LikePicsUIKit.AutoDefaultValue.generated.swift \
 		--args testable_import=LikePicsUIKit
 
 .PHONY: mockolo_generate
 mockolo_generate: ## mockoloによるモック自動生成を行う
 	cd BuildTools; \
 	./mockolo \
-		--sourcedirs ../Persistence \
-		--destination ../TestHelper/Mocks/Protocol/Persistence.ProtocolMocks.swift \
+		--sourcedirs ../LikePicsKit/Sources/Persistence \
+		--destination ../LikePicsKit/Sources/TestHelper/Mocks/Protocol/Persistence.ProtocolMocks.swift \
 		--testable-imports Persistence; \
 	./mockolo \
-		--sourcedirs ../Domain \
-		--destination ../TestHelper/Mocks/Protocol/Domain.ProtocolMocks.swift \
+		--sourcedirs ../LikePicsKit/Sources/Domain \
+		--destination ../LikePicsKit/Sources/TestHelper/Mocks/Protocol/Domain.ProtocolMocks.swift \
 		--testable-imports Domain; \
 	./mockolo \
-		--sourcedirs ../LikePicsUIKit \
-		--destination ../TestHelper/Mocks/Protocol/LikePicsUIKit.ProtocolMocks.swift \
+		--sourcedirs ../LikePicsKit/Sources/LikePicsUIKit \
+		--destination ../LikePicsKit/Sources/TestHelper/Mocks/Protocol/LikePicsUIKit.ProtocolMocks.swift \
 		--testable-imports LikePicsUIKit; \
 	./mockolo \
-		--sourcedirs ../Common \
-		--destination ../TestHelper/Mocks/Protocol/Common.ProtocolMocks.swift \
+		--sourcedirs ../LikePicsKit/Sources/Common \
+		--destination ../LikePicsKit/Sources/TestHelper/Mocks/Protocol/Common.ProtocolMocks.swift \
 		--testable-imports Common;
 
 .PHONY: lint

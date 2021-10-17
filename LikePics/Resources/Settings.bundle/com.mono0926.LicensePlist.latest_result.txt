@@ -26,13 +26,21 @@ name: SwiftLint, nameSpecified:
 body: The MIT License (MIT…
 version: 0.44.0
 
-name: BrightFutures, nameSpecified: , owner: Thomvis, version: 8.1.0
+name: BrightFutures, nameSpecified: BrightFutures, owner: Thomvis, version: 8.1.0
 
-name: Erik, nameSpecified: , owner: phimage, version: 5.1.0
+name: CwlCatchException, nameSpecified: CwlCatchException, owner: mattgallagher, version: 2.1.0
 
-name: Kanna, nameSpecified: , owner: tid-kijyun, version: 5.2.6
+name: CwlPreconditionTesting, nameSpecified: CwlPreconditionTesting, owner: mattgallagher, version: 2.0.1
 
-name: realm-cocoa, nameSpecified: , owner: realm, version: v10.7.5
+name: Erik, nameSpecified: Erik, owner: phimage, version: 5.1.0
+
+name: FileKit, nameSpecified: FileKit, owner: nvzqz, version: 6.0.0
+
+name: Kanna, nameSpecified: Kanna, owner: tid-kijyun, version: 5.2.7
+
+name: realm-cocoa, nameSpecified: Realm, owner: realm, version: 10.15.1
+
+name: realm-core, nameSpecified: RealmDatabase, owner: realm, version: 11.4.1
 
 add-version-numbers: false
 

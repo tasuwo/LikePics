@@ -5,7 +5,721 @@
 import Combine
 import Common
 @testable import Domain
-import Smoothie
+import Foundation
+
+public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
+    public init() { }
+
+    public private(set) var searchClipsCallCount = 0
+    public var searchClipsHandler: ((ClipSearchQuery) -> (Result<[Clip], ClipStorageError>))?
+    public func searchClips(query: ClipSearchQuery) -> Result<[Clip], ClipStorageError> {
+        searchClipsCallCount += 1
+        if let searchClipsHandler = searchClipsHandler {
+            return searchClipsHandler(query)
+        }
+        fatalError("searchClipsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var searchAlbumsCallCount = 0
+    public var searchAlbumsHandler: ((String, Bool, Int) -> (Result<[Album], ClipStorageError>))?
+    public func searchAlbums(containingTitle title: String, includesHiddenItems: Bool, limit: Int) -> Result<[Album], ClipStorageError> {
+        searchAlbumsCallCount += 1
+        if let searchAlbumsHandler = searchAlbumsHandler {
+            return searchAlbumsHandler(title, includesHiddenItems, limit)
+        }
+        fatalError("searchAlbumsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var searchTagsCallCount = 0
+    public var searchTagsHandler: ((String, Bool, Int) -> (Result<[Tag], ClipStorageError>))?
+    public func searchTags(containingName name: String, includesHiddenItems: Bool, limit: Int) -> Result<[Tag], ClipStorageError> {
+        searchTagsCallCount += 1
+        if let searchTagsHandler = searchTagsHandler {
+            return searchTagsHandler(name, includesHiddenItems, limit)
+        }
+        fatalError("searchTagsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var readClipAndTagsCallCount = 0
+    public var readClipAndTagsHandler: (([Clip.Identity]) -> (Result<([Clip], [Tag]), ClipStorageError>))?
+    public func readClipAndTags(for clipIds: [Clip.Identity]) -> Result<([Clip], [Tag]), ClipStorageError> {
+        readClipAndTagsCallCount += 1
+        if let readClipAndTagsHandler = readClipAndTagsHandler {
+            return readClipAndTagsHandler(clipIds)
+        }
+        fatalError("readClipAndTagsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var queryClipCallCount = 0
+    public var queryClipHandler: ((Clip.Identity) -> (Result<ClipQuery, ClipStorageError>))?
+    public func queryClip(having id: Clip.Identity) -> Result<ClipQuery, ClipStorageError> {
+        queryClipCallCount += 1
+        if let queryClipHandler = queryClipHandler {
+            return queryClipHandler(id)
+        }
+        fatalError("queryClipHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var queryClipItemsCallCount = 0
+    public var queryClipItemsHandler: ((Clip.Identity) -> (Result<ClipItemListQuery, ClipStorageError>))?
+    public func queryClipItems(inClipHaving id: Clip.Identity) -> Result<ClipItemListQuery, ClipStorageError> {
+        queryClipItemsCallCount += 1
+        if let queryClipItemsHandler = queryClipItemsHandler {
+            return queryClipItemsHandler(id)
+        }
+        fatalError("queryClipItemsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var queryClipItemCallCount = 0
+    public var queryClipItemHandler: ((ClipItem.Identity) -> (Result<ClipItemQuery, ClipStorageError>))?
+    public func queryClipItem(having id: ClipItem.Identity) -> Result<ClipItemQuery, ClipStorageError> {
+        queryClipItemCallCount += 1
+        if let queryClipItemHandler = queryClipItemHandler {
+            return queryClipItemHandler(id)
+        }
+        fatalError("queryClipItemHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var queryAllClipsCallCount = 0
+    public var queryAllClipsHandler: (() -> (Result<ClipListQuery, ClipStorageError>))?
+    public func queryAllClips() -> Result<ClipListQuery, ClipStorageError> {
+        queryAllClipsCallCount += 1
+        if let queryAllClipsHandler = queryAllClipsHandler {
+            return queryAllClipsHandler()
+        }
+        fatalError("queryAllClipsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var queryAllListingClipsCallCount = 0
+    public var queryAllListingClipsHandler: (() -> (Result<ListingClipListQuery, ClipStorageError>))?
+    public func queryAllListingClips() -> Result<ListingClipListQuery, ClipStorageError> {
+        queryAllListingClipsCallCount += 1
+        if let queryAllListingClipsHandler = queryAllListingClipsHandler {
+            return queryAllListingClipsHandler()
+        }
+        fatalError("queryAllListingClipsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var queryUncategorizedClipsCallCount = 0
+    public var queryUncategorizedClipsHandler: (() -> (Result<ClipListQuery, ClipStorageError>))?
+    public func queryUncategorizedClips() -> Result<ClipListQuery, ClipStorageError> {
+        queryUncategorizedClipsCallCount += 1
+        if let queryUncategorizedClipsHandler = queryUncategorizedClipsHandler {
+            return queryUncategorizedClipsHandler()
+        }
+        fatalError("queryUncategorizedClipsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var queryTagsCallCount = 0
+    public var queryTagsHandler: ((Clip.Identity) -> (Result<TagListQuery, ClipStorageError>))?
+    public func queryTags(forClipHaving clipId: Clip.Identity) -> Result<TagListQuery, ClipStorageError> {
+        queryTagsCallCount += 1
+        if let queryTagsHandler = queryTagsHandler {
+            return queryTagsHandler(clipId)
+        }
+        fatalError("queryTagsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var queryClipsCallCount = 0
+    public var queryClipsHandler: ((ClipSearchQuery) -> (Result<ClipListQuery, ClipStorageError>))?
+    public func queryClips(query: ClipSearchQuery) -> Result<ClipListQuery, ClipStorageError> {
+        queryClipsCallCount += 1
+        if let queryClipsHandler = queryClipsHandler {
+            return queryClipsHandler(query)
+        }
+        fatalError("queryClipsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var queryClipsTaggedCallCount = 0
+    public var queryClipsTaggedHandler: ((Tag) -> (Result<ClipListQuery, ClipStorageError>))?
+    public func queryClips(tagged tag: Tag) -> Result<ClipListQuery, ClipStorageError> {
+        queryClipsTaggedCallCount += 1
+        if let queryClipsTaggedHandler = queryClipsTaggedHandler {
+            return queryClipsTaggedHandler(tag)
+        }
+        fatalError("queryClipsTaggedHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var queryClipsTaggedTagIdentityCallCount = 0
+    public var queryClipsTaggedTagIdentityHandler: ((Tag.Identity) -> (Result<ClipListQuery, ClipStorageError>))?
+    public func queryClips(tagged tagId: Tag.Identity) -> Result<ClipListQuery, ClipStorageError> {
+        queryClipsTaggedTagIdentityCallCount += 1
+        if let queryClipsTaggedTagIdentityHandler = queryClipsTaggedTagIdentityHandler {
+            return queryClipsTaggedTagIdentityHandler(tagId)
+        }
+        fatalError("queryClipsTaggedTagIdentityHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var queryAlbumCallCount = 0
+    public var queryAlbumHandler: ((Album.Identity) -> (Result<AlbumQuery, ClipStorageError>))?
+    public func queryAlbum(having id: Album.Identity) -> Result<AlbumQuery, ClipStorageError> {
+        queryAlbumCallCount += 1
+        if let queryAlbumHandler = queryAlbumHandler {
+            return queryAlbumHandler(id)
+        }
+        fatalError("queryAlbumHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var queryAlbumsCallCount = 0
+    public var queryAlbumsHandler: ((Clip.Identity) -> (Result<ListingAlbumListQuery, ClipStorageError>))?
+    public func queryAlbums(containingClipHavingClipId id: Clip.Identity) -> Result<ListingAlbumListQuery, ClipStorageError> {
+        queryAlbumsCallCount += 1
+        if let queryAlbumsHandler = queryAlbumsHandler {
+            return queryAlbumsHandler(id)
+        }
+        fatalError("queryAlbumsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var queryAllAlbumsCallCount = 0
+    public var queryAllAlbumsHandler: (() -> (Result<AlbumListQuery, ClipStorageError>))?
+    public func queryAllAlbums() -> Result<AlbumListQuery, ClipStorageError> {
+        queryAllAlbumsCallCount += 1
+        if let queryAllAlbumsHandler = queryAllAlbumsHandler {
+            return queryAllAlbumsHandler()
+        }
+        fatalError("queryAllAlbumsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var queryAllTagsCallCount = 0
+    public var queryAllTagsHandler: (() -> (Result<TagListQuery, ClipStorageError>))?
+    public func queryAllTags() -> Result<TagListQuery, ClipStorageError> {
+        queryAllTagsCallCount += 1
+        if let queryAllTagsHandler = queryAllTagsHandler {
+            return queryAllTagsHandler()
+        }
+        fatalError("queryAllTagsHandler returns can't have a default value thus its handler must be set")
+    }
+}
+
+public class ClipReferencesIntegrityValidationServiceProtocolMock: ClipReferencesIntegrityValidationServiceProtocol {
+    public init() { }
+
+    public private(set) var validateAndFixIntegrityIfNeededCallCount = 0
+    public var validateAndFixIntegrityIfNeededHandler: (() -> Void)?
+    public func validateAndFixIntegrityIfNeeded() {
+        validateAndFixIntegrityIfNeededCallCount += 1
+        if let validateAndFixIntegrityIfNeededHandler = validateAndFixIntegrityIfNeededHandler {
+            validateAndFixIntegrityIfNeededHandler()
+        }
+    }
+}
+
+public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
+    public init() { }
+    public init(isInTransaction: Bool = false) {
+        self.isInTransaction = isInTransaction
+    }
+
+    public private(set) var isInTransactionSetCallCount = 0
+    public var isInTransaction: Bool = false { didSet { isInTransactionSetCallCount += 1 } }
+
+    public private(set) var beginTransactionCallCount = 0
+    public var beginTransactionHandler: (() throws -> Void)?
+    public func beginTransaction() throws {
+        beginTransactionCallCount += 1
+        if let beginTransactionHandler = beginTransactionHandler {
+            try beginTransactionHandler()
+        }
+    }
+
+    public private(set) var commitTransactionCallCount = 0
+    public var commitTransactionHandler: (() throws -> Void)?
+    public func commitTransaction() throws {
+        commitTransactionCallCount += 1
+        if let commitTransactionHandler = commitTransactionHandler {
+            try commitTransactionHandler()
+        }
+    }
+
+    public private(set) var cancelTransactionIfNeededCallCount = 0
+    public var cancelTransactionIfNeededHandler: (() throws -> Void)?
+    public func cancelTransactionIfNeeded() throws {
+        cancelTransactionIfNeededCallCount += 1
+        if let cancelTransactionIfNeededHandler = cancelTransactionIfNeededHandler {
+            try cancelTransactionIfNeededHandler()
+        }
+    }
+
+    public private(set) var readAllDirtyTagsCallCount = 0
+    public var readAllDirtyTagsHandler: (() -> (Result<[ReferenceTag], ClipStorageError>))?
+    public func readAllDirtyTags() -> Result<[ReferenceTag], ClipStorageError> {
+        readAllDirtyTagsCallCount += 1
+        if let readAllDirtyTagsHandler = readAllDirtyTagsHandler {
+            return readAllDirtyTagsHandler()
+        }
+        fatalError("readAllDirtyTagsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var readAllTagsCallCount = 0
+    public var readAllTagsHandler: (() -> (Result<[ReferenceTag], ClipStorageError>))?
+    public func readAllTags() -> Result<[ReferenceTag], ClipStorageError> {
+        readAllTagsCallCount += 1
+        if let readAllTagsHandler = readAllTagsHandler {
+            return readAllTagsHandler()
+        }
+        fatalError("readAllTagsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var createCallCount = 0
+    public var createHandler: ((ReferenceTag) -> (Result<Void, ClipStorageError>))?
+    public func create(tag: ReferenceTag) -> Result<Void, ClipStorageError> {
+        createCallCount += 1
+        if let createHandler = createHandler {
+            return createHandler(tag)
+        }
+        fatalError("createHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var updateTagCallCount = 0
+    public var updateTagHandler: ((ReferenceTag.Identity, String) -> (Result<Void, ClipStorageError>))?
+    public func updateTag(having id: ReferenceTag.Identity, nameTo name: String) -> Result<Void, ClipStorageError> {
+        updateTagCallCount += 1
+        if let updateTagHandler = updateTagHandler {
+            return updateTagHandler(id, name)
+        }
+        fatalError("updateTagHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var updateTagHavingCallCount = 0
+    public var updateTagHavingHandler: ((ReferenceTag.Identity, Bool) -> (Result<Void, ClipStorageError>))?
+    public func updateTag(having id: ReferenceTag.Identity, byHiding isHidden: Bool) -> Result<Void, ClipStorageError> {
+        updateTagHavingCallCount += 1
+        if let updateTagHavingHandler = updateTagHavingHandler {
+            return updateTagHavingHandler(id, isHidden)
+        }
+        fatalError("updateTagHavingHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var updateTagsCallCount = 0
+    public var updateTagsHandler: (([ReferenceTag.Identity], Bool) -> (Result<Void, ClipStorageError>))?
+    public func updateTags(having ids: [ReferenceTag.Identity], toDirty isDirty: Bool) -> Result<Void, ClipStorageError> {
+        updateTagsCallCount += 1
+        if let updateTagsHandler = updateTagsHandler {
+            return updateTagsHandler(ids, isDirty)
+        }
+        fatalError("updateTagsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var deleteTagsCallCount = 0
+    public var deleteTagsHandler: (([ReferenceTag.Identity]) -> (Result<Void, ClipStorageError>))?
+    public func deleteTags(having ids: [ReferenceTag.Identity]) -> Result<Void, ClipStorageError> {
+        deleteTagsCallCount += 1
+        if let deleteTagsHandler = deleteTagsHandler {
+            return deleteTagsHandler(ids)
+        }
+        fatalError("deleteTagsHandler returns can't have a default value thus its handler must be set")
+    }
+}
+
+public class StorageCommandQueueMock: StorageCommandQueue {
+    public init() { }
+
+    public private(set) var syncCallCount = 0
+    public var syncHandler: ((@escaping () -> Any) -> (Any))?
+    public func sync<T>(_ block: @escaping () -> T) -> T {
+        syncCallCount += 1
+        if let syncHandler = syncHandler {
+            return syncHandler(block) as! T
+        }
+        fatalError("syncHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var syncBlockCallCount = 0
+    public var syncBlockHandler: ((@escaping () throws -> Any) throws -> (Any))?
+    public func sync<T>(_ block: @escaping () throws -> T) throws -> T {
+        syncBlockCallCount += 1
+        if let syncBlockHandler = syncBlockHandler {
+            return try syncBlockHandler(block) as! T
+        }
+        fatalError("syncBlockHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var asyncCallCount = 0
+    public var asyncHandler: ((@escaping () -> Void) -> Void)?
+    public func async(_ block: @escaping () -> Void) {
+        asyncCallCount += 1
+        if let asyncHandler = asyncHandler {
+            asyncHandler(block)
+        }
+    }
+}
+
+public class TemporariesPersistServiceObserverMock: TemporariesPersistServiceObserver {
+    public init() { }
+
+    public private(set) var temporariesPersistServiceCallCount = 0
+    public var temporariesPersistServiceHandler: ((TemporariesPersistService, Int, Int) -> Void)?
+    public func temporariesPersistService(_ service: TemporariesPersistService, didStartThe index: Int, outOf count: Int) {
+        temporariesPersistServiceCallCount += 1
+        if let temporariesPersistServiceHandler = temporariesPersistServiceHandler {
+            temporariesPersistServiceHandler(service, index, count)
+        }
+    }
+}
+
+public class TemporaryClipCommandServiceProtocolMock: TemporaryClipCommandServiceProtocol {
+    public init() { }
+
+    public private(set) var createCallCount = 0
+    public var createHandler: ((ClipRecipe, [ImageContainer], Bool) -> (Result<Clip.Identity, ClipStorageError>))?
+    public func create(clip: ClipRecipe, withContainers containers: [ImageContainer], forced: Bool) -> Result<Clip.Identity, ClipStorageError> {
+        createCallCount += 1
+        if let createHandler = createHandler {
+            return createHandler(clip, containers, forced)
+        }
+        fatalError("createHandler returns can't have a default value thus its handler must be set")
+    }
+}
+
+public class TemporaryClipStorageProtocolMock: TemporaryClipStorageProtocol {
+    public init() { }
+    public init(isInTransaction: Bool = false) {
+        self.isInTransaction = isInTransaction
+    }
+
+    public private(set) var isInTransactionSetCallCount = 0
+    public var isInTransaction: Bool = false { didSet { isInTransactionSetCallCount += 1 } }
+
+    public private(set) var beginTransactionCallCount = 0
+    public var beginTransactionHandler: (() throws -> Void)?
+    public func beginTransaction() throws {
+        beginTransactionCallCount += 1
+        if let beginTransactionHandler = beginTransactionHandler {
+            try beginTransactionHandler()
+        }
+    }
+
+    public private(set) var commitTransactionCallCount = 0
+    public var commitTransactionHandler: (() throws -> Void)?
+    public func commitTransaction() throws {
+        commitTransactionCallCount += 1
+        if let commitTransactionHandler = commitTransactionHandler {
+            try commitTransactionHandler()
+        }
+    }
+
+    public private(set) var cancelTransactionIfNeededCallCount = 0
+    public var cancelTransactionIfNeededHandler: (() throws -> Void)?
+    public func cancelTransactionIfNeeded() throws {
+        cancelTransactionIfNeededCallCount += 1
+        if let cancelTransactionIfNeededHandler = cancelTransactionIfNeededHandler {
+            try cancelTransactionIfNeededHandler()
+        }
+    }
+
+    public private(set) var readAllClipsCallCount = 0
+    public var readAllClipsHandler: (() -> (Result<[ClipRecipe], ClipStorageError>))?
+    public func readAllClips() -> Result<[ClipRecipe], ClipStorageError> {
+        readAllClipsCallCount += 1
+        if let readAllClipsHandler = readAllClipsHandler {
+            return readAllClipsHandler()
+        }
+        fatalError("readAllClipsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var createCallCount = 0
+    public var createHandler: ((ClipRecipe) -> (Result<ClipRecipe, ClipStorageError>))?
+    public func create(clip: ClipRecipe) -> Result<ClipRecipe, ClipStorageError> {
+        createCallCount += 1
+        if let createHandler = createHandler {
+            return createHandler(clip)
+        }
+        fatalError("createHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var deleteClipsCallCount = 0
+    public var deleteClipsHandler: (([Clip.Identity]) -> (Result<[ClipRecipe], ClipStorageError>))?
+    public func deleteClips(having ids: [Clip.Identity]) -> Result<[ClipRecipe], ClipStorageError> {
+        deleteClipsCallCount += 1
+        if let deleteClipsHandler = deleteClipsHandler {
+            return deleteClipsHandler(ids)
+        }
+        fatalError("deleteClipsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var deleteAllCallCount = 0
+    public var deleteAllHandler: (() -> (Result<Void, ClipStorageError>))?
+    public func deleteAll() -> Result<Void, ClipStorageError> {
+        deleteAllCallCount += 1
+        if let deleteAllHandler = deleteAllHandler {
+            return deleteAllHandler()
+        }
+        fatalError("deleteAllHandler returns can't have a default value thus its handler must be set")
+    }
+}
+
+public class AlbumListQueryMock: AlbumListQuery {
+    public init() { }
+    public init(albums: CurrentValueSubject<[Album], Error>) {
+        self._albums = albums
+    }
+
+    public private(set) var albumsSetCallCount = 0
+    private var _albums: CurrentValueSubject<[Album], Error>! { didSet { albumsSetCallCount += 1 } }
+    public var albums: CurrentValueSubject<[Album], Error> {
+        get { return _albums }
+        set { _albums = newValue }
+    }
+}
+
+public class AlbumQueryMock: AlbumQuery {
+    public init() { }
+    public init(album: CurrentValueSubject<Album, Error>) {
+        self._album = album
+    }
+
+    public private(set) var albumSetCallCount = 0
+    private var _album: CurrentValueSubject<Album, Error>! { didSet { albumSetCallCount += 1 } }
+    public var album: CurrentValueSubject<Album, Error> {
+        get { return _album }
+        set { _album = newValue }
+    }
+}
+
+public class ClipItemListQueryMock: ClipItemListQuery {
+    public init() { }
+    public init(items: CurrentValueSubject<[ClipItem], Error>) {
+        self._items = items
+    }
+
+    public private(set) var itemsSetCallCount = 0
+    private var _items: CurrentValueSubject<[ClipItem], Error>! { didSet { itemsSetCallCount += 1 } }
+    public var items: CurrentValueSubject<[ClipItem], Error> {
+        get { return _items }
+        set { _items = newValue }
+    }
+}
+
+public class ClipItemQueryMock: ClipItemQuery {
+    public init() { }
+    public init(clipItem: CurrentValueSubject<ClipItem, Error>) {
+        self._clipItem = clipItem
+    }
+
+    public private(set) var clipItemSetCallCount = 0
+    private var _clipItem: CurrentValueSubject<ClipItem, Error>! { didSet { clipItemSetCallCount += 1 } }
+    public var clipItem: CurrentValueSubject<ClipItem, Error> {
+        get { return _clipItem }
+        set { _clipItem = newValue }
+    }
+}
+
+public class ClipListQueryMock: ClipListQuery {
+    public init() { }
+    public init(clips: CurrentValueSubject<[Clip], Error>) {
+        self._clips = clips
+    }
+
+    public private(set) var clipsSetCallCount = 0
+    private var _clips: CurrentValueSubject<[Clip], Error>! { didSet { clipsSetCallCount += 1 } }
+    public var clips: CurrentValueSubject<[Clip], Error> {
+        get { return _clips }
+        set { _clips = newValue }
+    }
+}
+
+public class ClipQueryMock: ClipQuery {
+    public init() { }
+    public init(clip: CurrentValueSubject<Clip, Error>) {
+        self._clip = clip
+    }
+
+    public private(set) var clipSetCallCount = 0
+    private var _clip: CurrentValueSubject<Clip, Error>! { didSet { clipSetCallCount += 1 } }
+    public var clip: CurrentValueSubject<Clip, Error> {
+        get { return _clip }
+        set { _clip = newValue }
+    }
+}
+
+public class CloudUsageContextStorageProtocolMock: CloudUsageContextStorageProtocol {
+    public init() { }
+    public init(lastLoggedInCloudAccountId: String? = nil) {
+        self.lastLoggedInCloudAccountId = lastLoggedInCloudAccountId
+    }
+
+    public private(set) var lastLoggedInCloudAccountIdSetCallCount = 0
+    public var lastLoggedInCloudAccountId: String? { didSet { lastLoggedInCloudAccountIdSetCallCount += 1 } }
+
+    public private(set) var setCallCount = 0
+    public var setHandler: ((String?) -> Void)?
+    public func set(lastLoggedInCloudAccountId: String?) {
+        setCallCount += 1
+        if let setHandler = setHandler {
+            setHandler(lastLoggedInCloudAccountId)
+        }
+    }
+}
+
+public class ListingAlbumListQueryMock: ListingAlbumListQuery {
+    public init() { }
+    public init(albums: CurrentValueSubject<[ListingAlbum], Error>) {
+        self._albums = albums
+    }
+
+    public private(set) var albumsSetCallCount = 0
+    private var _albums: CurrentValueSubject<[ListingAlbum], Error>! { didSet { albumsSetCallCount += 1 } }
+    public var albums: CurrentValueSubject<[ListingAlbum], Error> {
+        get { return _albums }
+        set { _albums = newValue }
+    }
+}
+
+public class ListingClipListQueryMock: ListingClipListQuery {
+    public init() { }
+    public init(clips: CurrentValueSubject<[ListingClip], Error>) {
+        self._clips = clips
+    }
+
+    public private(set) var clipsSetCallCount = 0
+    private var _clips: CurrentValueSubject<[ListingClip], Error>! { didSet { clipsSetCallCount += 1 } }
+    public var clips: CurrentValueSubject<[ListingClip], Error> {
+        get { return _clips }
+        set { _clips = newValue }
+    }
+}
+
+public class TagListQueryMock: TagListQuery {
+    public init() { }
+    public init(tags: CurrentValueSubject<[Domain.Tag], Error>) {
+        self._tags = tags
+    }
+
+    public private(set) var tagsSetCallCount = 0
+    private var _tags: CurrentValueSubject<[Domain.Tag], Error>! { didSet { tagsSetCallCount += 1 } }
+    public var tags: CurrentValueSubject<[Domain.Tag], Error> {
+        get { return _tags }
+        set { _tags = newValue }
+    }
+}
+
+public class TagQueryMock: TagQuery {
+    public init() { }
+    public init(tag: CurrentValueSubject<Tag, Error>) {
+        self._tag = tag
+    }
+
+    public private(set) var tagSetCallCount = 0
+    private var _tag: CurrentValueSubject<Tag, Error>! { didSet { tagSetCallCount += 1 } }
+    public var tag: CurrentValueSubject<Tag, Error> {
+        get { return _tag }
+        set { _tag = newValue }
+    }
+}
+
+public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
+    public init() { }
+    public init(userInterfaceStyle: AnyPublisher<UserInterfaceStyle, Never>, showHiddenItems: AnyPublisher<Bool, Never>, enabledICloudSync: AnyPublisher<Bool, Never>, ignoreCloudUnavailableAlert: AnyPublisher<Bool, Never>) {
+        self._userInterfaceStyle = userInterfaceStyle
+        self._showHiddenItems = showHiddenItems
+        self._enabledICloudSync = enabledICloudSync
+        self._ignoreCloudUnavailableAlert = ignoreCloudUnavailableAlert
+    }
+
+    public private(set) var userInterfaceStyleSetCallCount = 0
+    private var _userInterfaceStyle: AnyPublisher<UserInterfaceStyle, Never>! { didSet { userInterfaceStyleSetCallCount += 1 } }
+    public var userInterfaceStyle: AnyPublisher<UserInterfaceStyle, Never> {
+        get { return _userInterfaceStyle }
+        set { _userInterfaceStyle = newValue }
+    }
+
+    public private(set) var showHiddenItemsSetCallCount = 0
+    private var _showHiddenItems: AnyPublisher<Bool, Never>! { didSet { showHiddenItemsSetCallCount += 1 } }
+    public var showHiddenItems: AnyPublisher<Bool, Never> {
+        get { return _showHiddenItems }
+        set { _showHiddenItems = newValue }
+    }
+
+    public private(set) var enabledICloudSyncSetCallCount = 0
+    private var _enabledICloudSync: AnyPublisher<Bool, Never>! { didSet { enabledICloudSyncSetCallCount += 1 } }
+    public var enabledICloudSync: AnyPublisher<Bool, Never> {
+        get { return _enabledICloudSync }
+        set { _enabledICloudSync = newValue }
+    }
+
+    public private(set) var ignoreCloudUnavailableAlertSetCallCount = 0
+    private var _ignoreCloudUnavailableAlert: AnyPublisher<Bool, Never>! { didSet { ignoreCloudUnavailableAlertSetCallCount += 1 } }
+    public var ignoreCloudUnavailableAlert: AnyPublisher<Bool, Never> {
+        get { return _ignoreCloudUnavailableAlert }
+        set { _ignoreCloudUnavailableAlert = newValue }
+    }
+
+    public private(set) var readUserInterfaceStyleCallCount = 0
+    public var readUserInterfaceStyleHandler: (() -> (UserInterfaceStyle))?
+    public func readUserInterfaceStyle() -> UserInterfaceStyle {
+        readUserInterfaceStyleCallCount += 1
+        if let readUserInterfaceStyleHandler = readUserInterfaceStyleHandler {
+            return readUserInterfaceStyleHandler()
+        }
+        fatalError("readUserInterfaceStyleHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var readShowHiddenItemsCallCount = 0
+    public var readShowHiddenItemsHandler: (() -> (Bool))?
+    public func readShowHiddenItems() -> Bool {
+        readShowHiddenItemsCallCount += 1
+        if let readShowHiddenItemsHandler = readShowHiddenItemsHandler {
+            return readShowHiddenItemsHandler()
+        }
+        return false
+    }
+
+    public private(set) var readEnabledICloudSyncCallCount = 0
+    public var readEnabledICloudSyncHandler: (() -> (Bool))?
+    public func readEnabledICloudSync() -> Bool {
+        readEnabledICloudSyncCallCount += 1
+        if let readEnabledICloudSyncHandler = readEnabledICloudSyncHandler {
+            return readEnabledICloudSyncHandler()
+        }
+        return false
+    }
+
+    public private(set) var readIgnoreCloudUnavailableAlertCallCount = 0
+    public var readIgnoreCloudUnavailableAlertHandler: (() -> (Bool))?
+    public func readIgnoreCloudUnavailableAlert() -> Bool {
+        readIgnoreCloudUnavailableAlertCallCount += 1
+        if let readIgnoreCloudUnavailableAlertHandler = readIgnoreCloudUnavailableAlertHandler {
+            return readIgnoreCloudUnavailableAlertHandler()
+        }
+        return false
+    }
+
+    public private(set) var setCallCount = 0
+    public var setHandler: ((UserInterfaceStyle) -> Void)?
+    public func set(userInterfaceStyle: UserInterfaceStyle) {
+        setCallCount += 1
+        if let setHandler = setHandler {
+            setHandler(userInterfaceStyle)
+        }
+    }
+
+    public private(set) var setShowHiddenItemsCallCount = 0
+    public var setShowHiddenItemsHandler: ((Bool) -> Void)?
+    public func set(showHiddenItems: Bool) {
+        setShowHiddenItemsCallCount += 1
+        if let setShowHiddenItemsHandler = setShowHiddenItemsHandler {
+            setShowHiddenItemsHandler(showHiddenItems)
+        }
+    }
+
+    public private(set) var setEnabledICloudSyncCallCount = 0
+    public var setEnabledICloudSyncHandler: ((Bool) -> Void)?
+    public func set(enabledICloudSync: Bool) {
+        setEnabledICloudSyncCallCount += 1
+        if let setEnabledICloudSyncHandler = setEnabledICloudSyncHandler {
+            setEnabledICloudSyncHandler(enabledICloudSync)
+        }
+    }
+
+    public private(set) var setIgnoreCloudUnavailableAlertCallCount = 0
+    public var setIgnoreCloudUnavailableAlertHandler: ((Bool) -> Void)?
+    public func set(ignoreCloudUnavailableAlert: Bool) {
+        setIgnoreCloudUnavailableAlertCallCount += 1
+        if let setIgnoreCloudUnavailableAlertHandler = setIgnoreCloudUnavailableAlertHandler {
+            setIgnoreCloudUnavailableAlertHandler(ignoreCloudUnavailableAlert)
+        }
+    }
+}
 
 public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
     public init() { }
@@ -238,203 +952,6 @@ public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
             return deleteTagsHandler(ids)
         }
         fatalError("deleteTagsHandler returns can't have a default value thus its handler must be set")
-    }
-}
-
-public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
-    public init() { }
-
-    public private(set) var searchClipsCallCount = 0
-    public var searchClipsHandler: ((ClipSearchQuery) -> (Result<[Clip], ClipStorageError>))?
-    public func searchClips(query: ClipSearchQuery) -> Result<[Clip], ClipStorageError> {
-        searchClipsCallCount += 1
-        if let searchClipsHandler = searchClipsHandler {
-            return searchClipsHandler(query)
-        }
-        fatalError("searchClipsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var searchAlbumsCallCount = 0
-    public var searchAlbumsHandler: ((String, Bool, Int) -> (Result<[Album], ClipStorageError>))?
-    public func searchAlbums(containingTitle title: String, includesHiddenItems: Bool, limit: Int) -> Result<[Album], ClipStorageError> {
-        searchAlbumsCallCount += 1
-        if let searchAlbumsHandler = searchAlbumsHandler {
-            return searchAlbumsHandler(title, includesHiddenItems, limit)
-        }
-        fatalError("searchAlbumsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var searchTagsCallCount = 0
-    public var searchTagsHandler: ((String, Bool, Int) -> (Result<[Tag], ClipStorageError>))?
-    public func searchTags(containingName name: String, includesHiddenItems: Bool, limit: Int) -> Result<[Tag], ClipStorageError> {
-        searchTagsCallCount += 1
-        if let searchTagsHandler = searchTagsHandler {
-            return searchTagsHandler(name, includesHiddenItems, limit)
-        }
-        fatalError("searchTagsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var readClipAndTagsCallCount = 0
-    public var readClipAndTagsHandler: (([Clip.Identity]) -> (Result<([Clip], [Tag]), ClipStorageError>))?
-    public func readClipAndTags(for clipIds: [Clip.Identity]) -> Result<([Clip], [Tag]), ClipStorageError> {
-        readClipAndTagsCallCount += 1
-        if let readClipAndTagsHandler = readClipAndTagsHandler {
-            return readClipAndTagsHandler(clipIds)
-        }
-        fatalError("readClipAndTagsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var queryClipCallCount = 0
-    public var queryClipHandler: ((Clip.Identity) -> (Result<ClipQuery, ClipStorageError>))?
-    public func queryClip(having id: Clip.Identity) -> Result<ClipQuery, ClipStorageError> {
-        queryClipCallCount += 1
-        if let queryClipHandler = queryClipHandler {
-            return queryClipHandler(id)
-        }
-        fatalError("queryClipHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var queryClipItemsCallCount = 0
-    public var queryClipItemsHandler: ((Clip.Identity) -> (Result<ClipItemListQuery, ClipStorageError>))?
-    public func queryClipItems(inClipHaving id: Clip.Identity) -> Result<ClipItemListQuery, ClipStorageError> {
-        queryClipItemsCallCount += 1
-        if let queryClipItemsHandler = queryClipItemsHandler {
-            return queryClipItemsHandler(id)
-        }
-        fatalError("queryClipItemsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var queryClipItemCallCount = 0
-    public var queryClipItemHandler: ((ClipItem.Identity) -> (Result<ClipItemQuery, ClipStorageError>))?
-    public func queryClipItem(having id: ClipItem.Identity) -> Result<ClipItemQuery, ClipStorageError> {
-        queryClipItemCallCount += 1
-        if let queryClipItemHandler = queryClipItemHandler {
-            return queryClipItemHandler(id)
-        }
-        fatalError("queryClipItemHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var queryAllClipsCallCount = 0
-    public var queryAllClipsHandler: (() -> (Result<ClipListQuery, ClipStorageError>))?
-    public func queryAllClips() -> Result<ClipListQuery, ClipStorageError> {
-        queryAllClipsCallCount += 1
-        if let queryAllClipsHandler = queryAllClipsHandler {
-            return queryAllClipsHandler()
-        }
-        fatalError("queryAllClipsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var queryAllListingClipsCallCount = 0
-    public var queryAllListingClipsHandler: (() -> (Result<ListingClipListQuery, ClipStorageError>))?
-    public func queryAllListingClips() -> Result<ListingClipListQuery, ClipStorageError> {
-        queryAllListingClipsCallCount += 1
-        if let queryAllListingClipsHandler = queryAllListingClipsHandler {
-            return queryAllListingClipsHandler()
-        }
-        fatalError("queryAllListingClipsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var queryUncategorizedClipsCallCount = 0
-    public var queryUncategorizedClipsHandler: (() -> (Result<ClipListQuery, ClipStorageError>))?
-    public func queryUncategorizedClips() -> Result<ClipListQuery, ClipStorageError> {
-        queryUncategorizedClipsCallCount += 1
-        if let queryUncategorizedClipsHandler = queryUncategorizedClipsHandler {
-            return queryUncategorizedClipsHandler()
-        }
-        fatalError("queryUncategorizedClipsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var queryTagsCallCount = 0
-    public var queryTagsHandler: ((Clip.Identity) -> (Result<TagListQuery, ClipStorageError>))?
-    public func queryTags(forClipHaving clipId: Clip.Identity) -> Result<TagListQuery, ClipStorageError> {
-        queryTagsCallCount += 1
-        if let queryTagsHandler = queryTagsHandler {
-            return queryTagsHandler(clipId)
-        }
-        fatalError("queryTagsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var queryClipsCallCount = 0
-    public var queryClipsHandler: ((ClipSearchQuery) -> (Result<ClipListQuery, ClipStorageError>))?
-    public func queryClips(query: ClipSearchQuery) -> Result<ClipListQuery, ClipStorageError> {
-        queryClipsCallCount += 1
-        if let queryClipsHandler = queryClipsHandler {
-            return queryClipsHandler(query)
-        }
-        fatalError("queryClipsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var queryClipsTaggedCallCount = 0
-    public var queryClipsTaggedHandler: ((Tag) -> (Result<ClipListQuery, ClipStorageError>))?
-    public func queryClips(tagged tag: Tag) -> Result<ClipListQuery, ClipStorageError> {
-        queryClipsTaggedCallCount += 1
-        if let queryClipsTaggedHandler = queryClipsTaggedHandler {
-            return queryClipsTaggedHandler(tag)
-        }
-        fatalError("queryClipsTaggedHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var queryClipsTaggedTagIdentityCallCount = 0
-    public var queryClipsTaggedTagIdentityHandler: ((Tag.Identity) -> (Result<ClipListQuery, ClipStorageError>))?
-    public func queryClips(tagged tagId: Tag.Identity) -> Result<ClipListQuery, ClipStorageError> {
-        queryClipsTaggedTagIdentityCallCount += 1
-        if let queryClipsTaggedTagIdentityHandler = queryClipsTaggedTagIdentityHandler {
-            return queryClipsTaggedTagIdentityHandler(tagId)
-        }
-        fatalError("queryClipsTaggedTagIdentityHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var queryAlbumCallCount = 0
-    public var queryAlbumHandler: ((Album.Identity) -> (Result<AlbumQuery, ClipStorageError>))?
-    public func queryAlbum(having id: Album.Identity) -> Result<AlbumQuery, ClipStorageError> {
-        queryAlbumCallCount += 1
-        if let queryAlbumHandler = queryAlbumHandler {
-            return queryAlbumHandler(id)
-        }
-        fatalError("queryAlbumHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var queryAlbumsCallCount = 0
-    public var queryAlbumsHandler: ((Clip.Identity) -> (Result<ListingAlbumListQuery, ClipStorageError>))?
-    public func queryAlbums(containingClipHavingClipId id: Clip.Identity) -> Result<ListingAlbumListQuery, ClipStorageError> {
-        queryAlbumsCallCount += 1
-        if let queryAlbumsHandler = queryAlbumsHandler {
-            return queryAlbumsHandler(id)
-        }
-        fatalError("queryAlbumsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var queryAllAlbumsCallCount = 0
-    public var queryAllAlbumsHandler: (() -> (Result<AlbumListQuery, ClipStorageError>))?
-    public func queryAllAlbums() -> Result<AlbumListQuery, ClipStorageError> {
-        queryAllAlbumsCallCount += 1
-        if let queryAllAlbumsHandler = queryAllAlbumsHandler {
-            return queryAllAlbumsHandler()
-        }
-        fatalError("queryAllAlbumsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var queryAllTagsCallCount = 0
-    public var queryAllTagsHandler: (() -> (Result<TagListQuery, ClipStorageError>))?
-    public func queryAllTags() -> Result<TagListQuery, ClipStorageError> {
-        queryAllTagsCallCount += 1
-        if let queryAllTagsHandler = queryAllTagsHandler {
-            return queryAllTagsHandler()
-        }
-        fatalError("queryAllTagsHandler returns can't have a default value thus its handler must be set")
-    }
-}
-
-public class ClipReferencesIntegrityValidationServiceProtocolMock: ClipReferencesIntegrityValidationServiceProtocol {
-    public init() { }
-
-    public private(set) var validateAndFixIntegrityIfNeededCallCount = 0
-    public var validateAndFixIntegrityIfNeededHandler: (() -> Void)?
-    public func validateAndFixIntegrityIfNeeded() {
-        validateAndFixIntegrityIfNeededCallCount += 1
-        if let validateAndFixIntegrityIfNeededHandler = validateAndFixIntegrityIfNeededHandler {
-            validateAndFixIntegrityIfNeededHandler()
-        }
     }
 }
 
@@ -765,6 +1282,20 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
     }
 }
 
+public class ImageQueryServiceProtocolMock: ImageQueryServiceProtocol {
+    public init() { }
+
+    public private(set) var readCallCount = 0
+    public var readHandler: ((ImageContainer.Identity) throws -> (Data?))?
+    public func read(having id: ImageContainer.Identity) throws -> Data? {
+        readCallCount += 1
+        if let readHandler = readHandler {
+            return try readHandler(id)
+        }
+        return nil
+    }
+}
+
 public class ImageStorageProtocolMock: ImageStorageProtocol {
     public init() { }
     public init(isInTransaction: Bool = false) {
@@ -830,250 +1361,6 @@ public class ImageStorageProtocolMock: ImageStorageProtocol {
     }
 }
 
-public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
-    public init() { }
-    public init(isInTransaction: Bool = false) {
-        self.isInTransaction = isInTransaction
-    }
-
-    public private(set) var isInTransactionSetCallCount = 0
-    public var isInTransaction: Bool = false { didSet { isInTransactionSetCallCount += 1 } }
-
-    public private(set) var beginTransactionCallCount = 0
-    public var beginTransactionHandler: (() throws -> Void)?
-    public func beginTransaction() throws {
-        beginTransactionCallCount += 1
-        if let beginTransactionHandler = beginTransactionHandler {
-            try beginTransactionHandler()
-        }
-    }
-
-    public private(set) var commitTransactionCallCount = 0
-    public var commitTransactionHandler: (() throws -> Void)?
-    public func commitTransaction() throws {
-        commitTransactionCallCount += 1
-        if let commitTransactionHandler = commitTransactionHandler {
-            try commitTransactionHandler()
-        }
-    }
-
-    public private(set) var cancelTransactionIfNeededCallCount = 0
-    public var cancelTransactionIfNeededHandler: (() throws -> Void)?
-    public func cancelTransactionIfNeeded() throws {
-        cancelTransactionIfNeededCallCount += 1
-        if let cancelTransactionIfNeededHandler = cancelTransactionIfNeededHandler {
-            try cancelTransactionIfNeededHandler()
-        }
-    }
-
-    public private(set) var readAllDirtyTagsCallCount = 0
-    public var readAllDirtyTagsHandler: (() -> (Result<[ReferenceTag], ClipStorageError>))?
-    public func readAllDirtyTags() -> Result<[ReferenceTag], ClipStorageError> {
-        readAllDirtyTagsCallCount += 1
-        if let readAllDirtyTagsHandler = readAllDirtyTagsHandler {
-            return readAllDirtyTagsHandler()
-        }
-        fatalError("readAllDirtyTagsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var readAllTagsCallCount = 0
-    public var readAllTagsHandler: (() -> (Result<[ReferenceTag], ClipStorageError>))?
-    public func readAllTags() -> Result<[ReferenceTag], ClipStorageError> {
-        readAllTagsCallCount += 1
-        if let readAllTagsHandler = readAllTagsHandler {
-            return readAllTagsHandler()
-        }
-        fatalError("readAllTagsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var createCallCount = 0
-    public var createHandler: ((ReferenceTag) -> (Result<Void, ClipStorageError>))?
-    public func create(tag: ReferenceTag) -> Result<Void, ClipStorageError> {
-        createCallCount += 1
-        if let createHandler = createHandler {
-            return createHandler(tag)
-        }
-        fatalError("createHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var updateTagCallCount = 0
-    public var updateTagHandler: ((ReferenceTag.Identity, String) -> (Result<Void, ClipStorageError>))?
-    public func updateTag(having id: ReferenceTag.Identity, nameTo name: String) -> Result<Void, ClipStorageError> {
-        updateTagCallCount += 1
-        if let updateTagHandler = updateTagHandler {
-            return updateTagHandler(id, name)
-        }
-        fatalError("updateTagHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var updateTagHavingCallCount = 0
-    public var updateTagHavingHandler: ((ReferenceTag.Identity, Bool) -> (Result<Void, ClipStorageError>))?
-    public func updateTag(having id: ReferenceTag.Identity, byHiding isHidden: Bool) -> Result<Void, ClipStorageError> {
-        updateTagHavingCallCount += 1
-        if let updateTagHavingHandler = updateTagHavingHandler {
-            return updateTagHavingHandler(id, isHidden)
-        }
-        fatalError("updateTagHavingHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var updateTagsCallCount = 0
-    public var updateTagsHandler: (([ReferenceTag.Identity], Bool) -> (Result<Void, ClipStorageError>))?
-    public func updateTags(having ids: [ReferenceTag.Identity], toDirty isDirty: Bool) -> Result<Void, ClipStorageError> {
-        updateTagsCallCount += 1
-        if let updateTagsHandler = updateTagsHandler {
-            return updateTagsHandler(ids, isDirty)
-        }
-        fatalError("updateTagsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var deleteTagsCallCount = 0
-    public var deleteTagsHandler: (([ReferenceTag.Identity]) -> (Result<Void, ClipStorageError>))?
-    public func deleteTags(having ids: [ReferenceTag.Identity]) -> Result<Void, ClipStorageError> {
-        deleteTagsCallCount += 1
-        if let deleteTagsHandler = deleteTagsHandler {
-            return deleteTagsHandler(ids)
-        }
-        fatalError("deleteTagsHandler returns can't have a default value thus its handler must be set")
-    }
-}
-
-public class StorageCommandQueueMock: StorageCommandQueue {
-    public init() { }
-
-    public private(set) var syncCallCount = 0
-    public var syncHandler: ((@escaping () -> Any) -> (Any))?
-    public func sync<T>(_ block: @escaping () -> T) -> T {
-        syncCallCount += 1
-        if let syncHandler = syncHandler {
-            return syncHandler(block) as! T
-        }
-        fatalError("syncHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var syncBlockCallCount = 0
-    public var syncBlockHandler: ((@escaping () throws -> Any) throws -> (Any))?
-    public func sync<T>(_ block: @escaping () throws -> T) throws -> T {
-        syncBlockCallCount += 1
-        if let syncBlockHandler = syncBlockHandler {
-            return try syncBlockHandler(block) as! T
-        }
-        fatalError("syncBlockHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var asyncCallCount = 0
-    public var asyncHandler: ((@escaping () -> Void) -> Void)?
-    public func async(_ block: @escaping () -> Void) {
-        asyncCallCount += 1
-        if let asyncHandler = asyncHandler {
-            asyncHandler(block)
-        }
-    }
-}
-
-public class TemporariesPersistServiceObserverMock: TemporariesPersistServiceObserver {
-    public init() { }
-
-    public private(set) var temporariesPersistServiceCallCount = 0
-    public var temporariesPersistServiceHandler: ((TemporariesPersistService, Int, Int) -> Void)?
-    public func temporariesPersistService(_ service: TemporariesPersistService, didStartThe index: Int, outOf count: Int) {
-        temporariesPersistServiceCallCount += 1
-        if let temporariesPersistServiceHandler = temporariesPersistServiceHandler {
-            temporariesPersistServiceHandler(service, index, count)
-        }
-    }
-}
-
-public class TemporaryClipCommandServiceProtocolMock: TemporaryClipCommandServiceProtocol {
-    public init() { }
-
-    public private(set) var createCallCount = 0
-    public var createHandler: ((ClipRecipe, [ImageContainer], Bool) -> (Result<Clip.Identity, ClipStorageError>))?
-    public func create(clip: ClipRecipe, withContainers containers: [ImageContainer], forced: Bool) -> Result<Clip.Identity, ClipStorageError> {
-        createCallCount += 1
-        if let createHandler = createHandler {
-            return createHandler(clip, containers, forced)
-        }
-        fatalError("createHandler returns can't have a default value thus its handler must be set")
-    }
-}
-
-public class TemporaryClipStorageProtocolMock: TemporaryClipStorageProtocol {
-    public init() { }
-    public init(isInTransaction: Bool = false) {
-        self.isInTransaction = isInTransaction
-    }
-
-    public private(set) var isInTransactionSetCallCount = 0
-    public var isInTransaction: Bool = false { didSet { isInTransactionSetCallCount += 1 } }
-
-    public private(set) var beginTransactionCallCount = 0
-    public var beginTransactionHandler: (() throws -> Void)?
-    public func beginTransaction() throws {
-        beginTransactionCallCount += 1
-        if let beginTransactionHandler = beginTransactionHandler {
-            try beginTransactionHandler()
-        }
-    }
-
-    public private(set) var commitTransactionCallCount = 0
-    public var commitTransactionHandler: (() throws -> Void)?
-    public func commitTransaction() throws {
-        commitTransactionCallCount += 1
-        if let commitTransactionHandler = commitTransactionHandler {
-            try commitTransactionHandler()
-        }
-    }
-
-    public private(set) var cancelTransactionIfNeededCallCount = 0
-    public var cancelTransactionIfNeededHandler: (() throws -> Void)?
-    public func cancelTransactionIfNeeded() throws {
-        cancelTransactionIfNeededCallCount += 1
-        if let cancelTransactionIfNeededHandler = cancelTransactionIfNeededHandler {
-            try cancelTransactionIfNeededHandler()
-        }
-    }
-
-    public private(set) var readAllClipsCallCount = 0
-    public var readAllClipsHandler: (() -> (Result<[ClipRecipe], ClipStorageError>))?
-    public func readAllClips() -> Result<[ClipRecipe], ClipStorageError> {
-        readAllClipsCallCount += 1
-        if let readAllClipsHandler = readAllClipsHandler {
-            return readAllClipsHandler()
-        }
-        fatalError("readAllClipsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var createCallCount = 0
-    public var createHandler: ((ClipRecipe) -> (Result<ClipRecipe, ClipStorageError>))?
-    public func create(clip: ClipRecipe) -> Result<ClipRecipe, ClipStorageError> {
-        createCallCount += 1
-        if let createHandler = createHandler {
-            return createHandler(clip)
-        }
-        fatalError("createHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var deleteClipsCallCount = 0
-    public var deleteClipsHandler: (([Clip.Identity]) -> (Result<[ClipRecipe], ClipStorageError>))?
-    public func deleteClips(having ids: [Clip.Identity]) -> Result<[ClipRecipe], ClipStorageError> {
-        deleteClipsCallCount += 1
-        if let deleteClipsHandler = deleteClipsHandler {
-            return deleteClipsHandler(ids)
-        }
-        fatalError("deleteClipsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var deleteAllCallCount = 0
-    public var deleteAllHandler: (() -> (Result<Void, ClipStorageError>))?
-    public func deleteAll() -> Result<Void, ClipStorageError> {
-        deleteAllCallCount += 1
-        if let deleteAllHandler = deleteAllHandler {
-            return deleteAllHandler()
-        }
-        fatalError("deleteAllHandler returns can't have a default value thus its handler must be set")
-    }
-}
-
 public class TemporaryImageStorageProtocolMock: TemporaryImageStorageProtocol {
     public init() { }
 
@@ -1129,293 +1416,6 @@ public class TemporaryImageStorageProtocolMock: TemporaryImageStorageProtocol {
         readImageCallCount += 1
         if let readImageHandler = readImageHandler {
             return try readImageHandler(name, clipId)
-        }
-        return nil
-    }
-}
-
-public class AlbumListQueryMock: AlbumListQuery {
-    public init() { }
-    public init(albums: CurrentValueSubject<[Album], Error>) {
-        self._albums = albums
-    }
-
-    public private(set) var albumsSetCallCount = 0
-    private var _albums: CurrentValueSubject<[Album], Error>! { didSet { albumsSetCallCount += 1 } }
-    public var albums: CurrentValueSubject<[Album], Error> {
-        get { return _albums }
-        set { _albums = newValue }
-    }
-}
-
-public class AlbumQueryMock: AlbumQuery {
-    public init() { }
-    public init(album: CurrentValueSubject<Album, Error>) {
-        self._album = album
-    }
-
-    public private(set) var albumSetCallCount = 0
-    private var _album: CurrentValueSubject<Album, Error>! { didSet { albumSetCallCount += 1 } }
-    public var album: CurrentValueSubject<Album, Error> {
-        get { return _album }
-        set { _album = newValue }
-    }
-}
-
-public class ClipItemListQueryMock: ClipItemListQuery {
-    public init() { }
-    public init(items: CurrentValueSubject<[ClipItem], Error>) {
-        self._items = items
-    }
-
-    public private(set) var itemsSetCallCount = 0
-    private var _items: CurrentValueSubject<[ClipItem], Error>! { didSet { itemsSetCallCount += 1 } }
-    public var items: CurrentValueSubject<[ClipItem], Error> {
-        get { return _items }
-        set { _items = newValue }
-    }
-}
-
-public class ClipItemQueryMock: ClipItemQuery {
-    public init() { }
-    public init(clipItem: CurrentValueSubject<ClipItem, Error>) {
-        self._clipItem = clipItem
-    }
-
-    public private(set) var clipItemSetCallCount = 0
-    private var _clipItem: CurrentValueSubject<ClipItem, Error>! { didSet { clipItemSetCallCount += 1 } }
-    public var clipItem: CurrentValueSubject<ClipItem, Error> {
-        get { return _clipItem }
-        set { _clipItem = newValue }
-    }
-}
-
-public class ClipListQueryMock: ClipListQuery {
-    public init() { }
-    public init(clips: CurrentValueSubject<[Clip], Error>) {
-        self._clips = clips
-    }
-
-    public private(set) var clipsSetCallCount = 0
-    private var _clips: CurrentValueSubject<[Clip], Error>! { didSet { clipsSetCallCount += 1 } }
-    public var clips: CurrentValueSubject<[Clip], Error> {
-        get { return _clips }
-        set { _clips = newValue }
-    }
-}
-
-public class ClipQueryMock: ClipQuery {
-    public init() { }
-    public init(clip: CurrentValueSubject<Clip, Error>) {
-        self._clip = clip
-    }
-
-    public private(set) var clipSetCallCount = 0
-    private var _clip: CurrentValueSubject<Clip, Error>! { didSet { clipSetCallCount += 1 } }
-    public var clip: CurrentValueSubject<Clip, Error> {
-        get { return _clip }
-        set { _clip = newValue }
-    }
-}
-
-public class CloudUsageContextStorageProtocolMock: CloudUsageContextStorageProtocol {
-    public init() { }
-    public init(lastLoggedInCloudAccountId: String? = nil) {
-        self.lastLoggedInCloudAccountId = lastLoggedInCloudAccountId
-    }
-
-    public private(set) var lastLoggedInCloudAccountIdSetCallCount = 0
-    public var lastLoggedInCloudAccountId: String? { didSet { lastLoggedInCloudAccountIdSetCallCount += 1 } }
-
-    public private(set) var setCallCount = 0
-    public var setHandler: ((String?) -> Void)?
-    public func set(lastLoggedInCloudAccountId: String?) {
-        setCallCount += 1
-        if let setHandler = setHandler {
-            setHandler(lastLoggedInCloudAccountId)
-        }
-    }
-}
-
-public class ListingAlbumListQueryMock: ListingAlbumListQuery {
-    public init() { }
-    public init(albums: CurrentValueSubject<[ListingAlbum], Error>) {
-        self._albums = albums
-    }
-
-    public private(set) var albumsSetCallCount = 0
-    private var _albums: CurrentValueSubject<[ListingAlbum], Error>! { didSet { albumsSetCallCount += 1 } }
-    public var albums: CurrentValueSubject<[ListingAlbum], Error> {
-        get { return _albums }
-        set { _albums = newValue }
-    }
-}
-
-public class ListingClipListQueryMock: ListingClipListQuery {
-    public init() { }
-    public init(clips: CurrentValueSubject<[ListingClip], Error>) {
-        self._clips = clips
-    }
-
-    public private(set) var clipsSetCallCount = 0
-    private var _clips: CurrentValueSubject<[ListingClip], Error>! { didSet { clipsSetCallCount += 1 } }
-    public var clips: CurrentValueSubject<[ListingClip], Error> {
-        get { return _clips }
-        set { _clips = newValue }
-    }
-}
-
-public class TagListQueryMock: TagListQuery {
-    public init() { }
-    public init(tags: CurrentValueSubject<[Domain.Tag], Error>) {
-        self._tags = tags
-    }
-
-    public private(set) var tagsSetCallCount = 0
-    private var _tags: CurrentValueSubject<[Domain.Tag], Error>! { didSet { tagsSetCallCount += 1 } }
-    public var tags: CurrentValueSubject<[Domain.Tag], Error> {
-        get { return _tags }
-        set { _tags = newValue }
-    }
-}
-
-public class TagQueryMock: TagQuery {
-    public init() { }
-    public init(tag: CurrentValueSubject<Tag, Error>) {
-        self._tag = tag
-    }
-
-    public private(set) var tagSetCallCount = 0
-    private var _tag: CurrentValueSubject<Tag, Error>! { didSet { tagSetCallCount += 1 } }
-    public var tag: CurrentValueSubject<Tag, Error> {
-        get { return _tag }
-        set { _tag = newValue }
-    }
-}
-
-public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
-    public init() { }
-    public init(userInterfaceStyle: AnyPublisher<UserInterfaceStyle, Never>, showHiddenItems: AnyPublisher<Bool, Never>, enabledICloudSync: AnyPublisher<Bool, Never>, ignoreCloudUnavailableAlert: AnyPublisher<Bool, Never>) {
-        self._userInterfaceStyle = userInterfaceStyle
-        self._showHiddenItems = showHiddenItems
-        self._enabledICloudSync = enabledICloudSync
-        self._ignoreCloudUnavailableAlert = ignoreCloudUnavailableAlert
-    }
-
-    public private(set) var userInterfaceStyleSetCallCount = 0
-    private var _userInterfaceStyle: AnyPublisher<UserInterfaceStyle, Never>! { didSet { userInterfaceStyleSetCallCount += 1 } }
-    public var userInterfaceStyle: AnyPublisher<UserInterfaceStyle, Never> {
-        get { return _userInterfaceStyle }
-        set { _userInterfaceStyle = newValue }
-    }
-
-    public private(set) var showHiddenItemsSetCallCount = 0
-    private var _showHiddenItems: AnyPublisher<Bool, Never>! { didSet { showHiddenItemsSetCallCount += 1 } }
-    public var showHiddenItems: AnyPublisher<Bool, Never> {
-        get { return _showHiddenItems }
-        set { _showHiddenItems = newValue }
-    }
-
-    public private(set) var enabledICloudSyncSetCallCount = 0
-    private var _enabledICloudSync: AnyPublisher<Bool, Never>! { didSet { enabledICloudSyncSetCallCount += 1 } }
-    public var enabledICloudSync: AnyPublisher<Bool, Never> {
-        get { return _enabledICloudSync }
-        set { _enabledICloudSync = newValue }
-    }
-
-    public private(set) var ignoreCloudUnavailableAlertSetCallCount = 0
-    private var _ignoreCloudUnavailableAlert: AnyPublisher<Bool, Never>! { didSet { ignoreCloudUnavailableAlertSetCallCount += 1 } }
-    public var ignoreCloudUnavailableAlert: AnyPublisher<Bool, Never> {
-        get { return _ignoreCloudUnavailableAlert }
-        set { _ignoreCloudUnavailableAlert = newValue }
-    }
-
-    public private(set) var readUserInterfaceStyleCallCount = 0
-    public var readUserInterfaceStyleHandler: (() -> (UserInterfaceStyle))?
-    public func readUserInterfaceStyle() -> UserInterfaceStyle {
-        readUserInterfaceStyleCallCount += 1
-        if let readUserInterfaceStyleHandler = readUserInterfaceStyleHandler {
-            return readUserInterfaceStyleHandler()
-        }
-        fatalError("readUserInterfaceStyleHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var readShowHiddenItemsCallCount = 0
-    public var readShowHiddenItemsHandler: (() -> (Bool))?
-    public func readShowHiddenItems() -> Bool {
-        readShowHiddenItemsCallCount += 1
-        if let readShowHiddenItemsHandler = readShowHiddenItemsHandler {
-            return readShowHiddenItemsHandler()
-        }
-        return false
-    }
-
-    public private(set) var readEnabledICloudSyncCallCount = 0
-    public var readEnabledICloudSyncHandler: (() -> (Bool))?
-    public func readEnabledICloudSync() -> Bool {
-        readEnabledICloudSyncCallCount += 1
-        if let readEnabledICloudSyncHandler = readEnabledICloudSyncHandler {
-            return readEnabledICloudSyncHandler()
-        }
-        return false
-    }
-
-    public private(set) var readIgnoreCloudUnavailableAlertCallCount = 0
-    public var readIgnoreCloudUnavailableAlertHandler: (() -> (Bool))?
-    public func readIgnoreCloudUnavailableAlert() -> Bool {
-        readIgnoreCloudUnavailableAlertCallCount += 1
-        if let readIgnoreCloudUnavailableAlertHandler = readIgnoreCloudUnavailableAlertHandler {
-            return readIgnoreCloudUnavailableAlertHandler()
-        }
-        return false
-    }
-
-    public private(set) var setCallCount = 0
-    public var setHandler: ((UserInterfaceStyle) -> Void)?
-    public func set(userInterfaceStyle: UserInterfaceStyle) {
-        setCallCount += 1
-        if let setHandler = setHandler {
-            setHandler(userInterfaceStyle)
-        }
-    }
-
-    public private(set) var setShowHiddenItemsCallCount = 0
-    public var setShowHiddenItemsHandler: ((Bool) -> Void)?
-    public func set(showHiddenItems: Bool) {
-        setShowHiddenItemsCallCount += 1
-        if let setShowHiddenItemsHandler = setShowHiddenItemsHandler {
-            setShowHiddenItemsHandler(showHiddenItems)
-        }
-    }
-
-    public private(set) var setEnabledICloudSyncCallCount = 0
-    public var setEnabledICloudSyncHandler: ((Bool) -> Void)?
-    public func set(enabledICloudSync: Bool) {
-        setEnabledICloudSyncCallCount += 1
-        if let setEnabledICloudSyncHandler = setEnabledICloudSyncHandler {
-            setEnabledICloudSyncHandler(enabledICloudSync)
-        }
-    }
-
-    public private(set) var setIgnoreCloudUnavailableAlertCallCount = 0
-    public var setIgnoreCloudUnavailableAlertHandler: ((Bool) -> Void)?
-    public func set(ignoreCloudUnavailableAlert: Bool) {
-        setIgnoreCloudUnavailableAlertCallCount += 1
-        if let setIgnoreCloudUnavailableAlertHandler = setIgnoreCloudUnavailableAlertHandler {
-            setIgnoreCloudUnavailableAlertHandler(ignoreCloudUnavailableAlert)
-        }
-    }
-}
-
-public class ImageQueryServiceProtocolMock: ImageQueryServiceProtocol {
-    public init() { }
-
-    public private(set) var readCallCount = 0
-    public var readHandler: ((ImageContainer.Identity) throws -> (Data?))?
-    public func read(having id: ImageContainer.Identity) throws -> Data? {
-        readCallCount += 1
-        if let readHandler = readHandler {
-            return try readHandler(id)
         }
         return nil
     }
