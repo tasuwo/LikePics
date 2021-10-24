@@ -3,14 +3,14 @@
 //
 
 import Combine
+import CompositeKit
 import Domain
-import ForestKit
 import LikePicsUIKit
 import UIKit
 
 class TagSelectionModalController: UIViewController {
     typealias Layout = TagSelectionModalLayout
-    typealias Store = ForestKit.Store<TagSelectionModalState, TagSelectionModalAction, TagSelectionModalDependency>
+    typealias Store = CompositeKit.Store<TagSelectionModalState, TagSelectionModalAction, TagSelectionModalDependency>
 
     // MARK: - Properties
 

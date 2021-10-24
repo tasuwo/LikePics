@@ -4,11 +4,11 @@
 
 import Combine
 import Common
-import ForestKit
+import CompositeKit
 import UIKit
 
 class TextEditAlertController: NSObject {
-    typealias Store = ForestKit.Store<TextEditAlertState, TextEditAlertAction, TextEditAlertDependency>
+    typealias Store = CompositeKit.Store<TextEditAlertState, TextEditAlertAction, TextEditAlertDependency>
 
     private class AlertController: UIAlertController {
         weak var store: Store?

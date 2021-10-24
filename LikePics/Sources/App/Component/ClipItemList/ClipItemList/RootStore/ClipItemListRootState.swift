@@ -2,7 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-import ForestKit
+import CompositeKit
 
 struct ClipItemListRootState: Equatable {
     var listState: ClipItemListState

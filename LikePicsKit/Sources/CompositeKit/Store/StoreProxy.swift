@@ -6,10 +6,10 @@ import Combine
 
 public class StoreProxy<
     ChildState: Equatable,
-    ChildAction: ForestKit.Action,
+    ChildAction: CompositeKit.Action,
     Dependency,
     ParentState: Equatable,
-    ParentAction: ForestKit.Action,
+    ParentAction: CompositeKit.Action,
     ParentDependency
 > {
     private let store: Store<ParentState, ParentAction, ParentDependency>
@@ -48,7 +48,7 @@ extension StoreProxy: Storing {
 public extension Store {
     func proxy<
         ChildState: Equatable,
-        ChildAction: ForestKit.Action,
+        ChildAction: CompositeKit.Action,
         ChildDependency
     >(
         _ stateMapping: StateMapping<State, ChildState>,

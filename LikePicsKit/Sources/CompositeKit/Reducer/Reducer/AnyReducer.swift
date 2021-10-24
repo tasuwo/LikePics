@@ -2,13 +2,13 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-private class ReducerBoxBase<Action: ForestKit.Action, State: Equatable, Dependency> {
+private class ReducerBoxBase<Action: CompositeKit.Action, State: Equatable, Dependency> {
     func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         fatalError("Abstract method call")
     }
 }
 
-private class ReducerBox<Reducer: ForestKit.Reducer>: ReducerBoxBase<Reducer.Action, Reducer.State, Reducer.Dependency> {
+private class ReducerBox<Reducer: CompositeKit.Reducer>: ReducerBoxBase<Reducer.Action, Reducer.State, Reducer.Dependency> {
     private let base: Reducer
 
     init(_ base: Reducer) {
@@ -20,10 +20,10 @@ private class ReducerBox<Reducer: ForestKit.Reducer>: ReducerBoxBase<Reducer.Act
     }
 }
 
-public struct AnyReducer<Action: ForestKit.Action, State: Equatable, Dependency> {
+public struct AnyReducer<Action: CompositeKit.Action, State: Equatable, Dependency> {
     private let box: ReducerBoxBase<Action, State, Dependency>
 
-    public init<Reducer: ForestKit.Reducer>(_ base: Reducer) where Reducer.Action == Action, Reducer.State == State, Reducer.Dependency == Dependency {
+    public init<Reducer: CompositeKit.Reducer>(_ base: Reducer) where Reducer.Action == Action, Reducer.State == State, Reducer.Dependency == Dependency {
         self.box = ReducerBox(base)
     }
 }

@@ -280,7 +280,7 @@ targets:
       - package: LikePicsKit
         product: Common
       - package: LikePicsKit
-        product: ForestKit
+        product: CompositeKit
     postbuildScripts:
       - name: Copy App Data
         runOnlyWhenInstalling: false

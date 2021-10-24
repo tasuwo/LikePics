@@ -3,12 +3,12 @@
 //
 
 import Combine
-import ForestKit
+import CompositeKit
 import LikePicsUIKit
 import UIKit
 
 class SettingsViewController: UITableViewController {
-    typealias Store = ForestKit.Store<SettingsViewState, SettingsViewAction, SettingsViewDependency>
+    typealias Store = CompositeKit.Store<SettingsViewState, SettingsViewAction, SettingsViewDependency>
 
     // MARK: - Properties
 

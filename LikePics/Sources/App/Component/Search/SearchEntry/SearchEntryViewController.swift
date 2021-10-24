@@ -3,14 +3,14 @@
 //
 
 import Combine
+import CompositeKit
 import Domain
-import ForestKit
 import LikePicsUIKit
 import Smoothie
 import UIKit
 
 class SearchEntryViewController: UIViewController {
-    typealias RootStore = ForestKit.Store<SearchViewRootState, SearchViewRootAction, SearchViewRootDependency>
+    typealias RootStore = CompositeKit.Store<SearchViewRootState, SearchViewRootAction, SearchViewRootDependency>
 
     typealias Layout = SearchEntryViewLayout
     typealias Store = AnyStoring<SearchEntryViewState, SearchEntryViewAction, SearchEntryViewDependency>
@@ -44,7 +44,7 @@ class SearchEntryViewController: UIViewController {
          thumbnailPipeline: Pipeline,
          imageQueryService: ImageQueryServiceProtocol)
     {
-        rootStore = ForestKit.Store(initialState: state, dependency: dependency, reducer: searchViewRootReducer)
+        rootStore = CompositeKit.Store(initialState: state, dependency: dependency, reducer: searchViewRootReducer)
         store = rootStore
             .proxy(SearchViewRootState.entryMapping, SearchViewRootAction.entryMapping)
             .eraseToAnyStoring()

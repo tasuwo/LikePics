@@ -2,7 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-import ForestKit
+import CompositeKit
 
 typealias ClipItemListRootDependency = ClipItemListDependency
     & ClipItemListNavigationBarDependency

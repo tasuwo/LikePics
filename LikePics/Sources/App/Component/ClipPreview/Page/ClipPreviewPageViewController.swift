@@ -3,8 +3,8 @@
 //
 
 import Combine
+import CompositeKit
 import Domain
-import ForestKit
 import LikePicsUIKit
 import UIKit
 
@@ -12,7 +12,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     typealias RootState = ClipPreviewPageViewRootState
     typealias RootAction = ClipPreviewPageViewRootAction
     typealias RootDependency = ClipPreviewPageViewRootDependency
-    typealias RootStore = ForestKit.Store<RootState, RootAction, RootDependency>
+    typealias RootStore = CompositeKit.Store<RootState, RootAction, RootDependency>
 
     typealias Store = AnyStoring<ClipPreviewPageViewState, ClipPreviewPageViewAction, ClipPreviewPageViewDependency>
 

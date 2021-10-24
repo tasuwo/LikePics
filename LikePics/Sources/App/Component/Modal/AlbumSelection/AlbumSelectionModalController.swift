@@ -3,15 +3,15 @@
 //
 
 import Combine
+import CompositeKit
 import Domain
-import ForestKit
 import LikePicsUIKit
 import Smoothie
 import UIKit
 
 class AlbumSelectionModalController: UIViewController {
     typealias Layout = AlbumSelectionModalLayout
-    typealias Store = ForestKit.Store<AlbumSelectionModalState, AlbumSelectionModalAction, AlbumSelectionModalDependency>
+    typealias Store = CompositeKit.Store<AlbumSelectionModalState, AlbumSelectionModalAction, AlbumSelectionModalDependency>
 
     // MARK: - Properties
 

@@ -3,14 +3,14 @@
 //
 
 import Combine
+import CompositeKit
 import Domain
-import ForestKit
 import LikePicsUIKit
 import UIKit
 
 class TagCollectionViewController: UIViewController {
     typealias Layout = TagCollectionViewLayout
-    typealias Store = ForestKit.Store<TagCollectionViewState, TagCollectionViewAction, TagCollectionViewDependency>
+    typealias Store = CompositeKit.Store<TagCollectionViewState, TagCollectionViewAction, TagCollectionViewDependency>
 
     // MARK: - Properties
 

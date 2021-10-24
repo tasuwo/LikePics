@@ -3,8 +3,8 @@
 //
 
 import Combine
+import CompositeKit
 import Domain
-import ForestKit
 import LikePicsUIKit
 import Smoothie
 import UIKit
@@ -13,7 +13,7 @@ class ClipItemListViewController: UIViewController {
     typealias RootState = ClipItemListRootState
     typealias RootAction = ClipItemListRootAction
     typealias RootDependency = ClipItemListRootDependency
-    typealias RootStore = ForestKit.Store<RootState, RootAction, RootDependency>
+    typealias RootStore = CompositeKit.Store<RootState, RootAction, RootDependency>
 
     typealias Layout = ClipItemListViewLayout
     typealias Store = AnyStoring<ClipItemListState, ClipItemListAction, ClipItemListDependency>

@@ -4,8 +4,8 @@
 
 import Combine
 import Common
+import CompositeKit
 import Domain
-import ForestKit
 import LikePicsUIKit
 import Smoothie
 import UIKit
@@ -20,7 +20,7 @@ public class ClipCreationViewController: UIViewController {
 
     typealias Factory = ViewControllerFactory
     typealias Layout = ClipCreationViewLayout
-    typealias Store = ForestKit.Store<ClipCreationViewState, ClipCreationViewAction, ClipCreationViewDependency>
+    typealias Store = CompositeKit.Store<ClipCreationViewState, ClipCreationViewAction, ClipCreationViewDependency>
 
     // MARK: - Properties
 

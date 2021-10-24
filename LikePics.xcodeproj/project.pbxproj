@@ -11,7 +11,7 @@
 		021B7834765EED7587F07532 /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22652692EF2F26F1116EC239 /* DependencyContainer.swift */; };
 		02FD877B2E884AB2626B49D9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 467E520B12D5F90C9C7808BB /* LaunchScreen.storyboard */; };
 		03C0AA1BC40B6585E5006ACC /* ClipItemListToolBarEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0986F8C1367CCAA667F857 /* ClipItemListToolBarEvent.swift */; };
-		04628669D968FFFE9CD10119 /* ForestKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2A9BD6D3C20167D8C256F6C1 /* ForestKit */; };
+		04628669D968FFFE9CD10119 /* CompositeKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0488283F1BACE546D055435D /* CompositeKit */; };
 		058A8376B4199A8443B2637D /* SceneRoot_SideBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D980931AE083F095933E68 /* SceneRoot_SideBarItem.swift */; };
 		07D76D08F6CF32512F7054B9 /* LikePicsUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7F6507BB1069707955070686 /* LikePicsUIKit */; };
 		0876C4F1777F20A574C1DC07 /* ClipPreviewViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AE71A683E17C02EFA2E84B /* ClipPreviewViewState.swift */; };
@@ -520,7 +520,7 @@
 				F1D67D2B28E02D29F290A0EC /* Persistence in Frameworks */,
 				6E1630277E6FF3C7ADF1BA96 /* Domain in Frameworks */,
 				0E52B06F7CD8EC15914EF3DF /* Common in Frameworks */,
-				04628669D968FFFE9CD10119 /* ForestKit in Frameworks */,
+				04628669D968FFFE9CD10119 /* CompositeKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1720,7 +1720,7 @@
 				AB0DA12007F75A1C86D54D16 /* Persistence */,
 				12E14E13C7D8277E1D19C7F1 /* Domain */,
 				2DD310F450AD5F89E8A8C432 /* Common */,
-				2A9BD6D3C20167D8C256F6C1 /* ForestKit */,
+				0488283F1BACE546D055435D /* CompositeKit */,
 			);
 			productName = LikePics;
 			productReference = 7B507EAEA05D7AA1CB822352 /* LikePics.app */;
@@ -2754,13 +2754,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0488283F1BACE546D055435D /* CompositeKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CompositeKit;
+		};
 		12E14E13C7D8277E1D19C7F1 /* Domain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Domain;
-		};
-		2A9BD6D3C20167D8C256F6C1 /* ForestKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ForestKit;
 		};
 		2DD310F450AD5F89E8A8C432 /* Common */ = {
 			isa = XCSwiftPackageProductDependency;

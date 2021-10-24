@@ -25,8 +25,8 @@ let package = Package(
             targets: ["LikePicsUIKit"]
         ),
         .library(
-            name: "ForestKit",
-            targets: ["ForestKit"]
+            name: "CompositeKit",
+            targets: ["CompositeKit"]
         ),
         .library(
             name: "Smoothie",
@@ -64,7 +64,7 @@ let package = Package(
                 "Smoothie",
                 "Domain",
                 "Common",
-                "ForestKit",
+                "CompositeKit",
                 .product(name: "Erik", package: "Erik")
             ]
         ),
@@ -74,11 +74,11 @@ let package = Package(
                 "Smoothie",
                 "Domain",
                 "Common",
-                "ForestKit"
+                "CompositeKit"
             ]
         ),
         .target(
-            name: "ForestKit",
+            name: "CompositeKit",
             dependencies: []
         ),
         .target(

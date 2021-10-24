@@ -3,13 +3,13 @@
 //
 
 import Combine
+import CompositeKit
 import Domain
-import ForestKit
 import LikePicsUIKit
 import UIKit
 
 class ClipItemInformationViewController: UIViewController {
-    typealias Store = ForestKit.Store<ClipItemInformationViewState, ClipItemInformationViewAction, ClipItemInformationViewDependency>
+    typealias Store = CompositeKit.Store<ClipItemInformationViewState, ClipItemInformationViewAction, ClipItemInformationViewDependency>
     typealias Layout = ClipItemInformationLayout
 
     // MARK: - Properties

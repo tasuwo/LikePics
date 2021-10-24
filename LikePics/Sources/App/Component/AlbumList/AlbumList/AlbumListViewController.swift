@@ -3,15 +3,15 @@
 //
 
 import Combine
+import CompositeKit
 import Domain
-import ForestKit
 import LikePicsUIKit
 import Smoothie
 import UIKit
 
 class AlbumListViewController: UIViewController {
     typealias Layout = AlbumListViewLayout
-    typealias Store = ForestKit.Store<AlbumListViewState, AlbumListViewAction, AlbumListViewDependency>
+    typealias Store = CompositeKit.Store<AlbumListViewState, AlbumListViewAction, AlbumListViewDependency>
 
     // MARK: - Properties
 

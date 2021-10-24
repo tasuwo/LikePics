@@ -4,7 +4,7 @@
 
 import Combine
 
-private class StoringBoxBase<State: Equatable, Action: ForestKit.Action, Dependency> {
+private class StoringBoxBase<State: Equatable, Action: CompositeKit.Action, Dependency> {
     var stateValue: State { fatalError("abstract") }
     var state: AnyPublisher<State, Never> { fatalError("abstract") }
 
@@ -27,7 +27,7 @@ private class StoringBox<Store: Storing>: StoringBoxBase<Store.State, Store.Acti
     }
 }
 
-public class AnyStoring<State: Equatable, Action: ForestKit.Action, Dependency> {
+public class AnyStoring<State: Equatable, Action: CompositeKit.Action, Dependency> {
     private let box: StoringBoxBase<State, Action, Dependency>
 
     init<Store: Storing>(_ base: Store) where Store.Action == Action,

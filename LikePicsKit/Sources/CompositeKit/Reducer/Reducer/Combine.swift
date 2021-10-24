@@ -2,7 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-public func combine<Reducer: ForestKit.Reducer>(_ reducers: Reducer...) -> PureReducer<Reducer.Action, Reducer.State, Reducer.Dependency> {
+public func combine<Reducer: CompositeKit.Reducer>(_ reducers: Reducer...) -> PureReducer<Reducer.Action, Reducer.State, Reducer.Dependency> {
     return PureReducer<Reducer.Action, Reducer.State, Reducer.Dependency> { action, state, dependency in
         var state = state
         var effects: [Effect<Reducer.Action>] = []

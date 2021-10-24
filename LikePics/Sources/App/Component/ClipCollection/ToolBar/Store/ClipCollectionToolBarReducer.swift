@@ -3,7 +3,7 @@
 //
 
 import Combine
-import ForestKit
+import CompositeKit
 
 typealias ClipCollectionToolBarDependency = HasImageQueryService
 

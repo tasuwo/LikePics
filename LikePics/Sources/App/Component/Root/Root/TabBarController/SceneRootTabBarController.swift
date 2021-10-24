@@ -4,14 +4,14 @@
 
 import Combine
 import Common
+import CompositeKit
 import Domain
-import ForestKit
 import LikePicsUIKit
 import UIKit
 
 class SceneRootTabBarController: UITabBarController {
     typealias Factory = ViewControllerFactory
-    typealias Store = ForestKit.Store<ClipsIntegrityValidatorState, ClipsIntegrityValidatorAction, ClipsIntegrityValidatorDependency>
+    typealias Store = CompositeKit.Store<ClipsIntegrityValidatorState, ClipsIntegrityValidatorAction, ClipsIntegrityValidatorDependency>
 
     // MARK: - Properties
 

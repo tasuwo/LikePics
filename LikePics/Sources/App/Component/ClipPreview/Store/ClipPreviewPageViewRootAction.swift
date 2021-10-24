@@ -2,7 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-import ForestKit
+import CompositeKit
 
 enum ClipPreviewPageViewRootAction: Action {
     case page(ClipPreviewPageViewAction)
