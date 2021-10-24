@@ -35,7 +35,7 @@ let package = Package(
         .library(
             name: "Common",
             targets: ["Common"]
-        ),
+        )
     ],
     dependencies: [
         .package(name: "Realm", url: "https://github.com/realm/realm-cocoa", .exact("10.15.1")),
@@ -54,7 +54,7 @@ let package = Package(
                 "Common",
                 "Domain",
                 .product(name: "Realm", package: "Realm"),
-                .product(name: "RealmSwift", package: "Realm"),
+                .product(name: "RealmSwift", package: "Realm")
             ]
         ),
         .target(
@@ -74,7 +74,7 @@ let package = Package(
                 "Smoothie",
                 "Domain",
                 "Common",
-                "ForestKit",
+                "ForestKit"
             ]
         ),
         .target(
@@ -116,6 +116,6 @@ let package = Package(
             resources: [
                 .process("Resources/")
             ]
-        ),
+        )
     ]
 )
