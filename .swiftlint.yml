@@ -5,6 +5,8 @@ included:
 excluded:
   - Pods
   - SourcePackages
+  - LikePicsKit/Sources/TestHelper
+  - LikePicsKit/Tests
 opt_in_rules:
   - anyobject_protocol
   - array_init
