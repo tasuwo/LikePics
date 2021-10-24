@@ -55,7 +55,7 @@ public class CloudAvailabilityService {
                 return .available(.accountChanged)
             }
 
-        case .couldNotDetermine, .noAccount, .restricted:
+        default:
             return .unavailable
         }
     }

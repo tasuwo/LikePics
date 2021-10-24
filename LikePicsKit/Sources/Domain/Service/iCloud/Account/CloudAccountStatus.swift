@@ -7,4 +7,6 @@ public enum CloudAccountStatus {
     case noAccount
     case couldNotDetermine
     case restricted
+    case temporaryUnavailable
+    case internalError
 }

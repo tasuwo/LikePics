@@ -66,8 +66,11 @@ public class CloudAccountService {
             case .restricted:
                 completion(.success(.restricted))
 
+            case .temporarilyUnavailable:
+                completion(.success(.temporaryUnavailable))
+
             @unknown default:
-                fatalError("Unexpected status")
+                completion(.success(.internalError))
             }
         }
     }
