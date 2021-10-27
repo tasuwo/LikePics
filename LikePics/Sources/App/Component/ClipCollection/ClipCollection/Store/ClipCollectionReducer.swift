@@ -100,7 +100,7 @@ struct ClipCollectionReducer: Reducer {
         case let .tagAdditionMenuTapped(clipId):
             switch dependency.clipQueryService.readClipAndTags(for: [clipId]) {
             case let .success((_, tags)):
-                nextState.modal = .tagSelection(id: UUID(), clipIds: .init([clipId]), tagIds: Set(tags.map({ $0.id })))
+                nextState.modal = .tagSelectionForClip(id: UUID(), clipId: clipId, tagIds: Set(tags.map({ $0.id })))
                 return (nextState, .none)
 
             case .failure:
@@ -166,23 +166,39 @@ struct ClipCollectionReducer: Reducer {
 
         // MARK: Modal Completion
 
-        case let .tagsSelected(tagIds):
-            guard case let .tagSelection(id: _, clipIds: clipIds, tagIds: _) = nextState.modal,
-                  let tagIds = tagIds
-            else {
+        case let .tagsSelected(selectedTagIds):
+            defer {
                 nextState.modal = nil
+            }
+
+            guard let selectedTagIds = selectedTagIds else {
                 return (nextState, .none)
             }
 
-            nextState.modal = nil
+            let result: Result<Void, ClipStorageError>? = {
+                switch nextState.modal {
+                case let .tagSelectionForClip(id: _, clipId: clipId, tagIds: _):
+                    return dependency.clipCommandService.updateClips(having: [clipId], byReplacingTagsHaving: Array(selectedTagIds))
 
-            switch dependency.clipCommandService.updateClips(having: Array(clipIds), byReplacingTagsHaving: Array(tagIds)) {
+                case let .tagSelectionForClips(id: _, clipIds: clipIds):
+                    return dependency.clipCommandService.updateClips(having: Array(clipIds), byAddingTagsHaving: Array(selectedTagIds))
+
+                default:
+                    return nil
+                }
+            }()
+
+            switch result {
             case .success:
                 nextState = nextState.editingEnded()
 
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtUpdateTagsToClip)
+
+            case .none:
+                break
             }
+
             return (nextState, .none)
 
         case let .albumSelected(albumId):
@@ -409,7 +425,7 @@ extension ClipCollectionReducer {
             return (nextState, .none)
 
         case .addTags:
-            nextState.modal = .tagSelection(id: UUID(), clipIds: nextState.clips.selectedIds(), tagIds: .init())
+            nextState.modal = .tagSelectionForClips(id: UUID(), clipIds: nextState.clips.selectedIds())
             nextState.alert = nil
             return (nextState, .none)
 

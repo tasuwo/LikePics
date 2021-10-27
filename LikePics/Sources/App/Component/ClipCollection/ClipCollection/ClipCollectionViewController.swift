@@ -414,8 +414,11 @@ extension ClipCollectionViewController {
         case let .albumSelection(id: id, clipIds: _):
             presentAlbumSelectionModal(id: id)
 
-        case let .tagSelection(id: id, clipIds: _, tagIds: tagIds):
+        case let .tagSelectionForClip(id: id, clipId: _, tagIds: tagIds):
             presentTagSelectionModal(id: id, selections: tagIds)
+
+        case let .tagSelectionForClips(id: id, clipIds: _):
+            presentTagSelectionModal(id: id, selections: .init())
 
         case let .clipMerge(id: id, clips: clips):
             presentClipMergeModal(id: id, clips: clips)
