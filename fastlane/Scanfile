@@ -1,6 +1,7 @@
 # vim: syntax=ruby
 
 scheme("LikePicsKit-Package")
+workspace(".") # ignore .xcodeproj if it exists
 
 destination("platform=iOS Simulator,name=iPhone 13")
 
