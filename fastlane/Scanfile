@@ -1,13 +1,8 @@
 # vim: syntax=ruby
 
-scheme("LikePicsKit-Package")
-workspace(".") # ignore .xcodeproj if it exists
+scheme("LikePics")
 
-destination("platform=iOS Simulator,name=iPhone 13")
-
-package_path("./LikePicsKit")
 cloned_source_packages_path("./SourcePackages")
-skip_package_dependencies_resolution(true)
 disable_package_automatic_updates(true)
 
 force_quit_simulator(true)

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -345,7 +345,7 @@
 		47FEF019B1AC3475B311074C /* TagCollection_MenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollection_MenuItem.swift; sourceTree = "<group>"; };
 		482EBA7439C4DCE41A86A911 /* ViewLazyPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewLazyPresentable.swift; sourceTree = "<group>"; };
 		48FFDA93EAEBDBFB0F65D481 /* TextEditAlertDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditAlertDelegate.swift; sourceTree = "<group>"; };
-		4B09BC846DA055E035CA3CE0 /* LikePicsKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = LikePicsKit; path = LikePicsKit; sourceTree = SOURCE_ROOT; };
+		4B09BC846DA055E035CA3CE0 /* LikePicsKit */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LikePicsKit; sourceTree = SOURCE_ROOT; };
 		4B2AB01D75A41E3263AE08BB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4C0986F8C1367CCAA667F857 /* ClipItemListToolBarEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemListToolBarEvent.swift; sourceTree = "<group>"; };
 		4C5357590C40D2927A1F8395 /* TagSelectionModalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectionModalController.swift; sourceTree = "<group>"; };
