@@ -75,11 +75,6 @@ class TagSelectionModalController: UIViewController {
         })
     }
 
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        store.execute(.viewDidDisappear)
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 

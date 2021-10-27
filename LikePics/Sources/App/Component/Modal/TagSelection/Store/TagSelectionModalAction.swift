@@ -9,7 +9,6 @@ enum TagSelectionModalAction: Action {
     // MARK: View Life-Cycle
 
     case viewDidLoad
-    case viewDidDisappear
 
     // MARK: State Observation
 

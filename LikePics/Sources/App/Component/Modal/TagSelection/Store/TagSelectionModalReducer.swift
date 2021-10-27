@@ -25,12 +25,6 @@ struct TagSelectionModalReducer: Reducer {
         case .viewDidLoad:
             return Self.prepareQueryEffects(state, dependency)
 
-        case .viewDidDisappear:
-            var userInfo: [ModalNotification.UserInfoKey: Any] = [:]
-            userInfo[.selectedTags] = Set(state.tags.orderedSelectedEntities())
-            dependency.modalNotificationCenter.post(id: state.id, name: .tagSelectionModal, userInfo: userInfo)
-            return (nextState, .none)
-
         // MARK: State Observation
 
         case let .tagsUpdated(tags):
@@ -64,6 +58,9 @@ struct TagSelectionModalReducer: Reducer {
             return (nextState, .none)
 
         case .saveButtonTapped:
+            var userInfo: [ModalNotification.UserInfoKey: Any] = [:]
+            userInfo[.selectedTags] = Set(state.tags.orderedSelectedEntities())
+            dependency.modalNotificationCenter.post(id: state.id, name: .tagSelectionModal, userInfo: userInfo)
             nextState.isDismissed = true
             return (nextState, .none)
 
