@@ -1,4 +1,2 @@
-- Improve rendering performance.
-- Fixed an issue that images saved with wrong file name.
-- Fixed a bug sometimes exists an extra Home view in navigation stack.
-- Fixed minor bugs.
+- Save selected tags on selection sheet by tap "Save" button. If you select tags and close selection sheet without tap "Save" button, it has no effect.
+- Append selected tags for selected clips, instead of replace existing tags of selected clips.
