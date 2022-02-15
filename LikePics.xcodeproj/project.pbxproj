@@ -50,6 +50,12 @@
 		2BDF60D8E0EAE082077C20DA /* SceneDependencyContainer+Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F98D67EB7E59B8B685AF4E /* SceneDependencyContainer+Router.swift */; };
 		2C35B748CF4BE8BDF81A27EA /* ClipSearchToken+Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFF4AD5E8E612524AE2B88A /* ClipSearchToken+Display.swift */; };
 		2C54655681E4DEF5F6649DB2 /* ClipCollectionViewRootState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B3C89AD856C4B6AFB7ABA0 /* ClipCollectionViewRootState.swift */; };
+		2C7D442D27BBDCDC00F44F55 /* FindViewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7D442C27BBDCDC00F44F55 /* FindViewReducer.swift */; };
+		2C7D442F27BBDCF600F44F55 /* FindViewAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7D442E27BBDCF600F44F55 /* FindViewAction.swift */; };
+		2C7D443127BBDD0B00F44F55 /* FindViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7D443027BBDD0B00F44F55 /* FindViewState.swift */; };
+		2C7D443327BBE0DC00F44F55 /* FindViewTitleBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7D443227BBE0DC00F44F55 /* FindViewTitleBar.swift */; };
+		2C7D443527BBE0E900F44F55 /* FindViewTitleBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C7D443427BBE0E900F44F55 /* FindViewTitleBar.xib */; };
+		2C9F824027BAB47F0016E690 /* FindViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9F823F27BAB47F0016E690 /* FindViewController.swift */; };
 		2DF707FCBD66EB060748AB87 /* ClipItemListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FDCEC5DD57074EC4F749AED /* ClipItemListState.swift */; };
 		2E9904564A30EEED17147649 /* Intent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD5328AC8C6F2CC73B0D341 /* Intent.swift */; };
 		2F5C436A8E91CA75D518276E /* ClipCollectionToolBarState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE89A63F4CA374B988FB5BB /* ClipCollectionToolBarState.swift */; };
@@ -280,7 +286,6 @@
 		076C2B4C42E4B37B74F79703 /* AlbumListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListViewController.swift; sourceTree = "<group>"; };
 		083C17DAB6171916D982CF13 /* UserSettingsStorage+Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserSettingsStorage+Shared.swift"; sourceTree = "<group>"; };
 		08886B8AFF6B460E9F821DC0 /* ClipCollectionMenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollectionMenuBuilder.swift; sourceTree = "<group>"; };
-		0A2CC4DA318A160C3703CAB6 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
 		0AB24B046CFC88634ADE7490 /* SceneRootSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneRootSetupViewController.swift; sourceTree = "<group>"; };
 		0AE3E55BD77A98FF4434B1AD /* PreviewPrefetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewPrefetcher.swift; sourceTree = "<group>"; };
 		0B13CFDE5B8DE57566C6CDD4 /* ClipItemListRootReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemListRootReducer.swift; sourceTree = "<group>"; };
@@ -310,6 +315,14 @@
 		268F958F83C5D254A124C4F8 /* TagCollectionViewAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionViewAction.swift; sourceTree = "<group>"; };
 		2842D41049AAA30055FCE2FB /* SearchEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntryViewController.swift; sourceTree = "<group>"; };
 		2B318FBD1E04E610FEE37C39 /* HasTemporariesPersistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTemporariesPersistService.swift; sourceTree = "<group>"; };
+		2C7D442C27BBDCDC00F44F55 /* FindViewReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindViewReducer.swift; sourceTree = "<group>"; };
+		2C7D442E27BBDCF600F44F55 /* FindViewAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindViewAction.swift; sourceTree = "<group>"; };
+		2C7D443027BBDD0B00F44F55 /* FindViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindViewState.swift; sourceTree = "<group>"; };
+		2C7D443227BBE0DC00F44F55 /* FindViewTitleBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindViewTitleBar.swift; sourceTree = "<group>"; };
+		2C7D443427BBE0E900F44F55 /* FindViewTitleBar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FindViewTitleBar.xib; sourceTree = "<group>"; };
+		2C9F823B27BAB3DC0016E690 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
+		2C9F823D27BAB3EA0016E690 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
+		2C9F823F27BAB47F0016E690 /* FindViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindViewController.swift; sourceTree = "<group>"; };
 		2CCBDA1AEFE0D933CB1066B8 /* ModalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalController.swift; sourceTree = "<group>"; };
 		2D6545FFB2F072EFE1F29F95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsViewController.storyboard; sourceTree = "<group>"; };
 		2F281018BD2D0F132C3C46F8 /* ClipCollection_Source.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollection_Source.swift; sourceTree = "<group>"; };
@@ -352,7 +365,6 @@
 		4E6932009AB256481ED058B5 /* SearchMenuDisplaySettingAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMenuDisplaySettingAction.swift; sourceTree = "<group>"; };
 		4F59CB5F55614AC6ADAD368D /* TagCollectionBrickworkLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionBrickworkLayout.swift; sourceTree = "<group>"; };
 		4FDCEC5DD57074EC4F749AED /* ClipItemListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemListState.swift; sourceTree = "<group>"; };
-		5018B0AB23C208DB05108AB0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
 		52DE66DEFBA7E39390696AF8 /* SearchEntryViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntryViewState.swift; sourceTree = "<group>"; };
 		5339EB91CCB67A12FC540410 /* ClipPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewViewController.swift; sourceTree = "<group>"; };
 		53427571424F0F1CF2D0D069 /* SearchMenuSortAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMenuSortAction.swift; sourceTree = "<group>"; };
@@ -722,6 +734,27 @@
 				4B194C5B9AE94DE34CAB940B /* ValueObject */,
 			);
 			path = Root;
+			sourceTree = "<group>";
+		};
+		2C7D442B27BBDCCF00F44F55 /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				2C7D442C27BBDCDC00F44F55 /* FindViewReducer.swift */,
+				2C7D442E27BBDCF600F44F55 /* FindViewAction.swift */,
+				2C7D443027BBDD0B00F44F55 /* FindViewState.swift */,
+			);
+			path = Store;
+			sourceTree = "<group>";
+		};
+		2C9F823E27BAB4400016E690 /* Find */ = {
+			isa = PBXGroup;
+			children = (
+				2C7D442B27BBDCCF00F44F55 /* Store */,
+				2C9F823F27BAB47F0016E690 /* FindViewController.swift */,
+				2C7D443227BBE0DC00F44F55 /* FindViewTitleBar.swift */,
+				2C7D443427BBE0E900F44F55 /* FindViewTitleBar.xib */,
+			);
+			path = Find;
 			sourceTree = "<group>";
 		};
 		2F68CE6A7289F61735210D54 /* TagCollection */ = {
@@ -1185,6 +1218,7 @@
 		9A317BCD974F1943B9370086 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
+				2C9F823E27BAB4400016E690 /* Find */,
 				23C064444354BF4C4C0AEB5E /* Setting */,
 				A69F604A7357F657439861C3 /* UserInterfaceStyleSelection */,
 			);
@@ -1821,6 +1855,7 @@
 			files = (
 				D63256AF1AF1B810615CDF21 /* Assets.xcassets in Resources */,
 				CDA61B3939F06F9C0081E6D3 /* InfoPlist.strings in Resources */,
+				2C7D443527BBE0E900F44F55 /* FindViewTitleBar.xib in Resources */,
 				02FD877B2E884AB2626B49D9 /* LaunchScreen.storyboard in Resources */,
 				1928834B2B596667D97C7473 /* Localizable.strings in Resources */,
 				0A157FFF68CCF861B43DBB09 /* Settings.bundle in Resources */,
@@ -2019,6 +2054,7 @@
 				0DE49CC78610EF5A892CAE48 /* HasRouter.swift in Sources */,
 				18A57A732B8152E1AFEFF984 /* HasTemporariesPersistService.swift in Sources */,
 				D4E4C34F692EC3B4099DB2B1 /* HasTextEditAlertDelegate.swift in Sources */,
+				2C7D443327BBE0DC00F44F55 /* FindViewTitleBar.swift in Sources */,
 				A2D560F3E627EF7B83DA9FBC /* HasTextValidator.swift in Sources */,
 				25AB82F3E7027531CFD92812 /* HasTransitionLock.swift in Sources */,
 				E1FCDE47FB1DD2EC60BC3C9D /* HasUserSettingStorage.swift in Sources */,
@@ -2045,6 +2081,7 @@
 				85CAAD0E7CEAD8F059D07C1F /* SceneRootSetupViewController.swift in Sources */,
 				F02D7E4782A2364B6B0C9DB8 /* SceneRootSideBarController.swift in Sources */,
 				A996048B93CDB5177552B008 /* SceneRootSideBarLayout.swift in Sources */,
+				2C9F824027BAB47F0016E690 /* FindViewController.swift in Sources */,
 				BF154DD29164CE45C29D9D1A /* SceneRootSplitViewController.swift in Sources */,
 				143957516167CB827C7A4C3C /* SceneRootTabBarController.swift in Sources */,
 				A70A54BAC2EB69446A91688E /* SceneRootViewController+ClipPreviewPresentbale.swift in Sources */,
@@ -2062,6 +2099,7 @@
 				8EF47CE044224D03FECB29E4 /* SearchMenuAction.swift in Sources */,
 				A43A5327DB50DCEEA47F9329 /* SearchMenuBuilder.swift in Sources */,
 				F0D4EAE434DEAB158F66AF01 /* SearchMenuDisplaySettingAction.swift in Sources */,
+				2C7D443127BBDD0B00F44F55 /* FindViewState.swift in Sources */,
 				CA945424CE3D61B08D070A2E /* SearchMenuSortAction.swift in Sources */,
 				CBC5EC0DA276C5B9ECE1A25D /* SearchMenuState.swift in Sources */,
 				90AAC326DB83D271CF1B23CE /* SearchResultViewAction.swift in Sources */,
@@ -2089,6 +2127,7 @@
 				6321E61A6D5C7BB416B3A0A8 /* TagCollectionViewReducer.swift in Sources */,
 				CB04894271938581F889DE69 /* TagCollectionViewState.swift in Sources */,
 				558AEA269810A240DADDEA48 /* TagCollection_MenuItem.swift in Sources */,
+				2C7D442F27BBDCF600F44F55 /* FindViewAction.swift in Sources */,
 				6F400C109C76531003100664 /* TagSelectionModalAction.swift in Sources */,
 				DA53AC8BF9E5D01C6EA404C5 /* TagSelectionModalController.swift in Sources */,
 				1C4D30E7D4A03915DF93A5F2 /* TagSelectionModalLayout.swift in Sources */,
@@ -2105,6 +2144,7 @@
 				6DA6417E8C15C84D84612BDA /* URLButtonInteractionHandler.swift in Sources */,
 				FE16FD0E42852E419B57BA7A /* UserInterfaceStyleSelectionViewController.swift in Sources */,
 				65CC05ED094B2449A2736852 /* UserInterfaceStyleSelectionViewLayout.swift in Sources */,
+				2C7D442D27BBDCDC00F44F55 /* FindViewReducer.swift in Sources */,
 				2B61C9FCB469A1ED7F078264 /* UserSettingsStorage+Shared.swift in Sources */,
 				AEC46804CBD1E2737D6B2A5B /* ViewControllerFactory.swift in Sources */,
 				08A48AB509FA64E37F21DA7F /* ViewLazyPresentable.swift in Sources */,
@@ -2157,8 +2197,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				2D6545FFB2F072EFE1F29F95 /* Base */,
-				5018B0AB23C208DB05108AB0 /* en */,
-				0A2CC4DA318A160C3703CAB6 /* ja */,
+				2C9F823B27BAB3DC0016E690 /* en */,
+				2C9F823D27BAB3EA0016E690 /* ja */,
 			);
 			name = SettingsViewController.storyboard;
 			sourceTree = "<group>";

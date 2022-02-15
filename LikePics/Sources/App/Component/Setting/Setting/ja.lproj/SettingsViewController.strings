@@ -14,11 +14,17 @@
 /* Class = "UITableViewSection"; headerTitle = "表示設定"; ObjectID = "R8c-8b-MTp"; */
 "R8c-8b-MTp.headerTitle" = "表示設定";
 
+/* Class = "UITableViewSection"; headerTitle = "その他の機能"; ObjectID = "TvR-on-Yrl"; */
+"TvR-on-Yrl.headerTitle" = "その他の機能";
+
 /* Class = "UILabel"; text = "テーマ"; ObjectID = "Yh3-te-Ylx"; */
 "Yh3-te-Ylx.text" = "テーマ";
 
 /* Class = "UILabel"; text = "iCloudで同期する"; ObjectID = "fFY-Xv-c8Z"; */
 "fFY-Xv-c8Z.text" = "iCloudで同期する";
+
+/* Class = "UILabel"; text = "探す"; ObjectID = "hvu-9X-NRm"; */
+"hvu-9X-NRm.text" = "探す";
 
 /* Class = "UILabel"; text = "0.0.0"; ObjectID = "lYZ-fG-1Da"; */
 "lYZ-fG-1Da.text" = "0.0.0";

@@ -18,6 +18,10 @@ class SettingsViewController: UITableViewController {
     @IBOutlet var syncICloudSwitch: UISwitch!
     @IBOutlet var versionLabel: UILabel!
 
+    // MARK: Service
+
+    var router: Router!
+
     // MARK: Store
 
     var store: Store!
@@ -185,6 +189,8 @@ extension SettingsViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath == IndexPath(row: 0, section: 0) {
             show(UserInterfaceStyleSelectionViewController(), sender: nil)
+        } else if indexPath == IndexPath(row: 0, section: 2) {
+            router.showFindView()
         }
     }
 

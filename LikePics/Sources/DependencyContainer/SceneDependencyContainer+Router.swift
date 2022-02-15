@@ -263,6 +263,15 @@ extension SceneDependencyContainer: Router {
         return true
     }
 
+    func showFindView() -> Bool {
+        let state = FindViewState()
+        let viewController = FindViewController(state: state,
+                                                dependency: self)
+        guard let detailViewController = rootViewController?.currentViewController else { return false }
+        detailViewController.show(viewController, sender: nil)
+        return true
+    }
+
     func routeToClipCollectionView(for tag: Tag) {
         guard let rootViewController = rootViewController else { return }
         dismissAllModals { isSucceeded in

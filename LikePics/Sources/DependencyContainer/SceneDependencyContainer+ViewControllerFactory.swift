@@ -113,6 +113,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
         }()
         let store = Store(initialState: state, dependency: self, reducer: SettingsViewReducer())
         viewController.store = store
+        viewController.router = router
 
         return UINavigationController(rootViewController: viewController)
     }
