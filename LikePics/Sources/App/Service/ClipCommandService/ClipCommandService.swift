@@ -947,3 +947,19 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         }
     }
 }
+
+extension ClipCommandService: TagCommandServiceProtocol {
+    public func create(tagWithName name: String) -> Result<Tag.Identity, TagCommandServiceError> {
+        let result: Result<Tag.Identity, ClipStorageError> = create(tagWithName: name)
+        switch result {
+        case let .success(tagId):
+            return .success(tagId)
+
+        case .failure(.duplicated):
+            return .failure(.duplicated)
+
+        default:
+            return .failure(.internalError)
+        }
+    }
+}

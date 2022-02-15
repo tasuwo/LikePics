@@ -372,3 +372,9 @@ extension ClipQueryService: ClipQueryServiceProtocol {
         }
     }
 }
+
+extension ClipQueryService: TagQueryServiceProtocol {
+    public func queryTags() -> Result<TagListQuery, ClipStorageError> {
+        queryAllTags()
+    }
+}

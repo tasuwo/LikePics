@@ -12,7 +12,7 @@ public class WebImageLoadSourceResolver {
     private let url: URL
     private let finder = WebImageUrlSetFinder()
 
-    private var urlFinderDelayMs: Int = 0
+    private var urlFinderDelayMs: Int = 1000
     private var subscriptions = Set<AnyCancellable>()
 
     public var loadedView: PassthroughSubject<UIView, Never> = .init()

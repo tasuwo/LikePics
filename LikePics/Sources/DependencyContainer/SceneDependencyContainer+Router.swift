@@ -5,8 +5,10 @@
 import Common
 import Domain
 import Foundation
+import LikePicsCore
 import LikePicsUIKit
 import UIKit
+import WebKit
 
 extension SceneDependencyContainer {
     private var rootViewController: SceneRootViewController? {
@@ -265,10 +267,47 @@ extension SceneDependencyContainer: Router {
 
     func showFindView() -> Bool {
         let state = FindViewState()
-        let viewController = FindViewController(state: state,
-                                                dependency: self)
+        let viewController = FindViewController(state: state, dependency: self, router: self)
         guard let detailViewController = rootViewController?.currentViewController else { return false }
         detailViewController.show(viewController, sender: nil)
+        return true
+    }
+
+    func showClipCreationModal(webView: WKWebView, clipCreationDelegate: ClipCreationDelegate) -> Bool {
+        guard let currentUrl = webView.url else { return false }
+
+        struct Dependency: ClipCreationViewDependency {
+            var clipRecipeFactory: ClipRecipeFactoryProtocol
+            var clipStore: ClipStorable
+            var imageLoader: ImageLoadable
+            var imageSourceProvider: ImageLoadSourceResolver
+            var userSettingsStorage: UserSettingsStorageProtocol
+        }
+        let imageLoader = ImageLoader()
+        let dependency = Dependency(clipRecipeFactory: ClipRecipeFactory(),
+                                    clipStore: container._clipCommandService,
+                                    imageLoader: imageLoader,
+                                    // TODO: WebView の表示内容をそのままパースする方式に切り替える
+                                    imageSourceProvider: WebImageLoadSourceResolver(url: currentUrl),
+                                    userSettingsStorage: container._userSettingStorage)
+
+        let viewController = ClipCreationViewController(factory: self,
+                                                        state: .init(source: .webImage,
+                                                                     url: currentUrl,
+                                                                     isSomeItemsHidden: container._userSettingStorage.readShowHiddenItems()),
+                                                        dependency: dependency,
+                                                        thumbnailPipeline: container.temporaryThumbnailPipeline,
+                                                        imageLoader: imageLoader,
+                                                        delegate: clipCreationDelegate)
+
+        let navigationViewController = UINavigationController(rootViewController: viewController)
+
+        navigationViewController.modalPresentationStyle = .pageSheet
+        navigationViewController.isModalInPresentation = false
+
+        guard let topViewController = topViewController else { return false }
+        topViewController.present(navigationViewController, animated: true, completion: nil)
+
         return true
     }
 

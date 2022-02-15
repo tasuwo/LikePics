@@ -177,3 +177,21 @@ extension SceneDependencyContainer: ViewControllerFactory {
         return viewController
     }
 }
+
+extension SceneDependencyContainer: LikePicsCore.ViewControllerFactory {
+    func makeTagSelectionViewController(selectedTags: Set<Tag.Identity>, delegate: TagSelectionViewControllerDelegate) -> UIViewController? {
+        switch container._clipQueryService.queryAllTags() {
+        case let .success(query):
+            let viewModel = TagSelectionViewModel(query: query,
+                                                  selectedTags: selectedTags,
+                                                  commandService: container._clipCommandService,
+                                                  settingStorage: container._userSettingStorage,
+                                                  logger: container.logger)
+            let viewController = TagSelectionViewController(viewModel: viewModel, delegate: delegate)
+            return UINavigationController(rootViewController: viewController)
+
+        case .failure:
+            return nil
+        }
+    }
+}

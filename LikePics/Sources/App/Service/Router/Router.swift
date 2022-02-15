@@ -4,7 +4,9 @@
 
 import Domain
 import Foundation
+import LikePicsCore
 import LikePicsUIKit
+import WebKit
 
 protocol Router {
     @discardableResult
@@ -50,6 +52,9 @@ protocol Router {
 
     @discardableResult
     func showFindView() -> Bool
+
+    @discardableResult
+    func showClipCreationModal(webView: WKWebView, clipCreationDelegate: ClipCreationDelegate) -> Bool
 
     func routeToClipCollectionView(for tag: Tag)
 
