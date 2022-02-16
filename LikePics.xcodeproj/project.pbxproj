@@ -48,6 +48,7 @@
 		2B61C9FCB469A1ED7F078264 /* UserSettingsStorage+Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083C17DAB6171916D982CF13 /* UserSettingsStorage+Shared.swift */; };
 		2BDF60D8E0EAE082077C20DA /* SceneDependencyContainer+Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F98D67EB7E59B8B685AF4E /* SceneDependencyContainer+Router.swift */; };
 		2C35B748CF4BE8BDF81A27EA /* ClipSearchToken+Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFF4AD5E8E612524AE2B88A /* ClipSearchToken+Display.swift */; };
+		2C406A3827BD58DB00312C77 /* UINavigationController+UIGestureRecognizerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C406A3727BD58DB00312C77 /* UINavigationController+UIGestureRecognizerDelegate.swift */; };
 		2C54655681E4DEF5F6649DB2 /* ClipCollectionViewRootState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B3C89AD856C4B6AFB7ABA0 /* ClipCollectionViewRootState.swift */; };
 		2C7D442D27BBDCDC00F44F55 /* FindViewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7D442C27BBDCDC00F44F55 /* FindViewReducer.swift */; };
 		2C7D442F27BBDCF600F44F55 /* FindViewAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7D442E27BBDCF600F44F55 /* FindViewAction.swift */; };
@@ -313,6 +314,7 @@
 		268F958F83C5D254A124C4F8 /* TagCollectionViewAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionViewAction.swift; sourceTree = "<group>"; };
 		2842D41049AAA30055FCE2FB /* SearchEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntryViewController.swift; sourceTree = "<group>"; };
 		2B318FBD1E04E610FEE37C39 /* HasTemporariesPersistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTemporariesPersistService.swift; sourceTree = "<group>"; };
+		2C406A3727BD58DB00312C77 /* UINavigationController+UIGestureRecognizerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+UIGestureRecognizerDelegate.swift"; sourceTree = "<group>"; };
 		2C7D442C27BBDCDC00F44F55 /* FindViewReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindViewReducer.swift; sourceTree = "<group>"; };
 		2C7D442E27BBDCF600F44F55 /* FindViewAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindViewAction.swift; sourceTree = "<group>"; };
 		2C7D443027BBDD0B00F44F55 /* FindViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindViewState.swift; sourceTree = "<group>"; };
@@ -732,6 +734,14 @@
 			path = Root;
 			sourceTree = "<group>";
 		};
+		2C406A3627BD58BA00312C77 /* NavigationBar */ = {
+			isa = PBXGroup;
+			children = (
+				2C406A3727BD58DB00312C77 /* UINavigationController+UIGestureRecognizerDelegate.swift */,
+			);
+			path = NavigationBar;
+			sourceTree = "<group>";
+		};
 		2C7D442B27BBDCCF00F44F55 /* Store */ = {
 			isa = PBXGroup;
 			children = (
@@ -815,6 +825,7 @@
 				1340166A31F43385FBA5C5F9 /* SceneDelegate.swift */,
 				7F09267CDA57D222F3A3321F /* SceneDelegate+StateRestoration.swift */,
 				F640F9E430CB438420DFC17F /* ClipsIntegrityValidator */,
+				2C406A3627BD58BA00312C77 /* NavigationBar */,
 			);
 			path = Root;
 			sourceTree = "<group>";
@@ -1957,6 +1968,7 @@
 				E6862839E259722631FCDF77 /* ClipCollectionMenuBuilder.swift in Sources */,
 				7D4CE2C8752C320BE0CAE766 /* ClipCollectionNavigationBarAction.swift in Sources */,
 				2ADC73AA8C5985167792212C /* ClipCollectionNavigationBarController.swift in Sources */,
+				2C406A3827BD58DB00312C77 /* UINavigationController+UIGestureRecognizerDelegate.swift in Sources */,
 				1BDEB47BADBAADFB6A4FD254 /* ClipCollectionNavigationBarEvent.swift in Sources */,
 				445A972969223966EB737F5C /* ClipCollectionNavigationBarReducer.swift in Sources */,
 				C7BAA3F957C146CEFCE31150 /* ClipCollectionNavigationBarState.swift in Sources */,
