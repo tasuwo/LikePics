@@ -27,4 +27,5 @@ struct FindViewState: Equatable {
 
 extension FindViewState {
     var isClipEnabled: Bool { !isLoading }
+    var isProgressBarHidden: Bool { estimatedProgress >= 1 }
 }

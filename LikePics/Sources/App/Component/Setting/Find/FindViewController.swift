@@ -20,6 +20,7 @@ class FindViewController: UIViewController {
 
     private let webView: WKWebView
     private let barTitleView = FindViewTitleBar()
+    private let progressBar = UIProgressView(progressViewStyle: .bar)
 
     // MARK: BarButtons
 
@@ -119,6 +120,23 @@ extension FindViewController {
             .bind(\.isClipEnabled, to: \.isEnabled, on: clipButton)
             .store(in: &subscriptions)
         store.state
+            .bind(\.estimatedProgress) { [weak self] in
+                guard let self = self else { return }
+                if self.progressBar.progress >= 1, $0 < 1 {
+                    // 進捗度100%から戻る際にアニメーションさせると不自然なので、局所的にアニメーションを切る
+                    self.progressBar.setProgress(Float($0), animated: false)
+                    self.progressBar.isHidden = self.store.stateValue.isProgressBarHidden
+                } else {
+                    self.progressBar.setProgress(Float($0), animated: true)
+                    UIView.animate(withDuration: 0.2) {
+                        self.progressBar.layoutIfNeeded()
+                    } completion: { _ in
+                        self.progressBar.isHidden = self.store.stateValue.isProgressBarHidden
+                    }
+                }
+            }
+            .store(in: &subscriptions)
+        store.state
             .bind(\.isLoading) { [weak self] in
                 guard let self = self else { return }
                 let item: UIBarButtonItem = $0 ? self.cancelButton : self.reloadButton
@@ -185,6 +203,13 @@ extension FindViewController {
         webView.navigationDelegate = self
         webView.scrollView.delegate = self
         webView.allowsBackForwardNavigationGestures = true
+
+        progressBar.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(progressBar)
+        NSLayoutConstraint.activate([
+            progressBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            progressBar.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor)
+        ])
     }
 
     private func configureNavigationBar() {
