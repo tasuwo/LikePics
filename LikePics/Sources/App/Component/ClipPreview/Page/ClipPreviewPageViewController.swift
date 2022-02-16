@@ -51,7 +51,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     private var subscriptions: Set<AnyCancellable> = .init()
 
     private var previewViewSubscriptions: Set<AnyCancellable> = .init()
-    private var modalSubscription: Cancellable?
+    private var modalSubscriptions: Set<AnyCancellable> = .init()
 
     private let itemListTransitionController: ClipItemListTransitioningControllable
 
@@ -94,10 +94,6 @@ class ClipPreviewPageViewController: UIPageViewController {
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    deinit {
-        modalSubscription?.cancel()
     }
 
     // MARK: - View Life-Cycle Methods
@@ -286,59 +282,64 @@ extension ClipPreviewPageViewController {
     private func presentClipItemListModal(id: UUID) {
         guard let clip = store.stateValue.currentClip else { return }
 
-        modalSubscription = ModalNotificationCenter.default
+        ModalNotificationCenter.default
             .publisher(for: id, name: .clipItemList)
             .sink { [weak self] notification in
                 let itemId = notification.userInfo?[ModalNotification.UserInfoKey.selectedPreviewItem] as? ClipItem.Identity
                 self?.store.execute(.itemRequested(itemId))
-                self?.modalSubscription?.cancel()
-                self?.modalSubscription = nil
+                self?.modalSubscriptions.removeAll()
             }
+            .store(in: &modalSubscriptions)
 
         let succeeded = router.showClipItemListView(id: id,
                                                     clipId: clip.id,
                                                     clipItems: clip.items,
                                                     transitioningController: itemListTransitionController)
         if !succeeded {
-            modalSubscription?.cancel()
-            modalSubscription = nil
+            modalSubscriptions.removeAll()
             store.execute(.modalCompleted(false))
         }
     }
 
     private func presentAlbumSelectionModal(id: UUID) {
-        modalSubscription = ModalNotificationCenter.default
+        ModalNotificationCenter.default
             .publisher(for: id, name: .albumSelectionModal)
             .sink { [weak self] notification in
                 let albumId = notification.userInfo?[ModalNotification.UserInfoKey.selectedAlbumId] as? Album.Identity
                 self?.store.execute(.albumsSelected(albumId))
-                self?.modalSubscription?.cancel()
-                self?.modalSubscription = nil
+                self?.modalSubscriptions.removeAll()
             }
+            .store(in: &modalSubscriptions)
 
         if router.showAlbumSelectionModal(id: id) == false {
-            modalSubscription?.cancel()
-            modalSubscription = nil
+            modalSubscriptions.removeAll()
             store.execute(.modalCompleted(false))
         }
     }
 
     private func presentTagSelectionModal(id: UUID, selections: Set<Tag.Identity>) {
-        modalSubscription = ModalNotificationCenter.default
-            .publisher(for: id, name: .tagSelectionModal)
+        ModalNotificationCenter.default
+            .publisher(for: id, name: .tagSelectionModalDidSelect)
             .sink { [weak self] notification in
                 if let tags = notification.userInfo?[ModalNotification.UserInfoKey.selectedTags] as? Set<Tag> {
                     self?.store.execute(.tagsSelected(Set(tags.map({ $0.id }))))
                 } else {
                     self?.store.execute(.tagsSelected(nil))
                 }
-                self?.modalSubscription?.cancel()
-                self?.modalSubscription = nil
+                self?.modalSubscriptions.removeAll()
             }
+            .store(in: &modalSubscriptions)
+
+        ModalNotificationCenter.default
+            .publisher(for: id, name: .tagSelectionModalDidDismiss)
+            .sink { [weak self] _ in
+                self?.modalSubscriptions.removeAll()
+                self?.store.execute(.modalCompleted(true))
+            }
+            .store(in: &modalSubscriptions)
 
         if router.showTagSelectionModal(id: id, selections: selections) == false {
-            modalSubscription?.cancel()
-            modalSubscription = nil
+            modalSubscriptions.removeAll()
             store.execute(.modalCompleted(false))
         }
     }

@@ -60,7 +60,7 @@ struct TagSelectionModalReducer: Reducer {
         case .saveButtonTapped:
             var userInfo: [ModalNotification.UserInfoKey: Any] = [:]
             userInfo[.selectedTags] = Set(state.tags.orderedSelectedEntities())
-            dependency.modalNotificationCenter.post(id: state.id, name: .tagSelectionModal, userInfo: userInfo)
+            dependency.modalNotificationCenter.post(id: state.id, name: .tagSelectionModalDidSelect, userInfo: userInfo)
             nextState.isDismissed = true
             return (nextState, .none)
 
@@ -83,6 +83,12 @@ struct TagSelectionModalReducer: Reducer {
 
         case .alertDismissed:
             nextState.alert = nil
+            return (nextState, .none)
+
+        // MARK: Transition
+
+        case .didDismissedManually:
+            dependency.modalNotificationCenter.post(id: state.id, name: .tagSelectionModalDidDismiss, userInfo: nil)
             return (nextState, .none)
         }
     }
@@ -182,7 +188,8 @@ extension TagSelectionModalReducer {
 // MARK: - ModalNotification
 
 extension ModalNotification.Name {
-    static let tagSelectionModal = ModalNotification.Name("net.tasuwo.TBox.TagSelectionModalReducer.tagSelectionModal")
+    static let tagSelectionModalDidSelect = ModalNotification.Name("net.tasuwo.TBox.TagSelectionModalReducer.tagSelectionModalDidSelect")
+    static let tagSelectionModalDidDismiss = ModalNotification.Name("net.tasuwo.TBox.TagSelectionModalReducer.tagSelectionModalDidDismiss")
 }
 
 extension ModalNotification.UserInfoKey {

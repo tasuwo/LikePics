@@ -328,6 +328,14 @@ extension TagSelectionModalController: TextEditAlertDelegate {
     }
 }
 
+extension TagSelectionModalController: UIAdaptivePresentationControllerDelegate {
+    // MARK: - UIAdaptivePresentationControllerDelegate
+
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        store.execute(.didDismissedManually)
+    }
+}
+
 extension TagSelectionModalController: ModalController {
     // MARK: - ModalController
 

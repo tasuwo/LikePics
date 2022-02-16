@@ -31,4 +31,8 @@ enum TagSelectionModalAction: Action {
 
     case alertSaveButtonTapped(text: String)
     case alertDismissed
+
+    // MARK: Transition
+
+    case didDismissedManually
 }
