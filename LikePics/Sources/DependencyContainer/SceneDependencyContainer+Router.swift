@@ -287,8 +287,7 @@ extension SceneDependencyContainer: Router {
         let dependency = Dependency(clipRecipeFactory: ClipRecipeFactory(),
                                     clipStore: container._clipCommandService,
                                     imageLoader: imageLoader,
-                                    // TODO: WebView の表示内容をそのままパースする方式に切り替える
-                                    imageSourceProvider: WebImageLoadSourceResolver(url: currentUrl),
+                                    imageSourceProvider: WebPageImageLoadSourceResolver(webView: webView),
                                     userSettingsStorage: container._userSettingStorage)
 
         let viewController = ClipCreationViewController(factory: self,
