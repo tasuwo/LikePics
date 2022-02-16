@@ -61,6 +61,7 @@ class FindViewController: UIViewController {
     {
         let webView = WKWebView()
 
+        // swiftlint:disable:next force_unwrapping
         let request = URLRequest(url: URL(string: "https://google.com")!)
         webView.load(request)
 
