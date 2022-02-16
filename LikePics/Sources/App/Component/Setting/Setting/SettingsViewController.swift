@@ -213,6 +213,7 @@ extension SettingsViewController: Restorable {
                           dependency: store.dependency,
                           reducer: SettingsViewReducer())
         viewController.store = store
+        viewController.router = router
 
         return viewController
     }

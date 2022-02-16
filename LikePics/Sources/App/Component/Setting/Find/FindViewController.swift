@@ -18,7 +18,7 @@ class FindViewController: UIViewController {
 
     // MARK: View
 
-    private let webView = WKWebView()
+    private let webView: WKWebView
     private let barTitleView = FindViewTitleBar()
 
     // MARK: BarButtons
@@ -42,14 +42,28 @@ class FindViewController: UIViewController {
 
     private let router: Router
 
-    init(state: FindViewState,
+    init(webView: WKWebView,
+         state: FindViewState,
          dependency: FindViewDependency,
          router: Router)
     {
+        self.webView = webView
         self.store = Store(initialState: state, dependency: dependency, reducer: FindViewReducer())
         self.router = router
 
         super.init(nibName: nil, bundle: nil)
+    }
+
+    convenience init(state: FindViewState,
+                     dependency: FindViewDependency,
+                     router: Router)
+    {
+        let webView = WKWebView()
+
+        let request = URLRequest(url: URL(string: "https://google.com")!)
+        webView.load(request)
+
+        self.init(webView: webView, state: state, dependency: dependency, router: router)
     }
 
     deinit {
@@ -69,9 +83,6 @@ class FindViewController: UIViewController {
         configureNavigationBar()
 
         bind(to: store)
-
-        let request = URLRequest(url: URL(string: "https://google.com")!)
-        webView.load(request)
     }
 }
 
@@ -314,5 +325,16 @@ extension FindViewController: UITextFieldDelegate {
         webView.load(URLRequest(url: url))
         barTitleView.isSearching = false
         return true
+    }
+}
+
+extension FindViewController: Restorable {
+    // MARK: - Restorable
+
+    func restore() -> RestorableViewController {
+        return FindViewController(webView: webView,
+                                  state: store.stateValue,
+                                  dependency: store.dependency,
+                                  router: router)
     }
 }
