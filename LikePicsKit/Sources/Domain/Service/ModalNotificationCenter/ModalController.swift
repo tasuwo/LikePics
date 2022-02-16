@@ -4,6 +4,6 @@
 
 import Foundation
 
-protocol ModalController {
+public protocol ModalController {
     var id: UUID { get }
 }

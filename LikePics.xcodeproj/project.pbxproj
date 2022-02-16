@@ -27,7 +27,6 @@
 		10D7F79ABE35E8A376693DA0 /* ClipCollection_MenuElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1308D82B509A01728EE9C48B /* ClipCollection_MenuElement.swift */; };
 		10E192949EB0FCB3424F44FB /* Smoothie in Frameworks */ = {isa = PBXBuildFile; productRef = F3230B13C186B00F10AAC3F2 /* Smoothie */; };
 		143957516167CB827C7A4C3C /* SceneRootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD12525AC32BD4561759F7E /* SceneRootTabBarController.swift */; };
-		153BBF4EBF992F268AB76D80 /* HasModalNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CC72AC8516173DB6A63B66 /* HasModalNotificationCenter.swift */; };
 		16FE2E02577EF4A5DF2F7A2C /* ClipItemListNavigationBarAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC3A587BE4F8C95D180FA696 /* ClipItemListNavigationBarAction.swift */; };
 		1736C8B6CB6A721C2ED6C535 /* AlbumSelectionModalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8FE3A711B64E3095826F75 /* AlbumSelectionModalController.swift */; };
 		18A57A732B8152E1AFEFF984 /* HasTemporariesPersistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B318FBD1E04E610FEE37C39 /* HasTemporariesPersistService.swift */; };
@@ -141,7 +140,6 @@
 		966BBF9ADC4D39AC220BBD12 /* ClipMergeViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C4006DBD0F4A48D305AFB8 /* ClipMergeViewState.swift */; };
 		96F70D081B973B59C41FB9F0 /* SceneRootViewLayoutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE562FC85E4B5FAD7DE6B0CA /* SceneRootViewLayoutProvider.swift */; };
 		97244BFC5D76E94E2087AF05 /* ClipItemListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44245978270035332395D8F9 /* ClipItemListViewController.swift */; };
-		9782AC26C61197C53C298815 /* ModalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCBDA1AEFE0D933CB1066B8 /* ModalController.swift */; };
 		9A4DADFE98EE0FDF0F756AC3 /* ClipCollectionWaterfallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA67F5034C2C47248344CB7E /* ClipCollectionWaterfallLayout.swift */; };
 		9BF17274C4DDAF910504870C /* TextEditAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EECA91889A13AF25859A8 /* TextEditAlertController.swift */; };
 		9DC412E5335C0C36A7CCFB48 /* ClipCollectionReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7775634EBDD88282076732B /* ClipCollectionReducer.swift */; };
@@ -323,7 +321,6 @@
 		2C9F823B27BAB3DC0016E690 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
 		2C9F823D27BAB3EA0016E690 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/SettingsViewController.strings; sourceTree = "<group>"; };
 		2C9F823F27BAB47F0016E690 /* FindViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindViewController.swift; sourceTree = "<group>"; };
-		2CCBDA1AEFE0D933CB1066B8 /* ModalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalController.swift; sourceTree = "<group>"; };
 		2D6545FFB2F072EFE1F29F95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsViewController.storyboard; sourceTree = "<group>"; };
 		2F281018BD2D0F132C3C46F8 /* ClipCollection_Source.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCollection_Source.swift; sourceTree = "<group>"; };
 		2F89E9F1665A17B5A22E43E2 /* SceneRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneRootViewController.swift; sourceTree = "<group>"; };
@@ -379,7 +376,6 @@
 		5DBBBA9C4880CD0657E16825 /* AlbumListViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumListViewLayout.swift; sourceTree = "<group>"; };
 		62373FDEA5D1FC6425CC31E3 /* HasPasteboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasPasteboard.swift; sourceTree = "<group>"; };
 		65AE71A683E17C02EFA2E84B /* ClipPreviewViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewViewState.swift; sourceTree = "<group>"; };
-		68CC72AC8516173DB6A63B66 /* HasModalNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasModalNotificationCenter.swift; sourceTree = "<group>"; };
 		6927D7E589C18445FACC7E23 /* HasIntegrityValidationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasIntegrityValidationService.swift; sourceTree = "<group>"; };
 		6AE4B8B055DB46D4DFB835A5 /* ClipCommandService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipCommandService.swift; sourceTree = "<group>"; };
 		6AF2E1D4D3EE1FBD316A542A /* TagCollectionViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionViewState.swift; sourceTree = "<group>"; };
@@ -1244,7 +1240,6 @@
 				599F81512062BB19C47CCD76 /* HasCloudAvailabilityService.swift */,
 				FE11F3C951CA14BB1CF5F868 /* HasImageQueryService.swift */,
 				6927D7E589C18445FACC7E23 /* HasIntegrityValidationService.swift */,
-				68CC72AC8516173DB6A63B66 /* HasModalNotificationCenter.swift */,
 				2666D19DFE04961278534822 /* HasNop.swift */,
 				62373FDEA5D1FC6425CC31E3 /* HasPasteboard.swift */,
 				05556A3D892D4A1B37DB790C /* HasRouter.swift */,
@@ -1678,7 +1673,6 @@
 		F61D5E065898B41208D8E9E5 /* Modal */ = {
 			isa = PBXGroup;
 			children = (
-				2CCBDA1AEFE0D933CB1066B8 /* ModalController.swift */,
 				5E35FF9C33B44CF2E008C388 /* AlbumSelection */,
 				537FBDA5A33B3C0400290338 /* ClipMerge */,
 				329C7CC87AF00C09E40D5C91 /* TagSelection */,
@@ -2048,7 +2042,6 @@
 				5C51B75B3298F262476FC1A2 /* HasCloudAvailabilityService.swift in Sources */,
 				AF82CADC34C48D78DD3FCAFE /* HasImageQueryService.swift in Sources */,
 				DC6F3BB4F711D4ABC9C025A7 /* HasIntegrityValidationService.swift in Sources */,
-				153BBF4EBF992F268AB76D80 /* HasModalNotificationCenter.swift in Sources */,
 				6ADF7F194EA1F4A4699C17C9 /* HasNop.swift in Sources */,
 				40948649D9299F16DD570C75 /* HasPasteboard.swift in Sources */,
 				0DE49CC78610EF5A892CAE48 /* HasRouter.swift in Sources */,
@@ -2061,7 +2054,6 @@
 				68D51F5678D2378FCBDC0BE0 /* ImageDataProvider.swift in Sources */,
 				2E9904564A30EEED17147649 /* Intent.swift in Sources */,
 				77B178A32E46A91497591091 /* LoadingViewPresentable.swift in Sources */,
-				9782AC26C61197C53C298815 /* ModalController.swift in Sources */,
 				8FB003747E8425CC415C3DE9 /* NSUserActivity+initWithIntent.swift in Sources */,
 				489AE061876379092003A9A8 /* NewTagCollectionBrickworkLayout.swift in Sources */,
 				8D4DFA6A6F405F34FB2A8AFE /* Pasteboard.swift in Sources */,

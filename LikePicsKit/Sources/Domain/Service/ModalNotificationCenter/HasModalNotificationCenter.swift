@@ -2,8 +2,6 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-import Domain
-
-protocol HasModalNotificationCenter {
+public protocol HasModalNotificationCenter {
     var modalNotificationCenter: ModalNotificationCenter { get }
 }
