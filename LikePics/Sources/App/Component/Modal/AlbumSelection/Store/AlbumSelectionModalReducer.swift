@@ -70,6 +70,13 @@ struct AlbumSelectionModalReducer: Reducer {
         case .alertDismissed:
             nextState.alert = nil
             return (nextState, .none)
+
+        // MARK: Transition
+
+        case .didDismissedManually:
+            dependency.modalNotificationCenter.post(id: state.id, name: .albumSelectionModalDidDismiss, userInfo: nil)
+            nextState.isDismissed = true
+            return (nextState, .none)
         }
     }
 }
@@ -168,6 +175,7 @@ extension AlbumSelectionModalReducer {
 
 extension ModalNotification.Name {
     static let albumSelectionModal = ModalNotification.Name("net.tasuwo.TBox.AlbumSelectionModalReducer.albumSelectionModal")
+    static let albumSelectionModalDidDismiss = ModalNotification.Name("net.tasuwo.TBox.AlbumSelectionModalReducer.albumSelectionModalDidDismiss")
 }
 
 extension ModalNotification.UserInfoKey {

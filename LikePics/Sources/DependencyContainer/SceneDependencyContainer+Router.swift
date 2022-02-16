@@ -237,6 +237,7 @@ extension SceneDependencyContainer: Router {
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
         navigationViewController.modalPresentationStyle = .pageSheet
+        navigationViewController.presentationController?.delegate = viewController
         navigationViewController.isModalInPresentation = false
 
         guard let topViewController = topViewController else { return false }

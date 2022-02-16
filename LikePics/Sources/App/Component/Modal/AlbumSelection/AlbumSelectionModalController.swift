@@ -277,6 +277,14 @@ extension AlbumSelectionModalController: TextEditAlertDelegate {
     }
 }
 
+extension AlbumSelectionModalController: UIAdaptivePresentationControllerDelegate {
+    // MARK: - UIAdaptivePresentationControllerDelegate
+
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        store.execute(.didDismissedManually)
+    }
+}
+
 extension AlbumSelectionModalController: ModalController {
     // MARK: - ModalController
 

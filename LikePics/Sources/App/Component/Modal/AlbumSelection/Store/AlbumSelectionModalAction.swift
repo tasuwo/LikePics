@@ -27,4 +27,8 @@ enum AlbumSelectionModalAction: Action {
 
     case alertSaveButtonTapped(text: String)
     case alertDismissed
+
+    // MARK: Transition
+
+    case didDismissedManually
 }

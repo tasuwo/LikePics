@@ -146,7 +146,7 @@ extension ClipMergeViewController {
             .publisher(for: id, name: .tagSelectionModalDidDismiss)
             .sink { [weak self] _ in
                 self?.modalSubscriptions.removeAll()
-                self?.store.execute(.modalCompleted(true))
+                self?.store.execute(.modalCompleted(false))
             }
             .store(in: &modalSubscriptions)
 

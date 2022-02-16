@@ -240,7 +240,7 @@ extension ClipItemInformationViewController {
             .publisher(for: id, name: .tagSelectionModalDidDismiss)
             .sink { [weak self] _ in
                 self?.modalSubscriptions.removeAll()
-                self?.store.execute(.modalCompleted(true))
+                self?.store.execute(.modalCompleted(false))
             }
             .store(in: &modalSubscriptions)
 
@@ -256,6 +256,14 @@ extension ClipItemInformationViewController {
             .sink { [weak self] notification in
                 let albumId = notification.userInfo?[ModalNotification.UserInfoKey.selectedAlbumId] as? Album.Identity
                 self?.store.execute(.albumSelected(albumId))
+                self?.modalSubscriptions.removeAll()
+            }
+            .store(in: &modalSubscriptions)
+
+        ModalNotificationCenter.default
+            .publisher(for: id, name: .albumSelectionModalDidDismiss)
+            .sink { [weak self] _ in
+                self?.store.execute(.modalCompleted(false))
                 self?.modalSubscriptions.removeAll()
             }
             .store(in: &modalSubscriptions)

@@ -434,6 +434,14 @@ extension ClipCollectionViewController {
             }
             .store(in: &modalSubscriptions)
 
+        ModalNotificationCenter.default
+            .publisher(for: id, name: .albumSelectionModalDidDismiss)
+            .sink { [weak self] _ in
+                self?.store.execute(.modalCompleted(false))
+                self?.modalSubscriptions.removeAll()
+            }
+            .store(in: &modalSubscriptions)
+
         if router.showAlbumSelectionModal(id: id) == false {
             modalSubscriptions.removeAll()
             store.execute(.modalCompleted(false))
@@ -457,7 +465,7 @@ extension ClipCollectionViewController {
             .publisher(for: id, name: .tagSelectionModalDidDismiss)
             .sink { [weak self] _ in
                 self?.modalSubscriptions.removeAll()
-                self?.store.execute(.modalCompleted(true))
+                self?.store.execute(.modalCompleted(false))
             }
             .store(in: &modalSubscriptions)
 
