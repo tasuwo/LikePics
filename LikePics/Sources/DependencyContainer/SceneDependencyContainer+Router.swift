@@ -294,7 +294,7 @@ extension SceneDependencyContainer: Router {
 
         let viewController = ClipCreationViewController(factory: self,
                                                         state: .init(id: id,
-                                                                     source: .webImage,
+                                                                     source: .webPageImage,
                                                                      url: currentUrl,
                                                                      isSomeItemsHidden: container._userSettingStorage.readShowHiddenItems()),
                                                         dependency: dependency,

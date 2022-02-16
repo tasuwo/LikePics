@@ -9,6 +9,7 @@ import Foundation
 public struct ClipCreationViewState: Equatable {
     public enum Source: Equatable {
         case webImage
+        case webPageImage
         case localImage
 
         var fromLocal: Bool {
@@ -16,7 +17,17 @@ public struct ClipCreationViewState: Equatable {
             case .localImage:
                 return true
 
+            default:
+                return false
+            }
+        }
+
+        var isReloadable: Bool {
+            switch self {
             case .webImage:
+                return true
+
+            default:
                 return false
             }
         }
@@ -125,7 +136,7 @@ extension ClipCreationViewState {
     }
 
     var isOverlayHidden: Bool { !isLoading }
-    var isReloadItemEnabled: Bool { !isLoading && !source.fromLocal }
+    var isReloadItemEnabled: Bool { !isLoading && source.isReloadable }
     var isDoneItemEnabled: Bool { !isLoading && !imageLoadSources.selections.isEmpty }
-    var displayReloadButton: Bool { !source.fromLocal }
+    var displayReloadButton: Bool { source.isReloadable }
 }
