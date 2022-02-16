@@ -4,7 +4,12 @@
 
 import Foundation
 
-struct FindViewState: Equatable, Codable {
+struct FindViewState: Equatable {
+    enum Modal: Equatable {
+        case clipCreation(id: UUID)
+    }
+
+    var modal: Modal?
     var title: String?
     var currentUrl: URL?
     var canGoBack: Bool

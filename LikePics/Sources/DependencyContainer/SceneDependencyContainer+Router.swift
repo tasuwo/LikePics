@@ -273,7 +273,7 @@ extension SceneDependencyContainer: Router {
         return true
     }
 
-    func showClipCreationModal(webView: WKWebView, clipCreationDelegate: ClipCreationDelegate) -> Bool {
+    func showClipCreationModal(id: UUID, webView: WKWebView) -> Bool {
         guard let currentUrl = webView.url else { return false }
 
         struct Dependency: ClipCreationViewDependency {
@@ -282,26 +282,29 @@ extension SceneDependencyContainer: Router {
             var imageLoader: ImageLoadable
             var imageSourceProvider: ImageLoadSourceResolver
             var userSettingsStorage: UserSettingsStorageProtocol
+            var modalNotificationCenter: ModalNotificationCenter
         }
         let imageLoader = ImageLoader()
         let dependency = Dependency(clipRecipeFactory: ClipRecipeFactory(),
                                     clipStore: container._clipCommandService,
                                     imageLoader: imageLoader,
                                     imageSourceProvider: WebPageImageLoadSourceResolver(webView: webView),
-                                    userSettingsStorage: container._userSettingStorage)
+                                    userSettingsStorage: container._userSettingStorage,
+                                    modalNotificationCenter: .default)
 
         let viewController = ClipCreationViewController(factory: self,
-                                                        state: .init(source: .webImage,
+                                                        state: .init(id: id,
+                                                                     source: .webImage,
                                                                      url: currentUrl,
                                                                      isSomeItemsHidden: container._userSettingStorage.readShowHiddenItems()),
                                                         dependency: dependency,
                                                         thumbnailPipeline: container.temporaryThumbnailPipeline,
-                                                        imageLoader: imageLoader,
-                                                        delegate: clipCreationDelegate)
+                                                        imageLoader: imageLoader)
 
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
         navigationViewController.modalPresentationStyle = .pageSheet
+        navigationViewController.presentationController?.delegate = viewController
         navigationViewController.isModalInPresentation = false
 
         guard let topViewController = topViewController else { return false }

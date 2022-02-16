@@ -10,11 +10,6 @@ import LikePicsUIKit
 import Smoothie
 import UIKit
 
-public protocol ClipCreationDelegate: AnyObject {
-    func didCancel(_ viewController: ClipCreationViewController)
-    func didFinish(_ viewController: ClipCreationViewController)
-}
-
 public class ClipCreationViewController: UIViewController {
     // MARK: - Type Aliases
 
@@ -64,7 +59,6 @@ public class ClipCreationViewController: UIViewController {
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
     private let clipsUpdateQueue = DispatchQueue(label: "net.tasuwo.TBoxCore.ClipCreationViewController", qos: .userInteractive)
-    private weak var delegate: ClipCreationDelegate?
 
     // MARK: - Initializers
 
@@ -72,14 +66,12 @@ public class ClipCreationViewController: UIViewController {
                 state: ClipCreationViewState,
                 dependency: ClipCreationViewDependency,
                 thumbnailPipeline: Pipeline,
-                imageLoader: ImageLoadable,
-                delegate: ClipCreationDelegate)
+                imageLoader: ImageLoadable)
     {
         self.factory = factory
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipCreationViewReducer())
         self.thumbnailPipeline = thumbnailPipeline
         self.imageLoader = imageLoader
-        self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -183,8 +175,8 @@ extension ClipCreationViewController {
 
         store.state
             .bind(\.isDismissed) { [weak self] isDismissed in
-                guard let self = self, isDismissed else { return }
-                self.delegate?.didFinish(self)
+                guard isDismissed else { return }
+                self?.dismissAll(completion: nil)
             }
             .store(in: &subscriptions)
     }
@@ -426,5 +418,13 @@ extension ClipCreationViewController: ClipCreationViewDelegate {
         let selectedTags = Set(store.stateValue.tags.filteredEntities().map { $0.id })
         guard let nextVC = factory.makeTagSelectionViewController(selectedTags: selectedTags, delegate: self) else { return }
         parent.present(nextVC, animated: true, completion: nil)
+    }
+}
+
+extension ClipCreationViewController: UIAdaptivePresentationControllerDelegate {
+    // MARK: - UIAdaptivePresentationControllerDelegate
+
+    public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        store.execute(.didDismissedManually)
     }
 }

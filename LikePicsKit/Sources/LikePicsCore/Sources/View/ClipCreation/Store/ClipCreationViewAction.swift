@@ -38,4 +38,8 @@ enum ClipCreationViewAction: Action {
     // MARK: Alert Completion
 
     case alertDismissed
+
+    // MARK: Dismiss
+
+    case didDismissedManually
 }

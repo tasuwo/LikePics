@@ -37,6 +37,7 @@ public struct ClipCreationViewState: Equatable {
         case error(title: String, message: String)
     }
 
+    let id: UUID
     let source: Source
 
     var url: URL?
@@ -56,7 +57,8 @@ public struct ClipCreationViewState: Equatable {
 }
 
 public extension ClipCreationViewState {
-    init(source: Source, url: URL?, isSomeItemsHidden: Bool) {
+    init(id: UUID, source: Source, url: URL?, isSomeItemsHidden: Bool) {
+        self.id = id
         self.source = source
         self.url = url
         self.tags = .init()

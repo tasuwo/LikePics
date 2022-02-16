@@ -2,6 +2,8 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Combine
+import Domain
 import LikePicsCore
 import UIKit
 
@@ -10,6 +12,7 @@ class ShareNavigationRootViewController: UIViewController {
 
     private let factory: Factory
     private let presenter: ShareNavigationRootPresenter
+    private var modalSubscription: Cancellable?
 
     @IBOutlet var indicator: UIActivityIndicatorView!
 
@@ -58,26 +61,29 @@ extension ShareNavigationRootViewController: ShareNavigationViewProtocol {
     }
 
     func presentClipTargetSelectionView(by url: URL) {
-        self.navigationController?.pushViewController(self.factory.makeClipTargetCollectionViewController(webUrl: url, delegate: self), animated: true)
+        let id = UUID()
+
+        modalSubscription = ModalNotificationCenter.default
+            .publisher(for: id, name: .clipCreationModalDidFinish)
+            .sink { [weak self] _ in self?.didFinish() }
+
+        let viewController = self.factory.makeClipTargetCollectionViewController(id: id, webUrl: url)
+        self.navigationController?.pushViewController(viewController, animated: true)
     }
 
     func presentClipTargetSelectionView(by providers: [ImageProvider], fileUrls: [URL]) {
-        self.navigationController?.pushViewController(self.factory.makeClipTargetCollectionViewController(loaders: providers, fileUrls: fileUrls, delegate: self), animated: true)
+        let id = UUID()
+
+        modalSubscription = ModalNotificationCenter.default
+            .publisher(for: id, name: .clipCreationModalDidFinish)
+            .sink { [weak self] _ in self?.didFinish() }
+
+        let viewController = self.factory.makeClipTargetCollectionViewController(id: id, loaders: providers, fileUrls: fileUrls)
+        self.navigationController?.pushViewController(viewController, animated: true)
     }
-}
 
-extension ShareNavigationRootViewController: ClipCreationDelegate {
-    // MARK: - ClipTargetCollectionViewControllerDelegate
-
-    func didFinish(_ viewController: ClipCreationViewController) {
+    private func didFinish() {
         DarwinNotificationCenter.default.post(name: .shareExtensionDidCompleteRequest)
         self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
-    }
-
-    func didCancel(_ viewController: ClipCreationViewController) {
-        let error = NSError(domain: "net.tasuwo.TBox",
-                            code: 0,
-                            userInfo: [NSLocalizedDescriptionKey: "An error description"])
-        self.extensionContext?.cancelRequest(withError: error)
     }
 }

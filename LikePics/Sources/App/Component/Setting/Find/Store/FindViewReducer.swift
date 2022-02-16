@@ -3,6 +3,7 @@
 //
 
 import CompositeKit
+import Foundation
 
 typealias FindViewDependency = HasNop
 
@@ -31,6 +32,12 @@ struct FindViewReducer: Reducer {
 
         case let .updatedEstimatedProgress(progress):
             nextState.estimatedProgress = progress
+
+        case .tapClip:
+            nextState.modal = .clipCreation(id: UUID())
+
+        case .modalDismissed:
+            nextState.modal = nil
         }
         return (nextState, .none)
     }

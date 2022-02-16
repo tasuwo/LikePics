@@ -12,4 +12,6 @@ enum FindViewAction: Action {
     case updatedCanGoForward(Bool)
     case updatedLoading(Bool)
     case updatedEstimatedProgress(Double)
+    case tapClip
+    case modalDismissed
 }

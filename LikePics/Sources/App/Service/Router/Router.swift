@@ -54,7 +54,7 @@ protocol Router {
     func showFindView() -> Bool
 
     @discardableResult
-    func showClipCreationModal(webView: WKWebView, clipCreationDelegate: ClipCreationDelegate) -> Bool
+    func showClipCreationModal(id: UUID, webView: WKWebView) -> Bool
 
     func routeToClipCollectionView(for tag: Tag)
 

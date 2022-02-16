@@ -4,6 +4,7 @@
 
 import Combine
 import CompositeKit
+import Domain
 import Foundation
 import LikePicsCore
 import LikePicsUIKit
@@ -35,6 +36,7 @@ class FindViewController: UIViewController {
     private var previousOffset: CGPoint?
     private var subscriptions: Set<AnyCancellable> = .init()
     private var observations: [NSKeyValueObservation] = []
+    private var modalSubscription: Cancellable?
 
     // MARK: Services
 
@@ -120,6 +122,36 @@ extension FindViewController {
                 self?.barTitleView.text = $0?.absoluteString
             }
             .store(in: &subscriptions)
+        store.state
+            .bind(\.modal) { [weak self] modal in self?.presentModalIfNeeded(for: modal) }
+            .store(in: &subscriptions)
+    }
+
+    private func presentModalIfNeeded(for modal: FindViewState.Modal?) {
+        switch modal {
+        case let .clipCreation(id: id):
+            presentClipCreationModal(id: id)
+
+        case .none:
+            break
+        }
+    }
+
+    private func presentClipCreationModal(id: UUID) {
+        ModalNotificationCenter.default
+            .publisher(for: id, name: .clipCreationModalDidFinish)
+            .sink { [weak self] _ in
+                self?.modalSubscription?.cancel()
+                self?.modalSubscription = nil
+                self?.store.execute(.modalDismissed)
+            }
+            .store(in: &subscriptions)
+
+        if router.showClipCreationModal(id: id, webView: webView) == false {
+            modalSubscription?.cancel()
+            modalSubscription = nil
+            store.execute(.modalDismissed)
+        }
     }
 }
 
@@ -177,10 +209,8 @@ extension FindViewController {
 
         clipButton = UIBarButtonItem(title: nil,
                                      image: UIImage(systemName: "paperclip"),
-                                     primaryAction: .init(handler: { [weak self] _ in
-                                         guard let self = self else { return }
-                                         self.router.showClipCreationModal(webView: self.webView, clipCreationDelegate: self)
-                                     }), menu: nil)
+                                     primaryAction: .init(handler: { [weak self] _ in self?.store.execute(.tapClip) }),
+                                     menu: nil)
 
         flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 
@@ -284,15 +314,5 @@ extension FindViewController: UITextFieldDelegate {
         webView.load(URLRequest(url: url))
         barTitleView.isSearching = false
         return true
-    }
-}
-
-extension FindViewController: ClipCreationDelegate {
-    func didCancel(_ viewController: ClipCreationViewController) {
-        // NOP
-    }
-
-    func didFinish(_ viewController: ClipCreationViewController) {
-        // TODO: モーダルを閉じる
     }
 }

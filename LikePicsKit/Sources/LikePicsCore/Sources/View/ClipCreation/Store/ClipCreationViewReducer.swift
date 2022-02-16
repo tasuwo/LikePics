@@ -32,6 +32,7 @@ public typealias ClipCreationViewDependency = HasClipStore
     & HasImageSourceProvider
     & HasImageLoader
     & HasUserSettingsStorage
+    & HasModalNotificationCenter
 
 struct ClipCreationViewReducer: Reducer {
     typealias Dependency = ClipCreationViewDependency
@@ -57,6 +58,7 @@ struct ClipCreationViewReducer: Reducer {
             return (nextState, .none)
 
         case .imagesSaved:
+            dependency.modalNotificationCenter.post(id: state.id, name: .clipCreationModalDidFinish, userInfo: nil)
             nextState.isDismissed = true
             return (nextState, .none)
 
@@ -123,6 +125,13 @@ struct ClipCreationViewReducer: Reducer {
 
         case .alertDismissed:
             nextState.alert = nil
+            return (nextState, .none)
+
+        // MARK: Dismisse
+
+        case .didDismissedManually:
+            dependency.modalNotificationCenter.post(id: state.id, name: .clipCreationModalDidFinish, userInfo: nil)
+            nextState.isDismissed = true
             return (nextState, .none)
         }
     }
@@ -359,4 +368,10 @@ private extension ClipCreationViewReducer.DownloadError {
             return L10n.clipCreationViewDownloadErrorFailedToSaveBody
         }
     }
+}
+
+// MARK: - ModalNotification
+
+public extension ModalNotification.Name {
+    static let clipCreationModalDidFinish = ModalNotification.Name("net.tasuwo.TBox.ClipCreationViewReducer.ClipCreationModal")
 }

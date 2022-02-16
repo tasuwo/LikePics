@@ -12,10 +12,8 @@ import UIKit
 
 protocol ViewControllerFactory {
     func makeShareNavigationRootViewController() -> ShareNavigationRootViewController
-    func makeClipTargetCollectionViewController(webUrl: URL, delegate: ClipCreationDelegate) -> ClipCreationViewController
-    func makeClipTargetCollectionViewController(loaders: [ImageLazyLoadable],
-                                                fileUrls: [URL],
-                                                delegate: ClipCreationDelegate) -> ClipCreationViewController
+    func makeClipTargetCollectionViewController(id: UUID, webUrl: URL) -> ClipCreationViewController
+    func makeClipTargetCollectionViewController(id: UUID, loaders: [ImageLazyLoadable], fileUrls: [URL]) -> ClipCreationViewController
 }
 
 class DependencyContainer {
@@ -79,33 +77,33 @@ extension DependencyContainer: ViewControllerFactory {
         return ShareNavigationRootViewController(factory: self, presenter: presenter)
     }
 
-    func makeClipTargetCollectionViewController(webUrl: URL, delegate: ClipCreationDelegate) -> ClipCreationViewController {
+    func makeClipTargetCollectionViewController(id: UUID, webUrl: URL) -> ClipCreationViewController {
         struct Dependency: ClipCreationViewDependency {
             var clipRecipeFactory: ClipRecipeFactoryProtocol
             var clipStore: ClipStorable
             var imageLoader: ImageLoadable
             var imageSourceProvider: ImageLoadSourceResolver
             var userSettingsStorage: UserSettingsStorageProtocol
+            var modalNotificationCenter: ModalNotificationCenter
         }
         let imageLoader = ImageLoader()
         let dependency = Dependency(clipRecipeFactory: ClipRecipeFactory(),
                                     clipStore: clipStore,
                                     imageLoader: imageLoader,
                                     imageSourceProvider: WebImageLoadSourceResolver(url: webUrl),
-                                    userSettingsStorage: userSettingsStorage)
+                                    userSettingsStorage: userSettingsStorage,
+                                    modalNotificationCenter: .default)
         return ClipCreationViewController(factory: self,
-                                          state: .init(source: .webImage,
+                                          state: .init(id: id,
+                                                       source: .webImage,
                                                        url: webUrl,
                                                        isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems()),
                                           dependency: dependency,
                                           thumbnailPipeline: thumbnailPipeline,
-                                          imageLoader: imageLoader,
-                                          delegate: delegate)
+                                          imageLoader: imageLoader)
     }
 
-    func makeClipTargetCollectionViewController(loaders: [ImageLazyLoadable],
-                                                fileUrls: [URL],
-                                                delegate: ClipCreationDelegate) -> ClipCreationViewController
+    func makeClipTargetCollectionViewController(id: UUID, loaders: [ImageLazyLoadable], fileUrls: [URL]) -> ClipCreationViewController
     {
         struct Dependency: ClipCreationViewDependency {
             var clipRecipeFactory: ClipRecipeFactoryProtocol
@@ -113,21 +111,23 @@ extension DependencyContainer: ViewControllerFactory {
             var imageLoader: ImageLoadable
             var imageSourceProvider: ImageLoadSourceResolver
             var userSettingsStorage: UserSettingsStorageProtocol
+            var modalNotificationCenter: ModalNotificationCenter
         }
         let imageLoader = ImageLoader()
         let dependency = Dependency(clipRecipeFactory: ClipRecipeFactory(),
                                     clipStore: clipStore,
                                     imageLoader: imageLoader,
                                     imageSourceProvider: LocalImageLoadSourceResolver(loaders: loaders, fileUrls: fileUrls),
-                                    userSettingsStorage: userSettingsStorage)
+                                    userSettingsStorage: userSettingsStorage,
+                                    modalNotificationCenter: .default)
         return ClipCreationViewController(factory: self,
-                                          state: .init(source: .localImage,
+                                          state: .init(id: id,
+                                                       source: .localImage,
                                                        url: nil,
                                                        isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems()),
                                           dependency: dependency,
                                           thumbnailPipeline: thumbnailPipeline,
-                                          imageLoader: imageLoader,
-                                          delegate: delegate)
+                                          imageLoader: imageLoader)
     }
 }
 
