@@ -428,3 +428,9 @@ extension ClipCreationViewController: UIAdaptivePresentationControllerDelegate {
         store.execute(.didDismissedManually)
     }
 }
+
+extension ClipCreationViewController: ModalController {
+    // MARK: - ModalController
+
+    public var id: UUID { store.stateValue.id }
+}

@@ -276,6 +276,7 @@ extension SceneDependencyContainer: Router {
     }
 
     func showClipCreationModal(id: UUID, webView: WKWebView) -> Bool {
+        guard isPresentingModal(having: id) == false else { return true }
         guard let currentUrl = webView.url else { return false }
 
         struct Dependency: ClipCreationViewDependency {
