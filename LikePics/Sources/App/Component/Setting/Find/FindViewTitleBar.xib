@@ -22,10 +22,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t4M-dM-MYx" userLabel="Title Label Container">
-                    <rect key="frame" x="16" y="-2" width="502" height="75"/>
+                    <rect key="frame" x="16" y="6.5" width="502" height="58"/>
                     <subviews>
                         <stackView opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Lrq-Vf-inY" userLabel="Title Label Container">
-                            <rect key="frame" x="220.5" y="12.5" width="61.5" height="50"/>
+                            <rect key="frame" x="220.5" y="4" width="61.5" height="50"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rqO-A2-fZL">
                                     <rect key="frame" x="0.0" y="0.0" width="41.5" height="50"/>
@@ -57,11 +57,12 @@
                     </subviews>
                     <color key="backgroundColor" systemColor="secondarySystemFillColor"/>
                     <constraints>
-                        <constraint firstItem="Lrq-Vf-inY" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="t4M-dM-MYx" secondAttribute="leading" id="DhL-vh-bGd"/>
+                        <constraint firstItem="Lrq-Vf-inY" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="t4M-dM-MYx" secondAttribute="leading" constant="8" id="DhL-vh-bGd"/>
                         <constraint firstItem="Lrq-Vf-inY" firstAttribute="centerY" secondItem="t4M-dM-MYx" secondAttribute="centerY" id="RPP-D2-X3c"/>
-                        <constraint firstAttribute="height" secondItem="Lrq-Vf-inY" secondAttribute="height" multiplier="1.5" id="dht-4b-iEb"/>
+                        <constraint firstAttribute="bottom" secondItem="Lrq-Vf-inY" secondAttribute="bottom" constant="4" id="SF9-5z-zvY"/>
+                        <constraint firstItem="Lrq-Vf-inY" firstAttribute="top" secondItem="t4M-dM-MYx" secondAttribute="top" constant="4" id="Zp5-0X-EM5"/>
                         <constraint firstItem="Lrq-Vf-inY" firstAttribute="centerX" secondItem="t4M-dM-MYx" secondAttribute="centerX" id="jLJ-Jf-pW4"/>
-                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Lrq-Vf-inY" secondAttribute="trailing" id="kBg-jD-KxE"/>
+                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Lrq-Vf-inY" secondAttribute="trailing" constant="8" id="kBg-jD-KxE"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">

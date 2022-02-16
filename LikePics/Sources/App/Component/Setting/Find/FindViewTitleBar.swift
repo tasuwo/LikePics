@@ -15,6 +15,7 @@ class FindViewTitleBar: UIView {
         }
         set {
             titleLabel.text = newValue
+            updateVisibility()
         }
     }
 
@@ -29,8 +30,7 @@ class FindViewTitleBar: UIView {
 
     var isSearching = false {
         didSet {
-            searchField.isHidden = !isSearching
-            titleLabelContainer.isHidden = isSearching
+            updateVisibility()
             if isSearching {
                 searchField.becomeFirstResponder()
             } else {
@@ -87,6 +87,11 @@ class FindViewTitleBar: UIView {
 
     private func setupAppearance() {
         isSearching = false
+    }
+
+    private func updateVisibility() {
+        searchField.isHidden = !isSearching
+        titleLabelContainer.isHidden = isSearching || (titleLabel.text == nil || titleLabel.text?.isEmpty == true)
     }
 
     // MARK: - Override (UIView)
