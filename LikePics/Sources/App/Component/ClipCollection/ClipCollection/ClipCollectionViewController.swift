@@ -208,7 +208,7 @@ extension ClipCollectionViewController {
             .store(in: &subscriptions)
         store.state
             .bind(\.isEditing) { [weak self] isEditing in
-                self?.collectionView.visibleCells
+                self?.collectionView.allCells
                     .compactMap { $0 as? ClipCollectionViewCell }
                     .forEach { $0.isEditing = isEditing }
             }
@@ -255,6 +255,14 @@ extension ClipCollectionViewController {
         UIView.animate(withDuration: 0.25) {
             self.collectionView.setCollectionViewLayout(nextLayout, animated: true)
             animationBlocks.forEach { $0() }
+        } completion: { _ in
+            let blocks = self.collectionView.visibleCells
+                .compactMap { $0 as? ClipCollectionViewCell }
+                .filter { $0.isSingleThumbnail != layout.isSingleThumbnail }
+                .map { $0.setThumbnailTypeWithAnimationBlocks(toSingle: layout.isSingleThumbnail) }
+            UIView.animate(withDuration: 0.25) {
+                blocks.forEach { $0() }
+            }
         }
     }
 
@@ -541,7 +549,8 @@ extension ClipCollectionViewController {
 
     private func configureDataSource() {
         collectionView.delegate = self
-        dataSource = Layout.configureDataSource(collectionView: collectionView,
+        dataSource = Layout.configureDataSource(store: store,
+                                                collectionView: collectionView,
                                                 thumbnailPipeline: thumbnailPipeline,
                                                 imageQueryService: imageQueryService)
         selectionApplier = UICollectionViewSelectionLazyApplier(collectionView: collectionView,

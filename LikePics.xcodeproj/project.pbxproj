@@ -47,6 +47,7 @@
 		2B074068BE1E71740D5D649B /* ShareNavigationRootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD6DC1C24FDEC76E7379C404 /* ShareNavigationRootViewController.xib */; };
 		2B61C9FCB469A1ED7F078264 /* UserSettingsStorage+Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083C17DAB6171916D982CF13 /* UserSettingsStorage+Shared.swift */; };
 		2BDF60D8E0EAE082077C20DA /* SceneDependencyContainer+Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F98D67EB7E59B8B685AF4E /* SceneDependencyContainer+Router.swift */; };
+		2C1C8D4F27BE8E7500984D34 /* UICollectionView+allCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1C8D4E27BE8E7500984D34 /* UICollectionView+allCells.swift */; };
 		2C35B748CF4BE8BDF81A27EA /* ClipSearchToken+Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFF4AD5E8E612524AE2B88A /* ClipSearchToken+Display.swift */; };
 		2C406A3827BD58DB00312C77 /* UINavigationController+UIGestureRecognizerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C406A3727BD58DB00312C77 /* UINavigationController+UIGestureRecognizerDelegate.swift */; };
 		2C54655681E4DEF5F6649DB2 /* ClipCollectionViewRootState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B3C89AD856C4B6AFB7ABA0 /* ClipCollectionViewRootState.swift */; };
@@ -314,6 +315,7 @@
 		268F958F83C5D254A124C4F8 /* TagCollectionViewAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollectionViewAction.swift; sourceTree = "<group>"; };
 		2842D41049AAA30055FCE2FB /* SearchEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEntryViewController.swift; sourceTree = "<group>"; };
 		2B318FBD1E04E610FEE37C39 /* HasTemporariesPersistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTemporariesPersistService.swift; sourceTree = "<group>"; };
+		2C1C8D4E27BE8E7500984D34 /* UICollectionView+allCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+allCells.swift"; sourceTree = "<group>"; };
 		2C406A3727BD58DB00312C77 /* UINavigationController+UIGestureRecognizerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+UIGestureRecognizerDelegate.swift"; sourceTree = "<group>"; };
 		2C7D442C27BBDCDC00F44F55 /* FindViewReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindViewReducer.swift; sourceTree = "<group>"; };
 		2C7D442E27BBDCF600F44F55 /* FindViewAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindViewAction.swift; sourceTree = "<group>"; };
@@ -594,6 +596,7 @@
 				879E93BD932D427F1835B7DD /* UISearchController.swift */,
 				BA723435778F176DEC334845 /* UITargetdPreview.swift */,
 				22F8BC3259D1FBAD0E0549F9 /* URLButtonInteractionHandler.swift */,
+				2C1C8D4E27BE8E7500984D34 /* UICollectionView+allCells.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2114,6 +2117,7 @@
 				4BD22ACE44FE67C90F893208 /* SearchViewRootAction.swift in Sources */,
 				D04C5E3B39B21E9F6942AB74 /* SearchViewRootReducer.swift in Sources */,
 				C12FA43BB23531EA98AF3028 /* SearchViewRootState.swift in Sources */,
+				2C1C8D4F27BE8E7500984D34 /* UICollectionView+allCells.swift in Sources */,
 				AA33119BDFBF23E2321160EE /* SettingsViewAction.swift in Sources */,
 				25F52123735E6DE0B750577A /* SettingsViewController.swift in Sources */,
 				294B694E0001E5CABC4B1EAE /* SettingsViewReducer.swift in Sources */,

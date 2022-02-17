@@ -123,25 +123,26 @@ extension ClipCollection.Layout {
 // MARK: - DataSource
 
 extension ClipCollectionViewLayout {
-    static func configureDataSource(collectionView: UICollectionView,
+    static func configureDataSource(store: ClipCollectionViewController.Store,
+                                    collectionView: UICollectionView,
                                     thumbnailPipeline: Pipeline,
                                     imageQueryService: ImageQueryServiceProtocol) -> DataSource
     {
-        let cellRegistration = configureCell(collectionView: collectionView, thumbnailPipeline: thumbnailPipeline, imageQueryService: imageQueryService)
+        let cellRegistration = configureCell(store: store, thumbnailPipeline: thumbnailPipeline, imageQueryService: imageQueryService)
 
         return .init(collectionView: collectionView) { collectionView, indexPath, item in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
         }
     }
 
-    private static func configureCell(collectionView: UICollectionView,
+    private static func configureCell(store: ClipCollectionViewController.Store,
                                       thumbnailPipeline: Pipeline,
                                       imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<ClipCollectionViewCell, Item>
     {
-        return .init(cellNib: ClipCollectionViewCell.nib) { [weak collectionView, weak thumbnailPipeline, weak imageQueryService] cell, _, clip in
+        return .init(cellNib: ClipCollectionViewCell.nib) { [weak store, weak thumbnailPipeline, weak imageQueryService] cell, _, clip in
             cell.sizeDescription = .make(by: clip.clip)
-            cell.isEditing = collectionView?.isEditing ?? false
-            cell.setThumbnailType(toSingle: collectionView?.layout.isSingleThumbnail ?? false)
+            cell.isEditing = store?.stateValue.isEditing ?? false
+            cell.setThumbnailType(toSingle: store?.stateValue.layout.isSingleThumbnail ?? false)
 
             cell.setHiddenIconVisibility(true, animated: false)
             cell.setClipHiding(clip.isHidden, animated: false)

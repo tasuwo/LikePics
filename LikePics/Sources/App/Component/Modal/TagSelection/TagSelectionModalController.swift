@@ -65,11 +65,7 @@ class TagSelectionModalController: UIViewController {
 
         // HACK: 画面回転時にStackViewの状態がおかしくなるケースがあるため、強制的に表示を更新する
         coordinator.animate(alongsideTransition: { [weak self] _ in
-            self?.collectionView.visibleCells
-                .compactMap { $0 as? TagCollectionViewCell }
-                .forEach { $0.updateAppearance() }
-        }, completion: { [weak self] _ in
-            self?.collectionView.visibleCells
+            self?.collectionView.allCells
                 .compactMap { $0 as? TagCollectionViewCell }
                 .forEach { $0.updateAppearance() }
         })
