@@ -92,8 +92,6 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
     private func setupAppearance() {
         singleThumbnailView.alpha = 0
-        singleThumbnailView.layer.cornerRadius = Self.cornerRadius
-        singleThumbnailView.layer.cornerCurve = .continuous
         overallOverlayView.isHidden = true
 
         secondaryThumbnailView.isOverlayHidden = false
@@ -103,6 +101,10 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
         selectionMark.backgroundColor = .white
         selectionMark.layer.cornerRadius = selectionMark.bounds.width / 2.0
+
+        layer.cornerRadius = Self.cornerRadius
+        layer.cornerCurve = .continuous
+        layer.masksToBounds = true
 
         updateOverallOverlayView()
     }
