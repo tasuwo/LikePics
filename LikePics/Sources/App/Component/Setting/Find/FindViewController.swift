@@ -280,6 +280,12 @@ extension FindViewController: WKUIDelegate {
 }
 
 extension FindViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        // HACK: Universal Links を起動させない
+        // swiftlint:disable:next force_unwrapping
+        decisionHandler(WKNavigationActionPolicy(rawValue: WKNavigationActionPolicy.allow.rawValue + 2)!)
+    }
+
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         // TODO:
     }
