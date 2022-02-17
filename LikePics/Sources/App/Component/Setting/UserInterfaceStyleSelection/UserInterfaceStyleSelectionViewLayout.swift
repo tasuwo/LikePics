@@ -78,8 +78,10 @@ extension UserInterfaceStyleSelectionViewLayout {
 }
 
 extension UserInterfaceStyleSelectionViewLayout {
-    static func configureDataSource(collectionView: UICollectionView) -> DataSource {
-        let cellRegistration = configureCell()
+    static func configureDataSource(collectionView: UICollectionView,
+                                    userSettingsStorage: UserSettingsStorageProtocol) -> DataSource
+    {
+        let cellRegistration = configureCell(userSettingsStorage: userSettingsStorage)
 
         let dataSource = DataSource(collectionView: collectionView) { collectionView, indexPath, item in
             collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
@@ -88,11 +90,17 @@ extension UserInterfaceStyleSelectionViewLayout {
         return dataSource
     }
 
-    private static func configureCell() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
+    private static func configureCell(userSettingsStorage: UserSettingsStorageProtocol) -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
         return UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, _, item in
             var contentConfiguration = UIListContentConfiguration.valueCell()
             contentConfiguration.text = item.title
             cell.contentConfiguration = contentConfiguration
+
+            if userSettingsStorage.readUserInterfaceStyle() == item.style {
+                cell.accessories = [.checkmark()]
+            } else {
+                cell.accessories = []
+            }
 
             var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
             backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackground.color

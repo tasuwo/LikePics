@@ -89,7 +89,8 @@ extension UserInterfaceStyleSelectionViewController {
     }
 
     private func configureDataSource() {
-        dataSource = Layout.configureDataSource(collectionView: collectionView)
+        dataSource = Layout.configureDataSource(collectionView: collectionView,
+                                                userSettingsStorage: userSettingsStorage)
 
         var snapshot = Layout.Snapshot()
         snapshot.appendSections([.main])
