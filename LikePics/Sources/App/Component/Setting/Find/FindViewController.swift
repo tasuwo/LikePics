@@ -287,11 +287,19 @@ extension FindViewController: WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        // TODO:
+        let alert = UIAlertController(title: "Error", message: "エラーが発生しました\n\(error.localizedDescription)", preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+        store.execute(.updatedEstimatedProgress(1))
     }
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        // TODO:
+        let alert = UIAlertController(title: "Error", message: "ページ遷移中にエラーが発生しました\n\(error.localizedDescription)", preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+        store.execute(.updatedEstimatedProgress(1))
     }
 }
 
