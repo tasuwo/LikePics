@@ -1,2 +1,3 @@
-- Save selected tags on selection sheet by tap "Save" button. If you select tags and close selection sheet without tap "Save" button, it has no effect.
-- Append selected tags for selected clips, instead of replace existing tags of selected clips.
+- Fixed invalid appearance of items at editing.
+- Fixed a bug sometimes open modal unexpectedly.
+- Fixed minor bugs.
