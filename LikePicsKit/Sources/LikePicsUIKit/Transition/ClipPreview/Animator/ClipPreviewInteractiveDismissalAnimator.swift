@@ -11,7 +11,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         let initialImageFrame: CGRect
         let animatingImageView: UIImageView
         let fromViewBackgroundView: UIView
-        let postprocess: (@escaping () -> Void) -> Void
+        let postprocess: (ClipPreviewPresentable, @escaping () -> Void) -> Void
     }
 
     struct FinishAnimationParameters {
@@ -107,8 +107,9 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         // Display Cell
 
         to.displayAnimatingCell(self, id: previewingClipItem.cellIdentity)
-        // HACK: iPad&Landscape&Fullscreen切り替え時にalpha==1でセルが残ってしまうケースがあったため、
-        //       このタイミングでもセルを非表示にする
+        // CollectionViewの再描画により元のセルのインスタンスが破棄されている可能性があるため、
+        // 最新のセルのインスタンスを取得し直し、非表示にする
+        // iPad にて Preview 表示後、アプリをバックグラウンド > フォアグラウンドにすると再現しやすい
         to.animatingCell(self, id: previewingClipItem.cellIdentity, needsScroll: true)?.alpha = 0
 
         // Calculation
@@ -186,7 +187,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.cancelAnimateDuration)
         CATransaction.setCompletionBlock {
-            params.innerContext.postprocess {
+            params.innerContext.postprocess(params.to) {
                 params.to.view.removeFromSuperview()
 
                 params.innerContext.transitionContext.cancelInteractiveTransition()
@@ -227,7 +228,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.endAnimateDuration)
         CATransaction.setCompletionBlock {
-            params.innerContext.postprocess {
+            params.innerContext.postprocess(params.to) {
                 params.innerContext.transitionContext.finishInteractiveTransition()
                 params.innerContext.transitionContext.completeTransition(true)
                 self.innerContext = nil
@@ -356,12 +357,14 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
         toViewBaseView.addSubview(fromViewBackgroundView)
         toViewBaseView.insertSubview(animatingImageView, aboveSubview: fromViewBackgroundView)
 
-        let postprocess = { (completion: @escaping () -> Void) in
+        let postprocess = { (to: ClipPreviewPresentable, completion: @escaping () -> Void) in
             from.view.backgroundColor = fromViewBackgroundView.backgroundColor
             fromImageView.isHidden = false
 
             UIView.animate(withDuration: 0.15, animations: {
-                toCell.alpha = 1
+                // CollectionViewの再描画により元のセルのインスタンスが破棄されている可能性があるため、
+                // 最新のセルのインスタンスを取得し直す
+                to.animatingCell(self, id: previewingClipItem.cellIdentity, needsScroll: true)?.alpha = 1
             }, completion: { _ in
                 animatingImageView.alpha = 0
                 fromViewBackgroundView.removeFromSuperview()
