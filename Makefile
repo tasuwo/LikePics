@@ -77,22 +77,6 @@ swiftformat_format: ## SwiftFormatによるフォーマットを実行する
 extract_app_data_as_ja: ## 起動中のSimulatorからAppDataをDLする
 	./scripts/app_container.sh net.tasuwo.TBox.dev ja-JP export
 
-.PHONY: overwrite_app_data_ja
-overwrite_app_data_ja: ## 起動中のSimulatorにAppDataを受け渡す
-	xcrun simctl terminate booted net.tasuwo.TBox.dev
-	./scripts/app_container.sh net.tasuwo.TBox.dev ja-JP import
-	xcrun simctl launch booted net.tasuwo.TBox.dev
-
-.PHONY: extract_app_data_as_en
-extract_app_data_as_en: ## 起動中のSimulatorからAppDataをDLする
-	./scripts/app_container.sh net.tasuwo.TBox.dev en-US export
-
-.PHONY: overwirte_app_data_en
-overwirte_app_data_en: ## 起動中のSimulatorにAppDataを受け渡す
-	xcrun simctl terminate booted net.tasuwo.TBox.dev
-	./scripts/app_container.sh net.tasuwo.TBox.dev en-US import
-	xcrun simctl launch booted net.tasuwo.TBox.dev
-
 .PHONY: help
 help: ## ヘルプを表示する
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

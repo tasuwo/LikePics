@@ -24,13 +24,6 @@ public class AppDelegate: UIResponder, UIApplicationDelegate {
     private(set) var cloudAvailabilityService: CloudAvailabilityService!
 
     public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        #if DEBUG
-            if UserDefaults.standard.bool(forKey: "FASTLANE_SNAPSHOT") {
-                AppDataLoader.loadAppData()
-                UserSettingsStorage.shared.set(enabledICloudSync: false)
-            }
-        #endif
-
         let cloudAvailabilityService = CloudAvailabilityService(cloudUsageContextStorage: CloudUsageContextStorage(),
                                                                 cloudAccountService: CloudAccountService())
         self.cloudAvailabilityService = cloudAvailabilityService
