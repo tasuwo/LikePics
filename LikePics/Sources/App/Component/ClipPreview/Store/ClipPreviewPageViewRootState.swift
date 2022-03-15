@@ -13,7 +13,7 @@ struct ClipPreviewPageViewRootState: Equatable {
 extension ClipPreviewPageViewRootState {
     init(filteredClipIds: Set<Clip.Identity>,
          clips: [Clip],
-         query: ClipPreviewPageViewState.Query,
+         query: ClipPreviewPageQuery,
          isSomeItemsHidden: Bool,
          indexPath: ClipCollection.IndexPath)
     {

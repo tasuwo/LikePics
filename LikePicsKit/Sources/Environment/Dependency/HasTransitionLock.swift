@@ -4,6 +4,6 @@
 
 import LikePicsUIKit
 
-protocol HasTransitionLock {
+public protocol HasTransitionLock {
     var transitionLock: TransitionLock { get }
 }

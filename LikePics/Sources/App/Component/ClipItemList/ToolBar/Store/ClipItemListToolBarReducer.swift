@@ -4,6 +4,7 @@
 
 import Combine
 import CompositeKit
+import Environment
 
 typealias ClipItemListToolBarDependency = HasImageQueryService
 

@@ -4,6 +4,6 @@
 
 import Domain
 
-protocol HasClipQueryService {
+public protocol HasClipQueryService {
     var clipQueryService: ClipQueryServiceProtocol { get }
 }

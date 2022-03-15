@@ -3,14 +3,6 @@
 //
 
 public enum ClipPreviewPageQuery: Equatable {
-    public enum ClipCollectionSource: Equatable {
-        case all
-        case album(Album.Identity)
-        case tag(Tag)
-        case uncategorized
-        case search(ClipSearchQuery)
-    }
-
-    case clips(ClipCollectionSource)
+    case clips(ClipCollection.Source)
     case searchResult(ClipSearchQuery)
 }

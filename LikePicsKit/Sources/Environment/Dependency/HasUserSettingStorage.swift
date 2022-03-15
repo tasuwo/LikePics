@@ -4,6 +4,6 @@
 
 import Domain
 
-protocol HasUserSettingStorage {
+public protocol HasUserSettingStorage {
     var userSettingStorage: UserSettingsStorageProtocol { get }
 }

@@ -4,6 +4,6 @@
 
 import Domain
 
-protocol HasIntegrityValidationService {
+public protocol HasIntegrityValidationService {
     var integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol { get }
 }

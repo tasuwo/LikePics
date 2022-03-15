@@ -4,6 +4,7 @@
 
 import Common
 import Domain
+import Environment
 import Foundation
 import LikePicsCore
 import LikePicsUIKit
@@ -135,7 +136,7 @@ extension SceneDependencyContainer: Router {
 
     func showClipPreviewView(filteredClipIds: Set<Clip.Identity>,
                              clips: [Clip],
-                             query: ClipPreviewPageViewState.Query,
+                             query: ClipPreviewPageQuery,
                              indexPath: ClipCollection.IndexPath) -> Bool
     {
         let viewController = makeClipPreviewPageViewController(filteredClipIds: filteredClipIds,

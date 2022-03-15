@@ -4,6 +4,6 @@
 
 import Domain
 
-protocol HasCloudAvailabilityService {
+public protocol HasCloudAvailabilityService {
     var cloudAvailabilityService: CloudAvailabilityServiceProtocol { get }
 }

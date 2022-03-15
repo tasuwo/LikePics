@@ -3,6 +3,7 @@
 //
 
 import CompositeKit
+import Environment
 import Foundation
 
 typealias SearchEntryViewDependency = HasClipSearchHistoryService

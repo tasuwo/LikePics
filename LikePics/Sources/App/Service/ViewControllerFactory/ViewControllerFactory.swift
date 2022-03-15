@@ -16,7 +16,7 @@ protocol ViewControllerFactory {
     func makeSettingsViewController(_ state: SettingsViewState?) -> RestorableViewController
     func makeClipPreviewPageViewController(filteredClipIds: Set<Clip.Identity>,
                                            clips: [Clip],
-                                           query: ClipPreviewPageViewState.Query,
+                                           query: ClipPreviewPageQuery,
                                            indexPath: ClipCollection.IndexPath) -> UIViewController
     func makeClipPreviewViewController(for item: ClipItem) -> ClipPreviewViewController?
 }

@@ -4,6 +4,6 @@
 
 import Domain
 
-protocol HasClipSearchHistoryService {
+public protocol HasClipSearchHistoryService {
     var clipSearchHistoryService: ClipSearchHistoryService { get }
 }

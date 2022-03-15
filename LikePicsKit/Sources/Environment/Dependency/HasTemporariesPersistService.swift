@@ -4,6 +4,6 @@
 
 import Domain
 
-protocol HasTemporariesPersistService {
+public protocol HasTemporariesPersistService {
     var temporariesPersistService: TemporariesPersistServiceProtocol { get }
 }

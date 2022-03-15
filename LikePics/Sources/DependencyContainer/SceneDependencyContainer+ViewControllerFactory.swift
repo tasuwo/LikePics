@@ -6,6 +6,7 @@ import Combine
 import Common
 import CompositeKit
 import Domain
+import Environment
 import LikePicsCore
 import LikePicsUIKit
 import Smoothie
@@ -120,7 +121,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
 
     func makeClipPreviewPageViewController(filteredClipIds: Set<Clip.Identity>,
                                            clips: [Clip],
-                                           query: ClipPreviewPageViewState.Query,
+                                           query: ClipPreviewPageQuery,
                                            indexPath: ClipCollection.IndexPath) -> UIViewController
     {
         struct Dependency: ClipPreviewPageViewDependency & HasImageQueryService {

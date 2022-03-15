@@ -4,6 +4,6 @@
 
 import Domain
 
-protocol HasClipCommandService {
+public protocol HasClipCommandService {
     var clipCommandService: ClipCommandServiceProtocol { get }
 }

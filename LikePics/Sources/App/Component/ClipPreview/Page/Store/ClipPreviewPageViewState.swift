@@ -21,12 +21,7 @@ struct ClipPreviewPageViewState: Equatable {
         case reverse
     }
 
-    enum Query: Equatable {
-        case clips(ClipCollection.Source)
-        case searchResult(ClipSearchQuery)
-    }
-
-    let query: Query
+    let query: ClipPreviewPageQuery
 
     var currentIndexPath: ClipCollection.IndexPath
     var filteredClipIds: Set<Clip.Identity>
@@ -49,7 +44,7 @@ struct ClipPreviewPageViewState: Equatable {
 extension ClipPreviewPageViewState {
     init(filteredClipIds: Set<Clip.Identity>,
          clips: [Clip],
-         query: Query,
+         query: ClipPreviewPageQuery,
          isSomeItemsHidden: Bool,
          indexPath: ClipCollection.IndexPath)
     {

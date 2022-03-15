@@ -5,6 +5,7 @@
 import Combine
 import CompositeKit
 import Domain
+import Environment
 import Foundation
 
 typealias ClipsIntegrityValidatorDependency = HasTemporariesPersistService

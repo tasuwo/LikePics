@@ -4,6 +4,6 @@
 
 import Domain
 
-protocol HasImageQueryService {
+public protocol HasImageQueryService {
     var imageQueryService: ImageQueryServiceProtocol { get }
 }

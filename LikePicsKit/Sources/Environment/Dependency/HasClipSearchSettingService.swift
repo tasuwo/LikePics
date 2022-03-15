@@ -4,6 +4,6 @@
 
 import Domain
 
-protocol HasClipSearchSettingService {
+public protocol HasClipSearchSettingService {
     var clipSearchSettingService: ClipSearchSettingService { get }
 }
