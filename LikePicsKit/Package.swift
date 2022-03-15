@@ -35,6 +35,10 @@ let package = Package(
         .library(
             name: "Common",
             targets: ["Common"]
+        ),
+        .library(
+            name: "Environment",
+            targets: ["Environment"]
         )
     ],
     dependencies: [
@@ -88,6 +92,13 @@ let package = Package(
         .target(
             name: "Common",
             dependencies: []
+        ),
+        .target(
+            name: "Environment",
+            dependencies: [
+                "Domain",
+                "LikePicsUIKit"
+            ]
         ),
         .target(
             name: "TestHelper",
