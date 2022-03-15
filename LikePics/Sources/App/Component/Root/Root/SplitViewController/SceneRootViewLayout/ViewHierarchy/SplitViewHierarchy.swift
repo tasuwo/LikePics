@@ -4,6 +4,7 @@
 
 // swiftlint:disable force_unwrapping
 
+import Environment
 import UIKit
 
 struct SplitViewHierarchy {

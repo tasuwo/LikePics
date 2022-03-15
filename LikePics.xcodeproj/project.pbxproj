@@ -15,7 +15,6 @@
 		058A8376B4199A8443B2637D /* SceneRoot_SideBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D980931AE083F095933E68 /* SceneRoot_SideBarItem.swift */; };
 		07D76D08F6CF32512F7054B9 /* LikePicsUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7F6507BB1069707955070686 /* LikePicsUIKit */; };
 		0876C4F1777F20A574C1DC07 /* ClipPreviewViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AE71A683E17C02EFA2E84B /* ClipPreviewViewState.swift */; };
-		08A48AB509FA64E37F21DA7F /* ViewLazyPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482EBA7439C4DCE41A86A911 /* ViewLazyPresentable.swift */; };
 		0959B880248E8EEED607A4C2 /* SearchResultViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D215E2A876A2746663B1CE /* SearchResultViewLayout.swift */; };
 		0A157FFF68CCF861B43DBB09 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8E6E74C896B79B098BCF232F /* Settings.bundle */; };
 		0A5B3B6EEF5A1D89D020645E /* ClipMergeViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A65E7531EC89486CEDED95D3 /* ClipMergeViewLayout.swift */; };
@@ -137,7 +136,6 @@
 		9BF17274C4DDAF910504870C /* TextEditAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9EECA91889A13AF25859A8 /* TextEditAlertController.swift */; };
 		9DC412E5335C0C36A7CCFB48 /* ClipCollectionReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7775634EBDD88282076732B /* ClipCollectionReducer.swift */; };
 		A014518F44529CEBC72BD5C5 /* ClipItemListRootAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E68B4CE426FA276FED57B52 /* ClipItemListRootAction.swift */; };
-		A167453E10475CCE1C4C4049 /* Restorable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82957D5A08D182AA4B209C8A /* Restorable.swift */; };
 		A16DF894EBA27F57950E91EA /* ClipItemListRootState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907B4D63655F63BC320025CB /* ClipItemListRootState.swift */; };
 		A43A5327DB50DCEEA47F9329 /* SearchMenuBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3181B19B04B067456DD235D /* SearchMenuBuilder.swift */; };
 		A45992398778412167F4EBA5 /* ClipsIntegrityValidatorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B575256DF500A54E74F0C1 /* ClipsIntegrityValidatorState.swift */; };
@@ -331,7 +329,6 @@
 		44245978270035332395D8F9 /* ClipItemListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipItemListViewController.swift; sourceTree = "<group>"; };
 		46F6B3EBFB2559A55E38B580 /* SearchResultViewAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewAction.swift; sourceTree = "<group>"; };
 		47FEF019B1AC3475B311074C /* TagCollection_MenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCollection_MenuItem.swift; sourceTree = "<group>"; };
-		482EBA7439C4DCE41A86A911 /* ViewLazyPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewLazyPresentable.swift; sourceTree = "<group>"; };
 		48FFDA93EAEBDBFB0F65D481 /* TextEditAlertDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditAlertDelegate.swift; sourceTree = "<group>"; };
 		4B09BC846DA055E035CA3CE0 /* LikePicsKit */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LikePicsKit; sourceTree = SOURCE_ROOT; };
 		4B2AB01D75A41E3263AE08BB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -373,7 +370,6 @@
 		815C9A1DBE308AC97C81E082 /* TagSelectionModalState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectionModalState.swift; sourceTree = "<group>"; };
 		81869B1AA95BF10A3B9669CF /* SceneRootViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneRootViewLayout.swift; sourceTree = "<group>"; };
 		8206CA0701DE5A455C49368C /* ClipPreviewNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewNavigationController.swift; sourceTree = "<group>"; };
-		82957D5A08D182AA4B209C8A /* Restorable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restorable.swift; sourceTree = "<group>"; };
 		8370B0995394ABE196AF1A0E /* ShareNavigationRootPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNavigationRootPresenter.swift; sourceTree = "<group>"; };
 		856B219F10410DC905EB1877 /* ClipPreviewPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipPreviewPageViewController.swift; sourceTree = "<group>"; };
 		87309C0E73EC6268EC56CC11 /* SearchMenuAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMenuAction.swift; sourceTree = "<group>"; };
@@ -664,14 +660,6 @@
 				2C9B91E127E0CA02009741FF /* ClipCollection_Source+Stream.swift */,
 			);
 			path = ValueObject;
-			sourceTree = "<group>";
-		};
-		26C6F04B80B780D713DDB378 /* Restorable */ = {
-			isa = PBXGroup;
-			children = (
-				82957D5A08D182AA4B209C8A /* Restorable.swift */,
-			);
-			path = Restorable;
 			sourceTree = "<group>";
 		};
 		28899CB1901490AC75498C2A /* Alert */ = {
@@ -973,7 +961,6 @@
 			isa = PBXGroup;
 			children = (
 				0BA1AE8C502A981E56B47028 /* SceneRootSplitViewController.swift */,
-				26C6F04B80B780D713DDB378 /* Restorable */,
 				FFB7A0779F5C255F7CA428A9 /* SceneRootViewLayout */,
 				A9DEF66F0918901D89B12277 /* SideBar */,
 			);
@@ -1295,7 +1282,6 @@
 		B4A40EFA83192D62DD7DDD17 /* Root */ = {
 			isa = PBXGroup;
 			children = (
-				482EBA7439C4DCE41A86A911 /* ViewLazyPresentable.swift */,
 				66C8DACDC66ABFFBF837E6D1 /* Loading */,
 				2959C19F10F67D7D23A8059A /* Root */,
 				8EE66DAB8494E5E075D86BCB /* Setup */,
@@ -1982,7 +1968,6 @@
 				489AE061876379092003A9A8 /* NewTagCollectionBrickworkLayout.swift in Sources */,
 				E0C84462190703E54F3C2C56 /* PreviewPrefetcher.swift in Sources */,
 				2310622DB2F9F754BB02FD4B /* Publisher+waitUntilToBeTrue.swift in Sources */,
-				A167453E10475CCE1C4C4049 /* Restorable.swift in Sources */,
 				0D773DE1A6F825E2A67EE827 /* SceneDelegate+SceneResolvable.swift in Sources */,
 				751F6D1D253B0AF8BE4FA086 /* SceneDelegate+StateRestoration.swift in Sources */,
 				1CA2B01A363599C4B9BB5FE9 /* SceneDelegate.swift in Sources */,
@@ -2062,7 +2047,6 @@
 				2C7D442D27BBDCDC00F44F55 /* FindViewReducer.swift in Sources */,
 				2B61C9FCB469A1ED7F078264 /* UserSettingsStorage+Shared.swift in Sources */,
 				AEC46804CBD1E2737D6B2A5B /* ViewControllerFactory.swift in Sources */,
-				08A48AB509FA64E37F21DA7F /* ViewLazyPresentable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

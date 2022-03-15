@@ -4,16 +4,16 @@
 
 import UIKit
 
-typealias RestorableViewController = UIViewController & Restorable
+public typealias RestorableViewController = UIViewController & Restorable
 
-protocol Restorable {
+public protocol Restorable {
     func restore() -> RestorableViewController
 }
 
 extension UINavigationController: Restorable {
     // MARK: - Restorable
 
-    func restore() -> RestorableViewController {
+    public func restore() -> RestorableViewController {
         let navigationController = UINavigationController(nibName: nil, bundle: nil)
         navigationController.tabBarItem = tabBarItem
 

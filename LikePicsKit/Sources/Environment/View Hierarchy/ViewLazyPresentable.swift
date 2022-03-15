@@ -4,6 +4,6 @@
 
 import UIKit
 
-protocol ViewLazyPresentable {
+public protocol ViewLazyPresentable {
     func presentAfterLoad(_ viewController: UIViewController, animated: Bool, completion: (() -> Void)?)
 }
