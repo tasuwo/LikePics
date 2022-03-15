@@ -13,7 +13,7 @@ extension SceneDelegate {
 
     static let intentKey = "intent"
 
-    func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
+    public func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
         return scene.userActivity
     }
 }

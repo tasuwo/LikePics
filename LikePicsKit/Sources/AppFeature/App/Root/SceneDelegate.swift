@@ -14,8 +14,8 @@ import LikePicsUIKit
 import Persistence
 import UIKit
 
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-    var window: UIWindow?
+public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    public var window: UIWindow?
 
     private var sceneDependencyContainer: SceneDependencyContainer!
     private var subscription: Set<AnyCancellable> = .init()
@@ -23,7 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private var userSettingsStorage: UserSettingsStorage!
     private var uiStyleSubscription: AnyCancellable?
 
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+    public func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         // swiftlint:disable:next force_cast
@@ -53,11 +53,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window?.tintColor = Asset.Color.likePicsRed.color
     }
 
-    func sceneWillResignActive(_ scene: UIScene) {
+    public func sceneWillResignActive(_ scene: UIScene) {
         window?.windowScene?.userActivity?.resignCurrent()
     }
 
-    func sceneDidBecomeActive(_ scene: UIScene) {
+    public func sceneDidBecomeActive(_ scene: UIScene) {
         window?.windowScene?.userActivity?.becomeCurrent()
     }
 }
