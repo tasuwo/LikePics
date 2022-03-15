@@ -77,7 +77,7 @@ class FindViewTitleBar: UIView {
     // MARK: - Methods
 
     private func setupFromNib() {
-        UINib(nibName: String(describing: type(of: self)), bundle: Bundle.main).instantiate(withOwner: self, options: nil)
+        UINib(nibName: String(describing: type(of: self)), bundle: Bundle.module).instantiate(withOwner: self, options: nil)
         baseView.frame = self.bounds
 
         baseView.translatesAutoresizingMaskIntoConstraints = true

@@ -98,7 +98,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
     }
 
     func makeSettingsViewController(_ state: SettingsViewState?) -> RestorableViewController {
-        let storyBoard = UIStoryboard(name: "SettingsViewController", bundle: Bundle.main)
+        let storyBoard = UIStoryboard(name: "SettingsViewController", bundle: Bundle.module)
 
         // swiftlint:disable:next force_cast
         let viewController = storyBoard.instantiateViewController(identifier: "SettingsViewController") as! SettingsViewController
