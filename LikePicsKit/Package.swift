@@ -9,6 +9,10 @@ let package = Package(
     ],
     products: [
         .library(
+            name: "AppFeature",
+            targets: ["AppFeature"]
+        ),
+        .library(
             name: "Domain",
             targets: ["Domain"]
         ),
@@ -48,6 +52,19 @@ let package = Package(
         .package(name: "Nimble", url: "https://github.com/Quick/Nimble", .exact("9.2.1"))
     ],
     targets: [
+        .target(
+            name: "AppFeature",
+            dependencies: [
+                "Common",
+                "CompositeKit",
+                "Domain",
+                "Environment",
+                "LikePicsCore",
+                "LikePicsUIKit",
+                "Persistence",
+                "Smoothie",
+            ]
+        ),
         .target(
             name: "Domain",
             dependencies: ["Common"]
