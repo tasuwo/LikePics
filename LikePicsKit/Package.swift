@@ -62,7 +62,7 @@ let package = Package(
                 "LikePicsCore",
                 "LikePicsUIKit",
                 "Persistence",
-                "Smoothie",
+                "Smoothie"
             ]
         ),
         .target(

@@ -13,8 +13,7 @@ import LikePicsCore
 import Persistence
 import UIKit
 
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+public class AppDelegate: UIResponder, UIApplicationDelegate {
     struct Singleton {
         let container: DependencyContainer
         let cloudStackLoader: CloudStackLoader
@@ -24,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let singleton: CurrentValueSubject<Singleton?, Never> = .init(nil)
     private(set) var cloudAvailabilityService: CloudAvailabilityService!
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         #if DEBUG
             if UserDefaults.standard.bool(forKey: "FASTLANE_SNAPSHOT") {
                 AppDataLoader.loadAppData()
@@ -43,11 +42,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // MARK: UISceneSession Lifecycle
 
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+    public func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
 
-    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+    public func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
         // NOP
     }
 }
