@@ -4,6 +4,7 @@
 
 import Combine
 import CompositeKit
+import Domain
 
 typealias ClipCollectionNavigationBarDependency = HasNop
 

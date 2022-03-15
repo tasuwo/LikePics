@@ -3,6 +3,7 @@
 //
 
 import CompositeKit
+import Domain
 
 struct ClipCollectionViewRootState: Equatable {
     var clipCollectionState: ClipCollectionState

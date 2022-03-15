@@ -2,14 +2,12 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-import Domain
-
-extension ClipCollection {
+public extension ClipCollection {
     enum Operation: String, Codable, Equatable {
         case none
         case selecting
 
-        var isAllowedMultipleSelection: Bool {
+        public var isAllowedMultipleSelection: Bool {
             switch self {
             case .selecting:
                 return true
@@ -19,7 +17,7 @@ extension ClipCollection {
             }
         }
 
-        var isEditing: Bool {
+        public var isEditing: Bool {
             switch self {
             case .none:
                 return false
