@@ -14,12 +14,12 @@ import UIKit
 
 class SceneDependencyContainer {
     weak var sceneResolver: SceneResolvable!
-    let container: DependencyContainer
+    let container: AppDependencyContainer
 
     // MARK: - Initializer
 
     init(sceneResolver: SceneResolvable,
-         container: DependencyContainer)
+         container: AppDependencyContainer)
     {
         self.sceneResolver = sceneResolver
         self.container = container

@@ -15,7 +15,7 @@ import UIKit
 
 public class AppDelegate: UIResponder, UIApplicationDelegate {
     struct Singleton {
-        let container: DependencyContainer
+        let container: AppDependencyContainer
         let cloudStackLoader: CloudStackLoader
         let clipsIntegrityValidatorStore: Store<ClipsIntegrityValidatorState, ClipsIntegrityValidatorAction, ClipsIntegrityValidatorDependency>
     }
@@ -50,21 +50,21 @@ extension AppDelegate {
         cloudAvailabilityService.currentAvailability { [unowned self, unowned cloudAvailabilityService] result in
             let isSyncEnabled = UserSettingsStorage.shared.readEnabledICloudSync()
 
-            let container: DependencyContainer
+            let container: AppDependencyContainer
 
             switch (isSyncEnabled, result) {
             case (true, .success(.available(.none))):
                 // swiftlint:disable:next force_try
-                container = try! DependencyContainer(configuration: .init(isCloudSyncEnabled: true),
-                                                     cloudAvailabilityObserver: cloudAvailabilityService)
+                container = try! AppDependencyContainer(configuration: .init(isCloudSyncEnabled: true),
+                                                        cloudAvailabilityObserver: cloudAvailabilityService)
 
             case (true, .success(.available(.accountChanged))),
                  (true, .success(.unavailable)),
                  (true, .failure),
                  (false, _):
                 // swiftlint:disable:next force_try
-                container = try! DependencyContainer(configuration: .init(isCloudSyncEnabled: false),
-                                                     cloudAvailabilityObserver: cloudAvailabilityService)
+                container = try! AppDependencyContainer(configuration: .init(isCloudSyncEnabled: false),
+                                                        cloudAvailabilityObserver: cloudAvailabilityService)
             }
 
             let cloudStackLoader = container.makeCloudStackLoader()

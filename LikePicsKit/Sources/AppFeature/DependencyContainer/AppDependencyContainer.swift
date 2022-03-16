@@ -15,7 +15,7 @@ import UIKit
 
 // swiftlint:disable identifier_name
 
-class DependencyContainer {
+class AppDependencyContainer {
     // MARK: - Properties
 
     // MARK: Image Loader
@@ -75,7 +75,7 @@ class DependencyContainer {
 
     // MARK: - Lifecycle
 
-    init(configuration: DependencyContainerConfiguration, cloudAvailabilityObserver: CloudAvailabilityService) throws {
+    init(configuration: AppDependencyContainerConfiguration, cloudAvailabilityObserver: CloudAvailabilityService) throws {
         self.logger = RootLogger(loggers: [
             ConsoleLogger(scopes: [.default, .transition])
         ])
@@ -260,7 +260,7 @@ class DependencyContainer {
     }
 }
 
-extension DependencyContainer: CoreDataStackObserver {
+extension AppDependencyContainer: CoreDataStackObserver {
     // MARK: - CoreDataStackObserver
 
     func coreDataStack(_ coreDataStack: CoreDataStack, reloaded container: NSPersistentCloudKitContainer) {
@@ -282,10 +282,10 @@ extension DependencyContainer: CoreDataStackObserver {
 
 extension ClipCommandService: ClipStorable {}
 
-extension DependencyContainer: HasTemporariesPersistService {
+extension AppDependencyContainer: HasTemporariesPersistService {
     var temporariesPersistService: TemporariesPersistServiceProtocol { _temporariesPersistService }
 }
 
-extension DependencyContainer: HasIntegrityValidationService {
+extension AppDependencyContainer: HasIntegrityValidationService {
     var integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol { _integrityValidationService }
 }
