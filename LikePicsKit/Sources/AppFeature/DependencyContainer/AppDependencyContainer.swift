@@ -56,6 +56,7 @@ class AppDependencyContainer {
     private var commandContext: NSManagedObjectContext
 
     let monitor: ICloudSyncMonitor
+    private let _cloudStackLoader: CloudStackLoader
 
     // MARK: Queue
 
@@ -97,6 +98,9 @@ class AppDependencyContainer {
         self._cloudAvailabilityService = cloudAvailabilityObserver
 
         self.coreDataStack = CoreDataStack(isICloudSyncEnabled: configuration.isCloudSyncEnabled, logger: logger)
+        self._cloudStackLoader = CloudStackLoader(userSettingsStorage: self._userSettingStorage,
+                                                  cloudAvailabilityService: self._cloudAvailabilityService,
+                                                  cloudStack: self.coreDataStack)
 
         self.imageQueryContext = self.coreDataStack.newBackgroundContext(on: self.imageQueryQueue)
         self.commandContext = self.coreDataStack.newBackgroundContext(on: self.clipCommandQueue)
@@ -203,15 +207,10 @@ class AppDependencyContainer {
 
         self.coreDataStack.coreDataStackObserver = self
         self.coreDataStack.cloudStackObserver = _integrityValidationService
+        self.cloudStackLoader.startObserveCloudAvailability()
     }
 
     // MARK: - Methods
-
-    func makeCloudStackLoader() -> CloudStackLoader {
-        return CloudStackLoader(userSettingsStorage: self._userSettingStorage,
-                                cloudAvailabilityService: self._cloudAvailabilityService,
-                                cloudStack: self.coreDataStack)
-    }
 
     func makeClipsIntegrityValidatorStore() -> Store<ClipsIntegrityValidatorState, ClipsIntegrityValidatorAction, ClipsIntegrityValidatorDependency> {
         return .init(initialState: ClipsIntegrityValidatorState(),
@@ -288,4 +287,8 @@ extension AppDependencyContainer: HasTemporariesPersistService {
 
 extension AppDependencyContainer: HasIntegrityValidationService {
     var integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol { _integrityValidationService }
+}
+
+extension AppDependencyContainer: HasCloudStackLoader {
+    var cloudStackLoader: CloudStackLoader { _cloudStackLoader }
 }

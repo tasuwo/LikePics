@@ -16,7 +16,6 @@ import UIKit
 public class AppDelegate: UIResponder, UIApplicationDelegate {
     struct Singleton {
         let container: AppDependencyContainer
-        let cloudStackLoader: CloudStackLoader
         let clipsIntegrityValidatorStore: Store<ClipsIntegrityValidatorState, ClipsIntegrityValidatorAction, ClipsIntegrityValidatorDependency>
     }
 
@@ -67,10 +66,8 @@ extension AppDelegate {
                                                         cloudAvailabilityObserver: cloudAvailabilityService)
             }
 
-            let cloudStackLoader = container.makeCloudStackLoader()
             let clipsIntegrityValidatorStore = container.makeClipsIntegrityValidatorStore()
             let context = Singleton(container: container,
-                                    cloudStackLoader: cloudStackLoader,
                                     clipsIntegrityValidatorStore: clipsIntegrityValidatorStore)
             self.singleton.send(context)
 
@@ -78,7 +75,6 @@ extension AppDelegate {
                 self?.singleton.value?.clipsIntegrityValidatorStore.execute(.shareExtensionDidCompleteRequest)
             }
             clipsIntegrityValidatorStore.execute(.didLaunchApp)
-            cloudStackLoader.startObserveCloudAvailability()
         }
     }
 }

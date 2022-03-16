@@ -92,7 +92,7 @@ extension SceneDelegate: MainAppLauncher {
                     self.window?.rootViewController = rootViewController
                 }
 
-                singleton.cloudStackLoader.observers.append(.init(value: rootViewController))
+                singleton.container.cloudStackLoader.observers.append(.init(value: rootViewController))
 
                 self.subscription.first?.cancel()
             }
