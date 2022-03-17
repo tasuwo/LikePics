@@ -9,10 +9,6 @@ import Foundation
 import ImageIO
 import Smoothie
 
-protocol PreviewPrefetchable {
-    var clip: CurrentValueSubject<Clip?, Never> { get }
-}
-
 class PreviewPrefetcher: PreviewPrefetchable {
     // MARK: - Properties
 

@@ -4,6 +4,6 @@
 
 import Common
 
-protocol HasLogger {
+public protocol HasLogger {
     var logger: Loggable { get }
 }

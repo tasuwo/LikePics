@@ -2,9 +2,10 @@
 //  Copyright ©︎ 2022 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
 import Smoothie
 
-protocol HasImageLoaderSettings {
+public protocol HasImageLoaderSettings {
     var clipDiskCache: DiskCaching { get }
     var clipThumbnailPipeline: Pipeline { get }
     var albumThumbnailPipeline: Pipeline { get }

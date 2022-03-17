@@ -113,8 +113,10 @@ let package = Package(
         .target(
             name: "Environment",
             dependencies: [
+                "Common",
                 "Domain",
-                "LikePicsUIKit"
+                "LikePicsUIKit",
+                "Smoothie"
             ]
         ),
         .target(
