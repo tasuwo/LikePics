@@ -14,7 +14,7 @@ import Persistence
 import UIKit
 
 public class AppDelegate: UIResponder, UIApplicationDelegate {
-    private(set) var appDependencyContainer: AppDependencyContainer!
+    private(set) var appDependencyContainer: AppDependencyContaining!
     private var clipsIntegrityValidator: ClipsIntegrityValidator!
 
     public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {

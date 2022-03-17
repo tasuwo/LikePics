@@ -14,12 +14,12 @@ import UIKit
 
 class SceneDependencyContainer {
     weak var sceneResolver: SceneResolvable!
-    let container: AppDependencyContainer
+    let container: AppDependencyContaining
 
     // MARK: - Initializer
 
     init(sceneResolver: SceneResolvable,
-         container: AppDependencyContainer)
+         container: AppDependencyContaining)
     {
         self.sceneResolver = sceneResolver
         self.container = container
@@ -35,27 +35,27 @@ extension SceneDependencyContainer: HasPasteboard {
 }
 
 extension SceneDependencyContainer: HasClipCommandService {
-    var clipCommandService: ClipCommandServiceProtocol { container._clipCommandService }
+    var clipCommandService: ClipCommandServiceProtocol { container.clipCommandService }
 }
 
 extension SceneDependencyContainer: HasClipQueryService {
-    var clipQueryService: ClipQueryServiceProtocol { container._clipQueryService }
+    var clipQueryService: ClipQueryServiceProtocol { container.clipQueryService }
 }
 
 extension SceneDependencyContainer: HasClipSearchSettingService {
-    var clipSearchSettingService: Domain.ClipSearchSettingService { container._clipSearchSettingService }
+    var clipSearchSettingService: Domain.ClipSearchSettingService { container.clipSearchSettingService }
 }
 
 extension SceneDependencyContainer: HasClipSearchHistoryService {
-    var clipSearchHistoryService: Domain.ClipSearchHistoryService { container._clipSearchHistoryService }
+    var clipSearchHistoryService: Domain.ClipSearchHistoryService { container.clipSearchHistoryService }
 }
 
 extension SceneDependencyContainer: HasUserSettingStorage {
-    var userSettingStorage: UserSettingsStorageProtocol { container._userSettingStorage }
+    var userSettingStorage: UserSettingsStorageProtocol { container.userSettingStorage }
 }
 
 extension SceneDependencyContainer: HasImageQueryService {
-    var imageQueryService: ImageQueryServiceProtocol { container._imageQueryService }
+    var imageQueryService: ImageQueryServiceProtocol { container.imageQueryService }
 }
 
 extension SceneDependencyContainer: HasTransitionLock {
@@ -63,7 +63,7 @@ extension SceneDependencyContainer: HasTransitionLock {
 }
 
 extension SceneDependencyContainer: HasCloudAvailabilityService {
-    var cloudAvailabilityService: CloudAvailabilityServiceProtocol { container._cloudAvailabilityService }
+    var cloudAvailabilityService: CloudAvailabilityServiceProtocol { container.cloudAvailabilityService }
 }
 
 extension SceneDependencyContainer: HasModalNotificationCenter {

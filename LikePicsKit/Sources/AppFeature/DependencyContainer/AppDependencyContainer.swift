@@ -15,47 +15,66 @@ import UIKit
 
 // swiftlint:disable identifier_name
 
+typealias AppDependencyContaining = HasPasteboard
+    & HasClipCommandService
+    & HasClipQueryService
+    & HasClipSearchSettingService
+    & HasClipSearchHistoryService
+    & HasUserSettingStorage
+    & HasImageQueryService
+    & HasTransitionLock
+    & HasCloudAvailabilityService
+    & HasModalNotificationCenter
+    & HasTemporariesPersistService
+    & HasIntegrityValidationService
+    & HasCloudStackLoader
+    & HasTagCommandService
+    & HasNop
+    & HasLogger
+    & HasClipStore
+    & HasImageLoaderSettings
+
 class AppDependencyContainer {
     // MARK: - Properties
 
     // MARK: Image Loader
 
-    let clipDiskCache: DiskCache
-    let clipThumbnailPipeline: Pipeline
-    let albumThumbnailPipeline: Pipeline
-    let clipItemThumbnailPipeline: Pipeline
-    let temporaryThumbnailPipeline: Pipeline
-    let previewPipeline: Pipeline
-    let previewPrefetcher: PreviewPrefetcher
+    private let _clipDiskCache: DiskCache
+    private let _clipThumbnailPipeline: Pipeline
+    private let _albumThumbnailPipeline: Pipeline
+    private let _clipItemThumbnailPipeline: Pipeline
+    private let _temporaryThumbnailPipeline: Pipeline
+    private let _previewPipeline: Pipeline
+    private let _previewPrefetcher: PreviewPrefetcher
 
     // MARK: Storage
 
-    let clipStorage: ClipStorage
-    let tmpClipStorage: TemporaryClipStorageProtocol
-    let referenceClipStorage: ReferenceClipStorageProtocol
-    let imageStorage: ImageStorage
-    let tmpImageStorage: TemporaryImageStorageProtocol
-    let _userSettingStorage: UserSettingsStorageProtocol
-    let cloudUsageContextStorage: CloudUsageContextStorageProtocol
+    private let clipStorage: ClipStorage
+    private let tmpClipStorage: TemporaryClipStorageProtocol
+    private let referenceClipStorage: ReferenceClipStorageProtocol
+    private let imageStorage: ImageStorage
+    private let tmpImageStorage: TemporaryImageStorageProtocol
+    private let _userSettingStorage: UserSettingsStorageProtocol
+    private let cloudUsageContextStorage: CloudUsageContextStorageProtocol
 
     // MARK: Service
 
-    let _clipCommandService: ClipCommandService
-    let _clipQueryService: ClipQueryCacheService<ClipQueryService>
-    let _clipSearchHistoryService: Persistence.ClipSearchHistoryService
-    let _clipSearchSettingService: Persistence.ClipSearchSettingService
-    let _imageQueryService: ImageQueryService
-    let _integrityValidationService: ClipReferencesIntegrityValidationService
-    let _temporariesPersistService: TemporariesPersistService
+    private let _clipCommandService: ClipCommandService
+    private let _clipQueryService: ClipQueryCacheService<ClipQueryService>
+    private let _clipSearchHistoryService: Persistence.ClipSearchHistoryService
+    private let _clipSearchSettingService: Persistence.ClipSearchSettingService
+    private let _imageQueryService: ImageQueryService
+    private let _integrityValidationService: ClipReferencesIntegrityValidationService
+    private let _temporariesPersistService: TemporariesPersistService
 
     // MARK: Core Data
 
-    let coreDataStack: CoreDataStack
-    let _cloudAvailabilityService: CloudAvailabilityService
+    private let coreDataStack: CoreDataStack
+    private let _cloudAvailabilityService: CloudAvailabilityService
     private var imageQueryContext: NSManagedObjectContext
     private var commandContext: NSManagedObjectContext
 
-    let monitor: ICloudSyncMonitor
+    private let monitor: ICloudSyncMonitor
     private let _cloudStackLoader: CloudStackLoader
 
     // MARK: Queue
@@ -72,24 +91,24 @@ class AppDependencyContainer {
 
     // MARK: Logger
 
-    let logger: Loggable
+    private let _logger: Loggable
 
     // MARK: - Lifecycle
 
     init() throws {
-        self.logger = RootLogger(loggers: [
+        self._logger = RootLogger(loggers: [
             ConsoleLogger(scopes: [.default, .transition])
         ])
 
         // MARK: Storage
 
         self.tmpImageStorage = try TemporaryImageStorage(configuration: .resolve(for: Bundle.main, kind: .group))
-        self.tmpClipStorage = try TemporaryClipStorage(config: .resolve(for: Bundle.main, kind: .group), logger: self.logger)
-        self.referenceClipStorage = try ReferenceClipStorage(config: .resolve(for: Bundle.main), logger: self.logger)
+        self.tmpClipStorage = try TemporaryClipStorage(config: .resolve(for: Bundle.main, kind: .group), logger: _logger)
+        self.referenceClipStorage = try ReferenceClipStorage(config: .resolve(for: Bundle.main), logger: _logger)
 
         // MARK: CoreData
 
-        self.monitor = ICloudSyncMonitor(logger: self.logger)
+        self.monitor = ICloudSyncMonitor(logger: _logger)
 
         let userSettingsStorage = UserSettingsStorage.shared
         let cloudUsageContextStorage = CloudUsageContextStorage()
@@ -99,7 +118,7 @@ class AppDependencyContainer {
                                                                   cloudAccountService: CloudAccountService())
 
         self.coreDataStack = CoreDataStack(isICloudSyncEnabled: self._userSettingStorage.readEnabledICloudSync(),
-                                           logger: logger)
+                                           logger: _logger)
         self._cloudStackLoader = CloudStackLoader(userSettingsStorage: self._userSettingStorage,
                                                   cloudAvailabilityService: self._cloudAvailabilityService,
                                                   cloudStack: self.coreDataStack)
@@ -108,10 +127,10 @@ class AppDependencyContainer {
         self.commandContext = self.coreDataStack.newBackgroundContext(on: self.clipCommandQueue)
         // Note: clipStorage, imageStorage は、同一トランザクションとして書き込みを行うことが多いため、
         //       同一Contextとする
-        self.clipStorage = ClipStorage(context: self.commandContext, logger: logger)
+        self.clipStorage = ClipStorage(context: self.commandContext, logger: _logger)
         self.imageStorage = ImageStorage(context: self.commandContext)
         self._clipQueryService = ClipQueryCacheService(ClipQueryService(context: self.coreDataStack.viewContext))
-        self._imageQueryService = ImageQueryService(context: self.imageQueryContext, logger: logger)
+        self._imageQueryService = ImageQueryService(context: self.imageQueryContext, logger: _logger)
 
         self._clipSearchHistoryService = Persistence.ClipSearchHistoryService()
         self._clipSearchSettingService = Persistence.ClipSearchSettingService()
@@ -126,14 +145,14 @@ class AppDependencyContainer {
 
         var clipCacheConfig = Pipeline.Configuration()
         let clipCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-thumbnails")
-        self.clipDiskCache = try DiskCache(path: clipCacheDirectory,
-                                           config: .init(sizeLimit: 1024 * 1024 * 1024,
-                                                         countLimit: Int.max,
-                                                         dateLimit: 30))
-        clipCacheConfig.diskCache = self.clipDiskCache
+        self._clipDiskCache = try DiskCache(path: clipCacheDirectory,
+                                            config: .init(sizeLimit: 1024 * 1024 * 1024,
+                                                          countLimit: Int.max,
+                                                          dateLimit: 30))
+        clipCacheConfig.diskCache = self._clipDiskCache
         clipCacheConfig.compressionRatio = 0.5
         clipCacheConfig.memoryCache = memoryCache
-        self.clipThumbnailPipeline = .init(config: clipCacheConfig)
+        self._clipThumbnailPipeline = .init(config: clipCacheConfig)
 
         // Album
 
@@ -146,7 +165,7 @@ class AppDependencyContainer {
                                                          dateLimit: 30))
         albumCacheConfig.diskCache = albumDiskCache
         albumCacheConfig.memoryCache = memoryCache
-        self.albumThumbnailPipeline = Pipeline(config: albumCacheConfig)
+        self._albumThumbnailPipeline = Pipeline(config: albumCacheConfig)
 
         // Clip Item
 
@@ -158,14 +177,14 @@ class AppDependencyContainer {
                                                             dateLimit: 30))
         clipItemCacheConfig.diskCache = clipItemDiskCache
         clipItemCacheConfig.memoryCache = memoryCache
-        self.clipItemThumbnailPipeline = Pipeline(config: clipItemCacheConfig)
+        self._clipItemThumbnailPipeline = Pipeline(config: clipItemCacheConfig)
 
         // Temporary
 
         var temporaryCacheConfig = Pipeline.Configuration()
         temporaryCacheConfig.diskCache = nil
         temporaryCacheConfig.memoryCache = memoryCache
-        self.temporaryThumbnailPipeline = Pipeline(config: temporaryCacheConfig)
+        self._temporaryThumbnailPipeline = Pipeline(config: temporaryCacheConfig)
 
         // Preview
 
@@ -175,28 +194,28 @@ class AppDependencyContainer {
         previewCacheConfig.imageDecompressingQueue.maxConcurrentOperationCount = 1
         previewCacheConfig.diskCache = nil
         previewCacheConfig.memoryCache = memoryCache
-        self.previewPipeline = Pipeline(config: previewCacheConfig)
+        self._previewPipeline = Pipeline(config: previewCacheConfig)
 
-        self.previewPrefetcher = PreviewPrefetcher(pipeline: clipThumbnailPipeline,
-                                                   imageQueryService: _imageQueryService,
-                                                   scale: UIScreen.main.scale)
+        self._previewPrefetcher = PreviewPrefetcher(pipeline: _clipThumbnailPipeline,
+                                                    imageQueryService: _imageQueryService,
+                                                    scale: UIScreen.main.scale)
 
         // MARK: Service
 
         self._clipCommandService = ClipCommandService(clipStorage: clipStorage,
                                                       referenceClipStorage: referenceClipStorage,
                                                       imageStorage: imageStorage,
-                                                      diskCache: clipDiskCache,
+                                                      diskCache: _clipDiskCache,
                                                       // Note: ImageStorage, ClipStorage は同一 Context である前提
                                                       commandQueue: clipStorage,
                                                       lock: commandLock,
-                                                      logger: logger)
+                                                      logger: _logger)
         self._integrityValidationService = ClipReferencesIntegrityValidationService(clipStorage: clipStorage,
                                                                                     referenceClipStorage: referenceClipStorage,
                                                                                     // Note: ImageStorage, ClipStorage は同一 Context である前提
                                                                                     commandQueue: clipStorage,
                                                                                     lock: commandLock,
-                                                                                    logger: logger)
+                                                                                    logger: _logger)
         self._temporariesPersistService = TemporariesPersistService(temporaryClipStorage: tmpClipStorage,
                                                                     temporaryImageStorage: tmpImageStorage,
                                                                     clipStorage: clipStorage,
@@ -205,7 +224,7 @@ class AppDependencyContainer {
                                                                     // Note: ImageStorage, ClipStorage は同一 Context である前提
                                                                     commandQueue: clipStorage,
                                                                     lock: commandLock,
-                                                                    logger: logger)
+                                                                    logger: _logger)
 
         self.coreDataStack.coreDataStackObserver = self
         self.coreDataStack.cloudStackObserver = _integrityValidationService
@@ -277,6 +296,8 @@ extension AppDependencyContainer: CoreDataStackObserver {
 
 extension ClipCommandService: ClipStorable {}
 
+// MARK: - Dependencies
+
 extension AppDependencyContainer: HasPasteboard {
     var pasteboard: Pasteboard { UIPasteboard.general }
 }
@@ -329,4 +350,26 @@ extension AppDependencyContainer: HasCloudStackLoader {
     var cloudStackLoader: CloudStackLoader { _cloudStackLoader }
 }
 
+extension AppDependencyContainer: HasTagCommandService {
+    var tagCommandService: TagCommandServiceProtocol { _clipCommandService }
+}
+
 extension AppDependencyContainer: HasNop {}
+
+extension AppDependencyContainer: HasLogger {
+    var logger: Loggable { _logger }
+}
+
+extension AppDependencyContainer: HasClipStore {
+    var clipStore: ClipStorable { _clipCommandService }
+}
+
+extension AppDependencyContainer: HasImageLoaderSettings {
+    var clipDiskCache: DiskCaching { _clipDiskCache }
+    var clipThumbnailPipeline: Pipeline { _clipThumbnailPipeline }
+    var albumThumbnailPipeline: Pipeline { _albumThumbnailPipeline }
+    var clipItemThumbnailPipeline: Pipeline { _clipItemThumbnailPipeline }
+    var temporaryThumbnailPipeline: Pipeline { _temporaryThumbnailPipeline }
+    var previewPipeline: Pipeline { _previewPipeline }
+    var previewPrefetcher: PreviewPrefetchable { _previewPrefetcher }
+}

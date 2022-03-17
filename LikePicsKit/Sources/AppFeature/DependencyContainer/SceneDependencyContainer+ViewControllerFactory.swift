@@ -17,18 +17,18 @@ extension SceneDependencyContainer: ViewControllerFactory {
 
     func makeClipCollectionViewController(from source: ClipCollection.Source) -> RestorableViewController & ViewLazyPresentable {
         let state = ClipCollectionViewRootState(source: source,
-                                                isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+                                                isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
         return ClipCollectionViewController(state: state,
                                             dependency: self,
                                             thumbnailPipeline: container.clipThumbnailPipeline,
-                                            menuBuilder: ClipCollectionMenuBuilder(storage: container._userSettingStorage))
+                                            menuBuilder: ClipCollectionMenuBuilder(storage: container.userSettingStorage))
     }
 
     func makeClipCollectionViewController(_ state: ClipCollectionViewRootState) -> RestorableViewController & ViewLazyPresentable {
         return ClipCollectionViewController(state: state,
                                             dependency: self,
                                             thumbnailPipeline: container.clipThumbnailPipeline,
-                                            menuBuilder: ClipCollectionMenuBuilder(storage: container._userSettingStorage))
+                                            menuBuilder: ClipCollectionMenuBuilder(storage: container.userSettingStorage))
     }
 
     func makeTagCollectionViewController(_ state: TagCollectionViewState?) -> RestorableViewController? {
@@ -36,7 +36,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
             if let state = state {
                 return state
             } else {
-                return .init(isSomeItemsHidden: container._userSettingStorage.readShowHiddenItems())
+                return .init(isSomeItemsHidden: container.userSettingStorage.readShowHiddenItems())
             }
         }()
         let tagAdditionAlertState = TextEditAlertState(title: L10n.tagListViewAlertForAddTitle,
@@ -50,7 +50,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                                          tagAdditionAlertState: tagAdditionAlertState,
                                                          tagEditAlertState: tagEditAlertState,
                                                          dependency: self,
-                                                         menuBuilder: TagCollectionMenuBuilder(storage: container._userSettingStorage))
+                                                         menuBuilder: TagCollectionMenuBuilder(storage: container.userSettingStorage))
 
         return UINavigationController(rootViewController: viewController)
     }
@@ -60,7 +60,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
             if let state = state {
                 return state
             } else {
-                return .init(isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+                return .init(isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
             }
         }()
         let addAlbumAlertState = TextEditAlertState(title: L10n.albumListViewAlertForAddTitle,
@@ -75,7 +75,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                                      albumEditAlertState: editAlbumAlertState,
                                                      dependency: self,
                                                      thumbnailPipeline: container.albumThumbnailPipeline,
-                                                     imageQueryService: container._imageQueryService,
+                                                     imageQueryService: container.imageQueryService,
                                                      menuBuilder: AlbumListMenuBuilder.self)
 
         return UINavigationController(rootViewController: viewController)
@@ -86,13 +86,13 @@ extension SceneDependencyContainer: ViewControllerFactory {
             if let state = state {
                 return state
             } else {
-                return .init(isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+                return .init(isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
             }
         }()
         let viewController = SearchEntryViewController(state: state,
                                                        dependency: self,
                                                        thumbnailPipeline: container.temporaryThumbnailPipeline,
-                                                       imageQueryService: container._imageQueryService)
+                                                       imageQueryService: container.imageQueryService)
 
         return UINavigationController(rootViewController: viewController)
     }
@@ -108,8 +108,8 @@ extension SceneDependencyContainer: ViewControllerFactory {
                 return state
             } else {
                 return SettingsViewState(cloudAvailability: nil,
-                                         isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems(),
-                                         isICloudSyncEnabled: container._userSettingStorage.readEnabledICloudSync())
+                                         isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems(),
+                                         isICloudSyncEnabled: container.userSettingStorage.readEnabledICloudSync())
             }
         }()
         let store = Store(initialState: state, dependency: self, reducer: SettingsViewReducer())
@@ -141,17 +141,17 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                                                        informationTransitionController: informationTransitionController)
 
         let dependency = Dependency(router: self,
-                                    clipCommandService: container._clipCommandService,
-                                    clipQueryService: container._clipQueryService,
+                                    clipCommandService: container.clipCommandService,
+                                    clipQueryService: container.clipQueryService,
                                     clipItemInformationTransitioningController: informationTransitionController,
-                                    imageQueryService: container._imageQueryService,
+                                    imageQueryService: container.imageQueryService,
                                     transitionLock: container.transitionLock,
-                                    userSettingStorage: container._userSettingStorage)
+                                    userSettingStorage: container.userSettingStorage)
 
         let state = ClipPreviewPageViewRootState(filteredClipIds: filteredClipIds,
                                                  clips: clips,
                                                  query: query,
-                                                 isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems(),
+                                                 isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems(),
                                                  indexPath: indexPath)
         let viewController = ClipPreviewPageViewController(state: state,
                                                            dependency: dependency,
@@ -171,7 +171,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
 
     func makeClipPreviewViewController(for item: ClipItem) -> ClipPreviewViewController? {
         let viewController = ClipPreviewViewController(state: .init(item: item),
-                                                       imageQueryService: container._imageQueryService,
+                                                       imageQueryService: container.imageQueryService,
                                                        thumbnailMemoryCache: container.clipThumbnailPipeline.config.memoryCache,
                                                        thumbnailDiskCache: container.clipDiskCache,
                                                        pipeline: container.previewPipeline)
@@ -181,12 +181,12 @@ extension SceneDependencyContainer: ViewControllerFactory {
 
 extension SceneDependencyContainer: LikePicsCore.ViewControllerFactory {
     func makeTagSelectionViewController(selectedTags: Set<Tag.Identity>, delegate: TagSelectionViewControllerDelegate) -> UIViewController? {
-        switch container._clipQueryService.queryAllTags() {
+        switch container.clipQueryService.queryAllTags() {
         case let .success(query):
             let viewModel = TagSelectionViewModel(query: query,
                                                   selectedTags: selectedTags,
-                                                  commandService: container._clipCommandService,
-                                                  settingStorage: container._userSettingStorage,
+                                                  commandService: container.tagCommandService,
+                                                  settingStorage: container.userSettingStorage,
                                                   logger: container.logger)
             let viewController = TagSelectionViewController(viewModel: viewModel, delegate: delegate)
             return UINavigationController(rootViewController: viewController)

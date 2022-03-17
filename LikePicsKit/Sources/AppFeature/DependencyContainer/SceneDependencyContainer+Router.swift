@@ -154,7 +154,7 @@ extension SceneDependencyContainer: Router {
     {
         let state = ClipItemInformationViewState(clipId: clipId,
                                                  itemId: itemId,
-                                                 isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+                                                 isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
         let siteUrlEditAlertState = TextEditAlertState(title: L10n.alertForEditSiteUrlTitle,
                                                        message: L10n.alertForEditSiteUrlMessage,
                                                        placeholder: L10n.placeholderUrl)
@@ -179,7 +179,7 @@ extension SceneDependencyContainer: Router {
         let state = ClipItemListState(id: id,
                                       clipId: clipId,
                                       clipItems: clipItems,
-                                      isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+                                      isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
         let viewController = ClipItemListViewController(state: .init(listState: state,
                                                                      navigationBarState: .init(),
                                                                      toolBarState: .init()),
@@ -202,7 +202,7 @@ extension SceneDependencyContainer: Router {
 
         let state = TagSelectionModalState(id: id,
                                            selections: selections,
-                                           isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+                                           isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
         let tagAdditionAlertState = TextEditAlertState(title: L10n.tagListViewAlertForAddTitle,
                                                        message: L10n.tagListViewAlertForAddMessage,
                                                        placeholder: L10n.placeholderTagName)
@@ -225,7 +225,7 @@ extension SceneDependencyContainer: Router {
     func showAlbumSelectionModal(id: UUID) -> Bool {
         guard isPresentingModal(having: id) == false else { return true }
 
-        let state = AlbumSelectionModalState(id: id, isSomeItemsHidden: !container._userSettingStorage.readShowHiddenItems())
+        let state = AlbumSelectionModalState(id: id, isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
         let albumAdditionAlertState = TextEditAlertState(title: L10n.albumListViewAlertForAddTitle,
                                                          message: L10n.albumListViewAlertForAddMessage,
                                                          placeholder: L10n.placeholderAlbumName)
@@ -233,7 +233,7 @@ extension SceneDependencyContainer: Router {
                                                            albumAdditionAlertState: albumAdditionAlertState,
                                                            dependency: self,
                                                            thumbnailPipeline: container.temporaryThumbnailPipeline,
-                                                           imageQueryService: container._imageQueryService)
+                                                           imageQueryService: container.imageQueryService)
 
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
@@ -254,7 +254,7 @@ extension SceneDependencyContainer: Router {
         let viewController = ClipMergeViewController(state: state,
                                                      dependency: self,
                                                      thumbnailPipeline: container.temporaryThumbnailPipeline,
-                                                     imageQueryService: container._imageQueryService)
+                                                     imageQueryService: container.imageQueryService)
 
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
@@ -290,17 +290,17 @@ extension SceneDependencyContainer: Router {
         }
         let imageLoader = ImageLoader()
         let dependency = Dependency(clipRecipeFactory: ClipRecipeFactory(),
-                                    clipStore: container._clipCommandService,
+                                    clipStore: container.clipStore,
                                     imageLoader: imageLoader,
                                     imageSourceProvider: WebPageImageLoadSourceResolver(webView: webView),
-                                    userSettingsStorage: container._userSettingStorage,
+                                    userSettingsStorage: container.userSettingStorage,
                                     modalNotificationCenter: .default)
 
         let viewController = ClipCreationViewController(factory: self,
                                                         state: .init(id: id,
                                                                      source: .webPageImage,
                                                                      url: currentUrl,
-                                                                     isSomeItemsHidden: container._userSettingStorage.readShowHiddenItems()),
+                                                                     isSomeItemsHidden: container.userSettingStorage.readShowHiddenItems()),
                                                         dependency: dependency,
                                                         thumbnailPipeline: container.temporaryThumbnailPipeline,
                                                         imageLoader: imageLoader)

@@ -17,7 +17,7 @@ protocol SceneRootSetupViewProtocol: AnyObject {
 
 class SceneRootSetupPresenter {
     private let userSettingsStorage: UserSettingsStorageProtocol
-    private let cloudAvailabilityService: CloudAvailabilityService
+    private let cloudAvailabilityService: CloudAvailabilityServiceProtocol
     private let intent: Intent?
 
     weak var view: SceneRootSetupViewProtocol?
@@ -25,7 +25,7 @@ class SceneRootSetupPresenter {
     // MARK: - Lifecycle
 
     init(userSettingsStorage: UserSettingsStorageProtocol,
-         cloudAvailabilityService: CloudAvailabilityService,
+         cloudAvailabilityService: CloudAvailabilityServiceProtocol,
          intent: Intent?)
     {
         self.userSettingsStorage = userSettingsStorage

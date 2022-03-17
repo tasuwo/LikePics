@@ -26,7 +26,7 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // swiftlint:disable:next force_cast
         let delegate = UIApplication.shared.delegate as! AppDelegate
         let presenter = SceneRootSetupPresenter(userSettingsStorage: UserSettingsStorage.shared,
-                                                cloudAvailabilityService: delegate.appDependencyContainer._cloudAvailabilityService,
+                                                cloudAvailabilityService: delegate.appDependencyContainer.cloudAvailabilityService,
                                                 intent: session.stateRestorationActivity?.intent)
         let rootViewController = SceneRootSetupViewController(presenter: presenter, launcher: self)
 
