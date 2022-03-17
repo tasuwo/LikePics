@@ -18,10 +18,7 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     public var window: UIWindow?
 
     private var sceneDependencyContainer: SceneDependencyContainer!
-    private var subscription: Set<AnyCancellable> = .init()
-
-    private var userSettingsStorage: UserSettingsStorage!
-    private var uiStyleSubscription: AnyCancellable?
+    private var subscriptions: Set<AnyCancellable> = .init()
 
     public func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -29,7 +26,7 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // swiftlint:disable:next force_cast
         let delegate = UIApplication.shared.delegate as! AppDelegate
         let presenter = SceneRootSetupPresenter(userSettingsStorage: UserSettingsStorage.shared,
-                                                cloudAvailabilityService: delegate.cloudAvailabilityService,
+                                                cloudAvailabilityService: delegate.appDependencyContainer._cloudAvailabilityService,
                                                 intent: session.stateRestorationActivity?.intent)
         let rootViewController = SceneRootSetupViewController(presenter: presenter, launcher: self)
 
@@ -37,11 +34,11 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = rootViewController
         window.makeKeyAndVisible()
 
-        userSettingsStorage = UserSettingsStorage.shared
-        uiStyleSubscription = userSettingsStorage
+        UserSettingsStorage.shared
             .userInterfaceStyle
             .map { $0.uiUserInterfaceStyle }
             .sink { [window] style in window.overrideUserInterfaceStyle = style }
+            .store(in: &self.subscriptions)
 
         self.window = window
 
@@ -68,34 +65,23 @@ extension SceneDelegate: MainAppLauncher {
     func launch(_ intent: Intent?) {
         // swiftlint:disable:next force_cast
         let delegate = UIApplication.shared.delegate as! AppDelegate
-        delegate.singleton
-            .compactMap { $0 }
-            .receive(on: DispatchQueue.main)
-            // swiftlint:disable:next unowned_variable_capture
-            .sink { [unowned self] singleton in
-                self.sceneDependencyContainer = SceneDependencyContainer(sceneResolver: self, container: singleton.container)
+        self.sceneDependencyContainer = SceneDependencyContainer(sceneResolver: self, container: delegate.appDependencyContainer)
 
-                let rootViewController: SceneRootViewController
-                if UIDevice.current.userInterfaceIdiom == .pad {
-                    rootViewController = SceneRootSplitViewController(factory: self.sceneDependencyContainer,
-                                                                      clipsIntegrityValidatorStore: singleton.clipsIntegrityValidatorStore,
-                                                                      intent: intent,
-                                                                      logger: singleton.container.logger)
-                } else {
-                    rootViewController = SceneRootTabBarController(factory: self.sceneDependencyContainer,
-                                                                   clipsIntegrityValidatorStore: singleton.clipsIntegrityValidatorStore,
-                                                                   intent: intent,
-                                                                   logger: singleton.container.logger)
-                }
+        let rootViewController: SceneRootViewController
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            rootViewController = SceneRootSplitViewController(factory: self.sceneDependencyContainer,
+                                                              intent: intent,
+                                                              logger: delegate.appDependencyContainer.logger)
+        } else {
+            rootViewController = SceneRootTabBarController(factory: self.sceneDependencyContainer,
+                                                           intent: intent,
+                                                           logger: delegate.appDependencyContainer.logger)
+        }
 
-                self.window?.rootViewController?.dismiss(animated: true) {
-                    self.window?.rootViewController = rootViewController
-                }
+        self.window?.rootViewController?.dismiss(animated: true) {
+            self.window?.rootViewController = rootViewController
+        }
 
-                singleton.container.cloudStackLoader.observers.append(.init(value: rootViewController))
-
-                self.subscription.first?.cancel()
-            }
-            .store(in: &subscription)
+        delegate.appDependencyContainer.cloudStackLoader.observers.append(.init(value: rootViewController))
     }
 }

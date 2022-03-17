@@ -76,7 +76,7 @@ class AppDependencyContainer {
 
     // MARK: - Lifecycle
 
-    init(configuration: AppDependencyContainerConfiguration, cloudAvailabilityObserver: CloudAvailabilityService) throws {
+    init() throws {
         self.logger = RootLogger(loggers: [
             ConsoleLogger(scopes: [.default, .transition])
         ])
@@ -95,9 +95,11 @@ class AppDependencyContainer {
         let cloudUsageContextStorage = CloudUsageContextStorage()
         self._userSettingStorage = userSettingsStorage
         self.cloudUsageContextStorage = cloudUsageContextStorage
-        self._cloudAvailabilityService = cloudAvailabilityObserver
+        self._cloudAvailabilityService = CloudAvailabilityService(cloudUsageContextStorage: CloudUsageContextStorage(),
+                                                                  cloudAccountService: CloudAccountService())
 
-        self.coreDataStack = CoreDataStack(isICloudSyncEnabled: configuration.isCloudSyncEnabled, logger: logger)
+        self.coreDataStack = CoreDataStack(isICloudSyncEnabled: self._userSettingStorage.readEnabledICloudSync(),
+                                           logger: logger)
         self._cloudStackLoader = CloudStackLoader(userSettingsStorage: self._userSettingStorage,
                                                   cloudAvailabilityService: self._cloudAvailabilityService,
                                                   cloudStack: self.coreDataStack)
@@ -211,12 +213,6 @@ class AppDependencyContainer {
     }
 
     // MARK: - Methods
-
-    func makeClipsIntegrityValidatorStore() -> Store<ClipsIntegrityValidatorState, ClipsIntegrityValidatorAction, ClipsIntegrityValidatorDependency> {
-        return .init(initialState: ClipsIntegrityValidatorState(),
-                     dependency: self,
-                     reducer: ClipsIntegrityValidatorReducer())
-    }
 
     private static func sweepLegacyThumbnailCachesIfExists() {
         guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
