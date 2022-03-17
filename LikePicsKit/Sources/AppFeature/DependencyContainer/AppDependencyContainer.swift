@@ -68,7 +68,7 @@ class AppDependencyContainer {
 
     // MARK: Lock
 
-    let transitionLock = TransitionLock()
+    private let _transitionLock = TransitionLock()
 
     // MARK: Logger
 
@@ -277,6 +277,46 @@ extension AppDependencyContainer: CoreDataStackObserver {
 
 extension ClipCommandService: ClipStorable {}
 
+extension AppDependencyContainer: HasPasteboard {
+    var pasteboard: Pasteboard { UIPasteboard.general }
+}
+
+extension AppDependencyContainer: HasClipCommandService {
+    var clipCommandService: ClipCommandServiceProtocol { _clipCommandService }
+}
+
+extension AppDependencyContainer: HasClipQueryService {
+    var clipQueryService: ClipQueryServiceProtocol { _clipQueryService }
+}
+
+extension AppDependencyContainer: HasClipSearchSettingService {
+    var clipSearchSettingService: Domain.ClipSearchSettingService { _clipSearchSettingService }
+}
+
+extension AppDependencyContainer: HasClipSearchHistoryService {
+    var clipSearchHistoryService: Domain.ClipSearchHistoryService { _clipSearchHistoryService }
+}
+
+extension AppDependencyContainer: HasUserSettingStorage {
+    var userSettingStorage: UserSettingsStorageProtocol { _userSettingStorage }
+}
+
+extension AppDependencyContainer: HasImageQueryService {
+    var imageQueryService: ImageQueryServiceProtocol { _imageQueryService }
+}
+
+extension AppDependencyContainer: HasTransitionLock {
+    var transitionLock: TransitionLock { _transitionLock }
+}
+
+extension AppDependencyContainer: HasCloudAvailabilityService {
+    var cloudAvailabilityService: CloudAvailabilityServiceProtocol { _cloudAvailabilityService }
+}
+
+extension AppDependencyContainer: HasModalNotificationCenter {
+    var modalNotificationCenter: ModalNotificationCenter { ModalNotificationCenter.default }
+}
+
 extension AppDependencyContainer: HasTemporariesPersistService {
     var temporariesPersistService: TemporariesPersistServiceProtocol { _temporariesPersistService }
 }
@@ -288,3 +328,5 @@ extension AppDependencyContainer: HasIntegrityValidationService {
 extension AppDependencyContainer: HasCloudStackLoader {
     var cloudStackLoader: CloudStackLoader { _cloudStackLoader }
 }
+
+extension AppDependencyContainer: HasNop {}

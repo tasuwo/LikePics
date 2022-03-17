@@ -31,7 +31,7 @@ extension SceneDependencyContainer: HasRouter {
 }
 
 extension SceneDependencyContainer: HasPasteboard {
-    var pasteboard: Pasteboard { UIPasteboard.general }
+    var pasteboard: Pasteboard { container.pasteboard }
 }
 
 extension SceneDependencyContainer: HasClipCommandService {
@@ -67,7 +67,7 @@ extension SceneDependencyContainer: HasCloudAvailabilityService {
 }
 
 extension SceneDependencyContainer: HasModalNotificationCenter {
-    var modalNotificationCenter: ModalNotificationCenter { ModalNotificationCenter.default }
+    var modalNotificationCenter: ModalNotificationCenter { container.modalNotificationCenter }
 }
 
 extension SceneDependencyContainer: HasNop {}
