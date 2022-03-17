@@ -25,7 +25,7 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // swiftlint:disable:next force_cast
         let delegate = UIApplication.shared.delegate as! AppDelegate
-        let presenter = SceneRootSetupPresenter(userSettingsStorage: UserSettingsStorage.shared,
+        let presenter = SceneRootSetupPresenter(userSettingsStorage: delegate.appDependencyContainer.userSettingStorage,
                                                 cloudAvailabilityService: delegate.appDependencyContainer.cloudAvailabilityService,
                                                 intent: session.stateRestorationActivity?.intent)
         let rootViewController = SceneRootSetupViewController(presenter: presenter, launcher: self)
@@ -34,7 +34,7 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = rootViewController
         window.makeKeyAndVisible()
 
-        UserSettingsStorage.shared
+        delegate.appDependencyContainer.userSettingStorage
             .userInterfaceStyle
             .map { $0.uiUserInterfaceStyle }
             .sink { [window] style in window.overrideUserInterfaceStyle = style }
