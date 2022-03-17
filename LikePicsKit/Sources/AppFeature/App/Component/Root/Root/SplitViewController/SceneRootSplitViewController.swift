@@ -32,7 +32,6 @@ class SceneRootSplitViewController: UISplitViewController {
 
     // MARK: Store
 
-    private var clipsIntegrityValidatorStore: Store
     private var subscriptions = Set<AnyCancellable>()
 
     // MARK: Privates
@@ -43,12 +42,10 @@ class SceneRootSplitViewController: UISplitViewController {
     // MARK: - Initializers
 
     init(factory: Factory,
-         clipsIntegrityValidatorStore: Store,
          intent: Intent?,
          logger: Loggable)
     {
         self.factory = factory
-        self.clipsIntegrityValidatorStore = clipsIntegrityValidatorStore
         self.intent = intent
         self.logger = logger
         super.init(style: .doubleColumn)
@@ -72,37 +69,6 @@ class SceneRootSplitViewController: UISplitViewController {
         super.viewDidLoad()
 
         configureViewHierarchy()
-
-        bind(to: clipsIntegrityValidatorStore)
-    }
-}
-
-// MARK: - Bind
-
-extension SceneRootSplitViewController {
-    private func bind(to store: Store) {
-        store.state
-            .debounce(for: 1, scheduler: DispatchQueue.main)
-            .bind(\.state.isLoading) { [weak self] isLoading in
-                if isLoading {
-                    self?.addLoadingView()
-                } else {
-                    self?.removeLoadingView()
-                }
-            }
-            .store(in: &subscriptions)
-
-        store.state
-            .bind(\.state) { [weak self] state in
-                switch state {
-                case let .loading(currentIndex: index, counts: counts):
-                    self?.didStartLoad(at: index, in: counts)
-
-                case .stopped:
-                    self?.didStartLoad(at: nil, in: nil)
-                }
-            }
-            .store(in: &subscriptions)
     }
 }
 
