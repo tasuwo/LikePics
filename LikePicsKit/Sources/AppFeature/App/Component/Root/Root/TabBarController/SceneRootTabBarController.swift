@@ -30,18 +30,13 @@ class SceneRootTabBarController: UITabBarController {
 
     // MARK: Privates
 
-    private let logger: Loggable
     private let intent: Intent?
 
     // MARK: - Initializers
 
-    init(factory: Factory,
-         intent: Intent?,
-         logger: Loggable)
-    {
+    init(factory: Factory, intent: Intent?) {
         self.factory = factory
         self.intent = intent
-        self.logger = logger
         super.init(nibName: nil, bundle: nil)
     }
 

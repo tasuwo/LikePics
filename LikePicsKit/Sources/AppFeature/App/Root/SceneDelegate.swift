@@ -69,13 +69,9 @@ extension SceneDelegate: MainAppLauncher {
 
         let rootViewController: SceneRootViewController
         if UIDevice.current.userInterfaceIdiom == .pad {
-            rootViewController = SceneRootSplitViewController(factory: self.sceneDependencyContainer,
-                                                              intent: intent,
-                                                              logger: delegate.appDependencyContainer.logger)
+            rootViewController = SceneRootSplitViewController(factory: self.sceneDependencyContainer, intent: intent)
         } else {
-            rootViewController = SceneRootTabBarController(factory: self.sceneDependencyContainer,
-                                                           intent: intent,
-                                                           logger: delegate.appDependencyContainer.logger)
+            rootViewController = SceneRootTabBarController(factory: self.sceneDependencyContainer, intent: intent)
         }
 
         self.window?.rootViewController?.dismiss(animated: true) {

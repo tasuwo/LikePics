@@ -37,17 +37,12 @@ class SceneRootSplitViewController: UISplitViewController {
     // MARK: Privates
 
     private let intent: Intent?
-    private let logger: Loggable
 
     // MARK: - Initializers
 
-    init(factory: Factory,
-         intent: Intent?,
-         logger: Loggable)
-    {
+    init(factory: Factory, intent: Intent?) {
         self.factory = factory
         self.intent = intent
-        self.logger = logger
         super.init(style: .doubleColumn)
     }
 
