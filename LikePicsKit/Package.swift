@@ -84,6 +84,7 @@ let package = Package(
                 "LikePicsUIKit",
                 "Smoothie",
                 "Domain",
+                "Environment",
                 "Common",
                 "CompositeKit",
                 .product(name: "Erik", package: "Erik")
