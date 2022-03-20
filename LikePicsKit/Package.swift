@@ -13,6 +13,10 @@ let package = Package(
             targets: ["AppFeature"]
         ),
         .library(
+            name: "ShareExtensionFeature",
+            targets: ["ShareExtensionFeature"]
+        ),
+        .library(
             name: "Domain",
             targets: ["Domain"]
         ),
@@ -61,6 +65,16 @@ let package = Package(
                 "Environment",
                 "LikePicsCore",
                 "LikePicsUIKit",
+                "Persistence",
+                "Smoothie"
+            ]
+        ),
+        .target(
+            name: "ShareExtensionFeature",
+            dependencies: [
+                "Common",
+                "Domain",
+                "LikePicsCore",
                 "Persistence",
                 "Smoothie"
             ]

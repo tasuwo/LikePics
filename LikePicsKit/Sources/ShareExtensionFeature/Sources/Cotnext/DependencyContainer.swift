@@ -10,13 +10,13 @@ import Persistence
 import Smoothie
 import UIKit
 
-protocol ViewControllerFactory {
-    func makeShareNavigationRootViewController() -> ShareNavigationRootViewController
-    func makeClipTargetCollectionViewController(id: UUID, webUrl: URL) -> ClipCreationViewController
-    func makeClipTargetCollectionViewController(id: UUID, loaders: [ImageLazyLoadable], fileUrls: [URL]) -> ClipCreationViewController
+public protocol ViewControllerFactory {
+    func makeShareNavigationRootViewController() -> UIViewController
+    func makeClipTargetCollectionViewController(id: UUID, webUrl: URL) -> UIViewController
+    func makeClipTargetCollectionViewController(id: UUID, loaders: [ImageLazyLoadable], fileUrls: [URL]) -> UIViewController
 }
 
-class DependencyContainer {
+public class DependencyContainer {
     private let logger: Loggable
     private let clipStore: ClipStorable
     private let tagQueryService: ReferenceTagQueryService
@@ -25,7 +25,7 @@ class DependencyContainer {
     private let userSettingsStorage: UserSettingsStorage
     private let thumbnailPipeline: Pipeline
 
-    init() throws {
+    public init() throws {
         let mainBundleUrl = Bundle.main.bundleURL
             .deletingLastPathComponent()
             .deletingLastPathComponent()
@@ -72,12 +72,12 @@ class DependencyContainer {
 extension DependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
-    func makeShareNavigationRootViewController() -> ShareNavigationRootViewController {
+    public func makeShareNavigationRootViewController() -> UIViewController {
         let presenter = ShareNavigationRootPresenter()
         return ShareNavigationRootViewController(factory: self, presenter: presenter)
     }
 
-    func makeClipTargetCollectionViewController(id: UUID, webUrl: URL) -> ClipCreationViewController {
+    public func makeClipTargetCollectionViewController(id: UUID, webUrl: URL) -> UIViewController {
         struct Dependency: ClipCreationViewDependency {
             var clipRecipeFactory: ClipRecipeFactoryProtocol
             var clipStore: ClipStorable
@@ -103,7 +103,7 @@ extension DependencyContainer: ViewControllerFactory {
                                           imageLoader: imageLoader)
     }
 
-    func makeClipTargetCollectionViewController(id: UUID, loaders: [ImageLazyLoadable], fileUrls: [URL]) -> ClipCreationViewController
+    public func makeClipTargetCollectionViewController(id: UUID, loaders: [ImageLazyLoadable], fileUrls: [URL]) -> UIViewController
     {
         struct Dependency: ClipCreationViewDependency {
             var clipRecipeFactory: ClipRecipeFactoryProtocol
@@ -132,8 +132,8 @@ extension DependencyContainer: ViewControllerFactory {
 }
 
 extension DependencyContainer: LikePicsCore.ViewControllerFactory {
-    func makeTagSelectionViewController(selectedTags: Set<Domain.Tag.Identity>,
-                                        delegate: TagSelectionViewControllerDelegate) -> UIViewController?
+    public func makeTagSelectionViewController(selectedTags: Set<Domain.Tag.Identity>,
+                                               delegate: TagSelectionViewControllerDelegate) -> UIViewController?
     {
         switch self.tagQueryService.queryTags() {
         case let .success(query):

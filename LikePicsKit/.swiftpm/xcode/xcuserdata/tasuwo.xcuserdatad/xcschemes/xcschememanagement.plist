@@ -7,7 +7,7 @@
 		<key>AppFeature.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>14</integer>
+			<integer>15</integer>
 		</dict>
 		<key>Common.xcscheme_^#shared#^_</key>
 		<dict>
@@ -147,6 +147,11 @@
 		<dict>
 			<key>orderHint</key>
 			<integer>13</integer>
+		</dict>
+		<key>ShareExtensionFeature.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>27</integer>
 		</dict>
 		<key>Smoothie.xcscheme_^#shared#^_</key>
 		<dict>

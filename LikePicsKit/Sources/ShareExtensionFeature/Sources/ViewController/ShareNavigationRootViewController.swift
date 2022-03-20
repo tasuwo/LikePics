@@ -21,7 +21,7 @@ class ShareNavigationRootViewController: UIViewController {
     init(factory: Factory, presenter: ShareNavigationRootPresenter) {
         self.factory = factory
         self.presenter = presenter
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil, bundle: Bundle.module)
 
         self.presenter.view = self
     }
