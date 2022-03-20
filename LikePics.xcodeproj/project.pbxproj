@@ -10,6 +10,7 @@
 		02FD877B2E884AB2626B49D9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 467E520B12D5F90C9C7808BB /* LaunchScreen.storyboard */; };
 		0A157FFF68CCF861B43DBB09 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8E6E74C896B79B098BCF232F /* Settings.bundle */; };
 		2C5E39F927E70339008CE0FF /* ShareExtensionFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 2C5E39F827E70339008CE0FF /* ShareExtensionFeature */; };
+		2C5E39FB27E76166008CE0FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C5E39FA27E76166008CE0FF /* Assets.xcassets */; };
 		2CB4AE6E27E0ED9F004A3C1B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB4AE6D27E0ED9F004A3C1B /* main.swift */; };
 		2CB4AE7027E0EDCC004A3C1B /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 2CB4AE6F27E0EDCC004A3C1B /* AppFeature */; };
 		2CB4AE7227E0EE77004A3C1B /* Common in Frameworks */ = {isa = PBXBuildFile; productRef = 2CB4AE7127E0EE77004A3C1B /* Common */; };
@@ -59,6 +60,7 @@
 
 /* Begin PBXFileReference section */
 		179E31659F21FC20FCCA1405 /* LikePics.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LikePics.entitlements; sourceTree = "<group>"; };
+		2C5E39FA27E76166008CE0FF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2CB4AE6D27E0ED9F004A3C1B /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		3244CDEF6543830E6F56EDB0 /* ShareExtension.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = ShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		3684FED84FD8B94672573DF7 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				99B32BC78BA54672D07BD46D /* Info.plist */,
 				A2152B801E34A337DFA531E7 /* ShareExtension.entitlements */,
 				A27ABC8239271CCDAABD4CC4 /* ShareNavigationController.swift */,
+				2C5E39FA27E76166008CE0FF /* Assets.xcassets */,
 			);
 			path = ShareExtension;
 			sourceTree = "<group>";
@@ -331,6 +334,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C5E39FB27E76166008CE0FF /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
