@@ -5,6 +5,6 @@
       location = "group:LikePicsKit">
    </FileRef>
    <FileRef
-      location = "group:LikePics.xcodeproj">
+      location = "group:App/LikePics.xcodeproj">
    </FileRef>
 </Workspace>

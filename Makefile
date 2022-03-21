@@ -8,7 +8,7 @@ generate: license_generate swiftgen_generate sourcery_generate mockolo_generate 
 .PHONY: license_generate
 license_generate: ## ライセンスを自動生成する
 	 ./Pods/LicensePlist/license-plist \
-		 --output-path ./LikePics/Resources/Settings.bundle \
+		 --output-path ./App/LikePics/Resources/Settings.bundle \
 		 --config-path ./license_plist.yml
 
 .PHONY: swiftgen_generate

@@ -1,5 +1,6 @@
 # vim: syntax=ruby
 
+project("./App/LikePics.xcodeproj")
 scheme("LikePics")
 
 cloned_source_packages_path("./SourcePackages")
