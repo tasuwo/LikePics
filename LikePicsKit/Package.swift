@@ -142,6 +142,7 @@ let package = Package(
                 "Environment",
                 "Persistence",
                 "Smoothie",
+                "LikePicsCore",
                 "LikePicsUIKit",
             ]
         ),

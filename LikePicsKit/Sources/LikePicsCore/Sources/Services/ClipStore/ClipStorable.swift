@@ -4,6 +4,7 @@
 
 import Domain
 
+/// @mockable
 public protocol ClipStorable {
     func create(clip: ClipRecipe, withContainers containers: [ImageContainer], forced: Bool) -> Result<Clip.Identity, ClipStorageError>
 }
