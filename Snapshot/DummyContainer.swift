@@ -69,7 +69,10 @@ class DummyContainer: AppDependencyContaining {
         }
         _clipQueryService.queryTagsHandler = { _ in
             let query = TagListQueryMock()
-            query.tags = .init([.makeDefault(name: "食べ物"), .makeDefault(name: "寿司")])
+            query.tags = .init([
+                .makeDefault(name: NSLocalizedString("tag_06", comment: "")),
+                .makeDefault(name: NSLocalizedString("tag_02", comment: ""))
+            ])
             return .success(query)
         }
         _clipQueryService.queryAllAlbumsHandler = {
@@ -79,7 +82,9 @@ class DummyContainer: AppDependencyContaining {
         }
         _clipQueryService.queryAlbumsHandler = { _ in
             let query = ListingAlbumListQueryMock()
-            query.albums = .init([.makeDefault(title: "旅行")])
+            query.albums = .init([
+                .makeDefault(title: NSLocalizedString("album_02", comment: ""))
+            ])
             return .success(query)
         }
         clipQueryService = _clipQueryService
