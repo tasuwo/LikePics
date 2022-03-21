@@ -227,7 +227,7 @@ extension SettingsViewController: Restorable {
     func restore() -> RestorableViewController {
         presentingAlert?.dismiss(animated: false, completion: nil)
 
-        let storyBoard = UIStoryboard(name: "SettingsViewController", bundle: Bundle.main)
+        let storyBoard = UIStoryboard(name: "SettingsViewController", bundle: Bundle.module)
 
         // swiftlint:disable:next force_cast
         let viewController = storyBoard.instantiateViewController(identifier: "SettingsViewController") as! SettingsViewController
