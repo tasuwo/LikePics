@@ -350,7 +350,7 @@ extension AppDependencyContainer: HasIntegrityValidationService {
 }
 
 extension AppDependencyContainer: HasCloudStackLoader {
-    var cloudStackLoader: CloudStackLoader { _cloudStackLoader }
+    var cloudStackLoader: CloudStackLoadable { _cloudStackLoader }
 }
 
 extension AppDependencyContainer: HasTagCommandService {

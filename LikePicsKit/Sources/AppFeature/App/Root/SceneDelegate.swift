@@ -74,6 +74,6 @@ extension SceneDelegate: MainAppLauncher {
             self.window?.rootViewController = rootViewController
         }
 
-        delegate.appDependencyContainer.cloudStackLoader.observers.append(.init(value: rootViewController))
+        delegate.appDependencyContainer.cloudStackLoader.set(observer: rootViewController)
     }
 }

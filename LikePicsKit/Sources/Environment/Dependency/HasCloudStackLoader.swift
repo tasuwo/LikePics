@@ -6,5 +6,5 @@ import Domain
 
 /// @mockable
 public protocol HasCloudStackLoader {
-    var cloudStackLoader: CloudStackLoader { get }
+    var cloudStackLoader: CloudStackLoadable { get }
 }

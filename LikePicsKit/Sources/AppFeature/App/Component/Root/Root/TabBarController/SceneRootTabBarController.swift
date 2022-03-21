@@ -72,7 +72,7 @@ extension SceneRootTabBarController {
 extension SceneRootTabBarController: CloudStackLoaderObserver {
     // MARK: - CloudStackLoaderObserver
 
-    public func didAccountChanged(_ loader: CloudStackLoader) {
+    public func didAccountChanged(_ loader: CloudStackLoadable) {
         DispatchQueue.main.async {
             let alertController = UIAlertController(title: L10n.errorIcloudAccountChangedTitle,
                                                     message: L10n.errorIcloudAccountChangedMessage,
@@ -85,7 +85,7 @@ extension SceneRootTabBarController: CloudStackLoaderObserver {
         }
     }
 
-    public func didDisabledICloudSyncByUnavailableAccount(_ loader: CloudStackLoader) {
+    public func didDisabledICloudSyncByUnavailableAccount(_ loader: CloudStackLoadable) {
         DispatchQueue.main.async {
             let alertController = UIAlertController(title: L10n.errorIcloudUnavailableTitle,
                                                     message: L10n.errorIcloudUnavailableMessage,

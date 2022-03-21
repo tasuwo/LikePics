@@ -6,9 +6,16 @@ import Combine
 import Common
 import Foundation
 
+/// @mockable
 public protocol CloudStackLoaderObserver: AnyObject {
-    func didAccountChanged(_ loader: CloudStackLoader)
-    func didDisabledICloudSyncByUnavailableAccount(_ loader: CloudStackLoader)
+    func didAccountChanged(_ loader: CloudStackLoadable)
+    func didDisabledICloudSyncByUnavailableAccount(_ loader: CloudStackLoadable)
+}
+
+/// @mockable
+public protocol CloudStackLoadable {
+    func startObserveCloudAvailability()
+    func set(observer: CloudStackLoaderObserver)
 }
 
 public class CloudStackLoader {
@@ -19,7 +26,7 @@ public class CloudStackLoader {
 
     private var subscriptions = Set<AnyCancellable>()
 
-    public var observers: WeakContainerSet<CloudStackLoaderObserver> = .init()
+    private var observers: WeakContainerSet<CloudStackLoaderObserver> = .init()
 
     // MARK: - Lifecycle
 
@@ -33,6 +40,17 @@ public class CloudStackLoader {
     }
 
     // MARK: - Methods
+
+    @discardableResult
+    private func reloadCloudStackIfNeeded(isCloudSyncEnabled: Bool) -> Bool {
+        guard isCloudSyncEnabled != self.cloudStack.isCloudSyncEnabled else { return false }
+        self.cloudStack.reload(isCloudSyncEnabled: isCloudSyncEnabled)
+        return true
+    }
+}
+
+extension CloudStackLoader: CloudStackLoadable {
+    // MARK: - CloudStackLoadable
 
     public func startObserveCloudAvailability() {
         self.cloudAvailabilityService.availability
@@ -61,10 +79,7 @@ public class CloudStackLoader {
             .store(in: &subscriptions)
     }
 
-    @discardableResult
-    private func reloadCloudStackIfNeeded(isCloudSyncEnabled: Bool) -> Bool {
-        guard isCloudSyncEnabled != self.cloudStack.isCloudSyncEnabled else { return false }
-        self.cloudStack.reload(isCloudSyncEnabled: isCloudSyncEnabled)
-        return true
+    public func set(observer: CloudStackLoaderObserver) {
+        self.observers.append(.init(value: observer))
     }
 }
