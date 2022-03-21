@@ -9,7 +9,7 @@
 import AppFeature
 import UIKit
 
-@UIApplicationMain
+@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     public private(set) var appDependencyContainer: AppDependencyContaining!
     private var clipsIntegrityValidator: ClipsIntegrityValidator!
