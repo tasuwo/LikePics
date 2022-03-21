@@ -239,6 +239,8 @@ extension SettingsViewController: Restorable {
                           reducer: SettingsViewReducer())
         viewController.store = store
         viewController.router = router
+        viewController.userSettingsStorage = userSettingsStorage
+        viewController.appBundle = appBundle
 
         return viewController
     }
