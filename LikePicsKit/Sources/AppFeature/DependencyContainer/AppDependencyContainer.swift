@@ -32,6 +32,7 @@ typealias AppDependencyContaining = HasPasteboard
     & HasNop
     & HasLogger
     & HasClipStore
+    & HasDiskCaches
     & HasImageLoaderSettings
 
 class AppDependencyContainer {
@@ -40,6 +41,8 @@ class AppDependencyContainer {
     // MARK: Image Loader
 
     private let _clipDiskCache: DiskCache
+    private let _albumDiskCache: DiskCache
+    private let _clipItemDiskCache: DiskCache
     private let _clipThumbnailPipeline: Pipeline
     private let _albumThumbnailPipeline: Pipeline
     private let _clipItemThumbnailPipeline: Pipeline
@@ -159,11 +162,11 @@ class AppDependencyContainer {
         var albumCacheConfig = Pipeline.Configuration()
         albumCacheConfig.compressionRatio = 0.5
         let albumCacheDirectory = Self.resolveCacheDirectoryUrl(name: "album-thumbnails")
-        let albumDiskCache = try DiskCache(path: albumCacheDirectory,
-                                           config: .init(sizeLimit: 1024 * 1024 * 512,
-                                                         countLimit: 1000,
-                                                         dateLimit: 30))
-        albumCacheConfig.diskCache = albumDiskCache
+        _albumDiskCache = try DiskCache(path: albumCacheDirectory,
+                                        config: .init(sizeLimit: 1024 * 1024 * 512,
+                                                      countLimit: 1000,
+                                                      dateLimit: 30))
+        albumCacheConfig.diskCache = _albumDiskCache
         albumCacheConfig.memoryCache = memoryCache
         self._albumThumbnailPipeline = Pipeline(config: albumCacheConfig)
 
@@ -171,11 +174,11 @@ class AppDependencyContainer {
 
         var clipItemCacheConfig = Pipeline.Configuration()
         let clipItemCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-item-thumbnails")
-        let clipItemDiskCache = try DiskCache(path: clipItemCacheDirectory,
-                                              config: .init(sizeLimit: 1024 * 1024 * 512,
-                                                            countLimit: 100,
-                                                            dateLimit: 30))
-        clipItemCacheConfig.diskCache = clipItemDiskCache
+        _clipItemDiskCache = try DiskCache(path: clipItemCacheDirectory,
+                                           config: .init(sizeLimit: 1024 * 1024 * 512,
+                                                         countLimit: 100,
+                                                         dateLimit: 30))
+        clipItemCacheConfig.diskCache = _clipItemDiskCache
         clipItemCacheConfig.memoryCache = memoryCache
         self._clipItemThumbnailPipeline = Pipeline(config: clipItemCacheConfig)
 
@@ -364,8 +367,13 @@ extension AppDependencyContainer: HasClipStore {
     var clipStore: ClipStorable { _clipCommandService }
 }
 
-extension AppDependencyContainer: HasImageLoaderSettings {
+extension AppDependencyContainer: HasDiskCaches {
     var clipDiskCache: DiskCaching { _clipDiskCache }
+    var albumDiskCache: DiskCaching { _albumDiskCache }
+    var clipItemDiskCache: DiskCaching { _clipDiskCache }
+}
+
+extension AppDependencyContainer: HasImageLoaderSettings {
     var clipThumbnailPipeline: Pipeline { _clipThumbnailPipeline }
     var albumThumbnailPipeline: Pipeline { _albumThumbnailPipeline }
     var clipItemThumbnailPipeline: Pipeline { _clipItemThumbnailPipeline }

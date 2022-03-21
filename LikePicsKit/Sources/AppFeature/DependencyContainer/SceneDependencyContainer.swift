@@ -71,3 +71,9 @@ extension SceneDependencyContainer: HasModalNotificationCenter {
 }
 
 extension SceneDependencyContainer: HasNop {}
+
+extension SceneDependencyContainer: HasDiskCaches {
+    var clipDiskCache: DiskCaching { container.clipDiskCache }
+    var albumDiskCache: DiskCaching { container.albumDiskCache }
+    var clipItemDiskCache: DiskCaching { container.clipDiskCache }
+}
