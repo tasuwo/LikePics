@@ -9,6 +9,7 @@ struct SettingsViewState: Equatable, Codable {
         case iCloudSettingForceTurnOnConfirmation = "icloud_setting_force_turn_on_confirmation"
         case iCloudSettingForceTurnOffConfirmation = "icloud_setting_force_turn_off_confirmation"
         case iCloudTurnOffConfirmation = "icloud_turn_off_confirmation"
+        case clearAllCacheConfirmation = "clear_all_cache_confirmation"
     }
 
     enum SwitchState: String, Codable {

@@ -123,6 +123,9 @@ extension SettingsViewController {
         case .iCloudSettingForceTurnOnConfirmation:
             presentICloudSettingForceTurnOnConfirmation()
 
+        case .clearAllCacheConfirmation:
+            presentClearAllCacheConfirmation()
+
         case .none:
             break
         }
@@ -176,6 +179,22 @@ extension SettingsViewController {
         self.present(alertController, animated: true, completion: nil)
     }
 
+    private func presentClearAllCacheConfirmation() {
+        let alertController = UIAlertController(title: L10n.settingsConfirmClearCacheTitle,
+                                                message: L10n.settingsConfirmClearCacheMessage,
+                                                preferredStyle: .alert)
+        let okAction = UIAlertAction(title: L10n.confirmAlertOk, style: .destructive) { [weak self] _ in
+            self?.store.execute(.clearAllCacheConfirmed)
+        }
+        let cancelAction = UIAlertAction(title: L10n.confirmAlertCancel, style: .cancel) { [weak self] _ in
+            self?.store.execute(.alertDismissed)
+        }
+        alertController.addAction(okAction)
+        alertController.addAction(cancelAction)
+        presentingAlert = alertController
+        self.present(alertController, animated: true, completion: nil)
+    }
+
     // MARK: User Activity
 
     private func updateUserActivity(_ state: SettingsViewState) {
@@ -192,6 +211,8 @@ extension SettingsViewController {
             show(UserInterfaceStyleSelectionViewController(), sender: nil)
         } else if indexPath == IndexPath(row: 0, section: 2) {
             router.showFindView()
+        } else if indexPath == IndexPath(row: 0, section: 4) {
+            store.execute(.clearAllCache)
         }
     }
 

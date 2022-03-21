@@ -20,11 +20,13 @@ enum SettingsViewAction: Action {
 
     case itemsVisibilityChanged(isHidden: Bool)
     case iCloudSyncAvailabilityChanged(isEnabled: Bool)
+    case clearAllCache
 
     // MARK: Alert Completion
 
     case iCloudForceTurnOffConfirmed
     case iCloudForceTurnOnConfirmed
     case iCloudTurnOffConfirmed
+    case clearAllCacheConfirmed
     case alertDismissed
 }

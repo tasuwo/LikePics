@@ -175,6 +175,8 @@
 "setting_view_title" = "Setting";
 "settings_confirm_icloud_sync_off_title" = "Disable iCloud Sync";
 "settings_confirm_icloud_sync_off_message" = "Are you sure you want to disable iCloud sync?";
+"settings_confirm_clear_cache_title" = "Clear Thumbnail Cache";
+"settings_confirm_clear_cache_message" = "Clear all thumbnail cache to free up storage. Cache are auto re-generated as needed.";
 "settings_interface_style_light" = "Light";
 "settings_interface_style_dark" = "Dark";
 "settings_interface_style_unspecified" = "Unspecified";

@@ -10,6 +10,7 @@ import Foundation
 
 typealias SettingsViewDependency = HasCloudAvailabilityService
     & HasUserSettingStorage
+    & HasDiskCaches
 
 struct SettingsViewReducer: Reducer {
     typealias Dependency = SettingsViewDependency
@@ -71,6 +72,10 @@ struct SettingsViewReducer: Reducer {
 
             return (nextState, .none)
 
+        case .clearAllCache:
+            nextState.alert = .clearAllCacheConfirmation
+            return (nextState, .none)
+
         // MARK: Alert Completion
 
         case .iCloudForceTurnOffConfirmed:
@@ -89,6 +94,13 @@ struct SettingsViewReducer: Reducer {
             nextState.alert = nil
             nextState.isICloudSyncAvailabilitySetting = false
             dependency.userSettingStorage.set(enabledICloudSync: false)
+            return (nextState, .none)
+
+        case .clearAllCacheConfirmed:
+            dependency.clipDiskCache.removeAll()
+            dependency.albumDiskCache.removeAll()
+            dependency.clipItemDiskCache.removeAll()
+            nextState.alert = nil
             return (nextState, .none)
 
         case .alertDismissed:
