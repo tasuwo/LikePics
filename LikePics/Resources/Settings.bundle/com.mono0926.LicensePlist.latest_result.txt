@@ -28,9 +28,9 @@ version: 0.44.0
 
 name: BrightFutures, nameSpecified: BrightFutures, owner: Thomvis, version: 8.1.0
 
-name: CwlCatchException, nameSpecified: CwlCatchException, owner: mattgallagher, version: 2.1.0
+name: CwlCatchException, nameSpecified: CwlCatchException, owner: mattgallagher, version: 2.1.1
 
-name: CwlPreconditionTesting, nameSpecified: CwlPreconditionTesting, owner: mattgallagher, version: 2.0.1
+name: CwlPreconditionTesting, nameSpecified: CwlPreconditionTesting, owner: mattgallagher, version: 2.1.0
 
 name: Erik, nameSpecified: Erik, owner: phimage, version: 5.1.0
 

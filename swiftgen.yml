@@ -1,9 +1,9 @@
 strings:
     - inputs:
-        - LikePics/Resources/ja.lproj/Localizable.strings
+        - LikePicsKit/Sources/AppFeature/Resources/ja.lproj/Localizable.strings
       outputs:
         - templateName: structured-swift5
-          output: LikePics/Sources/Generated/String.swift
+          output: LikePicsKit/Sources/AppFeature/Generated/String.swift
     - inputs:
         - LikePicsKit/Sources/LikePicsCore/Resources/ja.lproj
       outputs:
@@ -15,10 +15,10 @@ strings:
         - templateName: structured-swift5
           output: LikePicsKit/Sources/LikePicsUIKit/Generated/String.swift
     - inputs:
-        - ShareExtension/Resources/ja.lproj
+        - LikePicsKit/Sources/ShareExtensionFeature/Resources/ja.lproj
       outputs:
         - templateName: structured-swift5
-          output: ShareExtension/Sources/Generated/String.swift
+          output: LikePicsKit/Sources/ShareExtensionFeature/Sources/Generated/String.swift
 xcassets:
     - inputs:
         - LikePicsKit/Sources/LikePicsUIKit/Resources/Assets.xcassets
