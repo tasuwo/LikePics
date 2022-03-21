@@ -3,7 +3,7 @@
 
 @testable import Domain
 
-extension Album {
+public extension Album {
     static func makeDefault(
         id: UUID = UUID(),
         title: String = "",
@@ -25,7 +25,7 @@ extension Album {
     }
 }
 
-extension Clip {
+public extension Clip {
     static func makeDefault(
         id: UUID = UUID(),
         description: String? = nil,
@@ -47,7 +47,7 @@ extension Clip {
     }
 }
 
-extension ClipItem {
+public extension ClipItem {
     static func makeDefault(
         id: UUID = UUID(),
         url: URL? = nil,
@@ -77,7 +77,7 @@ extension ClipItem {
     }
 }
 
-extension ClipItemRecipe {
+public extension ClipItemRecipe {
     static func makeDefault(
         id: UUID = UUID(),
         url: URL? = nil,
@@ -107,7 +107,7 @@ extension ClipItemRecipe {
     }
 }
 
-extension ClipRecipe {
+public extension ClipRecipe {
     static func makeDefault(
         id: UUID = UUID(),
         description: String? = nil,
@@ -131,7 +131,7 @@ extension ClipRecipe {
     }
 }
 
-extension ImageSize {
+public extension ImageSize {
     static func makeDefault(
         height: Double = 0,
         width: Double = 0
@@ -143,7 +143,7 @@ extension ImageSize {
     }
 }
 
-extension ReferenceTag {
+public extension ReferenceTag {
     static func makeDefault(
         id: UUID = UUID(),
         name: String = "",
@@ -159,7 +159,7 @@ extension ReferenceTag {
     }
 }
 
-extension Tag {
+public extension Tag {
     static func makeDefault(
         id: UUID = UUID(),
         name: String = "",

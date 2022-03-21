@@ -4,7 +4,7 @@
 
 import Foundation
 
-// sourcery: AutoDefaultValue
+// sourcery: AutoDefaultValuePublic
 public struct ReferenceTag: Codable, Equatable, Hashable {
     public let id: UUID
     public let name: String

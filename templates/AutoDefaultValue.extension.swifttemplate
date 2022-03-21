@@ -7,6 +7,7 @@ enum DefaultValueSettings {
         "UUID":"UUID()",
         "Clip.Identity":"UUID()",
         // Please add extra default value mappings
+        "ImageSize":"ImageSize.makeDefault()",
     ]
 
     static let genericTypeFormatMappings: [String:String] = [

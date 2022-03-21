@@ -4,7 +4,7 @@
 
 import Foundation
 
-// sourcery: AutoDefaultValue
+// sourcery: AutoDefaultValuePublic
 public struct Clip: Codable, Equatable, Hashable {
     public let id: UUID
     public let description: String?
