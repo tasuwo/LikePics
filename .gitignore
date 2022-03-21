@@ -1,10 +1,10 @@
 # Xcode
-*.xcodeproj/*
-*.xcworkspace/*
-!*.xcodeproj/xcshareddata
-!*.xcodeproj/project.pbxproj
-!*.xcworkspace/contents.xcworkspacedata
-!*.xcworkspace/xcshareddata
+**/*.xcodeproj/*
+**/*.xcworkspace/*
+!**/*.xcodeproj/xcshareddata
+!**/*.xcodeproj/project.pbxproj
+!**/*.xcworkspace/contents.xcworkspacedata
+!**/*.xcworkspace/xcshareddata
 # Cache SwiftPM for CI
 !*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
 
