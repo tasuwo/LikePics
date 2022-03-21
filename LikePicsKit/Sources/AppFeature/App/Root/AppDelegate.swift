@@ -6,11 +6,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-import Combine
-import CompositeKit
-import Domain
-import LikePicsCore
-import Persistence
+import Environment
 import UIKit
 
 public class AppDelegate: UIResponder, UIApplicationDelegate {

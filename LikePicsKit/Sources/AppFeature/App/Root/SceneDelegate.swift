@@ -7,11 +7,7 @@
 //
 
 import Combine
-import Common
-import CompositeKit
-import Domain
 import LikePicsUIKit
-import Persistence
 import UIKit
 
 public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
