@@ -36,7 +36,7 @@ public typealias AppDependencyContaining = HasPasteboard
     & HasImageLoaderSettings
     & HasAppBundle
 
-class AppDependencyContainer {
+public class AppDependencyContainer {
     // MARK: - Properties
 
     // MARK: Image Loader
@@ -103,7 +103,7 @@ class AppDependencyContainer {
 
     // MARK: - Lifecycle
 
-    init(appBundle: Bundle) throws {
+    public init(appBundle: Bundle) throws {
         self._logger = RootLogger(loggers: [
             ConsoleLogger(scopes: [.default, .transition])
         ])
@@ -286,7 +286,7 @@ class AppDependencyContainer {
 extension AppDependencyContainer: CoreDataStackObserver {
     // MARK: - CoreDataStackObserver
 
-    func coreDataStack(_ coreDataStack: CoreDataStack, reloaded container: NSPersistentCloudKitContainer) {
+    public func coreDataStack(_ coreDataStack: CoreDataStack, reloaded container: NSPersistentCloudKitContainer) {
         let newImageQueryContext = coreDataStack.newBackgroundContext(on: self.imageQueryQueue)
         let newCommandContext = coreDataStack.newBackgroundContext(on: self.clipCommandQueue)
 
@@ -308,84 +308,84 @@ extension ClipCommandService: ClipStorable {}
 // MARK: - Dependencies
 
 extension AppDependencyContainer: HasPasteboard {
-    var pasteboard: Pasteboard { UIPasteboard.general }
+    public var pasteboard: Pasteboard { UIPasteboard.general }
 }
 
 extension AppDependencyContainer: HasClipCommandService {
-    var clipCommandService: ClipCommandServiceProtocol { _clipCommandService }
+    public var clipCommandService: ClipCommandServiceProtocol { _clipCommandService }
 }
 
 extension AppDependencyContainer: HasClipQueryService {
-    var clipQueryService: ClipQueryServiceProtocol { _clipQueryService }
+    public var clipQueryService: ClipQueryServiceProtocol { _clipQueryService }
 }
 
 extension AppDependencyContainer: HasClipSearchSettingService {
-    var clipSearchSettingService: Domain.ClipSearchSettingService { _clipSearchSettingService }
+    public var clipSearchSettingService: Domain.ClipSearchSettingService { _clipSearchSettingService }
 }
 
 extension AppDependencyContainer: HasClipSearchHistoryService {
-    var clipSearchHistoryService: Domain.ClipSearchHistoryService { _clipSearchHistoryService }
+    public var clipSearchHistoryService: Domain.ClipSearchHistoryService { _clipSearchHistoryService }
 }
 
 extension AppDependencyContainer: HasUserSettingStorage {
-    var userSettingStorage: UserSettingsStorageProtocol { _userSettingStorage }
+    public var userSettingStorage: UserSettingsStorageProtocol { _userSettingStorage }
 }
 
 extension AppDependencyContainer: HasImageQueryService {
-    var imageQueryService: ImageQueryServiceProtocol { _imageQueryService }
+    public var imageQueryService: ImageQueryServiceProtocol { _imageQueryService }
 }
 
 extension AppDependencyContainer: HasTransitionLock {
-    var transitionLock: TransitionLock { _transitionLock }
+    public var transitionLock: TransitionLock { _transitionLock }
 }
 
 extension AppDependencyContainer: HasCloudAvailabilityService {
-    var cloudAvailabilityService: CloudAvailabilityServiceProtocol { _cloudAvailabilityService }
+    public var cloudAvailabilityService: CloudAvailabilityServiceProtocol { _cloudAvailabilityService }
 }
 
 extension AppDependencyContainer: HasModalNotificationCenter {
-    var modalNotificationCenter: ModalNotificationCenter { ModalNotificationCenter.default }
+    public var modalNotificationCenter: ModalNotificationCenter { ModalNotificationCenter.default }
 }
 
 extension AppDependencyContainer: HasTemporariesPersistService {
-    var temporariesPersistService: TemporariesPersistServiceProtocol { _temporariesPersistService }
+    public var temporariesPersistService: TemporariesPersistServiceProtocol { _temporariesPersistService }
 }
 
 extension AppDependencyContainer: HasIntegrityValidationService {
-    var integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol { _integrityValidationService }
+    public var integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol { _integrityValidationService }
 }
 
 extension AppDependencyContainer: HasCloudStackLoader {
-    var cloudStackLoader: CloudStackLoadable { _cloudStackLoader }
+    public var cloudStackLoader: CloudStackLoadable { _cloudStackLoader }
 }
 
 extension AppDependencyContainer: HasTagCommandService {
-    var tagCommandService: TagCommandServiceProtocol { _clipCommandService }
+    public var tagCommandService: TagCommandServiceProtocol { _clipCommandService }
 }
 
 extension AppDependencyContainer: HasNop {}
 
 extension AppDependencyContainer: HasLogger {
-    var logger: Loggable { _logger }
+    public var logger: Loggable { _logger }
 }
 
 extension AppDependencyContainer: HasClipStore {
-    var clipStore: ClipStorable { _clipCommandService }
+    public var clipStore: ClipStorable { _clipCommandService }
 }
 
 extension AppDependencyContainer: HasDiskCaches {
-    var clipDiskCache: DiskCaching { _clipDiskCache }
-    var albumDiskCache: DiskCaching { _albumDiskCache }
-    var clipItemDiskCache: DiskCaching { _clipDiskCache }
+    public var clipDiskCache: DiskCaching { _clipDiskCache }
+    public var albumDiskCache: DiskCaching { _albumDiskCache }
+    public var clipItemDiskCache: DiskCaching { _clipDiskCache }
 }
 
 extension AppDependencyContainer: HasImageLoaderSettings {
-    var clipThumbnailPipeline: Pipeline { _clipThumbnailPipeline }
-    var albumThumbnailPipeline: Pipeline { _albumThumbnailPipeline }
-    var clipItemThumbnailPipeline: Pipeline { _clipItemThumbnailPipeline }
-    var temporaryThumbnailPipeline: Pipeline { _temporaryThumbnailPipeline }
-    var previewPipeline: Pipeline { _previewPipeline }
-    var previewPrefetcher: PreviewPrefetchable { _previewPrefetcher }
+    public var clipThumbnailPipeline: Pipeline { _clipThumbnailPipeline }
+    public var albumThumbnailPipeline: Pipeline { _albumThumbnailPipeline }
+    public var clipItemThumbnailPipeline: Pipeline { _clipItemThumbnailPipeline }
+    public var temporaryThumbnailPipeline: Pipeline { _temporaryThumbnailPipeline }
+    public var previewPipeline: Pipeline { _previewPipeline }
+    public var previewPrefetcher: PreviewPrefetchable { _previewPrefetcher }
 }
 
 extension AppDependencyContainer: HasAppBundle {}

@@ -20,7 +20,7 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         // swiftlint:disable:next force_cast
-        let delegate = UIApplication.shared.delegate as! AppDelegate
+        let delegate = UIApplication.shared.delegate as! HasAppDependencyContainer
         let presenter = SceneRootSetupPresenter(userSettingsStorage: delegate.appDependencyContainer.userSettingStorage,
                                                 cloudAvailabilityService: delegate.appDependencyContainer.cloudAvailabilityService,
                                                 intent: session.stateRestorationActivity?.intent(appBundle: delegate.appDependencyContainer.appBundle))
@@ -64,7 +64,7 @@ extension SceneDelegate: MainAppLauncher {
 
     func launch(_ intent: Intent?) {
         // swiftlint:disable:next force_cast
-        let delegate = UIApplication.shared.delegate as! AppDelegate
+        let delegate = UIApplication.shared.delegate as! HasAppDependencyContainer
         self.sceneDependencyContainer = SceneDependencyContainer(sceneResolver: self, container: delegate.appDependencyContainer)
 
         let rootViewController: SceneRootViewController
