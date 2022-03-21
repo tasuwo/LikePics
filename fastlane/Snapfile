@@ -1,8 +1,8 @@
 devices([
-  "iPhone 12 Pro Max",
+  "iPhone 13 Pro Max",
   "iPhone 8 Plus",
   "iPad Pro (12.9-inch) (2nd generation)",
-  "iPad Pro (12.9-inch) (3rd generation)",
+  "iPad Pro (12.9-inch) (4th generation)",
 ])
 
 languages([
@@ -10,7 +10,8 @@ languages([
   "ja",
 ])
 
-scheme("SnapshotHelper")
+project("./Snapshot/Snapshot.xcodeproj")
+scheme("SnapshotUITests")
 
 output_directory("./fastlane/screenshots")
 

@@ -7,46 +7,46 @@
 		<key>AppFeature.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>14</integer>
+			<integer>1</integer>
 		</dict>
 		<key>Common.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>4</integer>
+			<integer>0</integer>
 		</dict>
 		<key>CompositeKit.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>5</integer>
+			<integer>1</integer>
 		</dict>
 		<key>Domain.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>6</integer>
+			<integer>2</integer>
 		</dict>
 		<key>DomainTests.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>12</integer>
+			<integer>8</integer>
 		</dict>
 		<key>Environment.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>7</integer>
+			<integer>3</integer>
 		</dict>
 		<key>FileKit (Playground) 1.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>10</integer>
+			<integer>15</integer>
 		</dict>
 		<key>FileKit (Playground) 2.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>11</integer>
+			<integer>16</integer>
 		</dict>
 		<key>FileKit (Playground) 3.xcscheme</key>
 		<dict>
@@ -74,7 +74,7 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>9</integer>
+			<integer>14</integer>
 		</dict>
 		<key>ForestKit.xcscheme_^#shared#^_</key>
 		<dict>
@@ -86,14 +86,14 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>13</integer>
+			<integer>18</integer>
 		</dict>
 		<key>GettingStarted (Playground) 2.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>14</integer>
+			<integer>19</integer>
 		</dict>
 		<key>GettingStarted (Playground) 3.xcscheme</key>
 		<dict>
@@ -121,12 +121,12 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>12</integer>
+			<integer>17</integer>
 		</dict>
 		<key>LikePicsCore.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>8</integer>
+			<integer>4</integer>
 		</dict>
 		<key>LikePicsKit-Package.xcscheme_^#shared#^_</key>
 		<dict>
@@ -136,24 +136,29 @@
 		<key>LikePicsUIKit.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>9</integer>
+			<integer>5</integer>
 		</dict>
 		<key>Persistence.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>10</integer>
+			<integer>6</integer>
 		</dict>
 		<key>PersistenceTests.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>13</integer>
+			<integer>9</integer>
 		</dict>
 		<key>ShareExtensionFeature.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>15</integer>
+			<integer>9</integer>
 		</dict>
 		<key>Smoothie.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>7</integer>
+		</dict>
+		<key>TestHelper.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>11</integer>
@@ -161,6 +166,11 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>AppFeature</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>Common</key>
 		<dict>
 			<key>primary</key>
@@ -196,6 +206,11 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>LikePicsKit_AppFeature</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>LikePicsKit_LikePicsCore</key>
 		<dict>
 			<key>primary</key>
@@ -216,6 +231,11 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>LikePicsKit_ShareExtensionFeature</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>LikePicsUIKit</key>
 		<dict>
 			<key>primary</key>
@@ -227,6 +247,11 @@
 			<true/>
 		</dict>
 		<key>PersistenceTests</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>ShareExtensionFeature</key>
 		<dict>
 			<key>primary</key>
 			<true/>

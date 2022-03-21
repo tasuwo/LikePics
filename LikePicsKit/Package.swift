@@ -47,6 +47,10 @@ let package = Package(
         .library(
             name: "Environment",
             targets: ["Environment"]
+        ),
+        .library(
+            name: "TestHelper",
+            targets: ["TestHelper"]
         )
     ],
     dependencies: [

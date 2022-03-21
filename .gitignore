@@ -16,7 +16,6 @@ Pods/*
 
 # SPM
 .build/
-SourcePackages
 
 # mockolo
 !lib_InternalSwiftSyntaxParser.dylib
@@ -30,7 +29,11 @@ templates/*
 **/fastlane/report.xml
 **/fastlane/Preview.html
 **/fastlane/test_output
+**/fastlane/screenshots/**/*.png
+**/fastlane/screenshots/**/*.ttf
+**/fastlane/screenshots/**/*.ttc
+**/fastlane/screenshots/**/*.html
 build
-
+SourcePackages
 .env.secret
 *.p8
