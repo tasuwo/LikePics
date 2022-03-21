@@ -185,13 +185,13 @@ public class HasUserSettingStorageMock: HasUserSettingStorage {
 
 public class HasCloudStackLoaderMock: HasCloudStackLoader {
     public init() { }
-    public init(cloudStackLoader: CloudStackLoader) {
+    public init(cloudStackLoader: CloudStackLoadable) {
         self._cloudStackLoader = cloudStackLoader
     }
 
     public private(set) var cloudStackLoaderSetCallCount = 0
-    private var _cloudStackLoader: CloudStackLoader! { didSet { cloudStackLoaderSetCallCount += 1 } }
-    public var cloudStackLoader: CloudStackLoader {
+    private var _cloudStackLoader: CloudStackLoadable! { didSet { cloudStackLoaderSetCallCount += 1 } }
+    public var cloudStackLoader: CloudStackLoadable {
         get { return _cloudStackLoader }
         set { _cloudStackLoader = newValue }
     }

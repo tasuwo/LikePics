@@ -1565,6 +1565,28 @@ public class ClipSearchHistoryServiceMock: ClipSearchHistoryService {
     }
 }
 
+public class CloudStackLoaderObserverMock: CloudStackLoaderObserver {
+    public init() { }
+
+    public private(set) var didAccountChangedCallCount = 0
+    public var didAccountChangedHandler: ((CloudStackLoadable) -> Void)?
+    public func didAccountChanged(_ loader: CloudStackLoadable) {
+        didAccountChangedCallCount += 1
+        if let didAccountChangedHandler = didAccountChangedHandler {
+            didAccountChangedHandler(loader)
+        }
+    }
+
+    public private(set) var didDisabledICloudSyncByUnavailableAccountCallCount = 0
+    public var didDisabledICloudSyncByUnavailableAccountHandler: ((CloudStackLoadable) -> Void)?
+    public func didDisabledICloudSyncByUnavailableAccount(_ loader: CloudStackLoadable) {
+        didDisabledICloudSyncByUnavailableAccountCallCount += 1
+        if let didDisabledICloudSyncByUnavailableAccountHandler = didDisabledICloudSyncByUnavailableAccountHandler {
+            didDisabledICloudSyncByUnavailableAccountHandler(loader)
+        }
+    }
+}
+
 public class TagCommandServiceProtocolMock: TagCommandServiceProtocol {
     public init() { }
 
@@ -1599,5 +1621,27 @@ public class TemporariesPersistServiceProtocolMock: TemporariesPersistServicePro
             return persistIfNeededHandler()
         }
         return false
+    }
+}
+
+public class CloudStackLoadableMock: CloudStackLoadable {
+    public init() { }
+
+    public private(set) var startObserveCloudAvailabilityCallCount = 0
+    public var startObserveCloudAvailabilityHandler: (() -> Void)?
+    public func startObserveCloudAvailability() {
+        startObserveCloudAvailabilityCallCount += 1
+        if let startObserveCloudAvailabilityHandler = startObserveCloudAvailabilityHandler {
+            startObserveCloudAvailabilityHandler()
+        }
+    }
+
+    public private(set) var setCallCount = 0
+    public var setHandler: ((CloudStackLoaderObserver) -> Void)?
+    public func set(observer: CloudStackLoaderObserver) {
+        setCallCount += 1
+        if let setHandler = setHandler {
+            setHandler(observer)
+        }
     }
 }
