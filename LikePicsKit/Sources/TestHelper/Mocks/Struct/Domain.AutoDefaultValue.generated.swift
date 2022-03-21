@@ -143,6 +143,24 @@ public extension ImageSize {
     }
 }
 
+public extension ListingAlbum {
+    static func makeDefault(
+        id: UUID = UUID(),
+        title: String = "",
+        isHidden: Bool = false,
+        registeredDate: Date = Date(timeIntervalSince1970: 0),
+        updatedDate: Date = Date(timeIntervalSince1970: 0)
+    ) -> Self {
+        return .init(
+            id: id,
+            title: title,
+            isHidden: isHidden,
+            registeredDate: registeredDate,
+            updatedDate: updatedDate
+        )
+    }
+}
+
 public extension ReferenceTag {
     static func makeDefault(
         id: UUID = UUID(),

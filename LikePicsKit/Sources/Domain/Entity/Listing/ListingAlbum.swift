@@ -4,6 +4,7 @@
 
 import Foundation
 
+// sourcery: AutoDefaultValuePublic
 public struct ListingAlbum: Codable, Equatable, Hashable {
     public let id: UUID
     public let title: String
