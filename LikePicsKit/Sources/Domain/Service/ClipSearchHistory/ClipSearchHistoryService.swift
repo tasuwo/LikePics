@@ -5,6 +5,7 @@
 import Combine
 import Foundation
 
+/// @mockable
 public protocol ClipSearchHistoryService {
     func append(_ history: ClipSearchHistory)
     func remove(historyHaving id: UUID)

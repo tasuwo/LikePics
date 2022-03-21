@@ -37,7 +37,15 @@ mockolo_generate: ## mockoloによるモック自動生成を行う
 	./mockolo \
 		--sourcedirs ../LikePicsKit/Sources/Common \
 		--destination ../LikePicsKit/Sources/TestHelper/Mocks/Protocol/Common.ProtocolMocks.swift \
-		--testable-imports Common;
+		--testable-imports Common; \
+	./mockolo \
+		--sourcedirs ../LikePicsKit/Sources/Environment \
+		--destination ../LikePicsKit/Sources/TestHelper/Mocks/Protocol/Environment.ProtocolMocks.swift \
+		--testable-imports Environment; \
+	./mockolo \
+		--sourcedirs ../LikePicsKit/Sources/Smoothie \
+		--destination ../LikePicsKit/Sources/TestHelper/Mocks/Protocol/Smoothie.ProtocolMocks.swift \
+		--testable-imports Smoothie;
 
 .PHONY: lint
 lint: swiftlint_lint ## 各種Linterを実行する

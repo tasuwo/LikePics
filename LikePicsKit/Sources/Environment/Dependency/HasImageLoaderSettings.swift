@@ -5,6 +5,7 @@
 import Domain
 import Smoothie
 
+/// @mockable
 public protocol HasImageLoaderSettings {
     var clipDiskCache: DiskCaching { get }
     var clipThumbnailPipeline: Pipeline { get }

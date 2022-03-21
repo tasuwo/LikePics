@@ -4,6 +4,7 @@
 
 import Domain
 
+/// @mockable
 public protocol HasTagCommandService {
     var tagCommandService: TagCommandServiceProtocol { get }
 }

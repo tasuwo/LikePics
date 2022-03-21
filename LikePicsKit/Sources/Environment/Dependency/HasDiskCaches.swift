@@ -4,6 +4,7 @@
 
 import Smoothie
 
+/// @mockable
 public protocol HasDiskCaches {
     var clipDiskCache: DiskCaching { get }
     var albumDiskCache: DiskCaching { get }

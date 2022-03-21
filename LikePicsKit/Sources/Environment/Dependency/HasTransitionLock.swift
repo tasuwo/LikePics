@@ -4,6 +4,7 @@
 
 import LikePicsUIKit
 
+/// @mockable
 public protocol HasTransitionLock {
     var transitionLock: TransitionLock { get }
 }

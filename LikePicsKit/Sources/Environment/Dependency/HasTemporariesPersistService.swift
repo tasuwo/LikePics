@@ -4,6 +4,7 @@
 
 import Domain
 
+/// @mockable
 public protocol HasTemporariesPersistService {
     var temporariesPersistService: TemporariesPersistServiceProtocol { get }
 }

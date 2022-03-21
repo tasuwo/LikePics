@@ -4,6 +4,7 @@
 
 import Combine
 
+/// @mockable
 public protocol ClipSearchSettingService {
     func save(_ setting: ClipSearchSetting)
     func read() -> ClipSearchSetting?

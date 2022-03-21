@@ -3,3 +3,16 @@
 ///
 
 @testable import Common
+
+public class LoggableMock: Loggable {
+    public init() { }
+
+    public private(set) var writeCallCount = 0
+    public var writeHandler: ((Log) -> Void)?
+    public func write(_ log: Log) {
+        writeCallCount += 1
+        if let writeHandler = writeHandler {
+            writeHandler(log)
+        }
+    }
+}

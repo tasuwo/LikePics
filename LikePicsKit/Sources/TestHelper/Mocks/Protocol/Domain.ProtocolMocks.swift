@@ -204,6 +204,29 @@ public class ClipReferencesIntegrityValidationServiceProtocolMock: ClipReference
     }
 }
 
+public class PasteboardMock: Pasteboard {
+    public init() { }
+
+    public private(set) var setCallCount = 0
+    public var setHandler: ((String) -> Void)?
+    public func set(_ text: String) {
+        setCallCount += 1
+        if let setHandler = setHandler {
+            setHandler(text)
+        }
+    }
+
+    public private(set) var getCallCount = 0
+    public var getHandler: (() -> (String?))?
+    public func get() -> String? {
+        getCallCount += 1
+        if let getHandler = getHandler {
+            return getHandler()
+        }
+        return nil
+    }
+}
+
 public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
     public init() { }
     public init(isInTransaction: Bool = false) {
@@ -529,6 +552,62 @@ public class ClipQueryMock: ClipQuery {
     public var clip: CurrentValueSubject<Clip, Error> {
         get { return _clip }
         set { _clip = newValue }
+    }
+}
+
+public class ClipSearchSettingServiceMock: ClipSearchSettingService {
+    public init() { }
+
+    public private(set) var saveCallCount = 0
+    public var saveHandler: ((ClipSearchSetting) -> Void)?
+    public func save(_ setting: ClipSearchSetting) {
+        saveCallCount += 1
+        if let saveHandler = saveHandler {
+            saveHandler(setting)
+        }
+    }
+
+    public private(set) var readCallCount = 0
+    public var readHandler: (() -> (ClipSearchSetting?))?
+    public func read() -> ClipSearchSetting? {
+        readCallCount += 1
+        if let readHandler = readHandler {
+            return readHandler()
+        }
+        return nil
+    }
+
+    public private(set) var queryCallCount = 0
+    public var queryHandler: (() -> (AnyPublisher<ClipSearchSetting?, Never>))?
+    public func query() -> AnyPublisher<ClipSearchSetting?, Never> {
+        queryCallCount += 1
+        if let queryHandler = queryHandler {
+            return queryHandler()
+        }
+        fatalError("queryHandler returns can't have a default value thus its handler must be set")
+    }
+}
+
+public class CloudAvailabilityServiceProtocolMock: CloudAvailabilityServiceProtocol {
+    public init() { }
+    public init(availability: AnyPublisher<CloudAvailability?, Error>) {
+        self._availability = availability
+    }
+
+    public private(set) var availabilitySetCallCount = 0
+    private var _availability: AnyPublisher<CloudAvailability?, Error>! { didSet { availabilitySetCallCount += 1 } }
+    public var availability: AnyPublisher<CloudAvailability?, Error> {
+        get { return _availability }
+        set { _availability = newValue }
+    }
+
+    public private(set) var currentAvailabilityCallCount = 0
+    public var currentAvailabilityHandler: ((@escaping (Result<CloudAvailability, Error>) -> Void) -> Void)?
+    public func currentAvailability(_ completion: @escaping (Result<CloudAvailability, Error>) -> Void) {
+        currentAvailabilityCallCount += 1
+        if let currentAvailabilityHandler = currentAvailabilityHandler {
+            currentAvailabilityHandler(completion)
+        }
     }
 }
 
@@ -1361,6 +1440,20 @@ public class ImageStorageProtocolMock: ImageStorageProtocol {
     }
 }
 
+public class PreviewPrefetchableMock: PreviewPrefetchable {
+    public init() { }
+    public init(clip: CurrentValueSubject<Clip?, Never>) {
+        self._clip = clip
+    }
+
+    public private(set) var clipSetCallCount = 0
+    private var _clip: CurrentValueSubject<Clip?, Never>! { didSet { clipSetCallCount += 1 } }
+    public var clip: CurrentValueSubject<Clip?, Never> {
+        get { return _clip }
+        set { _clip = newValue }
+    }
+}
+
 public class TemporaryImageStorageProtocolMock: TemporaryImageStorageProtocol {
     public init() { }
 
@@ -1418,6 +1511,71 @@ public class TemporaryImageStorageProtocolMock: TemporaryImageStorageProtocol {
             return try readImageHandler(name, clipId)
         }
         return nil
+    }
+}
+
+public class ClipSearchHistoryServiceMock: ClipSearchHistoryService {
+    public init() { }
+
+    public private(set) var appendCallCount = 0
+    public var appendHandler: ((ClipSearchHistory) -> Void)?
+    public func append(_ history: ClipSearchHistory) {
+        appendCallCount += 1
+        if let appendHandler = appendHandler {
+            appendHandler(history)
+        }
+    }
+
+    public private(set) var removeCallCount = 0
+    public var removeHandler: ((UUID) -> Void)?
+    public func remove(historyHaving id: UUID) {
+        removeCallCount += 1
+        if let removeHandler = removeHandler {
+            removeHandler(id)
+        }
+    }
+
+    public private(set) var removeAllCallCount = 0
+    public var removeAllHandler: (() -> Void)?
+    public func removeAll() {
+        removeAllCallCount += 1
+        if let removeAllHandler = removeAllHandler {
+            removeAllHandler()
+        }
+    }
+
+    public private(set) var readCallCount = 0
+    public var readHandler: (() -> ([ClipSearchHistory]))?
+    public func read() -> [ClipSearchHistory] {
+        readCallCount += 1
+        if let readHandler = readHandler {
+            return readHandler()
+        }
+        return [ClipSearchHistory]()
+    }
+
+    public private(set) var queryCallCount = 0
+    public var queryHandler: (() -> (AnyPublisher<[ClipSearchHistory], Never>))?
+    public func query() -> AnyPublisher<[ClipSearchHistory], Never> {
+        queryCallCount += 1
+        if let queryHandler = queryHandler {
+            return queryHandler()
+        }
+        fatalError("queryHandler returns can't have a default value thus its handler must be set")
+    }
+}
+
+public class TagCommandServiceProtocolMock: TagCommandServiceProtocol {
+    public init() { }
+
+    public private(set) var createCallCount = 0
+    public var createHandler: ((String) -> (Result<Tag.Identity, TagCommandServiceError>))?
+    public func create(tagWithName name: String) -> Result<Tag.Identity, TagCommandServiceError> {
+        createCallCount += 1
+        if let createHandler = createHandler {
+            return createHandler(name)
+        }
+        fatalError("createHandler returns can't have a default value thus its handler must be set")
     }
 }
 

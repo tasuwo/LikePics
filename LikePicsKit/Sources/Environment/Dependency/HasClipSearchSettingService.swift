@@ -4,6 +4,7 @@
 
 import Domain
 
+/// @mockable
 public protocol HasClipSearchSettingService {
     var clipSearchSettingService: ClipSearchSettingService { get }
 }

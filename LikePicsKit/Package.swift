@@ -137,8 +137,12 @@ let package = Package(
         .target(
             name: "TestHelper",
             dependencies: [
+                "Common",
+                "Domain",
+                "Environment",
                 "Persistence",
-                "LikePicsUIKit"
+                "Smoothie",
+                "LikePicsUIKit",
             ]
         ),
         .testTarget(

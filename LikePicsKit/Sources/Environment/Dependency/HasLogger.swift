@@ -4,6 +4,7 @@
 
 import Common
 
+/// @mockable
 public protocol HasLogger {
     var logger: Loggable { get }
 }

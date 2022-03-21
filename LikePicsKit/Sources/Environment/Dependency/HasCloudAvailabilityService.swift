@@ -4,6 +4,7 @@
 
 import Domain
 
+/// @mockable
 public protocol HasCloudAvailabilityService {
     var cloudAvailabilityService: CloudAvailabilityServiceProtocol { get }
 }

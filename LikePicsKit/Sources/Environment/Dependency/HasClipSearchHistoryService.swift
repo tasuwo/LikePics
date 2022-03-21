@@ -4,6 +4,7 @@
 
 import Domain
 
+/// @mockable
 public protocol HasClipSearchHistoryService {
     var clipSearchHistoryService: ClipSearchHistoryService { get }
 }

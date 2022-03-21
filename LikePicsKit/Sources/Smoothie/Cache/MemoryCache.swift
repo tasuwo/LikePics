@@ -4,6 +4,7 @@
 
 import UIKit
 
+/// @mockable
 public protocol MemoryCaching: AnyObject {
     func insert(_ data: UIImage?, forKey key: String)
     func remove(forKey key: String)

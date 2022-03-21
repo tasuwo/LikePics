@@ -4,6 +4,7 @@
 
 import Domain
 
+/// @mockable
 public protocol HasImageQueryService {
     var imageQueryService: ImageQueryServiceProtocol { get }
 }

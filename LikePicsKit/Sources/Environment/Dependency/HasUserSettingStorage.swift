@@ -4,6 +4,7 @@
 
 import Domain
 
+/// @mockable
 public protocol HasUserSettingStorage {
     var userSettingStorage: UserSettingsStorageProtocol { get }
 }

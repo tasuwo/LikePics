@@ -4,6 +4,7 @@
 
 import Combine
 
+/// @mockable
 public protocol PreviewPrefetchable {
     var clip: CurrentValueSubject<Clip?, Never> { get }
 }

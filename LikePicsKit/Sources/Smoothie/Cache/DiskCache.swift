@@ -4,6 +4,7 @@
 
 import Foundation
 
+/// @mockable
 public protocol DiskCaching: AnyObject {
     func store(_ data: Data?, forKey key: String)
     func remove(forKey key: String)

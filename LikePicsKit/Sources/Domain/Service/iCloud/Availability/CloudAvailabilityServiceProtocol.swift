@@ -4,6 +4,7 @@
 
 import Combine
 
+/// @mockable
 public protocol CloudAvailabilityServiceProtocol {
     var availability: AnyPublisher<CloudAvailability?, Error> { get }
     func currentAvailability(_ completion: @escaping (Result<CloudAvailability, Error>) -> Void)

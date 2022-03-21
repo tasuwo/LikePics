@@ -4,6 +4,7 @@
 
 import Domain
 
+/// @mockable
 public protocol HasPasteboard {
     var pasteboard: Pasteboard { get }
 }
