@@ -40,6 +40,7 @@ class DummyContainer: AppDependencyContaining {
     var transitionLock: TransitionLock
     var userSettingStorage: UserSettingsStorageProtocol
     var clipStore: ClipStorable
+    var appBundle = Bundle.main
 
     init() {
         modalNotificationCenter = .default
@@ -85,7 +86,11 @@ class DummyContainer: AppDependencyContaining {
 
         clipSearchHistoryService = ClipSearchHistoryServiceMock()
         clipSearchSettingService = ClipSearchSettingServiceMock()
-        cloudAvailabilityService = CloudAvailabilityServiceProtocolMock()
+
+        let _cloudAvailabilityService = CloudAvailabilityServiceProtocolMock()
+        _cloudAvailabilityService.currentAvailabilityHandler = { $0(.success(.available(.none))) }
+        cloudAvailabilityService = _cloudAvailabilityService
+
         cloudStackLoader = CloudStackLoadableMock()
 
         let diskCache = DiskCachingMock()
@@ -121,6 +126,9 @@ class DummyContainer: AppDependencyContaining {
         let _userSettingStorage = UserSettingsStorageProtocolMock()
         _userSettingStorage.showHiddenItems = CurrentValueSubject(true).eraseToAnyPublisher()
         _userSettingStorage.readShowHiddenItemsHandler = { true }
+        _userSettingStorage.userInterfaceStyle = CurrentValueSubject(.unspecified).eraseToAnyPublisher()
+        _userSettingStorage.readUserInterfaceStyleHandler = { .unspecified }
+        _userSettingStorage.readEnabledICloudSyncHandler = { true }
         userSettingStorage = _userSettingStorage
 
         clipStore = ClipStorableMock()

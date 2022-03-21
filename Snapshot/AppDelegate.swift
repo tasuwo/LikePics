@@ -10,7 +10,7 @@ import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    private(set) var appDependencyContainer: AppDependencyContaining!
+    public private(set) var appDependencyContainer: AppDependencyContaining!
     private var clipsIntegrityValidator: ClipsIntegrityValidator!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -29,3 +29,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // NOP
     }
 }
+
+extension AppDelegate: HasAppDependencyContainer {}

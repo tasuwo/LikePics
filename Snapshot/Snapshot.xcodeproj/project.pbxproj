@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2C16358B27E881BD006C2C24 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C16358A27E881BD006C2C24 /* AppDelegate.swift */; };
-		2C16358D27E881BD006C2C24 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C16358C27E881BD006C2C24 /* SceneDelegate.swift */; };
 		2C1635A227E88330006C2C24 /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 2C1635A127E88330006C2C24 /* AppFeature */; };
 		2C1635A427E883A2006C2C24 /* DummyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1635A327E883A2006C2C24 /* DummyContainer.swift */; };
 		2C1635A627E88842006C2C24 /* TestHelper in Frameworks */ = {isa = PBXBuildFile; productRef = 2C1635A527E88842006C2C24 /* TestHelper */; };
@@ -33,7 +32,6 @@
 /* Begin PBXFileReference section */
 		2C16358727E881BD006C2C24 /* Snapshot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Snapshot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C16358A27E881BD006C2C24 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		2C16358C27E881BD006C2C24 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		2C16359827E881BE006C2C24 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C16359F27E88201006C2C24 /* LikePicsKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = LikePicsKit; path = ../LikePicsKit; sourceTree = "<group>"; };
 		2C1635A327E883A2006C2C24 /* DummyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyContainer.swift; sourceTree = "<group>"; };
@@ -73,7 +71,6 @@
 				2C16359E27E88201006C2C24 /* Packages */,
 				2C16358A27E881BD006C2C24 /* AppDelegate.swift */,
 				2C1635A327E883A2006C2C24 /* DummyContainer.swift */,
-				2C16358C27E881BD006C2C24 /* SceneDelegate.swift */,
 				2C1635AB27E89BB1006C2C24 /* LaunchScreen.storyboard */,
 				2C1635A927E89AFB006C2C24 /* Assets.xcassets */,
 				2C16359827E881BE006C2C24 /* Info.plist */,
@@ -227,7 +224,6 @@
 				2C16358B27E881BD006C2C24 /* AppDelegate.swift in Sources */,
 				2C1635A427E883A2006C2C24 /* DummyContainer.swift in Sources */,
 				2C1635AE27E8C53D006C2C24 /* SampleDataProvider.swift in Sources */,
-				2C16358D27E881BD006C2C24 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
