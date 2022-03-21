@@ -73,10 +73,6 @@ format: swiftformat_format ## 各種フォーマッターを実行する
 swiftformat_format: ## SwiftFormatによるフォーマットを実行する
 	Pods/SwiftFormat/CommandLineTool/swiftformat --config ./.swiftformat ./
 
-.PHONY: extract_app_data_as_ja
-extract_app_data_as_ja: ## 起動中のSimulatorからAppDataをDLする
-	./scripts/app_container.sh net.tasuwo.TBox.dev ja-JP export
-
 .PHONY: help
 help: ## ヘルプを表示する
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
