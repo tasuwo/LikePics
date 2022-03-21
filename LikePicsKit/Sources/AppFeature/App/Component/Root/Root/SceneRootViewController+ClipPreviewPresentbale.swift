@@ -41,7 +41,7 @@ private extension SceneRootViewController {
 
 // MARK: - ClipPreviewPresentable
 
-extension SceneRootViewController where Self: UIViewController {
+extension SceneRootViewController {
     func animatingCell(_ animator: ClipPreviewAnimator, id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool) -> ClipPreviewPresentableCell? {
         guard let viewController = self.resolvePresentingViewController() else { return nil }
         return viewController.previewingCell(id: id, needsScroll: needsScroll)
