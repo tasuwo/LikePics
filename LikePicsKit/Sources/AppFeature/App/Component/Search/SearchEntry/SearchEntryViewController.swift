@@ -35,6 +35,7 @@ class SearchEntryViewController: UIViewController {
 
     // MARK: State Restoration
 
+    private let appBundle: Bundle
     private let viewDidAppeared: CurrentValueSubject<Bool, Never> = .init(false)
     private var presentingAlert: UIViewController?
 
@@ -43,7 +44,8 @@ class SearchEntryViewController: UIViewController {
     init(state: SearchViewRootState,
          dependency: SearchViewRootDependency,
          thumbnailPipeline: Pipeline,
-         imageQueryService: ImageQueryServiceProtocol)
+         imageQueryService: ImageQueryServiceProtocol,
+         appBundle: Bundle)
     {
         rootStore = CompositeKit.Store(initialState: state, dependency: dependency, reducer: searchViewRootReducer)
         store = rootStore
@@ -55,6 +57,7 @@ class SearchEntryViewController: UIViewController {
         resultsController = SearchResultViewController(store: resultStore,
                                                        thumbnailPipeline: thumbnailPipeline,
                                                        imageQueryService: imageQueryService)
+        self.appBundle = appBundle
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -115,7 +118,7 @@ extension SearchEntryViewController {
 
     private func updateUserActivity(_ state: SearchViewRootState) {
         DispatchQueue.global().async {
-            guard let activity = NSUserActivity.make(with: .search(state.removingSessionStates())) else { return }
+            guard let activity = NSUserActivity.make(with: .search(state.removingSessionStates()), appBundle: self.appBundle) else { return }
             DispatchQueue.main.async { self.view.window?.windowScene?.userActivity = activity }
         }
     }
@@ -263,6 +266,7 @@ extension SearchEntryViewController: Restorable {
         return SearchEntryViewController(state: rootStore.stateValue,
                                          dependency: rootStore.dependency,
                                          thumbnailPipeline: resultsController.thumbnailPipeline,
-                                         imageQueryService: resultsController.imageQueryService)
+                                         imageQueryService: resultsController.imageQueryService,
+                                         appBundle: appBundle)
     }
 }

@@ -60,6 +60,10 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private let previewPrefetcher: PreviewPrefetchable
 
+    // MARK: State Restoration
+
+    private let appBundle: Bundle
+
     // MARK: - Initializers
 
     init(state: ClipPreviewPageViewRootState,
@@ -67,7 +71,8 @@ class ClipPreviewPageViewController: UIPageViewController {
          factory: ViewControllerFactory,
          transitionDispatcher: ClipPreviewPageTransitionDispatcherType,
          itemListTransitionController: ClipItemListTransitioningControllable,
-         previewPrefetcher: PreviewPrefetchable)
+         previewPrefetcher: PreviewPrefetchable,
+         appBundle: Bundle)
     {
         let rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipPreviewPageViewRootReducer)
         self.rootStore = rootStore
@@ -88,6 +93,8 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.itemListTransitionController = itemListTransitionController
 
         self.previewPrefetcher = previewPrefetcher
+
+        self.appBundle = appBundle
 
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [.interPageSpacing: 40])
     }
@@ -146,9 +153,9 @@ class ClipPreviewPageViewController: UIPageViewController {
 
 extension ClipPreviewPageViewController {
     private func updateUserActivity() {
-        guard case let .clips(state, preview: _) = view.window?.windowScene?.userActivity?.intent else { return }
+        guard case let .clips(state, preview: _) = view.window?.windowScene?.userActivity?.intent(appBundle: appBundle) else { return }
         DispatchQueue.global().async {
-            guard let activity = NSUserActivity.make(with: .clips(state, preview: self.store.stateValue.currentIndexPath)) else { return }
+            guard let activity = NSUserActivity.make(with: .clips(state, preview: self.store.stateValue.currentIndexPath), appBundle: self.appBundle) else { return }
             DispatchQueue.main.async { self.view.window?.windowScene?.userActivity = activity }
         }
     }

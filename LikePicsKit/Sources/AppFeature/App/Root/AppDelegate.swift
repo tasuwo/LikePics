@@ -15,7 +15,7 @@ public class AppDelegate: UIResponder, UIApplicationDelegate {
 
     public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // swiftlint:disable:next force_try
-        self.appDependencyContainer = try! AppDependencyContainer()
+        self.appDependencyContainer = try! AppDependencyContainer(appBundle: Bundle.main)
         self.clipsIntegrityValidator = ClipsIntegrityValidator(dependency: appDependencyContainer)
 
         return true

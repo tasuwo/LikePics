@@ -23,7 +23,7 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let delegate = UIApplication.shared.delegate as! AppDelegate
         let presenter = SceneRootSetupPresenter(userSettingsStorage: delegate.appDependencyContainer.userSettingStorage,
                                                 cloudAvailabilityService: delegate.appDependencyContainer.cloudAvailabilityService,
-                                                intent: session.stateRestorationActivity?.intent)
+                                                intent: session.stateRestorationActivity?.intent(appBundle: delegate.appDependencyContainer.appBundle))
         let rootViewController = SceneRootSetupViewController(presenter: presenter, launcher: self)
 
         let window = UIWindow(windowScene: windowScene)
@@ -52,6 +52,10 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     public func sceneDidBecomeActive(_ scene: UIScene) {
         window?.windowScene?.userActivity?.becomeCurrent()
+    }
+
+    public func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
+        return scene.userActivity
     }
 }
 

@@ -54,6 +54,7 @@ class ClipCollectionViewController: UIViewController {
 
     // MARK: State Restoration
 
+    private let appBundle: Bundle
     private let viewDidAppeared: CurrentValueSubject<Bool, Never> = .init(false)
     private var presentingAlert: UIViewController?
 
@@ -62,7 +63,8 @@ class ClipCollectionViewController: UIViewController {
     init(state: ClipCollectionViewRootState,
          dependency: ClipCollectionViewRootDependency,
          thumbnailPipeline: Pipeline,
-         menuBuilder: ClipCollectionMenuBuildable)
+         menuBuilder: ClipCollectionMenuBuildable,
+         appBundle: Bundle)
     {
         self.router = dependency.router
         self.thumbnailPipeline = thumbnailPipeline
@@ -72,6 +74,7 @@ class ClipCollectionViewController: UIViewController {
         self.store = rootStore
             .proxy(RootState.clipsMapping, RootAction.clipsMapping)
             .eraseToAnyStoring()
+        self.appBundle = appBundle
 
         super.init(nibName: nil, bundle: nil)
 
@@ -160,7 +163,7 @@ extension ClipCollectionViewController {
 
     private func updateUserActivity(_ state: ClipCollectionViewRootState) {
         DispatchQueue.global().async {
-            guard let activity = NSUserActivity.make(with: .clips(state.removingSessionStates(), preview: nil)) else { return }
+            guard let activity = NSUserActivity.make(with: .clips(state.removingSessionStates(), preview: nil), appBundle: self.appBundle) else { return }
             DispatchQueue.main.async { self.view.window?.windowScene?.userActivity = activity }
         }
     }
@@ -854,7 +857,8 @@ extension ClipCollectionViewController: Restorable {
         return ClipCollectionViewController(state: nextState,
                                             dependency: rootStore.dependency,
                                             thumbnailPipeline: thumbnailPipeline,
-                                            menuBuilder: menuBuilder)
+                                            menuBuilder: menuBuilder,
+                                            appBundle: appBundle)
     }
 }
 

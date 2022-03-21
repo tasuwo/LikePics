@@ -15,9 +15,9 @@ public class UserSettingsStorage {
         case ignoreCloudUnavailableAlert = "userSettingsIgnoreCloudUnavailableAlert"
     }
 
-    private let bundle: Bundle
+    private let appBundle: Bundle
     private lazy var userDefaults: UserDefaults = {
-        guard let bundleIdentifier = self.bundle.bundleIdentifier else {
+        guard let bundleIdentifier = self.appBundle.bundleIdentifier else {
             fatalError("Failed to resolve bundle identifier")
         }
         guard let userDefaults = UserDefaults(suiteName: "group.\(bundleIdentifier)") else {
@@ -30,8 +30,8 @@ public class UserSettingsStorage {
 
     // MARK: - Lifecycle
 
-    public init(bundle: Bundle = Bundle.main) {
-        self.bundle = bundle
+    public init(appBundle: Bundle) {
+        self.appBundle = appBundle
         self.userDefaults.register(defaults: [
             Self.Key.userInterfaceStyle.rawValue: UserInterfaceStyle.unspecified.rawValue,
             Self.Key.showHiddenItems.rawValue: false,

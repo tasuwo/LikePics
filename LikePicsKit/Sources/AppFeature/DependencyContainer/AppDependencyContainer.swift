@@ -34,6 +34,7 @@ public typealias AppDependencyContaining = HasPasteboard
     & HasClipStore
     & HasDiskCaches
     & HasImageLoaderSettings
+    & HasAppBundle
 
 class AppDependencyContainer {
     // MARK: - Properties
@@ -96,24 +97,29 @@ class AppDependencyContainer {
 
     private let _logger: Loggable
 
+    // MARK: Bundle
+
+    public let appBundle: Bundle
+
     // MARK: - Lifecycle
 
-    init() throws {
+    init(appBundle: Bundle) throws {
         self._logger = RootLogger(loggers: [
             ConsoleLogger(scopes: [.default, .transition])
         ])
+        self.appBundle = appBundle
 
         // MARK: Storage
 
-        self.tmpImageStorage = try TemporaryImageStorage(configuration: .resolve(for: Bundle.main, kind: .group))
-        self.tmpClipStorage = try TemporaryClipStorage(config: .resolve(for: Bundle.main, kind: .group), logger: _logger)
-        self.referenceClipStorage = try ReferenceClipStorage(config: .resolve(for: Bundle.main), logger: _logger)
+        self.tmpImageStorage = try TemporaryImageStorage(configuration: .resolve(for: appBundle, kind: .group))
+        self.tmpClipStorage = try TemporaryClipStorage(config: .resolve(for: appBundle, kind: .group), logger: _logger)
+        self.referenceClipStorage = try ReferenceClipStorage(config: .resolve(for: appBundle), logger: _logger)
 
         // MARK: CoreData
 
         self.monitor = ICloudSyncMonitor(logger: _logger)
 
-        let userSettingsStorage = UserSettingsStorage.shared
+        let userSettingsStorage = UserSettingsStorage(appBundle: appBundle)
         let cloudUsageContextStorage = CloudUsageContextStorage()
         self._userSettingStorage = userSettingsStorage
         self.cloudUsageContextStorage = cloudUsageContextStorage
@@ -140,14 +146,14 @@ class AppDependencyContainer {
 
         // MARK: Image Loader
 
-        Self.sweepLegacyThumbnailCachesIfExists()
+        Self.sweepLegacyThumbnailCachesIfExists(appBundle: appBundle)
 
         let memoryCache = MemoryCache(config: .default)
 
         // Clip
 
         var clipCacheConfig = Pipeline.Configuration()
-        let clipCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-thumbnails")
+        let clipCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-thumbnails", appBundle: appBundle)
         self._clipDiskCache = try DiskCache(path: clipCacheDirectory,
                                             config: .init(sizeLimit: 1024 * 1024 * 1024,
                                                           countLimit: Int.max,
@@ -161,7 +167,7 @@ class AppDependencyContainer {
 
         var albumCacheConfig = Pipeline.Configuration()
         albumCacheConfig.compressionRatio = 0.5
-        let albumCacheDirectory = Self.resolveCacheDirectoryUrl(name: "album-thumbnails")
+        let albumCacheDirectory = Self.resolveCacheDirectoryUrl(name: "album-thumbnails", appBundle: appBundle)
         _albumDiskCache = try DiskCache(path: albumCacheDirectory,
                                         config: .init(sizeLimit: 1024 * 1024 * 512,
                                                       countLimit: 1000,
@@ -173,7 +179,7 @@ class AppDependencyContainer {
         // Clip Item
 
         var clipItemCacheConfig = Pipeline.Configuration()
-        let clipItemCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-item-thumbnails")
+        let clipItemCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-item-thumbnails", appBundle: appBundle)
         _clipItemDiskCache = try DiskCache(path: clipItemCacheDirectory,
                                            config: .init(sizeLimit: 1024 * 1024 * 512,
                                                          countLimit: 100,
@@ -236,8 +242,8 @@ class AppDependencyContainer {
 
     // MARK: - Methods
 
-    private static func sweepLegacyThumbnailCachesIfExists() {
-        guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
+    private static func sweepLegacyThumbnailCachesIfExists(appBundle: Bundle) {
+        guard let bundleIdentifier = appBundle.bundleIdentifier else {
             fatalError("Failed to resolve bundle identifier")
         }
 
@@ -257,8 +263,8 @@ class AppDependencyContainer {
         }
     }
 
-    private static func resolveCacheDirectoryUrl(name: String) -> URL {
-        guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
+    private static func resolveCacheDirectoryUrl(name: String, appBundle: Bundle) -> URL {
+        guard let bundleIdentifier = appBundle.bundleIdentifier else {
             fatalError("Failed to resolve bundle identifier")
         }
 
@@ -381,3 +387,5 @@ extension AppDependencyContainer: HasImageLoaderSettings {
     var previewPipeline: Pipeline { _previewPipeline }
     var previewPrefetcher: PreviewPrefetchable { _previewPrefetcher }
 }
+
+extension AppDependencyContainer: HasAppBundle {}

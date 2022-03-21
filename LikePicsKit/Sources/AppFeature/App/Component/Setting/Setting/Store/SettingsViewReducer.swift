@@ -11,6 +11,7 @@ import Foundation
 typealias SettingsViewDependency = HasCloudAvailabilityService
     & HasUserSettingStorage
     & HasDiskCaches
+    & HasAppBundle
 
 struct SettingsViewReducer: Reducer {
     typealias Dependency = SettingsViewDependency
@@ -133,8 +134,7 @@ extension SettingsViewReducer {
         nextState.isSomeItemsHidden = !dependency.userSettingStorage.readShowHiddenItems()
         nextState.isICloudSyncEnabled = dependency.userSettingStorage.readEnabledICloudSync()
         nextState.cloudAvailability = nil
-        // swiftlint:disable:next force_cast force_unwrapping
-        nextState.version = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
+        nextState.version = dependency.appBundle.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
 
         return (nextState, [settingEffect, availabilityEffect, syncSettingEffect])
     }

@@ -4,6 +4,7 @@
 
 import Combine
 import CompositeKit
+import Domain
 import Environment
 import LikePicsUIKit
 import UIKit
@@ -22,6 +23,7 @@ class SettingsViewController: UITableViewController {
     // MARK: Service
 
     var router: Router!
+    var userSettingsStorage: UserSettingsStorageProtocol!
 
     // MARK: Store
 
@@ -30,6 +32,7 @@ class SettingsViewController: UITableViewController {
 
     // MARK: State Restoration
 
+    var appBundle: Bundle!
     private let viewDidAppeared: CurrentValueSubject<Bool, Never> = .init(false)
     private var presentingAlert: UIViewController?
 
@@ -199,7 +202,7 @@ extension SettingsViewController {
 
     private func updateUserActivity(_ state: SettingsViewState) {
         DispatchQueue.global().async {
-            guard let activity = NSUserActivity.make(with: .setting(state.removingSessionStates())) else { return }
+            guard let activity = NSUserActivity.make(with: .setting(state.removingSessionStates()), appBundle: self.appBundle) else { return }
             DispatchQueue.main.async { self.view.window?.windowScene?.userActivity = activity }
         }
     }
@@ -208,7 +211,7 @@ extension SettingsViewController {
 extension SettingsViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath == IndexPath(row: 0, section: 0) {
-            show(UserInterfaceStyleSelectionViewController(), sender: nil)
+            show(UserInterfaceStyleSelectionViewController(userSettingsStorage: userSettingsStorage), sender: nil)
         } else if indexPath == IndexPath(row: 0, section: 2) {
             router.showFindView()
         } else if indexPath == IndexPath(row: 0, section: 4) {

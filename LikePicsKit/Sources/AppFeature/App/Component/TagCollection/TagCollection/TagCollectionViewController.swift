@@ -39,6 +39,7 @@ class TagCollectionViewController: UIViewController {
 
     // MARK: State Restoration
 
+    private let appBundle: Bundle
     private var viewDidAppeared: CurrentValueSubject<Bool, Never> = .init(false)
     private var presentingAlert: UIViewController?
 
@@ -53,13 +54,16 @@ class TagCollectionViewController: UIViewController {
          tagAdditionAlertState: TextEditAlertState,
          tagEditAlertState: TextEditAlertState,
          dependency: TagCollectionViewDependency,
-         menuBuilder: TagCollectionMenuBuildable)
+         menuBuilder: TagCollectionMenuBuildable,
+         appBundle: Bundle)
     {
         self.store = Store(initialState: state, dependency: dependency, reducer: TagCollectionViewReducer())
         self.tagAdditionAlert = .init(state: tagAdditionAlertState)
         self.tagEditAlert = .init(state: tagEditAlertState)
 
         self.menuBuilder = menuBuilder
+
+        self.appBundle = appBundle
 
         super.init(nibName: nil, bundle: nil)
 
@@ -239,7 +243,7 @@ extension TagCollectionViewController {
 
     private func updateUserActivity(_ state: TagCollectionViewState) {
         DispatchQueue.global().async {
-            guard let activity = NSUserActivity.make(with: .tags(state.removingSessionStates())) else { return }
+            guard let activity = NSUserActivity.make(with: .tags(state.removingSessionStates()), appBundle: self.appBundle) else { return }
             DispatchQueue.main.async { self.view.window?.windowScene?.userActivity = activity }
         }
     }
@@ -518,6 +522,7 @@ extension TagCollectionViewController: Restorable {
                                            tagAdditionAlertState: tagAdditionAlert.store.stateValue,
                                            tagEditAlertState: tagEditAlert.store.stateValue,
                                            dependency: store.dependency,
-                                           menuBuilder: menuBuilder)
+                                           menuBuilder: menuBuilder,
+                                           appBundle: appBundle)
     }
 }

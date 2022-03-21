@@ -50,7 +50,7 @@ public class DependencyContainer {
         self.tagCommandService = TagCommandService(storage: referenceClipStorage,
                                                    logger: self.logger)
 
-        self.userSettingsStorage = UserSettingsStorage(bundle: mainBundle)
+        self.userSettingsStorage = UserSettingsStorage(appBundle: mainBundle)
 
         var config = Pipeline.Configuration()
         config.diskCache = nil

@@ -42,6 +42,7 @@ class AlbumListViewController: UIViewController {
 
     // MARK: State Restoration
 
+    private let appBundle: Bundle
     private var viewDidAppeared: CurrentValueSubject<Bool, Never> = .init(false)
     private var presentingAlert: UIViewController?
 
@@ -53,7 +54,8 @@ class AlbumListViewController: UIViewController {
          dependency: AlbumListViewDependency,
          thumbnailPipeline: Pipeline,
          imageQueryService: ImageQueryServiceProtocol,
-         menuBuilder: AlbumListMenuBuildable.Type)
+         menuBuilder: AlbumListMenuBuildable.Type,
+         appBundle: Bundle)
     {
         self.store = Store(initialState: state, dependency: dependency, reducer: AlbumListViewReducer())
         self.albumAdditionAlert = .init(state: albumAdditionAlertState)
@@ -62,6 +64,7 @@ class AlbumListViewController: UIViewController {
         self.thumbnailPipeline = thumbnailPipeline
         self.imageQueryService = imageQueryService
         self.menuBuilder = menuBuilder
+        self.appBundle = appBundle
 
         super.init(nibName: nil, bundle: nil)
 
@@ -235,7 +238,7 @@ extension AlbumListViewController {
 
     private func updateUserActivity(_ state: AlbumListViewState) {
         DispatchQueue.global().async {
-            guard let activity = NSUserActivity.make(with: .albums(state.removingSessionStates())) else { return }
+            guard let activity = NSUserActivity.make(with: .albums(state.removingSessionStates()), appBundle: self.appBundle) else { return }
             DispatchQueue.main.async { self.view.window?.windowScene?.userActivity = activity }
         }
     }
@@ -562,6 +565,7 @@ extension AlbumListViewController: Restorable {
                                        dependency: store.dependency,
                                        thumbnailPipeline: thumbnailPipeline,
                                        imageQueryService: imageQueryService,
-                                       menuBuilder: menuBuilder)
+                                       menuBuilder: menuBuilder,
+                                       appBundle: appBundle)
     }
 }

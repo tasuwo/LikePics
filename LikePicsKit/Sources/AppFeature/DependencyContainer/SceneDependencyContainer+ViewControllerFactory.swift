@@ -21,14 +21,16 @@ extension SceneDependencyContainer: ViewControllerFactory {
         return ClipCollectionViewController(state: state,
                                             dependency: self,
                                             thumbnailPipeline: container.clipThumbnailPipeline,
-                                            menuBuilder: ClipCollectionMenuBuilder(storage: container.userSettingStorage))
+                                            menuBuilder: ClipCollectionMenuBuilder(storage: container.userSettingStorage),
+                                            appBundle: container.appBundle)
     }
 
     public func makeClipCollectionViewController(_ state: ClipCollectionViewRootState) -> RestorableViewController & ViewLazyPresentable {
         return ClipCollectionViewController(state: state,
                                             dependency: self,
                                             thumbnailPipeline: container.clipThumbnailPipeline,
-                                            menuBuilder: ClipCollectionMenuBuilder(storage: container.userSettingStorage))
+                                            menuBuilder: ClipCollectionMenuBuilder(storage: container.userSettingStorage),
+                                            appBundle: container.appBundle)
     }
 
     public func makeTagCollectionViewController(_ state: TagCollectionViewState?) -> RestorableViewController? {
@@ -50,7 +52,8 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                                          tagAdditionAlertState: tagAdditionAlertState,
                                                          tagEditAlertState: tagEditAlertState,
                                                          dependency: self,
-                                                         menuBuilder: TagCollectionMenuBuilder(storage: container.userSettingStorage))
+                                                         menuBuilder: TagCollectionMenuBuilder(storage: container.userSettingStorage),
+                                                         appBundle: container.appBundle)
 
         return UINavigationController(rootViewController: viewController)
     }
@@ -76,7 +79,8 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                                      dependency: self,
                                                      thumbnailPipeline: container.albumThumbnailPipeline,
                                                      imageQueryService: container.imageQueryService,
-                                                     menuBuilder: AlbumListMenuBuilder.self)
+                                                     menuBuilder: AlbumListMenuBuilder.self,
+                                                     appBundle: container.appBundle)
 
         return UINavigationController(rootViewController: viewController)
     }
@@ -92,7 +96,8 @@ extension SceneDependencyContainer: ViewControllerFactory {
         let viewController = SearchEntryViewController(state: state,
                                                        dependency: self,
                                                        thumbnailPipeline: container.temporaryThumbnailPipeline,
-                                                       imageQueryService: container.imageQueryService)
+                                                       imageQueryService: container.imageQueryService,
+                                                       appBundle: container.appBundle)
 
         return UINavigationController(rootViewController: viewController)
     }
@@ -115,6 +120,8 @@ extension SceneDependencyContainer: ViewControllerFactory {
         let store = Store(initialState: state, dependency: self, reducer: SettingsViewReducer())
         viewController.store = store
         viewController.router = router
+        viewController.userSettingsStorage = container.userSettingStorage
+        viewController.appBundle = container.appBundle
 
         return UINavigationController(rootViewController: viewController)
     }
@@ -158,7 +165,8 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                                            factory: self,
                                                            transitionDispatcher: transitionDispatcher,
                                                            itemListTransitionController: itemListTransitionController,
-                                                           previewPrefetcher: container.previewPrefetcher)
+                                                           previewPrefetcher: container.previewPrefetcher,
+                                                           appBundle: container.appBundle)
 
         transitionDispatcher.setup(baseViewController: viewController)
 

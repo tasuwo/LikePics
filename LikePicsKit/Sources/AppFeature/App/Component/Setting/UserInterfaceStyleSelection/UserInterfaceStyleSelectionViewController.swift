@@ -20,7 +20,7 @@ class UserInterfaceStyleSelectionViewController: UIViewController {
 
     // MARK: Service
 
-    private let userSettingsStorage: UserSettingsStorageProtocol = UserSettingsStorage.shared
+    private let userSettingsStorage: UserSettingsStorageProtocol
 
     // MARK: Subscription
 
@@ -28,7 +28,8 @@ class UserInterfaceStyleSelectionViewController: UIViewController {
 
     // MARK: - Initializers
 
-    init() {
+    init(userSettingsStorage: UserSettingsStorageProtocol) {
+        self.userSettingsStorage = userSettingsStorage
         super.init(nibName: nil, bundle: nil)
     }
 

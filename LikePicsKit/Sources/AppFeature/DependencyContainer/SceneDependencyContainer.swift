@@ -77,3 +77,7 @@ extension SceneDependencyContainer: HasDiskCaches {
     public var albumDiskCache: DiskCaching { container.albumDiskCache }
     public var clipItemDiskCache: DiskCaching { container.clipDiskCache }
 }
+
+extension SceneDependencyContainer: HasAppBundle {
+    public var appBundle: Bundle { container.appBundle }
+}
