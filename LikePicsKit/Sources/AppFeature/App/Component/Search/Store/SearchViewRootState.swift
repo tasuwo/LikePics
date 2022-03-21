@@ -4,7 +4,7 @@
 
 import CompositeKit
 
-struct SearchViewRootState: Equatable {
+public struct SearchViewRootState: Equatable {
     var entryState: SearchEntryViewState
     var resultState: SearchResultViewState
 }

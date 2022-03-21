@@ -8,8 +8,8 @@ import CompositeKit
 import Domain
 import UIKit
 
-class SceneRootSplitViewController: UISplitViewController {
-    typealias Factory = ViewControllerFactory
+public class SceneRootSplitViewController: UISplitViewController {
+    public typealias Factory = ViewControllerFactory
     typealias Store = CompositeKit.Store<ClipsIntegrityValidatorState, ClipsIntegrityValidatorAction, ClipsIntegrityValidatorDependency>
 
     // MARK: - Properties
@@ -40,7 +40,7 @@ class SceneRootSplitViewController: UISplitViewController {
 
     // MARK: - Initializers
 
-    init(factory: Factory, intent: Intent?) {
+    public init(factory: Factory, intent: Intent?) {
         self.factory = factory
         self.intent = intent
         super.init(style: .doubleColumn)
@@ -53,14 +53,14 @@ class SceneRootSplitViewController: UISplitViewController {
 
     // MARK: - View Life-Cycle Methods
 
-    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+    override public func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransition(to: newCollection, with: coordinator)
 
         guard newCollection.horizontalSizeClass == .regular else { return }
         layoutProvider?.apply(horizontalSizeClass: .regular)
     }
 
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
 
         configureViewHierarchy()
@@ -140,7 +140,7 @@ extension SceneRootSplitViewController {
 }
 
 extension SceneRootSplitViewController: UISplitViewControllerDelegate {
-    func splitViewController(_ svc: UISplitViewController, topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column) -> UISplitViewController.Column {
+    public func splitViewController(_ svc: UISplitViewController, topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column) -> UISplitViewController.Column {
         layoutProvider.apply(horizontalSizeClass: .compact)
         return .compact
     }
@@ -157,7 +157,7 @@ extension SceneRootSplitViewController: SceneRootSideBarControllerDelegate {
 extension SceneRootSplitViewController: CloudStackLoaderObserver {
     // MARK: - CloudStackLoaderObserver
 
-    func didAccountChanged(_ loader: CloudStackLoader) {
+    public func didAccountChanged(_ loader: CloudStackLoader) {
         DispatchQueue.main.async {
             let alertController = UIAlertController(title: L10n.errorIcloudAccountChangedTitle,
                                                     message: L10n.errorIcloudAccountChangedMessage,
@@ -170,7 +170,7 @@ extension SceneRootSplitViewController: CloudStackLoaderObserver {
         }
     }
 
-    func didDisabledICloudSyncByUnavailableAccount(_ loader: CloudStackLoader) {
+    public func didDisabledICloudSyncByUnavailableAccount(_ loader: CloudStackLoader) {
         DispatchQueue.main.async {
             let alertController = UIAlertController(title: L10n.errorIcloudUnavailableTitle,
                                                     message: L10n.errorIcloudUnavailableMessage,
@@ -201,9 +201,9 @@ extension SceneRootSplitViewController: LoadingViewPresentable {
 extension SceneRootSplitViewController: SceneRootViewController {
     // MARK: - SceneRootViewController
 
-    var currentViewController: UIViewController? { currentDetailViewController }
+    public var currentViewController: UIViewController? { currentDetailViewController }
 
-    func select(_ barItem: SceneRoot.BarItem) {
+    public func select(_ barItem: SceneRoot.BarItem) {
         layoutProvider.select(barItem)
     }
 }

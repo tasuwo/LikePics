@@ -9,8 +9,8 @@ import Domain
 import LikePicsUIKit
 import UIKit
 
-class SceneRootTabBarController: UITabBarController {
-    typealias Factory = ViewControllerFactory
+public class SceneRootTabBarController: UITabBarController {
+    public typealias Factory = ViewControllerFactory
     typealias Store = CompositeKit.Store<ClipsIntegrityValidatorState, ClipsIntegrityValidatorAction, ClipsIntegrityValidatorDependency>
 
     // MARK: - Properties
@@ -34,7 +34,7 @@ class SceneRootTabBarController: UITabBarController {
 
     // MARK: - Initializers
 
-    init(factory: Factory, intent: Intent?) {
+    public init(factory: Factory, intent: Intent?) {
         self.factory = factory
         self.intent = intent
         super.init(nibName: nil, bundle: nil)
@@ -47,7 +47,7 @@ class SceneRootTabBarController: UITabBarController {
 
     // MARK: - View Life-Cycle Methods
 
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
 
         configureTabBar()
@@ -72,7 +72,7 @@ extension SceneRootTabBarController {
 extension SceneRootTabBarController: CloudStackLoaderObserver {
     // MARK: - CloudStackLoaderObserver
 
-    func didAccountChanged(_ loader: CloudStackLoader) {
+    public func didAccountChanged(_ loader: CloudStackLoader) {
         DispatchQueue.main.async {
             let alertController = UIAlertController(title: L10n.errorIcloudAccountChangedTitle,
                                                     message: L10n.errorIcloudAccountChangedMessage,
@@ -85,7 +85,7 @@ extension SceneRootTabBarController: CloudStackLoaderObserver {
         }
     }
 
-    func didDisabledICloudSyncByUnavailableAccount(_ loader: CloudStackLoader) {
+    public func didDisabledICloudSyncByUnavailableAccount(_ loader: CloudStackLoader) {
         DispatchQueue.main.async {
             let alertController = UIAlertController(title: L10n.errorIcloudUnavailableTitle,
                                                     message: L10n.errorIcloudUnavailableMessage,
@@ -116,9 +116,9 @@ extension SceneRootTabBarController: LoadingViewPresentable {
 extension SceneRootTabBarController: SceneRootViewController {
     // MARK: - SceneRootViewController
 
-    var currentViewController: UIViewController? { selectedViewController }
+    public var currentViewController: UIViewController? { selectedViewController }
 
-    func select(_ barItem: SceneRoot.BarItem) {
+    public func select(_ barItem: SceneRoot.BarItem) {
         selectedIndex = barItem.tabBarItem.rawValue
     }
 }

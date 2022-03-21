@@ -5,5 +5,5 @@
 import UIKit
 
 extension SceneDelegate: SceneResolvable {
-    func resolveScene() -> UIWindowScene? { window?.windowScene }
+    public func resolveScene() -> UIWindowScene? { window?.windowScene }
 }

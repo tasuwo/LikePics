@@ -6,7 +6,7 @@ import Domain
 import LikePicsUIKit
 import UIKit
 
-struct ClipPreviewViewState: Equatable {
+public struct ClipPreviewViewState: Equatable {
     let itemId: ClipItem.Identity
     let imageId: ImageContainer.Identity
     let imageSize: CGSize

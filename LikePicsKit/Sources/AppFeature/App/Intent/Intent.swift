@@ -4,7 +4,7 @@
 
 import Domain
 
-enum Intent {
+public enum Intent {
     case clips(ClipCollectionViewRootState, preview: ClipCollection.IndexPath?)
     case search(SearchViewRootState)
     case setting(SettingsViewState)

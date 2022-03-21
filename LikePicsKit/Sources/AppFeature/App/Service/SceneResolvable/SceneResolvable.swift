@@ -4,6 +4,6 @@
 
 import UIKit
 
-protocol SceneResolvable: AnyObject {
+public protocol SceneResolvable: AnyObject {
     func resolveScene() -> UIWindowScene?
 }

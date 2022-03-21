@@ -9,7 +9,7 @@ import LikePicsUIKit
 import Smoothie
 import UIKit
 
-class ClipPreviewViewController: UIViewController {
+public class ClipPreviewViewController: UIViewController {
     // MARK: - Properties
 
     // MARK: View
@@ -30,11 +30,11 @@ class ClipPreviewViewController: UIViewController {
 
     // MARK: - Initializers
 
-    init(state: ClipPreviewViewState,
-         imageQueryService: ImageQueryServiceProtocol,
-         thumbnailMemoryCache: MemoryCaching,
-         thumbnailDiskCache: DiskCaching,
-         pipeline: Pipeline)
+    public init(state: ClipPreviewViewState,
+                imageQueryService: ImageQueryServiceProtocol,
+                thumbnailMemoryCache: MemoryCaching,
+                thumbnailDiskCache: DiskCaching,
+                pipeline: Pipeline)
     {
         self.imageQueryService = imageQueryService
         self.thumbnailMemoryCache = thumbnailMemoryCache
@@ -53,7 +53,7 @@ class ClipPreviewViewController: UIViewController {
 
     // MARK: - View Life-Cycle Methods
 
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
 
         configureViewHierarchy()

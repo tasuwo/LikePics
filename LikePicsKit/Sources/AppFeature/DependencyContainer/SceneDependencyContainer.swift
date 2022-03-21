@@ -12,14 +12,14 @@ import Persistence
 import Smoothie
 import UIKit
 
-class SceneDependencyContainer {
+public class SceneDependencyContainer {
     weak var sceneResolver: SceneResolvable!
-    let container: AppDependencyContaining
+    public let container: AppDependencyContaining
 
     // MARK: - Initializer
 
-    init(sceneResolver: SceneResolvable,
-         container: AppDependencyContaining)
+    public init(sceneResolver: SceneResolvable,
+                container: AppDependencyContaining)
     {
         self.sceneResolver = sceneResolver
         self.container = container
@@ -27,53 +27,53 @@ class SceneDependencyContainer {
 }
 
 extension SceneDependencyContainer: HasRouter {
-    var router: Router { self }
+    public var router: Router { self }
 }
 
 extension SceneDependencyContainer: HasPasteboard {
-    var pasteboard: Pasteboard { container.pasteboard }
+    public var pasteboard: Pasteboard { container.pasteboard }
 }
 
 extension SceneDependencyContainer: HasClipCommandService {
-    var clipCommandService: ClipCommandServiceProtocol { container.clipCommandService }
+    public var clipCommandService: ClipCommandServiceProtocol { container.clipCommandService }
 }
 
 extension SceneDependencyContainer: HasClipQueryService {
-    var clipQueryService: ClipQueryServiceProtocol { container.clipQueryService }
+    public var clipQueryService: ClipQueryServiceProtocol { container.clipQueryService }
 }
 
 extension SceneDependencyContainer: HasClipSearchSettingService {
-    var clipSearchSettingService: Domain.ClipSearchSettingService { container.clipSearchSettingService }
+    public var clipSearchSettingService: Domain.ClipSearchSettingService { container.clipSearchSettingService }
 }
 
 extension SceneDependencyContainer: HasClipSearchHistoryService {
-    var clipSearchHistoryService: Domain.ClipSearchHistoryService { container.clipSearchHistoryService }
+    public var clipSearchHistoryService: Domain.ClipSearchHistoryService { container.clipSearchHistoryService }
 }
 
 extension SceneDependencyContainer: HasUserSettingStorage {
-    var userSettingStorage: UserSettingsStorageProtocol { container.userSettingStorage }
+    public var userSettingStorage: UserSettingsStorageProtocol { container.userSettingStorage }
 }
 
 extension SceneDependencyContainer: HasImageQueryService {
-    var imageQueryService: ImageQueryServiceProtocol { container.imageQueryService }
+    public var imageQueryService: ImageQueryServiceProtocol { container.imageQueryService }
 }
 
 extension SceneDependencyContainer: HasTransitionLock {
-    var transitionLock: TransitionLock { container.transitionLock }
+    public var transitionLock: TransitionLock { container.transitionLock }
 }
 
 extension SceneDependencyContainer: HasCloudAvailabilityService {
-    var cloudAvailabilityService: CloudAvailabilityServiceProtocol { container.cloudAvailabilityService }
+    public var cloudAvailabilityService: CloudAvailabilityServiceProtocol { container.cloudAvailabilityService }
 }
 
 extension SceneDependencyContainer: HasModalNotificationCenter {
-    var modalNotificationCenter: ModalNotificationCenter { container.modalNotificationCenter }
+    public var modalNotificationCenter: ModalNotificationCenter { container.modalNotificationCenter }
 }
 
 extension SceneDependencyContainer: HasNop {}
 
 extension SceneDependencyContainer: HasDiskCaches {
-    var clipDiskCache: DiskCaching { container.clipDiskCache }
-    var albumDiskCache: DiskCaching { container.albumDiskCache }
-    var clipItemDiskCache: DiskCaching { container.clipDiskCache }
+    public var clipDiskCache: DiskCaching { container.clipDiskCache }
+    public var albumDiskCache: DiskCaching { container.albumDiskCache }
+    public var clipItemDiskCache: DiskCaching { container.clipDiskCache }
 }

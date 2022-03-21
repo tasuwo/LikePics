@@ -4,7 +4,7 @@
 
 import Domain
 
-struct SettingsViewState: Equatable, Codable {
+public struct SettingsViewState: Equatable, Codable {
     enum Alert: String, Equatable, Codable {
         case iCloudSettingForceTurnOnConfirmation = "icloud_setting_force_turn_on_confirmation"
         case iCloudSettingForceTurnOffConfirmation = "icloud_setting_force_turn_off_confirmation"

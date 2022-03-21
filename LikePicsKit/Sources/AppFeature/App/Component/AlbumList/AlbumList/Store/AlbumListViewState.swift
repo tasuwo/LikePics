@@ -5,7 +5,7 @@
 import CoreGraphics
 import Domain
 
-struct AlbumListViewState: Equatable, Codable {
+public struct AlbumListViewState: Equatable, Codable {
     enum Alert: Equatable {
         case error(String?)
         case addition

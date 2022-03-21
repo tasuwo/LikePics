@@ -15,7 +15,7 @@ import UIKit
 extension SceneDependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
-    func makeClipCollectionViewController(from source: ClipCollection.Source) -> RestorableViewController & ViewLazyPresentable {
+    public func makeClipCollectionViewController(from source: ClipCollection.Source) -> RestorableViewController & ViewLazyPresentable {
         let state = ClipCollectionViewRootState(source: source,
                                                 isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
         return ClipCollectionViewController(state: state,
@@ -24,14 +24,14 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                             menuBuilder: ClipCollectionMenuBuilder(storage: container.userSettingStorage))
     }
 
-    func makeClipCollectionViewController(_ state: ClipCollectionViewRootState) -> RestorableViewController & ViewLazyPresentable {
+    public func makeClipCollectionViewController(_ state: ClipCollectionViewRootState) -> RestorableViewController & ViewLazyPresentable {
         return ClipCollectionViewController(state: state,
                                             dependency: self,
                                             thumbnailPipeline: container.clipThumbnailPipeline,
                                             menuBuilder: ClipCollectionMenuBuilder(storage: container.userSettingStorage))
     }
 
-    func makeTagCollectionViewController(_ state: TagCollectionViewState?) -> RestorableViewController? {
+    public func makeTagCollectionViewController(_ state: TagCollectionViewState?) -> RestorableViewController? {
         let state: TagCollectionViewState = {
             if let state = state {
                 return state
@@ -55,7 +55,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeAlbumListViewController(_ state: AlbumListViewState?) -> RestorableViewController? {
+    public func makeAlbumListViewController(_ state: AlbumListViewState?) -> RestorableViewController? {
         let state: AlbumListViewState = {
             if let state = state {
                 return state
@@ -81,7 +81,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeSearchViewController(_ state: SearchViewRootState?) -> RestorableViewController? {
+    public func makeSearchViewController(_ state: SearchViewRootState?) -> RestorableViewController? {
         let state: SearchViewRootState = {
             if let state = state {
                 return state
@@ -97,7 +97,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeSettingsViewController(_ state: SettingsViewState?) -> RestorableViewController {
+    public func makeSettingsViewController(_ state: SettingsViewState?) -> RestorableViewController {
         let storyBoard = UIStoryboard(name: "SettingsViewController", bundle: Bundle.module)
 
         // swiftlint:disable:next force_cast
@@ -119,10 +119,10 @@ extension SceneDependencyContainer: ViewControllerFactory {
         return UINavigationController(rootViewController: viewController)
     }
 
-    func makeClipPreviewPageViewController(filteredClipIds: Set<Clip.Identity>,
-                                           clips: [Clip],
-                                           query: ClipPreviewPageQuery,
-                                           indexPath: ClipCollection.IndexPath) -> UIViewController
+    public func makeClipPreviewPageViewController(filteredClipIds: Set<Clip.Identity>,
+                                                  clips: [Clip],
+                                                  query: ClipPreviewPageQuery,
+                                                  indexPath: ClipCollection.IndexPath) -> UIViewController
     {
         struct Dependency: ClipPreviewPageViewDependency & HasImageQueryService {
             let router: Router
@@ -169,7 +169,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
         return navigationController
     }
 
-    func makeClipPreviewViewController(for item: ClipItem) -> ClipPreviewViewController? {
+    public func makeClipPreviewViewController(for item: ClipItem) -> ClipPreviewViewController? {
         let viewController = ClipPreviewViewController(state: .init(item: item),
                                                        imageQueryService: container.imageQueryService,
                                                        thumbnailMemoryCache: container.clipThumbnailPipeline.config.memoryCache,
@@ -180,7 +180,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
 }
 
 extension SceneDependencyContainer: LikePicsCore.ViewControllerFactory {
-    func makeTagSelectionViewController(selectedTags: Set<Tag.Identity>, delegate: TagSelectionViewControllerDelegate) -> UIViewController? {
+    public func makeTagSelectionViewController(selectedTags: Set<Tag.Identity>, delegate: TagSelectionViewControllerDelegate) -> UIViewController? {
         switch container.clipQueryService.queryAllTags() {
         case let .success(query):
             let viewModel = TagSelectionViewModel(query: query,

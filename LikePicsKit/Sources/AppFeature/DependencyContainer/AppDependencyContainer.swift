@@ -15,7 +15,7 @@ import UIKit
 
 // swiftlint:disable identifier_name
 
-typealias AppDependencyContaining = HasPasteboard
+public typealias AppDependencyContaining = HasPasteboard
     & HasClipCommandService
     & HasClipQueryService
     & HasClipSearchSettingService

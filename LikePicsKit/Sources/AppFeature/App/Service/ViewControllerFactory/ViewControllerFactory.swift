@@ -8,7 +8,7 @@ import LikePicsCore
 import LikePicsUIKit
 import UIKit
 
-protocol ViewControllerFactory {
+public protocol ViewControllerFactory {
     func makeClipCollectionViewController(from source: ClipCollection.Source) -> RestorableViewController & ViewLazyPresentable
     func makeClipCollectionViewController(_ state: ClipCollectionViewRootState) -> RestorableViewController & ViewLazyPresentable
     func makeTagCollectionViewController(_ state: TagCollectionViewState?) -> RestorableViewController?

@@ -5,7 +5,7 @@
 import CompositeKit
 import LikePicsCore
 
-class ClipsIntegrityValidator {
+public class ClipsIntegrityValidator {
     typealias Store = CompositeKit.Store<ClipsIntegrityValidatorState, ClipsIntegrityValidatorAction, ClipsIntegrityValidatorDependency>
 
     // MARK: - Properties
@@ -16,7 +16,7 @@ class ClipsIntegrityValidator {
 
     // MARK: - Initializers
 
-    init(dependency: ClipsIntegrityValidatorDependency) {
+    public init(dependency: ClipsIntegrityValidatorDependency) {
         self.store = .init(initialState: ClipsIntegrityValidatorState(),
                            dependency: dependency,
                            reducer: ClipsIntegrityValidatorReducer())

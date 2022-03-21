@@ -100,44 +100,44 @@ extension SceneDependencyContainer {
 extension SceneDependencyContainer: Router {
     // MARK: - Router
 
-    func open(_ url: URL) -> Bool {
+    public func open(_ url: URL) -> Bool {
         guard UIApplication.shared.canOpenURL(url) else { return false }
         sceneResolver.resolveScene()?.open(url, options: nil, completionHandler: nil)
         return true
     }
 
-    func showUncategorizedClipCollectionView() -> Bool {
+    public func showUncategorizedClipCollectionView() -> Bool {
         let viewController = makeClipCollectionViewController(from: .uncategorized)
         guard let detailViewController = rootViewController?.currentViewController else { return false }
         detailViewController.show(viewController, sender: nil)
         return true
     }
 
-    func showClipCollectionView(for query: ClipSearchQuery) -> Bool {
+    public func showClipCollectionView(for query: ClipSearchQuery) -> Bool {
         let viewController = makeClipCollectionViewController(from: .search(query))
         guard let detailViewController = rootViewController?.currentViewController else { return false }
         detailViewController.show(viewController, sender: nil)
         return true
     }
 
-    func showClipCollectionView(for tag: Tag) -> Bool {
+    public func showClipCollectionView(for tag: Tag) -> Bool {
         let viewController = makeClipCollectionViewController(from: .tag(tag))
         guard let detailViewController = rootViewController?.currentViewController else { return false }
         detailViewController.show(viewController, sender: nil)
         return true
     }
 
-    func showClipCollectionView(for albumId: Album.Identity) -> Bool {
+    public func showClipCollectionView(for albumId: Album.Identity) -> Bool {
         let viewController = makeClipCollectionViewController(from: .album(albumId))
         guard let detailViewController = rootViewController?.currentViewController as? UINavigationController else { return false }
         detailViewController.show(viewController, sender: nil)
         return true
     }
 
-    func showClipPreviewView(filteredClipIds: Set<Clip.Identity>,
-                             clips: [Clip],
-                             query: ClipPreviewPageQuery,
-                             indexPath: ClipCollection.IndexPath) -> Bool
+    public func showClipPreviewView(filteredClipIds: Set<Clip.Identity>,
+                                    clips: [Clip],
+                                    query: ClipPreviewPageQuery,
+                                    indexPath: ClipCollection.IndexPath) -> Bool
     {
         let viewController = makeClipPreviewPageViewController(filteredClipIds: filteredClipIds,
                                                                clips: clips,
@@ -148,9 +148,9 @@ extension SceneDependencyContainer: Router {
         return true
     }
 
-    func showClipInformationView(clipId: Clip.Identity,
-                                 itemId: ClipItem.Identity,
-                                 transitioningController: ClipItemInformationTransitioningControllable) -> Bool
+    public func showClipInformationView(clipId: Clip.Identity,
+                                        itemId: ClipItem.Identity,
+                                        transitioningController: ClipItemInformationTransitioningControllable) -> Bool
     {
         let state = ClipItemInformationViewState(clipId: clipId,
                                                  itemId: itemId,
@@ -171,10 +171,10 @@ extension SceneDependencyContainer: Router {
         return true
     }
 
-    func showClipItemListView(id: UUID,
-                              clipId: Clip.Identity,
-                              clipItems: [ClipItem],
-                              transitioningController: ClipItemListTransitioningControllable) -> Bool
+    public func showClipItemListView(id: UUID,
+                                     clipId: Clip.Identity,
+                                     clipItems: [ClipItem],
+                                     transitioningController: ClipItemListTransitioningControllable) -> Bool
     {
         let state = ClipItemListState(id: id,
                                       clipId: clipId,
@@ -197,7 +197,7 @@ extension SceneDependencyContainer: Router {
         return true
     }
 
-    func showTagSelectionModal(id: UUID, selections: Set<Tag.Identity>) -> Bool {
+    public func showTagSelectionModal(id: UUID, selections: Set<Tag.Identity>) -> Bool {
         guard isPresentingModal(having: id) == false else { return true }
 
         let state = TagSelectionModalState(id: id,
@@ -222,7 +222,7 @@ extension SceneDependencyContainer: Router {
         return true
     }
 
-    func showAlbumSelectionModal(id: UUID) -> Bool {
+    public func showAlbumSelectionModal(id: UUID) -> Bool {
         guard isPresentingModal(having: id) == false else { return true }
 
         let state = AlbumSelectionModalState(id: id, isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
@@ -247,7 +247,7 @@ extension SceneDependencyContainer: Router {
         return true
     }
 
-    func showClipMergeModal(id: UUID, clips: [Clip]) -> Bool {
+    public func showClipMergeModal(id: UUID, clips: [Clip]) -> Bool {
         guard isPresentingModal(having: id) == false else { return true }
 
         let state = ClipMergeViewState(id: id, clips: clips)
@@ -268,7 +268,7 @@ extension SceneDependencyContainer: Router {
         return true
     }
 
-    func showFindView() -> Bool {
+    public func showFindView() -> Bool {
         let state = FindViewState()
         let viewController = FindViewController(state: state, dependency: self, router: self)
         guard let detailViewController = rootViewController?.currentViewController else { return false }
@@ -276,7 +276,7 @@ extension SceneDependencyContainer: Router {
         return true
     }
 
-    func showClipCreationModal(id: UUID, webView: WKWebView) -> Bool {
+    public func showClipCreationModal(id: UUID, webView: WKWebView) -> Bool {
         guard isPresentingModal(having: id) == false else { return true }
         guard let currentUrl = webView.url else { return false }
 
@@ -317,7 +317,7 @@ extension SceneDependencyContainer: Router {
         return true
     }
 
-    func routeToClipCollectionView(for tag: Tag) {
+    public func routeToClipCollectionView(for tag: Tag) {
         guard let rootViewController = rootViewController else { return }
         dismissAllModals { isSucceeded in
             guard isSucceeded else { return }
@@ -333,7 +333,7 @@ extension SceneDependencyContainer: Router {
         }
     }
 
-    func routeToClipCollectionView(forAlbumId albumId: Album.Identity) {
+    public func routeToClipCollectionView(forAlbumId albumId: Album.Identity) {
         guard let rootViewController = rootViewController else { return }
         dismissAllModals { isSucceeded in
             guard isSucceeded else { return }

@@ -5,7 +5,7 @@
 import CoreGraphics
 import Domain
 
-struct TagCollectionViewState: Equatable {
+public struct TagCollectionViewState: Equatable {
     enum Alert: Equatable {
         case error(String?)
         case edit(tagId: Tag.Identity, name: String)

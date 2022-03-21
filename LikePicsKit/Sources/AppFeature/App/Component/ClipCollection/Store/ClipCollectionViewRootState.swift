@@ -5,7 +5,7 @@
 import CompositeKit
 import Domain
 
-struct ClipCollectionViewRootState: Equatable {
+public struct ClipCollectionViewRootState: Equatable {
     var clipCollectionState: ClipCollectionState
 
     // MARK: ClipCollectionNavigationBarState
