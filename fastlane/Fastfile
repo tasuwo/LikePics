@@ -15,7 +15,8 @@ platform :ios do
 
   lane :release do
     app_store_connect_api_key
-    build_for_appstore
+    match
+    gym
     github_release
     deliver
     clean_build_artifacts
@@ -23,14 +24,10 @@ platform :ios do
 
   lane :release_build_only do
     app_store_connect_api_key
-    build_for_appstore
-    pilot
-    clean_build_artifacts
-  end
-
-  private_lane :build_for_appstore do
     match
     gym
+    pilot
+    clean_build_artifacts
   end
 
   private_lane :github_release do
