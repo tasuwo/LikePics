@@ -248,7 +248,7 @@ public class AppDependencyContainer {
         }
 
         let targetUrl: URL = {
-            let directoryName: String = "thumbnails"
+            let directoryName = "thumbnails"
             if let directory = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) {
                 return directory
                     .appendingPathComponent(bundleIdentifier, isDirectory: true)

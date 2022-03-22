@@ -10,11 +10,13 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum L10n {
-    /// 保存する画像の取得元となるURLを設定できます\nURLは画像の保存後に参照することができます
+    /// 保存する画像の取得元となるURLを設定できます
+    /// URLは画像の保存後に参照することができます
     internal static let clipCreationViewAlertForAddUrlMessage = L10n.tr("Localizable", "clip_creation_view_alert_for_add_url_message")
     /// URLを追加
     internal static let clipCreationViewAlertForAddUrlTitle = L10n.tr("Localizable", "clip_creation_view_alert_for_add_url_title")
-    /// 保存する画像の取得元となるURLを編集します\nURLは画像の保存後に参照することができます
+    /// 保存する画像の取得元となるURLを編集します
+    /// URLは画像の保存後に参照することができます
     internal static let clipCreationViewAlertForEditUrlMessage = L10n.tr("Localizable", "clip_creation_view_alert_for_edit_url_message")
     /// URLを編集
     internal static let clipCreationViewAlertForEditUrlTitle = L10n.tr("Localizable", "clip_creation_view_alert_for_edit_url_title")
@@ -40,11 +42,23 @@ internal enum L10n {
     internal static let clipCreationViewLoadingErrorInternalMessage = L10n.tr("Localizable", "clip_creation_view_loading_error_internal_message")
     /// 画像の探索に失敗しました
     internal static let clipCreationViewLoadingErrorInternalTitle = L10n.tr("Localizable", "clip_creation_view_loading_error_internal_title")
-    /// 以下のいずれかの可能性があります\n\n・ダウンロード可能な画像が存在しない\n・ダウンロードが許可されていないコンテンツ\n・通信環境の問題で時間がかかっている\n\n何度がお試しいただくと成功する場合があります
+    /// 以下のいずれかの可能性があります
+    ///
+    /// ・ダウンロード可能な画像が存在しない
+    /// ・ダウンロードが許可されていないコンテンツ
+    /// ・通信環境の問題で時間がかかっている
+    ///
+    /// 何度がお試しいただくと成功する場合があります
     internal static let clipCreationViewLoadingErrorNotFoundMessage = L10n.tr("Localizable", "clip_creation_view_loading_error_not_found_message")
     /// 画像が見つかりませんでした
     internal static let clipCreationViewLoadingErrorNotFoundTitle = L10n.tr("Localizable", "clip_creation_view_loading_error_not_found_title")
-    /// 以下のいずれかの可能性があります\n\n・ダウンロード可能な画像が存在しない\n・ダウンロードが許可されていないコンテンツ\n・通信環境の問題で時間がかかっている\n\n何度がお試しいただくと成功する場合があります
+    /// 以下のいずれかの可能性があります
+    ///
+    /// ・ダウンロード可能な画像が存在しない
+    /// ・ダウンロードが許可されていないコンテンツ
+    /// ・通信環境の問題で時間がかかっている
+    ///
+    /// 何度がお試しいただくと成功する場合があります
     internal static let clipCreationViewLoadingErrorTimeoutMessage = L10n.tr("Localizable", "clip_creation_view_loading_error_timeout_message")
     /// 画像が見つかりませんでした
     internal static let clipCreationViewLoadingErrorTimeoutTitle = L10n.tr("Localizable", "clip_creation_view_loading_error_timeout_title")

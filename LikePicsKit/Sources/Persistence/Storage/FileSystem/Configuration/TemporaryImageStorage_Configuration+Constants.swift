@@ -15,7 +15,7 @@ public extension TemporaryImageStorage.Configuration {
     }
 
     private static func resolveUrl(for bundle: Bundle, kind: Kind) -> URL {
-        let directoryName: String = "images"
+        let directoryName = "images"
 
         guard let bundleIdentifier = bundle.bundleIdentifier else {
             fatalError("Failed to resolve bundle identifier")

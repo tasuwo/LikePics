@@ -16,7 +16,8 @@ internal enum L10n {
     internal static let albumListViewAlertForAddTitle = L10n.tr("Localizable", "album_list_view_alert_for_add_title")
     /// アルバムを削除
     internal static let albumListViewAlertForDeleteAction = L10n.tr("Localizable", "album_list_view_alert_for_delete_action")
-    /// アルバム"%@"を削除しますか？\n含まれるクリップは削除されません
+    /// アルバム"%@"を削除しますか？
+    /// 含まれるクリップは削除されません
     internal static func albumListViewAlertForDeleteMessage(_ p1: Any) -> String {
         return L10n.tr("Localizable", "album_list_view_alert_for_delete_message", String(describing: p1))
     }
@@ -79,13 +80,15 @@ internal enum L10n {
 
     /// 選択した画像を完全に削除します
     internal static let alertForDeleteClipItemsMessage = L10n.tr("Localizable", "alert_for_delete_clip_items_message")
-    /// 選択した画像の保存元のサイトのURLを更新します\n元の設定は上書きされます
+    /// 選択した画像の保存元のサイトのURLを更新します
+    /// 元の設定は上書きされます
     internal static let alertForEditClipItemsSiteUrlMessage = L10n.tr("Localizable", "alert_for_edit_clip_items_site_url_message")
     /// この画像の保存元のサイトのURLを入力してください
     internal static let alertForEditSiteUrlMessage = L10n.tr("Localizable", "alert_for_edit_site_url_message")
     /// サイトのURL
     internal static let alertForEditSiteUrlTitle = L10n.tr("Localizable", "alert_for_edit_site_url_title")
-    /// 新しい画像を読み込んでいます\nしばらくお待ちください
+    /// 新しい画像を読み込んでいます
+    /// しばらくお待ちください
     internal static let appRootLoadingMessage = L10n.tr("Localizable", "app_root_loading_message")
     /// (%d/%d)
     internal static func appRootLoadingProgress(_ p1: Int, _ p2: Int) -> String {
@@ -195,7 +198,8 @@ internal enum L10n {
     internal static let clipInformationErrorAtUpdateSiteUrl = L10n.tr("Localizable", "clip_information_error_at_update_site_url")
     /// 削除
     internal static let clipInformationViewAlertForDeleteTagAction = L10n.tr("Localizable", "clip_information_view_alert_for_delete_tag_action")
-    /// このタグを削除しますか？\nクリップ及び画像は削除されません
+    /// このタグを削除しますか？
+    /// クリップ及び画像は削除されません
     internal static let clipInformationViewAlertForDeleteTagMessage = L10n.tr("Localizable", "clip_information_view_alert_for_delete_tag_message")
     /// 無題
     internal static let clipItemCellNoTitle = L10n.tr("Localizable", "clip_item_cell_no_title")
@@ -258,7 +262,8 @@ internal enum L10n {
     internal static let clipsListAlertForDeleteMessage = L10n.tr("Localizable", "clips_list_alert_for_delete_message")
     /// 別々のクリップに分割する
     internal static let clipsListAlertForPurgeAction = L10n.tr("Localizable", "clips_list_alert_for_purge_action")
-    /// このクリップを削除し、含まれる画像1枚毎に新しいクリップを作成します\nタグやサイトURL、アルバムとの関連は維持されます
+    /// このクリップを削除し、含まれる画像1枚毎に新しいクリップを作成します
+    /// タグやサイトURL、アルバムとの関連は維持されます
     internal static let clipsListAlertForPurgeMessage = L10n.tr("Localizable", "clips_list_alert_for_purge_message")
     /// %d件のクリップを取り除く
     internal static func clipsListAlertForRemoveFromAlbumAction(_ p1: Int) -> String {
@@ -304,7 +309,8 @@ internal enum L10n {
     internal static let errorAtDeleteClipItem = L10n.tr("Localizable", "error_at_delete_clip_item")
     /// 更新に失敗しました
     internal static let errorAtUpdateSiteUrlClipItem = L10n.tr("Localizable", "error_at_update_site_url_clip_item")
-    /// 以前利用していたiCloudアカウントと異なるアカウントでログインされています。\nこの端末上に保存されているデータは、現在ログイン中のiCloudアカウントに保存されているデータと統合されます
+    /// 以前利用していたiCloudアカウントと異なるアカウントでログインされています。
+    /// この端末上に保存されているデータは、現在ログイン中のiCloudアカウントに保存されているデータと統合されます
     internal static let errorIcloudAccountChangedMessage = L10n.tr("Localizable", "error_icloud_account_changed_message")
     /// iCloudアカウントが異なります
     internal static let errorIcloudAccountChangedTitle = L10n.tr("Localizable", "error_icloud_account_changed_title")
@@ -318,7 +324,8 @@ internal enum L10n {
     internal static let errorIcloudFailureTitle = L10n.tr("Localizable", "error_icloud_failure_title")
     /// 二度と表示しない
     internal static let errorIcloudIgnoreAction = L10n.tr("Localizable", "error_icloud_ignore_action")
-    /// iCloudアカウントでログインしていないか、端末のiCloud同期設定がオフになっている可能性があります。\niCluoudが利用できない間に保存したデータは、後ほどiCloudが有効になった際に統合されます
+    /// iCloudアカウントでログインしていないか、端末のiCloud同期設定がオフになっている可能性があります。
+    /// iCluoudが利用できない間に保存したデータは、後ほどiCloudが有効になった際に統合されます
     internal static let errorIcloudUnavailableMessage = L10n.tr("Localizable", "error_icloud_unavailable_message")
     /// iCloudが利用できません
     internal static let errorIcloudUnavailableTitle = L10n.tr("Localizable", "error_icloud_unavailable_title")
@@ -429,7 +436,8 @@ internal enum L10n {
     internal static let tagListViewAlertForAddTitle = L10n.tr("Localizable", "tag_list_view_alert_for_add_title")
     /// タグを削除
     internal static let tagListViewAlertForDeleteAction = L10n.tr("Localizable", "tag_list_view_alert_for_delete_action")
-    /// タグ「%@」を削除しますか？\n含まれるクリップは削除されません
+    /// タグ「%@」を削除しますか？
+    /// 含まれるクリップは削除されません
     internal static func tagListViewAlertForDeleteMessage(_ p1: Any) -> String {
         return L10n.tr("Localizable", "tag_list_view_alert_for_delete_message", String(describing: p1))
     }

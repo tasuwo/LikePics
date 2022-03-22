@@ -10,28 +10,26 @@ import TestHelper
 import UIKit
 
 enum SampleDataSetProvider {
-    static var clips: [Clip] = {
-        (1 ..< 30).map {
-            let imageName = String(format: "%03d", $0)
-            let imageData = UIImage(named: imageName)!.jpegData(compressionQuality: 1)!
-            let size = SampleDataSetProvider.resolveSize(for: imageData)!
+    static var clips: [Clip] = (1 ..< 30).map {
+        let imageName = String(format: "%03d", $0)
+        let imageData = UIImage(named: imageName)!.jpegData(compressionQuality: 1)!
+        let size = SampleDataSetProvider.resolveSize(for: imageData)!
 
-            let clipId = UUID()
-            return Clip.makeDefault(
-                id: clipId,
-                items: [
-                    ClipItem.makeDefault(id: UUID(),
-                                         clipId: clipId,
-                                         imageId: UUID(),
-                                         imageFileName: imageName,
-                                         imageSize: ImageSize(height: size.height, width: size.width),
-                                         imageDataSize: 1024 * 15,
-                                         registeredDate: Date(),
-                                         updatedDate: Date())
-                ]
-            )
-        }
-    }()
+        let clipId = UUID()
+        return Clip.makeDefault(
+            id: clipId,
+            items: [
+                ClipItem.makeDefault(id: UUID(),
+                                     clipId: clipId,
+                                     imageId: UUID(),
+                                     imageFileName: imageName,
+                                     imageSize: ImageSize(height: size.height, width: size.width),
+                                     imageDataSize: 1024 * 15,
+                                     registeredDate: Date(),
+                                     updatedDate: Date())
+            ]
+        )
+    }
 
     static var tags: [Tag] = {
         return [

@@ -2,46 +2,46 @@ name: LicensePlist, nameSpecified:
 body: MIT License
 
 Copyrig…
-version: 3.13.0
+version: 3.19.1
 
 name: Sourcery, nameSpecified: 
 body: MIT License
 
 Copyrig…
-version: 1.5.0
+version: 1.7.0
 
 name: SwiftFormat, nameSpecified: 
 body: MIT License
 
 Copyrig…
-version: 0.48.11
+version: 0.49.6
 
 name: SwiftGen, nameSpecified: 
 body: MIT Licence
 
 Copyrig…
-version: 6.4.0
+version: 6.5.1
 
 name: SwiftLint, nameSpecified: 
 body: The MIT License (MIT…
-version: 0.44.0
+version: 0.46.5
 
-name: BrightFutures, nameSpecified: BrightFutures, owner: Thomvis, version: 8.1.0
+name: BrightFutures, nameSpecified: BrightFutures, owner: Thomvis, version: 8.1.0, source: https://github.com/Thomvis/BrightFutures
 
-name: CwlCatchException, nameSpecified: CwlCatchException, owner: mattgallagher, version: 2.1.1
+name: CwlCatchException, nameSpecified: CwlCatchException, owner: mattgallagher, version: 2.1.1, source: https://github.com/mattgallagher/CwlCatchException
 
-name: CwlPreconditionTesting, nameSpecified: CwlPreconditionTesting, owner: mattgallagher, version: 2.1.0
+name: CwlPreconditionTesting, nameSpecified: CwlPreconditionTesting, owner: mattgallagher, version: 2.1.0, source: https://github.com/mattgallagher/CwlPreconditionTesting
 
-name: Erik, nameSpecified: Erik, owner: phimage, version: 5.1.0
+name: Erik, nameSpecified: Erik, owner: phimage, version: 5.1.0, source: https://github.com/phimage/Erik
 
-name: FileKit, nameSpecified: FileKit, owner: nvzqz, version: 6.0.0
+name: FileKit, nameSpecified: FileKit, owner: nvzqz, version: 6.0.0, source: https://github.com/nvzqz/FileKit
 
-name: Kanna, nameSpecified: Kanna, owner: tid-kijyun, version: 5.2.7
+name: Kanna, nameSpecified: Kanna, owner: tid-kijyun, version: 5.2.7, source: https://github.com/tid-kijyun/Kanna
 
-name: realm-cocoa, nameSpecified: Realm, owner: realm, version: 10.15.1
+name: realm-cocoa, nameSpecified: Realm, owner: realm, version: 10.15.1, source: https://github.com/realm/realm-cocoa
 
-name: realm-core, nameSpecified: RealmDatabase, owner: realm, version: 11.4.1
+name: realm-core, nameSpecified: RealmDatabase, owner: realm, version: 11.4.1, source: https://github.com/realm/realm-core
 
 add-version-numbers: false
 
-LicensePlist Version: 3.13.0
+LicensePlist Version: 3.19.1

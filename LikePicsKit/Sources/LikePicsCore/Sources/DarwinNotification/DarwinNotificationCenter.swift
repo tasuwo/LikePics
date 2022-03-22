@@ -4,7 +4,7 @@
 
 import Foundation
 
-public typealias DarwinNotificationHandler = ((DarwinNotification) -> Void)
+public typealias DarwinNotificationHandler = (DarwinNotification) -> Void
 
 public protocol DarwinNotificationCenterProtocol {
     func addObserver(_ observer: AnyObject, for name: DarwinNotification.Name, using handler: @escaping DarwinNotificationHandler)

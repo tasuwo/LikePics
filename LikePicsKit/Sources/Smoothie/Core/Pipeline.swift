@@ -334,9 +334,7 @@ private extension Data {
 
 private extension CGImage {
     func encode(compressionRatio: Float) -> Data? {
-        let type: ImageType = {
-            return self.alphaInfo.hasAlphaChannel ? .png : .jpeg
-        }()
+        let type: ImageType = self.alphaInfo.hasAlphaChannel ? .png : .jpeg
 
         let mutableData = NSMutableData()
         let options: NSDictionary = [
