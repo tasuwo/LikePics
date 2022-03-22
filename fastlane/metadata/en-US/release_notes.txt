@@ -1,3 +1,2 @@
-- Fixed invalid appearance of items at editing.
-- Fixed a bug sometimes open modal unexpectedly.
+- You can clear thumbnail cache data in Settings.
 - Fixed minor bugs.
