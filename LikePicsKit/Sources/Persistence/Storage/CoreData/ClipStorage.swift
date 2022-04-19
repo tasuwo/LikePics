@@ -865,11 +865,13 @@ extension ClipStorage: ClipStorageProtocol {
             for case let clip as Clip in clips {
                 let mutableTags = clip.mutableSetValue(forKey: "tags")
 
-                guard mutableTags.contains(tag) else { continue }
-                mutableTags.remove(tag)
+                if mutableTags.contains(tag) {
+                    mutableTags.remove(tag)
+                }
 
-                guard !mutableTags.contains(winner) else { continue }
-                mutableTags.add(winner)
+                if !mutableTags.contains(winner) {
+                    mutableTags.add(winner)
+                }
             }
         }
     }
