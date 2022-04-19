@@ -168,4 +168,28 @@ extension ClipReferencesIntegrityValidationService: CloudStackObserver {
             """))
         }
     }
+
+    public func didRemoteChangedAlbumItems(inserted: [ObjectID], updated: [ObjectID], deleted: [ObjectID]) {
+        lock.lock()
+        defer { lock.unlock() }
+
+        commandQueue.sync { [weak self] in
+            guard let self = self else { return }
+            do {
+                let insertOrUpdatedIDs = inserted + updated
+                if !insertOrUpdatedIDs.isEmpty {
+                    try self.clipStorage.beginTransaction()
+                    insertOrUpdatedIDs.forEach { objectId in
+                        self.clipStorage.deduplicateAlbumItem(for: objectId)
+                    }
+                    try self.clipStorage.commitTransaction()
+                }
+            } catch {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                self.logger.write(ConsoleLog(level: .error, message: """
+                Failed to deduplicate: \(error.localizedDescription)
+                """))
+            }
+        }
+    }
 }

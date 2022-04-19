@@ -875,6 +875,54 @@ extension ClipStorage: ClipStorageProtocol {
             }
         }
     }
+
+    public func deduplicateAlbumItem(for id: ObjectID) {
+        guard let id = id as? NSManagedObjectID else {
+            self.logger.write(ConsoleLog(level: .info, message: """
+            Invalid ID for deduplicate.
+            """))
+            return
+        }
+
+        guard let item = context.object(with: id) as? AlbumItem, let albumId = item.album?.id, let clipId = item.clip?.id else {
+            self.logger.write(ConsoleLog(level: .info, message: """
+            Failed to retrieve a valid album item with ID: \(id).
+            """))
+            return
+        }
+
+        let request: NSFetchRequest<AlbumItem> = AlbumItem.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \AlbumItem.id, ascending: true)]
+        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+            NSPredicate(format: "album.id == %@", albumId as CVarArg),
+            NSPredicate(format: "clip.id == %@", clipId as CVarArg)
+        ])
+
+        guard var duplicates = try? context.fetch(request),
+              duplicates.count > 1,
+              let winner = duplicates.first
+        else {
+            return
+        }
+
+        duplicates.removeFirst()
+        remove(duplicates: duplicates, winner: winner)
+    }
+
+    private func remove(duplicates: [AlbumItem], winner: AlbumItem) {
+        duplicates.forEach { item in
+            defer { context.delete(item) }
+            guard let album = item.album else { return }
+
+            let mutableItems = album.mutableSetValue(forKey: "items")
+            if mutableItems.contains(item) {
+                mutableItems.remove(item)
+            }
+            if !mutableItems.contains(winner) {
+                mutableItems.add(winner)
+            }
+        }
+    }
 }
 
 extension ClipStorage: StorageCommandQueue {

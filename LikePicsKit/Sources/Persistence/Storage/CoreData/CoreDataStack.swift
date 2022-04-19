@@ -193,21 +193,40 @@ extension CoreDataStack {
             var insertedTagObjectIDs = [NSManagedObjectID]()
             var updatedTagObjectIDs = [NSManagedObjectID]()
             var deletedTagObjectIDs = [NSManagedObjectID]()
+            var insertedAlbumItemObjectIDs = [NSManagedObjectID]()
+            var updatedAlbumItemObjectIDs = [NSManagedObjectID]()
+            var deletedAlbumItemObjectIDs = [NSManagedObjectID]()
             for transaction in transactions where transaction.changes != nil {
                 // swiftlint:disable:next force_unwrapping
-                for change in transaction.changes! where change.isTagChange {
-                    switch change.changeType {
-                    case .insert:
-                        insertedTagObjectIDs.append(change.changedObjectID)
+                for change in transaction.changes! {
+                    if change.isTagChange {
+                        switch change.changeType {
+                        case .insert:
+                            insertedTagObjectIDs.append(change.changedObjectID)
 
-                    case .update:
-                        updatedTagObjectIDs.append(change.changedObjectID)
+                        case .update:
+                            updatedTagObjectIDs.append(change.changedObjectID)
 
-                    case .delete:
-                        deletedTagObjectIDs.append(change.changedObjectID)
+                        case .delete:
+                            deletedTagObjectIDs.append(change.changedObjectID)
 
-                    @unknown default:
-                        break
+                        @unknown default:
+                            break
+                        }
+                    } else if change.isAlbumItemChange {
+                        switch change.changeType {
+                        case .insert:
+                            insertedAlbumItemObjectIDs.append(change.changedObjectID)
+
+                        case .update:
+                            updatedAlbumItemObjectIDs.append(change.changedObjectID)
+
+                        case .delete:
+                            deletedAlbumItemObjectIDs.append(change.changedObjectID)
+
+                        @unknown default:
+                            break
+                        }
                     }
                 }
             }
@@ -215,6 +234,9 @@ extension CoreDataStack {
             self.cloudStackObserver?.didRemoteChangedTags(inserted: insertedTagObjectIDs,
                                                           updated: updatedTagObjectIDs,
                                                           deleted: deletedTagObjectIDs)
+            self.cloudStackObserver?.didRemoteChangedAlbumItems(inserted: insertedAlbumItemObjectIDs,
+                                                                updated: updatedAlbumItemObjectIDs,
+                                                                deleted: deletedAlbumItemObjectIDs)
 
             self.lastHistoryToken = transactions.last?.token
         }
@@ -224,6 +246,10 @@ extension CoreDataStack {
 private extension NSPersistentHistoryChange {
     var isTagChange: Bool {
         return self.changedObjectID.entity.name == Tag.entity().name
+    }
+
+    var isAlbumItemChange: Bool {
+        return self.changedObjectID.entity.name == AlbumItem.entity().name
     }
 
     var isInsertOrUpdate: Bool {

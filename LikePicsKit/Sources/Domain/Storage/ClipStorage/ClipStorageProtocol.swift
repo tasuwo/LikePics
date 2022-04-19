@@ -56,4 +56,5 @@ public protocol ClipStorageProtocol {
     // MARK: Deduplicate
 
     func deduplicateTag(for id: ObjectID) -> [Domain.Tag.Identity]
+    func deduplicateAlbumItem(for id: ObjectID)
 }
