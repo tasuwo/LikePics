@@ -1,2 +1,1 @@
-- You can clear thumbnail cache data in Settings.
-- Fixed minor bugs.
+- Fixed a crash that occurred when adding clips to an album from multiple iOS/iPadOS devices simultaniously under iCloud sync.
