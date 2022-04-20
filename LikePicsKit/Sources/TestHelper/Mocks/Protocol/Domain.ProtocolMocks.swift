@@ -1032,6 +1032,15 @@ public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
         }
         fatalError("deleteTagsHandler returns can't have a default value thus its handler must be set")
     }
+
+    public private(set) var deduplicateAlbumItemCallCount = 0
+    public var deduplicateAlbumItemHandler: ((Domain.Album.Identity, Domain.Clip.Identity) -> Void)?
+    public func deduplicateAlbumItem(albumId: Domain.Album.Identity, clipId: Domain.Clip.Identity) {
+        deduplicateAlbumItemCallCount += 1
+        if let deduplicateAlbumItemHandler = deduplicateAlbumItemHandler {
+            deduplicateAlbumItemHandler(albumId, clipId)
+        }
+    }
 }
 
 public class ClipStorageProtocolMock: ClipStorageProtocol {
@@ -1358,6 +1367,24 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
             return deduplicateTagHandler(id)
         }
         return [Domain.Tag.Identity]()
+    }
+
+    public private(set) var deduplicateAlbumItemCallCount = 0
+    public var deduplicateAlbumItemHandler: ((ObjectID) -> Void)?
+    public func deduplicateAlbumItem(for id: ObjectID) {
+        deduplicateAlbumItemCallCount += 1
+        if let deduplicateAlbumItemHandler = deduplicateAlbumItemHandler {
+            deduplicateAlbumItemHandler(id)
+        }
+    }
+
+    public private(set) var deduplicateAlbumItemAlbumIdCallCount = 0
+    public var deduplicateAlbumItemAlbumIdHandler: ((Domain.Album.Identity, Domain.Clip.Identity) -> Void)?
+    public func deduplicateAlbumItem(albumId: Domain.Album.Identity, clipId: Domain.Clip.Identity) {
+        deduplicateAlbumItemAlbumIdCallCount += 1
+        if let deduplicateAlbumItemAlbumIdHandler = deduplicateAlbumItemAlbumIdHandler {
+            deduplicateAlbumItemAlbumIdHandler(albumId, clipId)
+        }
     }
 }
 

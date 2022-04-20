@@ -21,5 +21,15 @@ public extension ClipCollection {
                 return false
             }
         }
+
+        public var albumId: Album.Identity? {
+            switch self {
+            case let .album(albumId):
+                return albumId
+
+            default:
+                return nil
+            }
+        }
     }
 }

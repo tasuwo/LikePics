@@ -125,6 +125,8 @@ internal enum L10n {
     internal static let clipCollectionErrorAtDeleteClip = L10n.tr("Localizable", "clip_collection_error_at_delete_clip")
     /// クリップの削除に失敗しました
     internal static let clipCollectionErrorAtDeleteClips = L10n.tr("Localizable", "clip_collection_error_at_delete_clips")
+    /// 読み込みに失敗しました
+    internal static let clipCollectionErrorAtDuplicates = L10n.tr("Localizable", "clip_collection_error_at_duplicates")
     /// クリップの更新に失敗しました
     internal static let clipCollectionErrorAtHideClip = L10n.tr("Localizable", "clip_collection_error_at_hide_clip")
     /// クリップの更新に失敗しました

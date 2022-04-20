@@ -241,6 +241,7 @@
 "clip_collection_error_at_share" = "共有に失敗しました";
 "clip_collection_error_at_purge" = "クリップの分割に失敗しました";
 "clip_collection_error_at_reorder" = "並び替えに失敗しました";
+"clip_collection_error_at_duplicates" = "読み込みに失敗しました";
 
 // MARK: Clip Item
 

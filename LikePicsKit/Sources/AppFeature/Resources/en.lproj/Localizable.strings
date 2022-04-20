@@ -241,6 +241,7 @@
 "clip_collection_error_at_share" = "Failed to share.";
 "clip_collection_error_at_purge" = "Failed to split images in the clip.";
 "clip_collection_error_at_reorder" = "Failed to reorder.";
+"clip_collection_error_at_duplicates" = "Something went wrong...";
 
 // MAKR: Clip Item
 

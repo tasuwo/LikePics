@@ -318,12 +318,39 @@ extension ClipCollectionReducer {
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
+        // Album Item は CoreData の制約上重複してしまう可能性があるので、このタイミングで重複チェックを行う
+        if let albumId = state.source.albumId {
+            let duplicateIds = stream.clips.duplicateIds
+            if !duplicateIds.isEmpty {
+                for clipId in duplicateIds {
+                    dependency.clipCommandService.deduplicateAlbumItem(albumId: albumId, clipId: clipId)
+                }
+                var nextState = state
+                nextState.alert = .error(L10n.clipCollectionErrorAtDuplicates)
+                return (nextState, [])
+            }
+        }
+
         var nextState = performFilter(clips: stream.clips,
                                       isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
                                       previousState: state)
         nextState.sourceDescription = stream.description
 
         return (nextState, [queryEffect, settingsEffect])
+    }
+}
+
+extension Array where Element == Clip {
+    var duplicateIds: [Clip.Identity] {
+        var results: [Clip.Identity] = []
+        var clipIds: Set<Clip.Identity> = .init()
+        for clip in self {
+            if clipIds.contains(clip.id) {
+                results.append(clip.id)
+            }
+            clipIds = clipIds.union(Set([clip.id]))
+        }
+        return results
     }
 }
 
