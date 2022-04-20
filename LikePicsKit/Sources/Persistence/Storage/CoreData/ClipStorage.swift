@@ -923,6 +923,25 @@ extension ClipStorage: ClipStorageProtocol {
             }
         }
     }
+
+    public func deduplicateAlbumItem(albumId: Domain.Album.Identity, clipId: Domain.Clip.Identity) {
+        let request: NSFetchRequest<AlbumItem> = AlbumItem.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \AlbumItem.id, ascending: true)]
+        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+            NSPredicate(format: "album.id == %@", albumId as CVarArg),
+            NSPredicate(format: "clip.id == %@", clipId as CVarArg)
+        ])
+
+        guard var duplicates = try? context.fetch(request),
+              duplicates.count > 1,
+              let winner = duplicates.first
+        else {
+            return
+        }
+
+        duplicates.removeFirst()
+        remove(duplicates: duplicates, winner: winner)
+    }
 }
 
 extension ClipStorage: StorageCommandQueue {

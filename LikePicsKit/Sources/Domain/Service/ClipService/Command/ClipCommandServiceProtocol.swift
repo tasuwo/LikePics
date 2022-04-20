@@ -38,4 +38,8 @@ public protocol ClipCommandServiceProtocol {
     func deleteClipItem(_ item: ClipItem) -> Result<Void, ClipStorageError>
     func deleteAlbum(having id: Album.Identity) -> Result<Void, ClipStorageError>
     func deleteTags(having ids: [Tag.Identity]) -> Result<Void, ClipStorageError>
+
+    // MARK: Decuplicate
+
+    func deduplicateAlbumItem(albumId: Domain.Album.Identity, clipId: Domain.Clip.Identity)
 }

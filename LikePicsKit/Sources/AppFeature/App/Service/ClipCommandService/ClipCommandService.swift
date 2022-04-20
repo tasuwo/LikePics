@@ -946,6 +946,20 @@ extension ClipCommandService: ClipCommandServiceProtocol {
             }
         }
     }
+
+    public func deduplicateAlbumItem(albumId: Album.Identity, clipId: Clip.Identity) {
+        lock.lock(); defer { lock.unlock() }
+        return commandQueue.sync { [weak self] in
+            guard let self = self else { return }
+            do {
+                try self.clipStorage.beginTransaction()
+                self.clipStorage.deduplicateAlbumItem(albumId: albumId, clipId: clipId)
+                try self.clipStorage.commitTransaction()
+            } catch {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+            }
+        }
+    }
 }
 
 extension ClipCommandService: TagCommandServiceProtocol {
