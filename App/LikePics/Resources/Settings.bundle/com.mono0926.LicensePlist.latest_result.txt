@@ -2,19 +2,19 @@ name: LicensePlist, nameSpecified:
 body: MIT License
 
 Copyrig…
-version: 3.19.1
+version: 3.22.0
 
 name: Sourcery, nameSpecified: 
 body: MIT License
 
 Copyrig…
-version: 1.7.0
+version: 1.8.1
 
 name: SwiftFormat, nameSpecified: 
 body: MIT License
 
 Copyrig…
-version: 0.49.6
+version: 0.49.11
 
 name: SwiftGen, nameSpecified: 
 body: MIT Licence
@@ -24,7 +24,7 @@ version: 6.5.1
 
 name: SwiftLint, nameSpecified: 
 body: The MIT License (MIT…
-version: 0.46.5
+version: 0.47.1
 
 name: BrightFutures, nameSpecified: BrightFutures, owner: Thomvis, version: 8.1.0, source: https://github.com/Thomvis/BrightFutures
 
@@ -44,4 +44,4 @@ name: realm-core, nameSpecified: RealmDatabase, owner: realm, version: 11.4.1, s
 
 add-version-numbers: false
 
-LicensePlist Version: 3.19.1
+LicensePlist Version: 3.22.0
