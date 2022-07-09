@@ -154,9 +154,7 @@ let package = Package(
             name: "DomainTests",
             dependencies: [
                 "Domain",
-                "TestHelper",
-                .product(name: "Quick", package: "Quick"),
-                .product(name: "Nimble", package: "Nimble")
+                "TestHelper"
             ]
         ),
         .testTarget(
