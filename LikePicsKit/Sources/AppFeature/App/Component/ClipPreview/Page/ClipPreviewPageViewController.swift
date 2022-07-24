@@ -214,21 +214,17 @@ extension ClipPreviewPageViewController {
     // MARK: Page
 
     private func changePageIfNeeded(for state: ClipPreviewPageViewState) {
-        guard let currentItem = state.currentItem,
-              currentIndexPath != state.currentIndexPath,
-              let viewController = factory.makeClipPreviewViewController(for: currentItem)
+        guard let nextItem = state.currentItem,
+              currentViewController?.itemId != nextItem.id,
+              let viewController = factory.makeClipPreviewViewController(for: nextItem)
         else {
             return
         }
         let direction = state.pageChange?.navigationDirection ?? .forward
 
-        // HACK: `children` に溜まったキャッシュを一度クリアするために、一時的に dataSource を外す
-        //       ページの並び更新後、`children` に古い VC が残っていると、不正な繊維の原因となるため
-        dataSource = nil
         setViewControllers([viewController], direction: direction, animated: state.isPageAnimated, completion: { _ in
             self.didChangePage(to: viewController)
         })
-        dataSource = self
     }
 
     private func didChangePage(to viewController: ClipPreviewViewController) {

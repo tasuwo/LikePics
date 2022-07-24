@@ -211,79 +211,62 @@ extension ClipPreviewPageViewReducer {
             return (previousState, [Effect(calcStream)])
         }
 
-        var filteredClipIds: [Clip.Identity] = []
-        var newClipIndex: Int?
-
-        for (index, clip) in zip(clips.indices, clips) {
-            if isSomeItemsHidden {
-                if clip.isHidden == false {
-                    filteredClipIds.append(clip.id)
-                }
-            } else {
-                filteredClipIds.append(clip.id)
-            }
-
-            if previousState.currentClip?.id == clip.id {
-                newClipIndex = index
-            }
-        }
+        let nextFilteredClipIds = clips
+            .filter { isSomeItemsHidden ? !$0.isHidden : true }
+            .map { $0.id }
+        nextState = coordinateCurrentIndexPath(previousState: nextState, nextClips: clips, nextFilteredClipIds: Set(nextFilteredClipIds))
 
         nextState.clips = clips
-        nextState.filteredClipIds = Set(filteredClipIds)
+        nextState.filteredClipIds = Set(nextFilteredClipIds)
         nextState.isSomeItemsHidden = isSomeItemsHidden
+
+        return (nextState, [Effect(calcStream)])
+    }
+}
+
+// MARK: - Coordinate current index path
+
+extension ClipPreviewPageViewReducer {
+    static func coordinateCurrentIndexPath(previousState: State, nextClips: [Clip], nextFilteredClipIds: Set<Clip.Identity>) -> State {
+        var nextState = previousState
 
         // 元々フォーカスしていた Clip や Item が存在した場合は、IndexPath の調整を行う
         guard let previousClip = previousState.currentClip,
               let previousItem = previousState.currentItem
         else {
-            return (nextState, [Effect(calcStream)])
+            return nextState
         }
 
-        if let clipIndex = newClipIndex {
-            if filteredClipIds.contains(previousClip.id) {
-                // 元々フォーカスしていた Clip が存在し、表示可能だった場合
-                if let itemIndex = previousClip.items.firstIndex(of: previousItem) {
-                    // 元々フォーカスしていた Item が存在した場合
+        if let clipIndex = nextClips.ids.firstIndex(of: previousClip.id) {
+            // 直前にフォーカスしていたClipが存在した場合
+            if nextFilteredClipIds.contains(nextClips.ids[clipIndex]) {
+                // 直前にフォーカスしていたClipが表示可能だった場合
+                if let itemIndex = nextClips[clipIndex].items.firstIndex(of: previousItem) {
+                    // 直前にフォーカスしていた Item が存在した場合、その場に止まる
                     nextState.isPageAnimated = false
                     nextState.currentIndexPath = .init(clipIndex: clipIndex, itemIndex: itemIndex)
                 } else {
-                    // 元々フォーカスしていた Item が存在しなかった場合
+                    // 直前にフォーカスしていた Item が存在しなかった場合、Clipの一番最初に移動する
                     nextState.isPageAnimated = true
                     nextState.pageChange = .reverse
                     nextState.currentIndexPath = .init(clipIndex: clipIndex, itemIndex: 0)
                 }
             } else {
-                // 元々フォーカスしていた Clip が存在し、表示不可だった場合
-                if let indexPath = indexPath(after: clipIndex, clips: clips, filteredClipIds: Set(filteredClipIds)) {
-                    // 前方向に探索
-                    nextState.isPageAnimated = true
-                    nextState.pageChange = .forward
-                    nextState.currentIndexPath = indexPath
-                } else if let indexPath = indexPath(before: clipIndex, clips: clips, filteredClipIds: Set(filteredClipIds)) {
-                    // 後方向に探索
-                    nextState.isPageAnimated = true
-                    nextState.pageChange = .reverse
-                    nextState.currentIndexPath = indexPath
-                } else {
-                    // 表示できるクリップが存在しないため、閉じる
-                    nextState.isDismissed = true
-                }
+                // 直前にフォーカスしていたClipが表示不可だった場合、周囲のClipに移動する
+                nextState = transitToClip(around: previousState.currentIndexPath.clipIndex,
+                                          nextClips: nextClips,
+                                          nextFilteredClipIds: nextFilteredClipIds,
+                                          previousState: nextState)
             }
         } else {
-            let previousClipIndex = previousState.currentIndexPath.clipIndex
-            if nextState.clips.indices.contains(previousClipIndex),
-               nextState.filteredClipIds.contains(nextState.clips[previousClipIndex].id)
-            {
-                // 前回の位置に該当するクリップが表示可能だった
-                nextState.currentIndexPath = .init(clipIndex: previousClipIndex, itemIndex: 0)
-                nextState.pageChange = .forward
-            } else {
-                // 前回の位置に該当するクリップが表示不可だった
-                nextState = transitToClip(around: previousClipIndex, state: nextState)
-            }
+            // 直前にフォーカスしていたClipが存在しなかった場合、周囲のClipに移動する
+            nextState = transitToClip(around: previousState.currentIndexPath.clipIndex,
+                                      nextClips: nextClips,
+                                      nextFilteredClipIds: nextFilteredClipIds,
+                                      previousState: nextState)
         }
 
-        return (nextState, [Effect(calcStream)])
+        return nextState
     }
 
     static func indexPath(after clipIndex: Int, clips: [Clip], filteredClipIds: Set<Clip.Identity>) -> ClipCollection.IndexPath? {
@@ -304,6 +287,31 @@ extension ClipPreviewPageViewReducer {
             }
         }
         return nil
+    }
+
+    private static func transitToClip(around clipIndex: Int, nextClips: [Clip], nextFilteredClipIds: Set<Clip.Identity>, previousState: State) -> State {
+        var nextState = previousState
+        if clipIndex < nextClips.count, nextFilteredClipIds.contains(nextClips[clipIndex].id) {
+            // 直前にフォーカスしていたindexと同じ位置にClipが存在し、表示可能な場合
+            nextState.isPageAnimated = true
+            // 本来は移動方向を調整するのが望ましいが、計算コストが高いためforward固定にする
+            nextState.pageChange = .forward
+            nextState.currentIndexPath = ClipCollection.IndexPath(clipIndex: clipIndex, itemIndex: 0)
+        } else if let indexPath = indexPath(after: clipIndex, clips: nextClips, filteredClipIds: nextFilteredClipIds) {
+            // 直前にフォーカスしていたindexから前方向に表示可能なClipが存在すれば、移動する
+            nextState.isPageAnimated = true
+            nextState.pageChange = .forward
+            nextState.currentIndexPath = indexPath
+        } else if let indexPath = indexPath(before: clipIndex, clips: nextClips, filteredClipIds: nextFilteredClipIds) {
+            // 直前にフォーカスしていたindexから後方向に表示可能なClipが存在すれば、移動する
+            nextState.isPageAnimated = true
+            nextState.pageChange = .reverse
+            nextState.currentIndexPath = indexPath
+        } else {
+            // 直前にフォーカスしていたindexの前後に表示可能なClipが存在しなければ、表示できるクリップが存在しないため、閉じる
+            nextState.isDismissed = true
+        }
+        return nextState
     }
 }
 
@@ -384,18 +392,13 @@ extension ClipPreviewPageViewReducer {
 
             switch dependency.clipCommandService.deleteClips(having: [currentClipId]) {
             case .success:
-                nextState.clips.remove(at: clipIndex)
+                var nextClips = nextState.clips
+                nextClips.remove(at: clipIndex)
 
-                if nextState.clips.indices.contains(clipIndex),
-                   nextState.filteredClipIds.contains(nextState.clips[clipIndex].id)
-                {
-                    // 現在位置に該当するクリップが表示可能だった
-                    nextState.currentIndexPath = .init(clipIndex: clipIndex, itemIndex: 0)
-                    nextState.pageChange = .forward
-                } else {
-                    // 現在位置に該当するクリップが表示不可だった
-                    nextState = transitToClip(around: clipIndex, state: nextState)
-                }
+                nextState = coordinateCurrentIndexPath(previousState: nextState,
+                                                       nextClips: nextClips,
+                                                       nextFilteredClipIds: nextState.filteredClipIds)
+                nextState.clips = nextClips
 
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtDeleteClip)
@@ -417,49 +420,19 @@ extension ClipPreviewPageViewReducer {
             }
 
             switch dependency.clipCommandService.deleteClipItem(item) {
-            case .success: ()
-                nextState.clips[clipIndex] = state.clips[clipIndex].removedItem(at: itemIndex)
+            case .success:
+                var nextClips = state.clips
+                nextClips[clipIndex] = state.clips[clipIndex].removedItem(at: itemIndex)
 
-                guard !nextState.clips[clipIndex].items.isEmpty else {
-                    nextState.isDismissed = true
-                    return (nextState, .none)
-                }
-
-                if itemIndex < nextState.clips[clipIndex].items.count {
-                    // 現在位置に該当するアイテムが存在する
-                    nextState.currentIndexPath = .init(clipIndex: clipIndex, itemIndex: itemIndex)
-                    nextState.pageChange = .forward
-                } else if itemIndex - 1 >= 0 {
-                    // 1つ前のアイテムが存在する
-                    nextState.currentIndexPath = .init(clipIndex: clipIndex, itemIndex: itemIndex - 1)
-                    nextState.pageChange = .reverse
-                } else {
-                    nextState = transitToClip(around: clipIndex, state: nextState)
-                }
+                nextState = coordinateCurrentIndexPath(previousState: nextState,
+                                                       nextClips: nextClips,
+                                                       nextFilteredClipIds: nextState.filteredClipIds)
+                nextState.clips = nextClips
 
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtRemoveItemFromClip)
             }
             return (nextState, .none)
         }
-    }
-
-    private static func transitToClip(around clipIndex: Int, state: State) -> State {
-        var nextState = state
-        if let indexPath = indexPath(after: clipIndex, clips: nextState.clips, filteredClipIds: nextState.filteredClipIds) {
-            // 前方向に探索
-            nextState.isPageAnimated = true
-            nextState.pageChange = .forward
-            nextState.currentIndexPath = indexPath
-        } else if let indexPath = indexPath(before: clipIndex, clips: nextState.clips, filteredClipIds: nextState.filteredClipIds) {
-            // 後方向に探索
-            nextState.isPageAnimated = true
-            nextState.pageChange = .reverse
-            nextState.currentIndexPath = indexPath
-        } else {
-            // 表示できるクリップが存在しないため、閉じる
-            nextState.isDismissed = true
-        }
-        return nextState
     }
 }
