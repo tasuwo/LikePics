@@ -2,7 +2,6 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-import Common
 import Domain
 import RealmSwift
 
@@ -12,14 +11,12 @@ public class ReferenceTagQueryService {
     }
 
     let configuration: Realm.Configuration
-    private let logger: Loggable
     private var realm: Realm?
 
     // MARK: - Lifecycle
 
-    public init(config: ReferenceClipStorage.Configuration, logger: Loggable) throws {
+    public init(config: ReferenceClipStorage.Configuration) throws {
         self.configuration = config.realmConfiguration
-        self.logger = logger
     }
 }
 

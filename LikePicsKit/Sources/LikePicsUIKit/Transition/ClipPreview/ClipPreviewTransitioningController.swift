@@ -3,19 +3,19 @@
 //
 
 import Common
+import os.log
 import UIKit
 
 public class ClipPreviewTransitioningController: NSObject {
     private let lock: TransitionLock
-    private let logger: Loggable
+    private let logger = Logger(LogHandler.transition)
     private var dismissalInteractiveAnimator: ClipPreviewInteractiveDismissalAnimator?
     private var transitionMode: ClipPreviewTransitionType = .initialValue
 
     // MARK: - Lifecycle
 
-    public init(lock: TransitionLock, logger: Loggable) {
+    public init(lock: TransitionLock) {
         self.lock = lock
-        self.logger = logger
     }
 }
 
@@ -62,7 +62,7 @@ extension ClipPreviewTransitioningController: UIViewControllerTransitioningDeleg
     {
         switch self.transitionMode {
         case .custom:
-            let fallback = FadeTransitionAnimator(logger: self.logger)
+            let fallback = FadeTransitionAnimator()
             return ClipPreviewPresentationAnimator(delegate: self, fallbackAnimator: fallback)
 
         default:
@@ -73,7 +73,7 @@ extension ClipPreviewTransitioningController: UIViewControllerTransitioningDeleg
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         switch self.transitionMode {
         case .custom:
-            let fallback = FadeTransitionAnimator(logger: self.logger)
+            let fallback = FadeTransitionAnimator()
             return ClipPreviewDismissalAnimator(delegate: self, fallbackAnimator: fallback)
 
         default:
@@ -83,7 +83,7 @@ extension ClipPreviewTransitioningController: UIViewControllerTransitioningDeleg
 
     public func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         if case .custom(interactive: true) = self.transitionMode {
-            self.logger.write(ConsoleLog(level: .error, message: "Cannot use interactive transition for presenting ClipPreview."))
+            logger.error("Cannot use interactive transition for presenting ClipPreview.")
         }
         return nil
     }
@@ -91,9 +91,8 @@ extension ClipPreviewTransitioningController: UIViewControllerTransitioningDeleg
     public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         switch self.transitionMode {
         case .custom(interactive: true):
-            let fallback = FadeTransitionAnimator(logger: self.logger)
-            self.dismissalInteractiveAnimator = ClipPreviewInteractiveDismissalAnimator(logger: self.logger,
-                                                                                        fallbackAnimator: fallback)
+            let fallback = FadeTransitionAnimator()
+            self.dismissalInteractiveAnimator = ClipPreviewInteractiveDismissalAnimator(fallbackAnimator: fallback)
             return self.dismissalInteractiveAnimator
 
         default:
@@ -112,14 +111,14 @@ extension ClipPreviewTransitioningController: UINavigationControllerDelegate {
     {
         switch (operation, self.transitionMode) {
         case (.push, .custom):
-            let fallback = FadeTransitionAnimator(logger: self.logger)
+            let fallback = FadeTransitionAnimator()
             return ClipPreviewPresentationAnimator(delegate: self, fallbackAnimator: fallback)
 
         case (.push, _):
             return nil
 
         case (.pop, .custom):
-            let fallback = FadeTransitionAnimator(logger: self.logger)
+            let fallback = FadeTransitionAnimator()
             return ClipPreviewDismissalAnimator(delegate: self, fallbackAnimator: fallback)
 
         case (.pop, _):
@@ -136,12 +135,11 @@ extension ClipPreviewTransitioningController: UINavigationControllerDelegate {
         switch self.transitionMode {
         case .custom(interactive: true):
             guard animationController is ClipPreviewDismissalAnimator else {
-                self.logger.write(ConsoleLog(level: .error, message: "Interactive transition for presenting ClipPreview is unsupported."))
+                logger.error("Interactive transition for presenting ClipPreview is unsupported.")
                 return nil
             }
-            let fallback = FadeTransitionAnimator(logger: self.logger)
-            self.dismissalInteractiveAnimator = ClipPreviewInteractiveDismissalAnimator(logger: self.logger,
-                                                                                        fallbackAnimator: fallback)
+            let fallback = FadeTransitionAnimator()
+            self.dismissalInteractiveAnimator = ClipPreviewInteractiveDismissalAnimator(fallbackAnimator: fallback)
             return self.dismissalInteractiveAnimator
 
         default:

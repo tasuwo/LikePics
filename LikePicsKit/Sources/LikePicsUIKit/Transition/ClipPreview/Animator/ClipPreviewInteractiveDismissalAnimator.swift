@@ -3,6 +3,7 @@
 //
 
 import Common
+import os.log
 import UIKit
 
 class ClipPreviewInteractiveDismissalAnimator: NSObject {
@@ -41,7 +42,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
     private static let endAnimateDuration: TimeInterval = 0.17
     private static let fallbackAnimateDuration: TimeInterval = 0.17
 
-    private var logger: Loggable
+    private var logger = Logger(LogHandler.transition)
     private var fallbackAnimator: FadeTransitionAnimatorProtocol
     private var innerContext: InnerContext?
     private var shouldEndImmediately = false
@@ -50,8 +51,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
     // MARK: - Lifecycle
 
-    init(logger: Loggable, fallbackAnimator: FadeTransitionAnimatorProtocol) {
-        self.logger = logger
+    init(fallbackAnimator: FadeTransitionAnimatorProtocol) {
         self.fallbackAnimator = fallbackAnimator
     }
 
@@ -84,7 +84,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
     func didPan(sender: UIPanGestureRecognizer) {
         guard let innerContext = self.innerContext else {
-            logger.write(ConsoleLog(level: .debug, message: "Ignored '\(sender.state.description)' gesture for ClipPreviewPageView dismissal", scope: .transition))
+            logger.debug("Ignored '\(sender.state.description)' gesture for ClipPreviewPageView dismissal")
             shouldEndImmediately = sender.state.isContinuousGestureFinished
             return
         }
@@ -137,7 +137,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
         // End Animation
 
-        logger.write(ConsoleLog(level: .debug, message: "Handle '\(sender.state.description)' gesture for ClipPreviewPageView dismissal", scope: .transition))
+        logger.debug("Handle '\(sender.state.description)' gesture for ClipPreviewPageView dismissal")
 
         switch sender.state {
         case .ended, .cancelled, .failed, .recognized:
@@ -182,7 +182,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
     private func startCancelAnimation(params: FinishAnimationParameters) {
         lock.lock()
 
-        logger.write(ConsoleLog(level: .debug, message: "Start cancel animation for ClipPreviewPageView dismissal", scope: .transition))
+        logger.debug("Start cancel animation for ClipPreviewPageView dismissal")
 
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.cancelAnimateDuration)
@@ -195,7 +195,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
                 self.innerContext = nil
                 self.lock.unlock()
 
-                self.logger.write(ConsoleLog(level: .debug, message: "Finish cancel animation for ClipPreviewPageView dismissal", scope: .transition))
+                self.logger.debug("Finish cancel animation for ClipPreviewPageView dismissal")
             }
         }
 
@@ -223,7 +223,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
     private func startEndAnimation(params: FinishAnimationParameters) {
         lock.lock()
 
-        logger.write(ConsoleLog(level: .debug, message: "Start end animation for ClipPreviewPageView dismissal", scope: .transition))
+        logger.debug("Start end animation for ClipPreviewPageView dismissal")
 
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.endAnimateDuration)
@@ -234,7 +234,7 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
                 self.innerContext = nil
                 self.lock.unlock()
 
-                self.logger.write(ConsoleLog(level: .debug, message: "Finish end animation for ClipPreviewPageView dismissal", scope: .transition))
+                self.logger.debug("Finish end animation for ClipPreviewPageView dismissal")
             }
         }
 
@@ -275,7 +275,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
     func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning) {
         lock.lock(); defer { lock.unlock() }
 
-        logger.write(ConsoleLog(level: .debug, message: "Start transition for ClipPreviewPageView dismissal", scope: .transition))
+        logger.debug("Start transition for ClipPreviewPageView dismissal")
 
         let containerView = transitionContext.containerView
 
@@ -289,7 +289,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
             let toCell = to.animatingCell(self, id: previewingClipItem.cellIdentity, needsScroll: true),
             let toViewBaseView = to.baseView(self)
         else {
-            logger.write(ConsoleLog(level: .debug, message: "Start fallback transition for ClipPreviewPageView dismissal", scope: .transition))
+            logger.debug("Start fallback transition for ClipPreviewPageView dismissal")
             fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
             return
         }
@@ -393,7 +393,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
                                                    to: to,
                                                    innerContext: innerContext)
             lock.unlock()
-            logger.write(ConsoleLog(level: .debug, message: "Immediately ended transition for ClipPreviewPageView dismissal", scope: .transition))
+            logger.debug("Immediately ended transition for ClipPreviewPageView dismissal")
             self.startEndAnimation(params: params)
             return
         }

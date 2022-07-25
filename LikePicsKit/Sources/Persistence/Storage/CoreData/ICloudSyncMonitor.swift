@@ -5,18 +5,17 @@
 import Combine
 import Common
 import CoreData
+import os.log
 
 public class ICloudSyncMonitor {
     static let userInfoKey = NSPersistentCloudKitContainer.eventNotificationUserInfoKey
 
-    private let logger: Loggable
     private var disposableBag = Set<AnyCancellable>()
+    private let logger = Logger(LogHandler.iCloudSync)
 
     // MARK: - Lifecycle
 
-    public init(logger: Loggable) {
-        self.logger = logger
-
+    public init() {
         NotificationCenter.default.publisher(for: NSPersistentCloudKitContainer.eventChangedNotification)
             .sink { [weak self] notification in
                 guard let self = self else { return }
@@ -24,31 +23,20 @@ public class ICloudSyncMonitor {
 
                 switch event.type {
                 case .setup:
-                    self.logger.write(ConsoleLog(level: .debug, message: """
-                    Setup \(event.isStarted ? "started" : "ended")
-                    """))
+                    self.logger.debug("Setup \(event.isStarted ? "started" : "ended")")
 
                 case .import:
-                    self.logger.write(ConsoleLog(level: .debug, message: """
-                    Import \(event.isStarted ? "started" : "ended")
-                    """))
+                    self.logger.debug("Import \(event.isStarted ? "started" : "ended")")
 
                 case .export:
-                    self.logger.write(ConsoleLog(level: .debug, message: """
-                    Export \(event.isStarted ? "started" : "ended")
-                    """))
+                    self.logger.debug("Export \(event.isStarted ? "started" : "ended")")
 
                 @unknown default:
                     assertionFailure("Unknown NSPersistentCloudKitContainer.Event")
                 }
 
                 if let error = event.error {
-                    self.logger.write(ConsoleLog(level: .error, message: """
-                    Filed to iCloud sync. \(error.localizedDescription)
-                    - type: \(event.type)
-                    - startDate: \(event.startDate)
-                    - endDate: \(String(describing: event.endDate))
-                    """))
+                    self.logger.error("Failed to iCloud sync: \(error.localizedDescription, privacy: .public)")
                 }
             }
             .store(in: &self.disposableBag)

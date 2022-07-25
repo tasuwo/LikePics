@@ -4,20 +4,19 @@
 
 import Common
 import Foundation
+import os.log
 
 public class TemporaryClipCommandService {
     private let clipStorage: TemporaryClipStorageProtocol
     private let imageStorage: TemporaryImageStorageProtocol
-    private let logger: Loggable
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.Domain.TemporaryClipCommandService")
+    private let logger = Logger(LogHandler.service)
 
     public init(clipStorage: TemporaryClipStorageProtocol,
-                imageStorage: TemporaryImageStorageProtocol,
-                logger: Loggable)
+                imageStorage: TemporaryImageStorageProtocol)
     {
         self.clipStorage = clipStorage
         self.imageStorage = imageStorage
-        self.logger = logger
     }
 }
 
@@ -31,11 +30,7 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
                     return containers.contains(where: { $0.id == item.imageId })
                 }
                 guard clip.items.allSatisfy({ item in containsFilesFor(item) }) else {
-                    self.logger.write(ConsoleLog(level: .error, message: """
-                    Clipに紐付けれた全Itemの画像データが揃っていない:
-                    - expected: \(clip.items.map { $0.id.uuidString }.joined(separator: ","))
-                    - got: \(containers.map { $0.id.uuidString }.joined(separator: ","))
-                    """))
+                    self.logger.error("Clipに紐付けれた全Itemの画像データが揃っていない")
                     return .failure(.invalidParameter)
                 }
 
@@ -48,9 +43,7 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
 
                 case let .failure(error):
                     try? self.clipStorage.cancelTransactionIfNeeded()
-                    self.logger.write(ConsoleLog(level: .error, message: """
-                    一時クリップの保存に失敗: \(error.localizedDescription)
-                    """))
+                    self.logger.error("一時クリップの保存に失敗: \(error.localizedDescription, privacy: .public)")
                     return .failure(error)
                 }
 
@@ -65,9 +58,7 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
                 return .success(createdClip.id)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
-                self.logger.write(ConsoleLog(level: .error, message: """
-                一時クリップの保存に失敗: \(error.localizedDescription)
-                """))
+                self.logger.error("一時クリップの保存に失敗: \(error.localizedDescription, privacy: .public)")
                 return .failure(.internalError)
             }
         }

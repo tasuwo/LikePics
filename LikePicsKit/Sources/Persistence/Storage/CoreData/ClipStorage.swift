@@ -7,6 +7,7 @@
 import Common
 import CoreData
 import Domain
+import os.log
 
 public class ClipStorage {
     public var context: NSManagedObjectContext {
@@ -19,13 +20,12 @@ public class ClipStorage {
         }
     }
 
-    private let logger: Loggable
+    private let logger = Logger(LogHandler.storage)
 
     // MARK: - Lifecycle
 
-    public init(context: NSManagedObjectContext, logger: Loggable) {
+    public init(context: NSManagedObjectContext) {
         self.context = context
-        self.logger = logger
     }
 
     // MARK: - Methods
@@ -43,7 +43,7 @@ public class ClipStorage {
         let request: NSFetchRequest<Album> = Album.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         guard let album = try self.context.fetch(request).first else {
-            self.logger.write(ConsoleLog(level: .error, message: "Album not found (id=\(id.uuidString))"))
+            self.logger.error("Album not found (id=\(id.uuidString, privacy: .public))")
             return .failure(.notFound)
         }
         return .success(album)
@@ -53,7 +53,7 @@ public class ClipStorage {
         let request: NSFetchRequest<Album> = Album.fetchRequest()
         request.predicate = NSPredicate(format: "title == %@", title as CVarArg)
         guard let album = try self.context.fetch(request).first else {
-            self.logger.write(ConsoleLog(level: .error, message: "Album not found (title=\(title))"))
+            self.logger.error("Album not found (title=\(title, privacy: .public))")
             return .failure(.notFound)
         }
         return .success(album)
@@ -65,7 +65,7 @@ public class ClipStorage {
             let request: NSFetchRequest<Tag> = Tag.fetchRequest()
             request.predicate = NSPredicate(format: "id == %@", tagId as CVarArg)
             guard let tag = try self.context.fetch(request).first else {
-                self.logger.write(ConsoleLog(level: .error, message: "Tag not found (id=\(tagId.uuidString))"))
+                self.logger.error("Tag not found (id=\(tagId.uuidString, privacy: .public))")
                 return .failure(.notFound)
             }
             tags.append(tag)
@@ -86,7 +86,7 @@ public class ClipStorage {
         let request: NSFetchRequest<Tag> = Tag.fetchRequest()
         request.predicate = NSPredicate(format: "name == %@", name as CVarArg)
         guard let tag = try self.context.fetch(request).first else {
-            self.logger.write(ConsoleLog(level: .error, message: "Tag not found (name=\(name))"))
+            self.logger.error("Tag not found (name=\(name, privacy: .public))")
             return .failure(.notFound)
         }
         return .success(tag)
@@ -98,7 +98,7 @@ public class ClipStorage {
             let request: NSFetchRequest<Clip> = Clip.fetchRequest()
             request.predicate = NSPredicate(format: "id == %@", clipId as CVarArg)
             guard let clip = try self.context.fetch(request).first else {
-                self.logger.write(ConsoleLog(level: .error, message: "Clip not found (id=\(clipId.uuidString))"))
+                self.logger.error("Clip not found (id=\(clipId.uuidString, privacy: .public))")
                 return .failure(.notFound)
             }
             clips.append(clip)
@@ -112,7 +112,7 @@ public class ClipStorage {
             let request: NSFetchRequest<Item> = Item.fetchRequest()
             request.predicate = NSPredicate(format: "id == %@", clipItemId as CVarArg)
             guard let item = try self.context.fetch(request).first else {
-                self.logger.write(ConsoleLog(level: .error, message: "ClipItem not found (id=\(clipItemId.uuidString))"))
+                self.logger.error("ClipItem not found (id=\(clipItemId.uuidString, privacy: .public))")
                 return .failure(.notFound)
             }
             items.append(item)
@@ -124,7 +124,7 @@ public class ClipStorage {
         let request: NSFetchRequest<Item> = Item.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
         guard let item = try self.context.fetch(request).first else {
-            self.logger.write(ConsoleLog(level: .error, message: "ClipItem not found (id=\(id.uuidString))"))
+            self.logger.error("ClipItem not found (id=\(id.uuidString, privacy: .public))")
             return .failure(.notFound)
         }
         return .success(item)
@@ -155,9 +155,7 @@ extension ClipStorage: ClipStorageProtocol {
                 .compactMap { $0.map(to: Domain.Clip.self) }
             return .success(clips)
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to read clips. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to read clips. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -169,9 +167,7 @@ extension ClipStorage: ClipStorageProtocol {
                 .compactMap { $0.map(to: Domain.Tag.self) }
             return .success(tags)
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to read tags. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to read tags. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -184,9 +180,7 @@ extension ClipStorage: ClipStorageProtocol {
                 .compactMap { $0.map(to: Domain.Tag.self) }
             return .success(tags)
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to read tags. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to read tags. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -196,9 +190,7 @@ extension ClipStorage: ClipStorageProtocol {
             guard case let .success(items) = try self.fetchClipItems(for: itemIds) else { return .failure(.notFound) }
             return .success(items.compactMap({ $0.map(to: Domain.ClipItem.self) }))
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to read clip items. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to clip items. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -216,9 +208,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(Array(Set(albumIds)))
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to read clips. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to clips. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -238,9 +228,7 @@ extension ClipStorage: ClipStorageProtocol {
                 }
 
                 // IDが同一のタグが存在しなければ、スキップする
-                self.logger.write(ConsoleLog(level: .error, message: """
-                クリップ作成のためのタグ(ID: \(tagId))が見つかりませんでした。無視してクリップを作成します
-                """))
+                self.logger.error("クリップ作成のためのタグ(ID: \(tagId, privacy: .public))が見つかりませんでした。無視してクリップを作成します")
             }
 
             // Prepare new objects
@@ -277,7 +265,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(newClip.map(to: Domain.Clip.self)!)
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to create clip. (error=\(error.localizedDescription))"))
+            self.logger.error("Failed to create clip. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -285,7 +273,7 @@ extension ClipStorage: ClipStorageProtocol {
     public func create(tagWithName name: String) -> Result<Domain.Tag, ClipStorageError> {
         do {
             guard case .failure = try self.fetchTag(for: name) else {
-                self.logger.write(ConsoleLog(level: .error, message: "Failed to create tag. Duplicated."))
+                self.logger.error("Failed to create tag. Duplicated.")
                 return .failure(.duplicated)
             }
 
@@ -296,7 +284,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(tag.map(to: Domain.Tag.self)!)
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to create tag. (error=\(error.localizedDescription))"))
+            self.logger.error("Failed to create tag. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -304,12 +292,12 @@ extension ClipStorage: ClipStorageProtocol {
     public func create(_ tag: Domain.Tag) -> Result<Domain.Tag, ClipStorageError> {
         do {
             guard case .failure = try self.fetchTag(for: tag.id) else {
-                self.logger.write(ConsoleLog(level: .error, message: "Failed to create tag. Duplicated."))
+                self.logger.error("Failed to create tag. Duplicated.")
                 return .failure(.duplicated)
             }
 
             guard case .failure = try self.fetchTag(for: tag.name) else {
-                self.logger.write(ConsoleLog(level: .error, message: "Failed to create tag. Duplicated."))
+                self.logger.error("Failed to create tag. Duplicated.")
                 return .failure(.duplicated)
             }
 
@@ -320,7 +308,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(tag)
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to create tag. (error=\(error.localizedDescription))"))
+            self.logger.error("Failed to create tag. (error=\(error.localizedDescription, privacy: .public)")
             return .failure(.internalError)
         }
     }
@@ -347,7 +335,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(album.map(to: Domain.Album.self)!)
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to create album. (error=\(error.localizedDescription))"))
+            self.logger.error("Failed to create album. (error=\(error.localizedDescription, privacy: .public)")
             return .failure(.internalError)
         }
     }
@@ -355,7 +343,7 @@ extension ClipStorage: ClipStorageProtocol {
     public func updateClips(having ids: [Domain.Clip.Identity], byHiding isHidden: Bool) -> Result<[Domain.Clip], ClipStorageError> {
         do {
             guard case let .success(clips) = try self.fetchClips(for: ids) else {
-                self.logger.write(ConsoleLog(level: .error, message: "Failed to update clips to \(isHidden ? "hide" : "show"). Not found."))
+                self.logger.error("Failed to update clips to \(isHidden ? "hide" : "show", privacy: .public). Not found.")
                 return .failure(.notFound)
             }
 
@@ -364,7 +352,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(clips.compactMap { $0.map(to: Domain.Clip.self) })
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: "Failed to update clips to \(isHidden ? "hide" : "show"). (error=\(error.localizedDescription))"))
+            self.logger.error("Failed to update clips to \(isHidden ? "hide" : "show", privacy: .public). (error=\(error.localizedDescription, privacy: .public)")
             return .failure(.internalError)
         }
     }
@@ -391,9 +379,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(clips.compactMap { $0.map(to: Domain.Clip.self) })
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to add tags to clip. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to add tags to clip. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -419,9 +405,7 @@ extension ClipStorage: ClipStorageProtocol {
             }
             return .success(clips.compactMap { $0.map(to: Domain.Clip.self) })
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to add update clips. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to update clips. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -440,9 +424,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(clips.compactMap { $0.map(to: Domain.Clip.self) })
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to add update clips. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to update clips. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -450,9 +432,7 @@ extension ClipStorage: ClipStorageProtocol {
     public func updateClip(having clipId: Domain.Clip.Identity, byReorderingItemsHaving itemIds: [Domain.ClipItem.Identity]) -> Result<Void, ClipStorageError> {
         do {
             guard case let .success(clip) = try self.fetchClip(for: clipId) else {
-                self.logger.write(ConsoleLog(level: .error, message: """
-                更新対象のクリップが見つからなかったため、クリップ内のアイテムの並び替えに失敗しました (id: \(clipId))
-                """))
+                self.logger.error("更新対象のクリップが見つからなかったため、クリップ内のアイテムの並び替えに失敗しました (id: \(clipId, privacy: .public))")
                 return .failure(.notFound)
             }
 
@@ -461,12 +441,7 @@ extension ClipStorage: ClipStorageProtocol {
                 .compactMap { $0 as? Item }
                 .compactMap { $0.id } ?? []
             guard Set(clipItemIds) == Set(itemIds) else {
-                self.logger.write(ConsoleLog(level: .error, message: """
-                引数が不正だったため、クリップ内の並び替えに失敗しました
-                - clipId: \(clipId)
-                - クリップ内のアイテム数: \(Set(clipItemIds).count)
-                - 引数のアイテム数: \(Set(itemIds).count)
-                """))
+                self.logger.error("引数が不正だったため、クリップ内の並び替えに失敗しました: clipId=\(clipId, privacy: .public), クリップ内のアイテム数=\(Set(clipItemIds).count, privacy: .public), 引数のアイテム数=\(Set(itemIds).count, privacy: .public)")
                 return .failure(.invalidParameter)
             }
 
@@ -483,9 +458,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(())
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to add update clip. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to update clip. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -501,9 +474,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(())
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to add update clips. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to update clips. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -540,9 +511,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(())
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to add update album. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to update albums. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -578,9 +547,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(())
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to add update album. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to update album. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -588,9 +555,7 @@ extension ClipStorage: ClipStorageProtocol {
     public func updateAlbum(having albumId: Domain.Album.Identity, byReorderingClipsHaving clipIds: [Domain.Clip.Identity]) -> Result<Void, ClipStorageError> {
         do {
             guard case let .success(album) = try self.fetchAlbum(for: albumId) else {
-                self.logger.write(ConsoleLog(level: .error, message: """
-                更新対象のアルバムが見つからなかったため、アルバム内のアイテムの並び替えに失敗しました (id: \(albumId))
-                """))
+                self.logger.error("更新対象のアルバムが見つからなかったため、アルバム内のアイテムの並び替えに失敗しました (id: \(albumId, privacy: .public))")
                 return .failure(.notFound)
             }
 
@@ -599,12 +564,7 @@ extension ClipStorage: ClipStorageProtocol {
                 .compactMap { $0 as? AlbumItem }
                 .compactMap { $0.clip?.id } ?? []
             guard Set(itemIds) == Set(clipIds) else {
-                self.logger.write(ConsoleLog(level: .error, message: """
-                引数が不正だったため、アルバム内の並び替えに失敗しました
-                - albumId: \(albumId)
-                - アルバム内のアイテム数: \(Set(itemIds).count)
-                - 引数のアイテム数: \(Set(clipIds).count)
-                """))
+                self.logger.error("引数が不正だったため、アルバム内の並び替えに失敗しました: albumId=\(albumId, privacy: .public), アルバム内のアイテム数=\(Set(itemIds).count, privacy: .public), 引数のアイテム数=\(Set(clipIds).count, privacy: .public)")
                 return .failure(.invalidParameter)
             }
 
@@ -619,9 +579,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(())
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to add update album. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to update album. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -637,9 +595,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(result)
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to add update album. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to update album. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -653,9 +609,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(album.map(to: Domain.Album.self)!)
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to add update album. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to update album. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -665,11 +619,7 @@ extension ClipStorage: ClipStorageProtocol {
             let request: NSFetchRequest<Album> = Album.fetchRequest()
             let albums = try self.context.fetch(request)
             guard Set(albums.compactMap({ $0.id })) == Set(albumIds) else {
-                self.logger.write(ConsoleLog(level: .error, message: """
-                引数が不正だったため、アルバムの並び替えに失敗しました
-                - アルバム数: \(Set(albums.compactMap({ $0.id })).count)
-                - 引数のアルバム数: \(Set(albumIds).count)
-                """))
+                self.logger.error("引数が不正だったため、アルバムの並び替えに失敗しました: アルバム数=\(Set(albums.compactMap({ $0.id })).count, privacy: .public), 引数のアルバム数=\(Set(albumIds).count, privacy: .public)")
                 return .failure(.invalidParameter)
             }
 
@@ -684,9 +634,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(())
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to add update album. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to update album. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -700,9 +648,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(result)
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to add update tag. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to update tag. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -715,9 +661,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(tag.map(to: Domain.Tag.self)!)
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to add update tag. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to update tag. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -731,9 +675,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(deleteTarget)
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to delete clips. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to delete clips. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -765,9 +707,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(removeTarget)
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to delete clip item. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to delete clip item. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -798,9 +738,7 @@ extension ClipStorage: ClipStorageProtocol {
             guard let result = deletedTarget else { return .failure(.notFound) }
             return .success(result)
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to delete album. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to delete album. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -814,9 +752,7 @@ extension ClipStorage: ClipStorageProtocol {
 
             return .success(deleteTarget)
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to delete tags. (error=\(error.localizedDescription))
-            """))
+            self.logger.error("Failed to delete tags. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)
         }
     }
@@ -827,16 +763,12 @@ extension ClipStorage: ClipStorageProtocol {
 
     public func deduplicateTag(for id: ObjectID) -> [Domain.Tag.Identity] {
         guard let id = id as? NSManagedObjectID else {
-            self.logger.write(ConsoleLog(level: .info, message: """
-            Invalid ID for deduplicate.
-            """))
+            self.logger.info("Invalid ID for deduplicate.")
             return []
         }
 
         guard let tag = context.object(with: id) as? Tag, let name = tag.name else {
-            self.logger.write(ConsoleLog(level: .info, message: """
-            Failed to retrieve a valid tag with ID: \(id).
-            """))
+            self.logger.info("Failed to retrieve a valid tag with ID: \(id, privacy: .public).")
             return []
         }
 
@@ -878,16 +810,12 @@ extension ClipStorage: ClipStorageProtocol {
 
     public func deduplicateAlbumItem(for id: ObjectID) {
         guard let id = id as? NSManagedObjectID else {
-            self.logger.write(ConsoleLog(level: .info, message: """
-            Invalid ID for deduplicate.
-            """))
+            self.logger.info("Invalid ID for deduplicate.")
             return
         }
 
         guard let item = context.object(with: id) as? AlbumItem, let albumId = item.album?.id, let clipId = item.clip?.id else {
-            self.logger.write(ConsoleLog(level: .info, message: """
-            Failed to retrieve a valid album item with ID: \(id).
-            """))
+            self.logger.info("Failed to retrieve a valid album item with ID: \(id, privacy: .public).")
             return
         }
 

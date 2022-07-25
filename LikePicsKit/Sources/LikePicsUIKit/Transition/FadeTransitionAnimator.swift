@@ -3,6 +3,7 @@
 //
 
 import Common
+import os.log
 import UIKit
 
 protocol FadeTransitionAnimatorProtocol {
@@ -10,13 +11,7 @@ protocol FadeTransitionAnimatorProtocol {
 }
 
 class FadeTransitionAnimator {
-    private let logger: Loggable
-
-    // MARK: - Lifecycle
-
-    init(logger: Loggable) {
-        self.logger = logger
-    }
+    private let logger = Logger(LogHandler.transition)
 }
 
 extension FadeTransitionAnimator: FadeTransitionAnimatorProtocol {
@@ -33,12 +28,12 @@ extension FadeTransitionAnimator: FadeTransitionAnimatorProtocol {
                 transitionContext.cancelInteractiveTransition()
             }
             transitionContext.completeTransition(false)
-            self.logger.write(ConsoleLog(level: .error, message: "Filed to fade transition:"))
+            self.logger.error("Filed to fade transition:")
             if transitionContext.viewController(forKey: .from) == nil {
-                self.logger.write(ConsoleLog(level: .error, message: "- From ViewController not found."))
+                self.logger.error("- From ViewController not found.")
             }
             if transitionContext.viewController(forKey: .to) == nil {
-                self.logger.write(ConsoleLog(level: .error, message: "- To ViewController not found."))
+                self.logger.error("- To ViewController not found.")
             }
             return
         }

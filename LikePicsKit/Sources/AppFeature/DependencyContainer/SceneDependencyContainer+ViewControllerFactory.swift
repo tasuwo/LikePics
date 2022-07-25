@@ -141,9 +141,9 @@ extension SceneDependencyContainer: ViewControllerFactory {
             let userSettingStorage: UserSettingsStorageProtocol
         }
 
-        let previewTransitioningController = ClipPreviewTransitioningController(lock: container.transitionLock, logger: container.logger)
-        let informationTransitionController = ClipItemInformationTransitioningController(lock: container.transitionLock, logger: container.logger)
-        let itemListTransitionController = ClipItemListTransitioningController(lock: container.transitionLock, logger: container.logger)
+        let previewTransitioningController = ClipPreviewTransitioningController(lock: container.transitionLock)
+        let informationTransitionController = ClipItemInformationTransitioningController(lock: container.transitionLock)
+        let itemListTransitionController = ClipItemListTransitioningController(lock: container.transitionLock)
         let transitionDispatcher = ClipPreviewPageTransitionController(previewTransitioningController: previewTransitioningController,
                                                                        informationTransitionController: informationTransitionController)
 
@@ -194,8 +194,7 @@ extension SceneDependencyContainer: LikePicsCore.ViewControllerFactory {
             let viewModel = TagSelectionViewModel(query: query,
                                                   selectedTags: selectedTags,
                                                   commandService: container.tagCommandService,
-                                                  settingStorage: container.userSettingStorage,
-                                                  logger: container.logger)
+                                                  settingStorage: container.userSettingStorage)
             let viewController = TagSelectionViewController(viewModel: viewModel, delegate: delegate)
             return UINavigationController(rootViewController: viewController)
 

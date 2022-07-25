@@ -2,7 +2,6 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-import Common
 import Domain
 import RealmSwift
 
@@ -12,14 +11,12 @@ public class TemporaryClipStorage {
     }
 
     let configuration: Realm.Configuration
-    private let logger: Loggable
     private var realm: Realm?
 
     // MARK: - Lifecycle
 
-    public init(config: TemporaryClipStorage.Configuration, logger: Loggable) throws {
+    public init(config: TemporaryClipStorage.Configuration) throws {
         self.configuration = config.realmConfiguration
-        self.logger = logger
     }
 }
 

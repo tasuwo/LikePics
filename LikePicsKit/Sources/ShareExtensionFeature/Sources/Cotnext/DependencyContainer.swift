@@ -17,7 +17,6 @@ public protocol ViewControllerFactory {
 }
 
 public class DependencyContainer {
-    private let logger: Loggable
     private let clipStore: ClipStorable
     private let tagQueryService: ReferenceTagQueryService
     private let currentDateResolver = { Date() }
@@ -33,22 +32,15 @@ public class DependencyContainer {
             fatalError("Failed to resolve main bundle.")
         }
 
-        self.logger = RootLogger()
         let imageStorage = try TemporaryImageStorage(configuration: .resolve(for: mainBundle, kind: .group))
-        let clipStorage = try TemporaryClipStorage(config: .resolve(for: mainBundle, kind: .group),
-                                                   logger: self.logger)
-        let referenceClipStorage = try ReferenceClipStorage(config: .resolve(for: mainBundle),
-                                                            logger: self.logger)
+        let clipStorage = try TemporaryClipStorage(config: .resolve(for: mainBundle, kind: .group))
+        let referenceClipStorage = try ReferenceClipStorage(config: .resolve(for: mainBundle))
 
-        self.clipStore = TemporaryClipCommandService(clipStorage: clipStorage,
-                                                     imageStorage: imageStorage,
-                                                     logger: self.logger)
+        self.clipStore = TemporaryClipCommandService(clipStorage: clipStorage, imageStorage: imageStorage)
 
-        self.tagQueryService = try ReferenceTagQueryService(config: .resolve(for: mainBundle),
-                                                            logger: self.logger)
+        self.tagQueryService = try ReferenceTagQueryService(config: .resolve(for: mainBundle))
 
-        self.tagCommandService = TagCommandService(storage: referenceClipStorage,
-                                                   logger: self.logger)
+        self.tagCommandService = TagCommandService(storage: referenceClipStorage)
 
         self.userSettingsStorage = UserSettingsStorage(appBundle: mainBundle)
 
@@ -140,8 +132,7 @@ extension DependencyContainer: LikePicsCore.ViewControllerFactory {
             let viewModel = TagSelectionViewModel(query: query,
                                                   selectedTags: selectedTags,
                                                   commandService: self.tagCommandService,
-                                                  settingStorage: self.userSettingsStorage,
-                                                  logger: self.logger)
+                                                  settingStorage: self.userSettingsStorage)
             let viewController = TagSelectionViewController(viewModel: viewModel, delegate: delegate)
             return UINavigationController(rootViewController: viewController)
 

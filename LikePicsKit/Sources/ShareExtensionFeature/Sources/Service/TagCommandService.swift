@@ -5,16 +5,16 @@
 import Common
 import Domain
 import Foundation
+import os.log
 
 class TagCommandService {
     private let storage: ReferenceClipStorageProtocol
-    private let logger: Loggable
+    private let logger = Logger(LogHandler.service)
 
     // MARK: - Lifecycle
 
-    init(storage: ReferenceClipStorageProtocol, logger: Loggable) {
+    init(storage: ReferenceClipStorageProtocol) {
         self.storage = storage
-        self.logger = logger
     }
 }
 
@@ -37,9 +37,8 @@ extension TagCommandService: TagCommandServiceProtocol {
 
             case let .failure(error):
                 try self.storage.cancelTransactionIfNeeded()
-                self.logger.write(ConsoleLog(level: .error, message: """
-                タグの作成に失敗: \(error.localizedDescription)
-                """))
+                self.logger.error("タグの作成に失敗: \(error.localizedDescription, privacy: .public)")
+
                 return .failure(.internalError)
             }
 
@@ -47,9 +46,7 @@ extension TagCommandService: TagCommandServiceProtocol {
 
             return .success(id)
         } catch {
-            self.logger.write(ConsoleLog(level: .error, message: """
-            タグの作成に失敗: \(error.localizedDescription)
-            """))
+            self.logger.error("タグの作成に失敗: \(error.localizedDescription, privacy: .public)")
             return .failure(.internalError)
         }
     }

@@ -30,7 +30,6 @@ public typealias AppDependencyContaining = HasPasteboard
     & HasCloudStackLoader
     & HasTagCommandService
     & HasNop
-    & HasLogger
     & HasClipStore
     & HasDiskCaches
     & HasImageLoaderSettings
@@ -93,10 +92,6 @@ public class AppDependencyContainer {
 
     private let _transitionLock = TransitionLock()
 
-    // MARK: Logger
-
-    private let _logger: Loggable
-
     // MARK: Bundle
 
     public let appBundle: Bundle
@@ -104,20 +99,17 @@ public class AppDependencyContainer {
     // MARK: - Lifecycle
 
     public init(appBundle: Bundle) throws {
-        self._logger = RootLogger(loggers: [
-            ConsoleLogger(scopes: [.default, .transition])
-        ])
         self.appBundle = appBundle
 
         // MARK: Storage
 
         self.tmpImageStorage = try TemporaryImageStorage(configuration: .resolve(for: appBundle, kind: .group))
-        self.tmpClipStorage = try TemporaryClipStorage(config: .resolve(for: appBundle, kind: .group), logger: _logger)
-        self.referenceClipStorage = try ReferenceClipStorage(config: .resolve(for: appBundle), logger: _logger)
+        self.tmpClipStorage = try TemporaryClipStorage(config: .resolve(for: appBundle, kind: .group))
+        self.referenceClipStorage = try ReferenceClipStorage(config: .resolve(for: appBundle))
 
         // MARK: CoreData
 
-        self.monitor = ICloudSyncMonitor(logger: _logger)
+        self.monitor = ICloudSyncMonitor()
 
         let userSettingsStorage = UserSettingsStorage(appBundle: appBundle)
         let cloudUsageContextStorage = CloudUsageContextStorage()
@@ -126,8 +118,7 @@ public class AppDependencyContainer {
         self._cloudAvailabilityService = CloudAvailabilityService(cloudUsageContextStorage: CloudUsageContextStorage(),
                                                                   cloudAccountService: CloudAccountService())
 
-        self.coreDataStack = CoreDataStack(isICloudSyncEnabled: self._userSettingStorage.readEnabledICloudSync(),
-                                           logger: _logger)
+        self.coreDataStack = CoreDataStack(isICloudSyncEnabled: self._userSettingStorage.readEnabledICloudSync())
         self._cloudStackLoader = CloudStackLoader(userSettingsStorage: self._userSettingStorage,
                                                   cloudAvailabilityService: self._cloudAvailabilityService,
                                                   cloudStack: self.coreDataStack)
@@ -136,10 +127,10 @@ public class AppDependencyContainer {
         self.commandContext = self.coreDataStack.newBackgroundContext(on: self.clipCommandQueue)
         // Note: clipStorage, imageStorage は、同一トランザクションとして書き込みを行うことが多いため、
         //       同一Contextとする
-        self.clipStorage = ClipStorage(context: self.commandContext, logger: _logger)
+        self.clipStorage = ClipStorage(context: self.commandContext)
         self.imageStorage = ImageStorage(context: self.commandContext)
         self._clipQueryService = ClipQueryCacheService(ClipQueryService(context: self.coreDataStack.viewContext))
-        self._imageQueryService = ImageQueryService(context: self.imageQueryContext, logger: _logger)
+        self._imageQueryService = ImageQueryService(context: self.imageQueryContext)
 
         self._clipSearchHistoryService = Persistence.ClipSearchHistoryService()
         self._clipSearchSettingService = Persistence.ClipSearchSettingService()
@@ -217,14 +208,12 @@ public class AppDependencyContainer {
                                                       diskCache: _clipDiskCache,
                                                       // Note: ImageStorage, ClipStorage は同一 Context である前提
                                                       commandQueue: clipStorage,
-                                                      lock: commandLock,
-                                                      logger: _logger)
+                                                      lock: commandLock)
         self._integrityValidationService = ClipReferencesIntegrityValidationService(clipStorage: clipStorage,
                                                                                     referenceClipStorage: referenceClipStorage,
                                                                                     // Note: ImageStorage, ClipStorage は同一 Context である前提
                                                                                     commandQueue: clipStorage,
-                                                                                    lock: commandLock,
-                                                                                    logger: _logger)
+                                                                                    lock: commandLock)
         self._temporariesPersistService = TemporariesPersistService(temporaryClipStorage: tmpClipStorage,
                                                                     temporaryImageStorage: tmpImageStorage,
                                                                     clipStorage: clipStorage,
@@ -232,8 +221,7 @@ public class AppDependencyContainer {
                                                                     imageStorage: imageStorage,
                                                                     // Note: ImageStorage, ClipStorage は同一 Context である前提
                                                                     commandQueue: clipStorage,
-                                                                    lock: commandLock,
-                                                                    logger: _logger)
+                                                                    lock: commandLock)
 
         self.coreDataStack.coreDataStackObserver = self
         self.coreDataStack.cloudStackObserver = _integrityValidationService
@@ -364,10 +352,6 @@ extension AppDependencyContainer: HasTagCommandService {
 }
 
 extension AppDependencyContainer: HasNop {}
-
-extension AppDependencyContainer: HasLogger {
-    public var logger: Loggable { _logger }
-}
 
 extension AppDependencyContainer: HasClipStore {
     public var clipStore: ClipStorable { _clipCommandService }

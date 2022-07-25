@@ -3,6 +3,7 @@
 //
 
 import Common
+import os.log
 import UIKit
 
 class ClipItemInformationInteractivePresentationAnimator: NSObject {
@@ -31,7 +32,7 @@ class ClipItemInformationInteractivePresentationAnimator: NSObject {
 
     private let fallbackAnimator: FadeTransitionAnimatorProtocol
 
-    private var logger: Loggable
+    private var logger = Logger(LogHandler.transition)
     private var innerContext: InnerContext?
     private var shouldEndImmediately = false
 
@@ -39,8 +40,7 @@ class ClipItemInformationInteractivePresentationAnimator: NSObject {
 
     // MARK: - Lifecycle
 
-    init(logger: Loggable, fallbackAnimator: FadeTransitionAnimatorProtocol) {
-        self.logger = logger
+    init(fallbackAnimator: FadeTransitionAnimatorProtocol) {
         self.fallbackAnimator = fallbackAnimator
     }
 
@@ -75,7 +75,7 @@ class ClipItemInformationInteractivePresentationAnimator: NSObject {
 
     func didPan(sender: UIPanGestureRecognizer) {
         guard let innerContext = self.innerContext else {
-            logger.write(ConsoleLog(level: .debug, message: "Ignored '\(sender.state.description)' gesture for ClipItemInformationView presentation", scope: .transition))
+            logger.debug("Ignored '\(sender.state.description)' gesture for ClipItemInformationView presentation")
             shouldEndImmediately = sender.state.isContinuousGestureFinished
             return
         }
@@ -114,7 +114,7 @@ class ClipItemInformationInteractivePresentationAnimator: NSObject {
 
         // End Animation
 
-        logger.write(ConsoleLog(level: .debug, message: "Handle '\(sender.state.description)' gesture for ClipItemInformationView presentation", scope: .transition))
+        logger.debug("Handle '\(sender.state.description)' gesture for ClipItemInformationView presentation")
 
         switch sender.state {
         case .ended, .cancelled, .failed, .recognized:
@@ -145,7 +145,7 @@ class ClipItemInformationInteractivePresentationAnimator: NSObject {
     private func startCancelAnimation(params: FinishAnimationParameters) {
         lock.lock()
 
-        logger.write(ConsoleLog(level: .debug, message: "Start cancel animation for ClipItemInformationView presentation", scope: .transition))
+        logger.debug("Start cancel animation for ClipItemInformationView presentation")
 
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.cancelAnimateDuration)
@@ -159,7 +159,7 @@ class ClipItemInformationInteractivePresentationAnimator: NSObject {
             self.innerContext = nil
             self.lock.unlock()
 
-            self.logger.write(ConsoleLog(level: .debug, message: "Finish cancel animation for ClipItemInformationView presentation", scope: .transition))
+            self.logger.debug("Finish cancel animation for ClipItemInformationView presentation")
         }
 
         UIView.animate(
@@ -184,7 +184,7 @@ class ClipItemInformationInteractivePresentationAnimator: NSObject {
     private func startEndAnimation(params: FinishAnimationParameters) {
         lock.lock()
 
-        logger.write(ConsoleLog(level: .debug, message: "Start end animation for ClipItemInformationView presentation", scope: .transition))
+        logger.debug("Start end animation for ClipItemInformationView presentation")
 
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.endAnimateDuration)
@@ -196,7 +196,7 @@ class ClipItemInformationInteractivePresentationAnimator: NSObject {
             self.innerContext = nil
             self.lock.unlock()
 
-            self.logger.write(ConsoleLog(level: .debug, message: "Finish end animation for ClipItemInformationView presentation", scope: .transition))
+            self.logger.debug("Finish end animation for ClipItemInformationView presentation")
         }
 
         UIView.animate(
@@ -228,7 +228,7 @@ extension ClipItemInformationInteractivePresentationAnimator: UIViewControllerIn
     func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning) {
         lock.lock(); defer { lock.unlock() }
 
-        logger.write(ConsoleLog(level: .debug, message: "Start transition for ClipItemInformationView presentation", scope: .transition))
+        logger.debug("Start transition for ClipItemInformationView presentation")
 
         let containerView = transitionContext.containerView
 
@@ -241,7 +241,7 @@ extension ClipItemInformationInteractivePresentationAnimator: UIViewControllerIn
             let selectedImage = selectedImageView.image,
             let fromViewBaseView = from.baseView(self)
         else {
-            logger.write(ConsoleLog(level: .debug, message: "Start fallback transition for ClipItemInformationView presentation", scope: .transition))
+            logger.debug("Start fallback transition for ClipItemInformationView presentation")
             fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
             return
         }
@@ -329,7 +329,7 @@ extension ClipItemInformationInteractivePresentationAnimator: UIViewControllerIn
                                                    to: to,
                                                    innerContext: innerContext)
             lock.unlock()
-            logger.write(ConsoleLog(level: .debug, message: "Immediately ended transition for ClipItemInformationView presentation", scope: .transition))
+            logger.debug("Immediately ended transition for ClipItemInformationView presentation")
             startEndAnimation(params: params)
             return
         }

@@ -2,7 +2,6 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-import Common
 import UIKit
 
 public class ClipItemInformationTransitioningController: NSObject {
@@ -10,13 +9,11 @@ public class ClipItemInformationTransitioningController: NSObject {
     private var dismissalInteractiveAnimator: ClipItemInformationInteractiveDismissalAnimator?
     private var transitionMode: ClipItemInformationTransitionType = .initialValue
     private let lock: TransitionLock
-    private let logger: Loggable
 
     // MARK: - Lifecycle
 
-    public init(lock: TransitionLock, logger: Loggable) {
+    public init(lock: TransitionLock) {
         self.lock = lock
-        self.logger = logger
     }
 }
 
@@ -72,7 +69,7 @@ extension ClipItemInformationTransitioningController: UIViewControllerTransition
     {
         switch self.transitionMode {
         case .custom:
-            let fallback = FadeTransitionAnimator(logger: self.logger)
+            let fallback = FadeTransitionAnimator()
             return ClipItemInformationPresentationAnimator(delegate: self, fallbackAnimator: fallback)
 
         default:
@@ -83,7 +80,7 @@ extension ClipItemInformationTransitioningController: UIViewControllerTransition
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         switch self.transitionMode {
         case .custom:
-            let fallback = FadeTransitionAnimator(logger: self.logger)
+            let fallback = FadeTransitionAnimator()
             return ClipItemInformationDismissalAnimator(delegate: self, fallbackAnimator: fallback)
 
         default:
@@ -94,9 +91,8 @@ extension ClipItemInformationTransitioningController: UIViewControllerTransition
     public func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         switch self.transitionMode {
         case .custom(interactive: true):
-            let fallback = FadeTransitionAnimator(logger: self.logger)
-            self.presentationInteractiveAnimator = ClipItemInformationInteractivePresentationAnimator(logger: self.logger,
-                                                                                                      fallbackAnimator: fallback)
+            let fallback = FadeTransitionAnimator()
+            self.presentationInteractiveAnimator = ClipItemInformationInteractivePresentationAnimator(fallbackAnimator: fallback)
             return self.presentationInteractiveAnimator
 
         default:
@@ -107,9 +103,8 @@ extension ClipItemInformationTransitioningController: UIViewControllerTransition
     public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         switch self.transitionMode {
         case .custom(interactive: true):
-            let fallback = FadeTransitionAnimator(logger: self.logger)
-            self.dismissalInteractiveAnimator = ClipItemInformationInteractiveDismissalAnimator(logger: self.logger,
-                                                                                                fallbackAnimator: fallback)
+            let fallback = FadeTransitionAnimator()
+            self.dismissalInteractiveAnimator = ClipItemInformationInteractiveDismissalAnimator(fallbackAnimator: fallback)
             return self.dismissalInteractiveAnimator
 
         default:

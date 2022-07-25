@@ -5,6 +5,7 @@
 import Common
 import CoreData
 import Domain
+import os.log
 
 public protocol CoreDataStackObserver: AnyObject {
     func coreDataStack(_ coreDataStack: CoreDataStack, reloaded container: NSPersistentCloudKitContainer)
@@ -29,7 +30,7 @@ public class CoreDataStack {
     private var persistentContainer: NSPersistentCloudKitContainer
     private var isICloudSyncEnabled: Bool
     private let notificationCenter: NotificationCenter
-    private let logger: Loggable
+    private let logger = Logger(LogHandler.coreDataStack)
 
     private var lastHistoryToken: NSPersistentHistoryToken? {
         didSet {
@@ -43,9 +44,7 @@ public class CoreDataStack {
             do {
                 try data.write(to: tokenFile)
             } catch {
-                self.logger.write(ConsoleLog(level: .error, message: """
-                Failed to write token data. Error = \(error)
-                """))
+                self.logger.error("トークンデータの書き込みに失敗: \(error.localizedDescription, privacy: .public)")
             }
         }
     }
@@ -61,9 +60,7 @@ public class CoreDataStack {
                                                         withIntermediateDirectories: true,
                                                         attributes: nil)
             } catch {
-                self.logger.write(ConsoleLog(level: .error, message: """
-                Failed to create persistent container URL. Error = \(error)
-                """))
+                self.logger.error("PersistentContainerURLの生成に失敗: \(error.localizedDescription, privacy: .public)")
             }
         }
 
@@ -79,21 +76,17 @@ public class CoreDataStack {
     // MARK: - Lifecycle
 
     public init(isICloudSyncEnabled: Bool,
-                logger: Loggable,
                 notificationCenter: NotificationCenter = .default)
     {
         self.persistentContainer = Self.makeContainer(isICloudSyncEnabled: isICloudSyncEnabled)
         self.isICloudSyncEnabled = isICloudSyncEnabled
         self.notificationCenter = notificationCenter
-        self.logger = logger
 
         if let tokenData = try? Data(contentsOf: self.tokenFile) {
             do {
                 self.lastHistoryToken = try NSKeyedUnarchiver.unarchivedObject(ofClass: NSPersistentHistoryToken.self, from: tokenData)
             } catch {
-                self.logger.write(ConsoleLog(level: .error, message: """
-                Failed to unarchive NSPersistentHistoryToken. Error = \(error)
-                """))
+                self.logger.error("NSPersistentHistoryTokenのunarchiveに失敗: \(error.localizedDescription, privacy: .public)")
             }
         }
 

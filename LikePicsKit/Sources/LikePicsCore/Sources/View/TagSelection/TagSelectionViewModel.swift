@@ -6,6 +6,7 @@ import Combine
 import Common
 import Domain
 import Foundation
+import os.log
 
 public protocol TagSelectionViewModelType {
     var inputs: TagSelectionViewModelInputs { get }
@@ -63,24 +64,22 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
     private let query: TagListQuery
     private let commandService: TagCommandServiceProtocol
     private let settingStorage: UserSettingsStorageProtocol
-    private let logger: Loggable
     private var searchStorage: SearchableStorage<Tag> = .init()
     private var subscriptions: Set<AnyCancellable> = .init()
     private let tagsUpdateQueue = DispatchQueue(label: "net.tasuwo.TBoxCore.TagSelectionViewModel", qos: .userInteractive)
+    private let logger = Logger(LogHandler.common)
 
     // MARK: - Lifecycle
 
     public init(query: TagListQuery,
                 selectedTags: Set<Tag.Identity>,
                 commandService: TagCommandServiceProtocol,
-                settingStorage: UserSettingsStorageProtocol,
-                logger: Loggable)
+                settingStorage: UserSettingsStorageProtocol)
     {
         self.tags = .init(.init(entities: [], selectedIds: selectedTags, filteredIds: .init()))
         self.query = query
         self.commandService = commandService
         self.settingStorage = settingStorage
-        self.logger = logger
 
         self.bind()
     }
@@ -124,11 +123,11 @@ public class TagSelectionViewModel: TagSelectionViewModelType,
                     self.tags.send(newTags)
 
                 case .failure(.duplicated):
-                    self.logger.write(ConsoleLog(level: .info, message: "Duplicated tag name \(name)."))
+                    self.logger.debug("重複したタグ名: \(name, privacy: .public)")
                     self.displayErrorMessage.send(L10n.errorTagAddDuplicated)
 
                 default:
-                    self.logger.write(ConsoleLog(level: .error, message: "Failed to add tag."))
+                    self.logger.error("タグの追加に失敗)")
                     self.displayErrorMessage.send(L10n.errorTagAddDefault)
                 }
             }

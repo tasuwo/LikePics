@@ -18,13 +18,10 @@ public class ImageQueryService {
         }
     }
 
-    private let logger: Loggable
-
     // MARK: - Lifecycle
 
-    public init(context: NSManagedObjectContext, logger: Loggable) {
+    public init(context: NSManagedObjectContext) {
         self.context = context
-        self.logger = logger
     }
 }
 

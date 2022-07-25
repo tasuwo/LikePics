@@ -4,27 +4,26 @@
 
 import Common
 import Foundation
+import os.log
 
 public class ClipReferencesIntegrityValidationService {
     private let clipStorage: ClipStorageProtocol
     private let referenceClipStorage: ReferenceClipStorageProtocol
     private let commandQueue: StorageCommandQueue
     private let lock: NSRecursiveLock
-    private let logger: Loggable
+    private let logger = Logger.init()
 
     // MARK: - Lifecycle
 
     public init(clipStorage: ClipStorageProtocol,
                 referenceClipStorage: ReferenceClipStorageProtocol,
                 commandQueue: StorageCommandQueue,
-                lock: NSRecursiveLock,
-                logger: Loggable)
+                lock: NSRecursiveLock)
     {
         self.clipStorage = clipStorage
         self.referenceClipStorage = referenceClipStorage
         self.commandQueue = commandQueue
         self.lock = lock
-        self.logger = logger
     }
 
     // MARK: - Methods
@@ -38,9 +37,7 @@ public class ClipReferencesIntegrityValidationService {
             }
 
         case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to read reference tags: \(error.localizedDescription)
-            """))
+            self.logger.error("参照タグの読み込みに失敗: \(error.localizedDescription, privacy: .public)")
             return
         }
 
@@ -52,15 +49,11 @@ public class ClipReferencesIntegrityValidationService {
             }
 
         case let .failure(error):
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to read tags: \(error.localizedDescription)
-            """))
+            self.logger.error("タグの読み込みに失敗: \(error.localizedDescription, privacy: .public)")
             return
 
         case .none:
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to read tags
-            """))
+            self.logger.error("タグの読み込みに失敗")
             return
         }
 
@@ -73,27 +66,18 @@ public class ClipReferencesIntegrityValidationService {
 
                 if referenceTag.name != tag.name {
                     if case let .failure(error) = self.referenceClipStorage.updateTag(having: referenceTag.identity, nameTo: tag.name) {
-                        self.logger.write(ConsoleLog(level: .error, message: """
-                        Failed to update tag '\(referenceTag.name)' to '\(tag.name)'
-                        Error: \(error.localizedDescription)
-                        """))
+                        self.logger.error("タグの名前変更('\(referenceTag.name, privacy: .public)'>'\(tag.name, privacy: .public)'に失敗: \(error.localizedDescription, privacy: .public)")
                     }
                 }
 
                 if referenceTag.isHidden != tag.isHidden {
                     if case let .failure(error) = self.referenceClipStorage.updateTag(having: referenceTag.identity, byHiding: tag.isHidden) {
-                        self.logger.write(ConsoleLog(level: .error, message: """
-                        Failed to update tag to \(tag.isHidden ? "hide" : "reveal")
-                        Error: \(error.localizedDescription)
-                        """))
+                        self.logger.error("タグの更新に失敗: \(error.localizedDescription, privacy: .public)")
                     }
                 }
             } else {
                 if case let .failure(error) = self.referenceClipStorage.create(tag: .init(id: tag.id, name: tag.name, isHidden: tag.isHidden)) {
-                    self.logger.write(ConsoleLog(level: .error, message: """
-                    Failed to create reference tag '\(tag.name)' with id \(tag.id)
-                    Error: \(error.localizedDescription)
-                    """))
+                    self.logger.error("参照タグ(name='\(tag.name, privacy: .public)', id='\(tag.id, privacy: .public)'の作成に失敗: \(error.localizedDescription, privacy: .public)")
                 }
             }
         }
@@ -103,9 +87,7 @@ public class ClipReferencesIntegrityValidationService {
             .filter { referenceTags[$0]?.isDirty == false }
         if !extraTagIds.isEmpty {
             if case let .failure(error) = self.referenceClipStorage.deleteTags(having: Array(extraTagIds)) {
-                self.logger.write(ConsoleLog(level: .error, message: """
-                Failed to delete extra reference tag: \(error.localizedDescription)
-                """))
+                self.logger.error("余分な参照タグの削除に失敗: \(error.localizedDescription, privacy: .public)")
             }
         }
 
@@ -124,9 +106,7 @@ extension ClipReferencesIntegrityValidationService: ClipReferencesIntegrityValid
             try self.validateAndFixTagsIntegrityIfNeeded()
         } catch {
             try? self.referenceClipStorage.cancelTransactionIfNeeded()
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to fix integrity: \(error.localizedDescription)
-            """))
+            self.logger.error("整合に失敗: \(error.localizedDescription, privacy: .public)")
         }
     }
 }
@@ -151,9 +131,7 @@ extension ClipReferencesIntegrityValidationService: CloudStackObserver {
                 }
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
-                self.logger.write(ConsoleLog(level: .error, message: """
-                Failed to deduplicate: \(error.localizedDescription)
-                """))
+                self.logger.error("タグのdeduplicateに失敗: \(error.localizedDescription, privacy: .public)")
             }
         }
 
@@ -163,9 +141,7 @@ extension ClipReferencesIntegrityValidationService: CloudStackObserver {
             }
         } catch {
             try? self.referenceClipStorage.cancelTransactionIfNeeded()
-            self.logger.write(ConsoleLog(level: .error, message: """
-            Failed to fix integrity: \(error.localizedDescription)
-            """))
+            self.logger.error("タグの整合に失敗: \(error.localizedDescription, privacy: .public)")
         }
     }
 
@@ -186,9 +162,7 @@ extension ClipReferencesIntegrityValidationService: CloudStackObserver {
                 }
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
-                self.logger.write(ConsoleLog(level: .error, message: """
-                Failed to deduplicate: \(error.localizedDescription)
-                """))
+                self.logger.error("AlbumItemのdeduplicateに失敗: \(error.localizedDescription, privacy: .public)")
             }
         }
     }

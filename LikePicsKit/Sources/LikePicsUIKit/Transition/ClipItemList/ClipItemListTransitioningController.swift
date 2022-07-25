@@ -2,18 +2,15 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-import Common
 import UIKit
 
 public class ClipItemListTransitioningController: NSObject {
     private let lock: TransitionLock
-    private let logger: Loggable
 
     // MARK: - Initializers
 
-    public init(lock: TransitionLock, logger: Loggable) {
+    public init(lock: TransitionLock) {
         self.lock = lock
-        self.logger = logger
     }
 }
 
@@ -45,12 +42,12 @@ extension ClipItemListTransitioningController: UIViewControllerTransitioningDele
                                     presenting: UIViewController,
                                     source: UIViewController) -> UIViewControllerAnimatedTransitioning?
     {
-        let fallback = FadeTransitionAnimator(logger: self.logger)
+        let fallback = FadeTransitionAnimator()
         return ClipItemListPresentationAnimator(delegate: self, fallbackAnimator: fallback)
     }
 
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        let fallback = FadeTransitionAnimator(logger: self.logger)
+        let fallback = FadeTransitionAnimator()
         return ClipItemListDismissalAnimator(delegate: self, fallbackAnimator: fallback)
     }
 

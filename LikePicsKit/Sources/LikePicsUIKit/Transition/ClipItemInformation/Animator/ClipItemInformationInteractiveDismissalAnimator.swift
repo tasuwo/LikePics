@@ -3,6 +3,7 @@
 //
 
 import Common
+import os.log
 import UIKit
 
 class ClipItemInformationInteractiveDismissalAnimator: NSObject {
@@ -31,16 +32,15 @@ class ClipItemInformationInteractiveDismissalAnimator: NSObject {
 
     private let fallbackAnimator: FadeTransitionAnimatorProtocol
 
-    private var logger: Loggable
     private var innerContext: InnerContext?
     private var shouldEndImmediately = false
+    private var logger = Logger(LogHandler.transition)
 
     private let lock = NSLock()
 
     // MARK: - Lifecycle
 
-    init(logger: Loggable, fallbackAnimator: FadeTransitionAnimatorProtocol) {
-        self.logger = logger
+    init(fallbackAnimator: FadeTransitionAnimatorProtocol) {
         self.fallbackAnimator = fallbackAnimator
     }
 
@@ -75,7 +75,7 @@ class ClipItemInformationInteractiveDismissalAnimator: NSObject {
 
     func didPan(sender: UIPanGestureRecognizer) {
         guard let innerContext = self.innerContext else {
-            logger.write(ConsoleLog(level: .debug, message: "Ignored '\(sender.state.description)' gesture for ClipItemInformationView dismissal", scope: .transition))
+            logger.debug("Ignored '\(sender.state.description, privacy: .public)' gesture for ClipItemInformationView dismissal")
             shouldEndImmediately = sender.state.isContinuousGestureFinished
             return
         }
@@ -115,7 +115,7 @@ class ClipItemInformationInteractiveDismissalAnimator: NSObject {
 
         // End Animation
 
-        logger.write(ConsoleLog(level: .debug, message: "Handle '\(sender.state.description)' gesture for ClipItemInformationView dismissal", scope: .transition))
+        logger.debug("Handle '\(sender.state.description, privacy: .public)' gesture for ClipItemInformationView dismissal")
 
         switch sender.state {
         case .ended, .cancelled, .failed, .recognized:
@@ -146,7 +146,7 @@ class ClipItemInformationInteractiveDismissalAnimator: NSObject {
     private func startCancelAnimation(params: FinishAnimationParameters) {
         lock.lock()
 
-        logger.write(ConsoleLog(level: .debug, message: "Start cancel animation for ClipItemInformationView dismissal", scope: .transition))
+        logger.debug("Start cancel animation for ClipItemInformationView dismissal")
 
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.cancelAnimateDuration)
@@ -160,7 +160,7 @@ class ClipItemInformationInteractiveDismissalAnimator: NSObject {
             self.innerContext = nil
             self.lock.unlock()
 
-            self.logger.write(ConsoleLog(level: .debug, message: "Finish cancel animation for ClipItemInformationView dismissal", scope: .transition))
+            self.logger.debug("Finish cancel animation for ClipItemInformationView dismissal")
         }
 
         UIView.animate(
@@ -189,7 +189,7 @@ class ClipItemInformationInteractiveDismissalAnimator: NSObject {
     private func startEndAnimation(params: FinishAnimationParameters) {
         lock.lock()
 
-        logger.write(ConsoleLog(level: .debug, message: "Start end animation for ClipItemInformationView dismissal", scope: .transition))
+        logger.debug("Start end animation for ClipItemInformationView dismissal")
 
         CATransaction.begin()
         CATransaction.setAnimationDuration(Self.endAnimateDuration)
@@ -201,7 +201,7 @@ class ClipItemInformationInteractiveDismissalAnimator: NSObject {
             self.innerContext = nil
             self.lock.unlock()
 
-            self.logger.write(ConsoleLog(level: .debug, message: "Finish end animation for ClipItemInformationView dismissal", scope: .transition))
+            self.logger.debug("Finish end animation for ClipItemInformationView dismissal")
         }
 
         UIView.animate(
@@ -235,7 +235,7 @@ extension ClipItemInformationInteractiveDismissalAnimator: UIViewControllerInter
     func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning) {
         lock.lock(); defer { lock.unlock() }
 
-        logger.write(ConsoleLog(level: .debug, message: "Start transition for ClipItemInformationView dismissal", scope: .transition))
+        logger.debug("Start transition for ClipItemInformationView dismissal")
 
         let containerView = transitionContext.containerView
 
@@ -248,7 +248,7 @@ extension ClipItemInformationInteractiveDismissalAnimator: UIViewControllerInter
             let targetPreviewView = to.previewView(self),
             let toViewBaseView = to.baseView(self)
         else {
-            logger.write(ConsoleLog(level: .debug, message: "Start fallback transition for ClipItemInformationView dismissal", scope: .transition))
+            logger.debug("Start fallback transition for ClipItemInformationView dismissal")
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
             return
         }
@@ -256,7 +256,7 @@ extension ClipItemInformationInteractiveDismissalAnimator: UIViewControllerInter
         guard let infoViewingClipItem = from.clipItem(self),
               to.isPreviewing(self, clipItem: infoViewingClipItem) == true
         else {
-            logger.write(ConsoleLog(level: .debug, message: "Start fallback transition for ClipItemInformationView dismissal", scope: .transition))
+            logger.debug("Start fallback transition for ClipItemInformationView dismissal")
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)
             return
         }
@@ -305,7 +305,7 @@ extension ClipItemInformationInteractiveDismissalAnimator: UIViewControllerInter
             self.shouldEndImmediately = false
             let params = FinishAnimationParameters(from: from, to: to, innerContext: innerContext)
             lock.unlock()
-            logger.write(ConsoleLog(level: .debug, message: "Immediately ended transition for ClipItemInformationView dismissal", scope: .transition))
+            logger.debug("Immediately ended transition for ClipItemInformationView dismissal")
             startEndAnimation(params: params)
             return
         }
