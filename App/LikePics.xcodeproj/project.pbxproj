@@ -13,7 +13,7 @@
 		2C16355927E877F9006C2C24 /* ShareExtensionFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 2C16355827E877F9006C2C24 /* ShareExtensionFeature */; };
 		2C2CB21B27E9401400243281 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2CB21A27E9401400243281 /* AppDelegate.swift */; };
 		2C5E39FB27E76166008CE0FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C5E39FA27E76166008CE0FF /* Assets.xcassets */; };
-		953320B06B0B1D6AF7D75B8F /* ShareExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 3244CDEF6543830E6F56EDB0 /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		953320B06B0B1D6AF7D75B8F /* ShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3244CDEF6543830E6F56EDB0 /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CBC0890201886D3367DEA9FA /* ShareNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27ABC8239271CCDAABD4CC4 /* ShareNavigationController.swift */; };
 		CDA61B3939F06F9C0081E6D3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 313B82C59D48077CA373AC41 /* InfoPlist.strings */; };
 		D63256AF1AF1B810615CDF21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8DB994011BC03FDBCB8CB48 /* Assets.xcassets */; };
@@ -30,15 +30,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		E1A803A7AD9C2386C6477FFC /* Embed App Extensions */ = {
+		E1A803A7AD9C2386C6477FFC /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				953320B06B0B1D6AF7D75B8F /* ShareExtension.appex in Embed App Extensions */,
+				953320B06B0B1D6AF7D75B8F /* ShareExtension.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -168,7 +168,7 @@
 				9F090216CCFF843CD05BFDE2 /* Sources */,
 				6EC454ECE841C07367D5F6FD /* Resources */,
 				A8B069AC82C692753522BF10 /* Frameworks */,
-				E1A803A7AD9C2386C6477FFC /* Embed App Extensions */,
+				E1A803A7AD9C2386C6477FFC /* Embed Foundation Extensions */,
 				D444E408C3481B7E5D5BB580 /* Copy App Data */,
 			);
 			buildRules = (
@@ -210,7 +210,7 @@
 		A1D27652CECD923F6E7E3AAF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1400;
 				ORGANIZATIONNAME = "Tasuku Tozawa";
 				TargetAttributes = {
 					8084EEB0A690B12BDD5EF1B5 = {
