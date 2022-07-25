@@ -169,7 +169,6 @@
 				6EC454ECE841C07367D5F6FD /* Resources */,
 				A8B069AC82C692753522BF10 /* Frameworks */,
 				E1A803A7AD9C2386C6477FFC /* Embed Foundation Extensions */,
-				D444E408C3481B7E5D5BB580 /* Copy App Data */,
 			);
 			buildRules = (
 			);
@@ -283,24 +282,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/sh\n\nif [[ -f \"${PROJECT_DIR}/Pods//SwiftLint/swiftlint\" ]]; then\n  \"${PROJECT_DIR}/Pods/SwiftLint/swiftlint\"\nelse\n  echo \"warning: SwiftLint is not installed. Run 'bundle exec pod install --repo-update' to install it.\"\nfi\n";
-		};
-		D444E408C3481B7E5D5BB580 /* Copy App Data */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Copy App Data";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\nif [[ ${CONFIGURATION} == \"DebugDev\" ]] && [[ ! -z ${FASTLANE_SNAPSHOT} ]]; then\n    bundlePath=\"${CONFIGURATION_BUILD_DIR}/${CONTENTS_FOLDER_PATH}\"\n    cp -R \"${SRCROOT}/ScreenshotData/AppData\" $bundlePath\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
