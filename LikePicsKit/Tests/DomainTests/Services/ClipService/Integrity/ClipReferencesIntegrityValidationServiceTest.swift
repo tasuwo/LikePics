@@ -21,8 +21,7 @@ class ClipReferencesIntegrityValidationServiceTest: XCTestCase {
         service = ClipReferencesIntegrityValidationService(clipStorage: clipStorage,
                                                            referenceClipStorage: referenceClipStorage,
                                                            commandQueue: queue,
-                                                           lock: NSRecursiveLock(),
-                                                           logger: RootLogger(loggers: []))
+                                                           lock: NSRecursiveLock())
 
         queue.syncHandler = { $0() }
         queue.syncBlockHandler = { try $0() }

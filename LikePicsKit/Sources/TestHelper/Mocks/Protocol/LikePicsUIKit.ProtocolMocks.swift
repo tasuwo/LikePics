@@ -7,5 +7,6 @@ import Common
 import CoreGraphics
 import Domain
 @testable import LikePicsUIKit
+import os
 import Smoothie
 import UIKit

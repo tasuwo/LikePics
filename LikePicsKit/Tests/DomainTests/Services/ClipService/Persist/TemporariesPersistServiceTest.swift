@@ -40,8 +40,7 @@ class TemporariesPersistServiceTests: XCTestCase {
                         referenceClipStorage: referenceClipStorage,
                         imageStorage: imageStorage,
                         commandQueue: queue,
-                        lock: .init(),
-                        logger: RootLogger(loggers: []))
+                        lock: .init())
         service.set(observer: observer)
     }
 

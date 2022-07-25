@@ -17,8 +17,7 @@ class ReferenceClipStorageTest: XCTestCase {
     var storage: ReferenceClipStorage!
 
     override func setUp() {
-        storage = try! ReferenceClipStorage(config: .init(realmConfiguration: configuration),
-                                            logger: RootLogger(loggers: []))
+        storage = try! ReferenceClipStorage(config: .init(realmConfiguration: configuration))
         try! realm.write {
             realm.deleteAll()
         }

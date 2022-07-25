@@ -17,7 +17,7 @@ class TemporaryClipStorageTest: XCTestCase {
     var clipStorage: TemporaryClipStorage!
 
     override func setUp() {
-        clipStorage = try! TemporaryClipStorage(config: .init(realmConfiguration: configuration), logger: RootLogger(loggers: []))
+        clipStorage = try! TemporaryClipStorage(config: .init(realmConfiguration: configuration))
         try! realm.write {
             realm.deleteAll()
         }

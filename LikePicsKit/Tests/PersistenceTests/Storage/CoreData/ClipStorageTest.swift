@@ -17,7 +17,7 @@ class ClipStorageTest: XCTestCase {
     override func setUp() {
         container = setUp_CoreDataStack()
         managedContext = container.newBackgroundContext()
-        service = ClipStorage(context: managedContext, logger: RootLogger(loggers: []))
+        service = ClipStorage(context: managedContext)
     }
 
     func setUp_CoreDataStack() -> NSPersistentContainer {

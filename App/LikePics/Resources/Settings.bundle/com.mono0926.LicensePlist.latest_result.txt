@@ -28,10 +28,6 @@ version: 0.47.1
 
 name: BrightFutures, nameSpecified: BrightFutures, owner: Thomvis, version: 8.1.0, source: https://github.com/Thomvis/BrightFutures
 
-name: CwlCatchException, nameSpecified: CwlCatchException, owner: mattgallagher, version: 2.1.1, source: https://github.com/mattgallagher/CwlCatchException
-
-name: CwlPreconditionTesting, nameSpecified: CwlPreconditionTesting, owner: mattgallagher, version: 2.1.0, source: https://github.com/mattgallagher/CwlPreconditionTesting
-
 name: Erik, nameSpecified: Erik, owner: phimage, version: 5.1.0, source: https://github.com/phimage/Erik
 
 name: FileKit, nameSpecified: FileKit, owner: nvzqz, version: 6.0.0, source: https://github.com/nvzqz/FileKit

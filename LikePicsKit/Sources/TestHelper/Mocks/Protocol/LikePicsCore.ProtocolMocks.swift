@@ -11,6 +11,7 @@ import Erik
 import Foundation
 @testable import LikePicsCore
 import LikePicsUIKit
+import os
 import Smoothie
 import UIKit
 import WebKit
