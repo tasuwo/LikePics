@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -267,6 +267,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		14A8BCF9E9EC39CE3B44054B /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -281,7 +282,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\nif [[ -f \"${PROJECT_DIR}/Pods//SwiftLint/swiftlint\" ]]; then\n  \"${PROJECT_DIR}/Pods/SwiftLint/swiftlint\"\nelse\n  echo \"warning: SwiftLint is not installed. Run 'bundle exec pod install --repo-update' to install it.\"\nfi\n";
+			shellScript = "#!/bin/sh\n\ncd ${PROJECT_DIR}/..\nif [[ -f \"Pods/SwiftLint/swiftlint\" ]]; then\n  \"Pods/SwiftLint/swiftlint\"\nelse\n  echo \"warning: SwiftLint is not installed. Run 'bundle exec pod install --repo-update' to install it.\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
