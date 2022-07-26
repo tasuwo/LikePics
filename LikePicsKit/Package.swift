@@ -55,7 +55,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "Realm", url: "https://github.com/realm/realm-cocoa", .exact("10.15.1")),
-        .package(name: "Erik", url: "https://github.com/phimage/Erik", .exact("5.1.0")),
+        .package(name: "Erik", url: "https://github.com/phimage/Erik", .exact("5.1.0"))
     ],
     targets: [
         .target(
@@ -145,7 +145,7 @@ let package = Package(
                 "Persistence",
                 "Smoothie",
                 "LikePicsCore",
-                "LikePicsUIKit",
+                "LikePicsUIKit"
             ]
         ),
         .testTarget(
@@ -159,7 +159,7 @@ let package = Package(
             name: "PersistenceTests",
             dependencies: [
                 "Persistence",
-                "TestHelper",
+                "TestHelper"
             ],
             resources: [
                 .process("Resources/")

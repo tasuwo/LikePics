@@ -11,7 +11,7 @@ public class ClipReferencesIntegrityValidationService {
     private let referenceClipStorage: ReferenceClipStorageProtocol
     private let commandQueue: StorageCommandQueue
     private let lock: NSRecursiveLock
-    private let logger = Logger.init()
+    private let logger = Logger()
 
     // MARK: - Lifecycle
 

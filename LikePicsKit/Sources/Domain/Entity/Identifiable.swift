@@ -5,7 +5,7 @@
 import Foundation
 
 public protocol Identifiable {
-    associatedtype Identity: Hashable & Codable
+    associatedtype Identity: Hashable, Codable
 
     var identity: Identity { get }
 }

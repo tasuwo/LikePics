@@ -131,7 +131,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                                   query: ClipPreviewPageQuery,
                                                   indexPath: ClipCollection.IndexPath) -> UIViewController
     {
-        struct Dependency: ClipPreviewPageViewDependency & HasImageQueryService {
+        struct Dependency: ClipPreviewPageViewDependency, HasImageQueryService {
             let router: Router
             let clipCommandService: ClipCommandServiceProtocol
             let clipQueryService: ClipQueryServiceProtocol

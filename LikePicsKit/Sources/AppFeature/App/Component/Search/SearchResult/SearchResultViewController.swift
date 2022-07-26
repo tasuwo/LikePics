@@ -111,9 +111,7 @@ extension SearchResultViewController {
             .removeDuplicates(by: { $0.menuState == $1.menuState && $0.isSomeItemsHidden == $1.isSomeItemsHidden })
             .sink { [weak self] state in
                 guard let self = self else { return }
-                self.filterButtonItem.menu = self.filterMenuBuilder.build(state.menuState,
-                                                                          isSomeItemsHiddenByUserSetting: state.isSomeItemsHidden)
-                { change in
+                self.filterButtonItem.menu = self.filterMenuBuilder.build(state.menuState, isSomeItemsHiddenByUserSetting: state.isSomeItemsHidden) { change in
                     self.store.execute(.displaySettingMenuChanged(change))
                 } sortChangeHandler: { change in
                     self.store.execute(.sortMenuChanged(change))
