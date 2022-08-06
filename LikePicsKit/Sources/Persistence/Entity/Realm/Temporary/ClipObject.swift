@@ -6,19 +6,15 @@ import Domain
 import Foundation
 import RealmSwift
 
-final class ClipObject: Object {
-    @objc dynamic var id: String = ""
-    @objc dynamic var descriptionText: String?
-    let items = List<ClipItemObject>()
-    let tagIds = List<TagIdObject>()
-    @objc dynamic var isHidden = false
-    @objc dynamic var dataSize: Int = 0
-    @objc dynamic var registeredAt = Date()
-    @objc dynamic var updatedAt = Date()
-
-    override static func primaryKey() -> String? {
-        return "id"
-    }
+class ClipObject: Object {
+    @Persisted(primaryKey: true) var id: String = ""
+    @Persisted var descriptionText: String?
+    @Persisted var items: List<ClipItemObject>
+    @Persisted var tagIds: List<TagIdObject>
+    @Persisted var isHidden = false
+    @Persisted var dataSize: Int = 0
+    @Persisted var registeredAt = Date()
+    @Persisted var updatedAt = Date()
 }
 
 extension Domain.Clip {

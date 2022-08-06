@@ -6,23 +6,19 @@ import Domain
 import Foundation
 import RealmSwift
 
-final class ClipItemObject: Object {
-    @objc dynamic var id: String = ""
-    @objc dynamic var url: String? = ""
-    @objc dynamic var clipId: String = ""
-    @objc dynamic var clipIndex: Int = 0
-    @objc dynamic var imageId: String = ""
-    @objc dynamic var imageFileName: String = ""
-    @objc dynamic var imageUrl: String? = ""
-    @objc dynamic var imageHeight: Double = 0
-    @objc dynamic var imageWidth: Double = 0
-    @objc dynamic var imageDataSize: Int = 0
-    @objc dynamic var registeredAt = Date()
-    @objc dynamic var updatedAt = Date()
-
-    override static func primaryKey() -> String? {
-        return "id"
-    }
+class ClipItemObject: Object {
+    @Persisted(primaryKey: true) var id: String = ""
+    @Persisted var url: String?
+    @Persisted var clipId: String = ""
+    @Persisted var clipIndex: Int = 0
+    @Persisted var imageId: String = ""
+    @Persisted var imageFileName: String = ""
+    @Persisted var imageUrl: String?
+    @Persisted var imageHeight: Double = 0
+    @Persisted var imageWidth: Double = 0
+    @Persisted var imageDataSize: Int = 0
+    @Persisted var registeredAt = Date()
+    @Persisted var updatedAt = Date()
 }
 
 extension ClipItemRecipe {

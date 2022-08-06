@@ -6,15 +6,11 @@ import Domain
 import Foundation
 import RealmSwift
 
-final class ReferenceTagObject: Object {
-    @objc dynamic var id: String = ""
-    @objc dynamic var name: String = ""
-    @objc dynamic var isHidden = false
-    @objc dynamic var isDirty = false
-
-    override static func primaryKey() -> String? {
-        return "id"
-    }
+class ReferenceTagObject: Object {
+    @Persisted(primaryKey: true) var id: String = ""
+    @Persisted var name: String = ""
+    @Persisted var isHidden = false
+    @Persisted var isDirty = false
 }
 
 extension ReferenceTag {

@@ -5,6 +5,6 @@
 import Foundation
 import RealmSwift
 
-final class TagIdObject: Object {
-    @objc dynamic var id: String = ""
+class TagIdObject: Object {
+    @Persisted var id: String = ""
 }
