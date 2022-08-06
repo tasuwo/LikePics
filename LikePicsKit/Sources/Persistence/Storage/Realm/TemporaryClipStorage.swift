@@ -72,12 +72,12 @@ extension TemporaryClipStorage: TemporaryClipStorageProtocol {
             let newClipItem = ClipItemObject()
 
             newClipItem.id = item.id.uuidString
-            newClipItem.url = item.url?.absoluteString
+            newClipItem.url = item.url
             newClipItem.clipId = clip.id.uuidString
             newClipItem.clipIndex = item.clipIndex
             newClipItem.imageId = item.imageId.uuidString
             newClipItem.imageFileName = item.imageFileName
-            newClipItem.imageUrl = item.imageUrl?.absoluteString
+            newClipItem.imageUrl = item.imageUrl
             newClipItem.imageHeight = item.imageSize.height
             newClipItem.imageWidth = item.imageSize.width
             newClipItem.imageDataSize = item.imageDataSize

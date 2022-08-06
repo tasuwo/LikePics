@@ -32,12 +32,12 @@ extension ClipObject {
 
 extension ClipItemObject {
     static func makeDefault(id: String = "",
-                            url: String? = nil,
+                            url: URL? = nil,
                             clipId: String = "",
                             clipIndex: Int = 0,
                             imageId: String = "",
                             imageFileName: String = "",
-                            imageUrl: String = "",
+                            imageUrl: URL? = nil,
                             registeredAt: Date = Date(timeIntervalSince1970: 0),
                             updatedAt: Date = Date(timeIntervalSince1970: 0)) -> ClipItemObject
     {

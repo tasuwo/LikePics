@@ -8,12 +8,12 @@ import RealmSwift
 
 class ClipItemObject: Object {
     @Persisted(primaryKey: true) var id: String = ""
-    @Persisted var url: String?
+    @Persisted var url: URL?
     @Persisted var clipId: String = ""
     @Persisted var clipIndex: Int = 0
     @Persisted var imageId: String = ""
     @Persisted var imageFileName: String = ""
-    @Persisted var imageUrl: String?
+    @Persisted var imageUrl: URL?
     @Persisted var imageHeight: Double = 0
     @Persisted var imageWidth: Double = 0
     @Persisted var imageDataSize: Int = 0
@@ -23,30 +23,16 @@ class ClipItemObject: Object {
 
 extension ClipItemRecipe {
     static func make(by managedObject: ClipItemObject) -> ClipItemRecipe {
-        let imageUrl: URL?
-        if let imageUrlString = managedObject.imageUrl {
-            imageUrl = URL(string: imageUrlString)
-        } else {
-            imageUrl = nil
-        }
-
-        let url: URL?
-        if let urlString = managedObject.url {
-            url = URL(string: urlString)
-        } else {
-            url = nil
-        }
-
         // swiftlint:disable:next force_unwrapping
         return .init(id: UUID(uuidString: managedObject.id)!,
-                     url: url,
+                     url: managedObject.url,
                      // swiftlint:disable:next force_unwrapping
                      clipId: UUID(uuidString: managedObject.clipId)!,
                      clipIndex: managedObject.clipIndex,
                      // swiftlint:disable:next force_unwrapping
                      imageId: UUID(uuidString: managedObject.imageId)!,
                      imageFileName: managedObject.imageFileName,
-                     imageUrl: imageUrl,
+                     imageUrl: managedObject.imageUrl,
                      imageSize: ImageSize(height: managedObject.imageHeight,
                                           width: managedObject.imageWidth),
                      imageDataSize: managedObject.imageDataSize,
