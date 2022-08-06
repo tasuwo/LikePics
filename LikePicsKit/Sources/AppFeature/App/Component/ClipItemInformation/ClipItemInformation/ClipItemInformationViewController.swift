@@ -7,6 +7,7 @@ import CompositeKit
 import Domain
 import Environment
 import LikePicsUIKit
+import TagSelectionModalFeature
 import UIKit
 
 class ClipItemInformationViewController: UIViewController {

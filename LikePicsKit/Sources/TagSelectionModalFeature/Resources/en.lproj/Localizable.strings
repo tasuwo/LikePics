@@ -1,0 +1,12 @@
+"tag_selection_view_title" = "Select Tag";
+
+"placeholder_search_tag" = "Search Tags";
+
+"tag_list_view_empty_title" = "No tags";
+"tag_list_view_empty_message" = "If you classify clips by tags, you can list the clips categorized with specific tag later.";
+"tag_list_view_empty_action_title" = "Add your first Tag";
+
+"confirm_alert_ok" = "OK";
+
+"error_tag_rename_duplicated" = "Duplicated tag name.";
+"error_tag_default" = "Failed to update tag";

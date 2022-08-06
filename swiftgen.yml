@@ -19,6 +19,11 @@ strings:
       outputs:
         - templateName: structured-swift5
           output: LikePicsKit/Sources/ShareExtensionFeature/Sources/Generated/String.swift
+    - inputs:
+        - LikePicsKit/Sources/TagSelectionModalFeature/Resources/ja.lproj
+      outputs:
+        - templateName: structured-swift5
+          output: LikePicsKit/Sources/TagSelectionModalFeature/Generated/String.swift
 xcassets:
     - inputs:
         - LikePicsKit/Sources/LikePicsUIKit/Resources/Assets.xcassets

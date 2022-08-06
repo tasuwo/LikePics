@@ -4,13 +4,13 @@
 
 import UIKit
 
-protocol NewTagCollectionBrickworkLayoutDelegate: AnyObject {
+public protocol NewTagCollectionBrickworkLayoutDelegate: AnyObject {
     func heightOfUncategorizedCell(_ collectionView: UICollectionView) -> CGFloat
     func heightOfTagCell(_ collectionView: UICollectionView) -> CGFloat
     func collectionView(_ collectionView: UICollectionView, widthAtIndexPath indexPath: IndexPath) -> CGFloat
 }
 
-class NewTagCollectionBrickworkLayout: UICollectionViewLayout {
+public class NewTagCollectionBrickworkLayout: UICollectionViewLayout {
     struct Cache {
         let uncategorizedItemHeight: CGFloat
         let tagItemHeight: CGFloat
@@ -35,15 +35,15 @@ class NewTagCollectionBrickworkLayout: UICollectionViewLayout {
 
     private var cache: Cache?
 
-    weak var delegate: NewTagCollectionBrickworkLayoutDelegate?
+    public weak var delegate: NewTagCollectionBrickworkLayoutDelegate?
 
     // MARK: - UICollectionViewLayout
 
-    override var collectionViewContentSize: CGSize {
+    override public var collectionViewContentSize: CGSize {
         return CGSize(width: contentWidth, height: contentHeight)
     }
 
-    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+    override public func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         guard let cache = cache else { return nil }
 
         let startRow: Int = rect.minY <= (cache.uncategorizedItemHeight + Self.interSectionSpacing)
@@ -59,18 +59,18 @@ class NewTagCollectionBrickworkLayout: UICollectionViewLayout {
             .compactMap { cache.attributesByIndex[$0] }
     }
 
-    override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+    override public func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         return cache?.attributesByIndex[indexPath]
     }
 
-    override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+    override public func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         if let collectionView = collectionView {
             return collectionView.frame.size != newBounds.size
         }
         return false
     }
 
-    override func prepare() {
+    override public func prepare() {
         resetAttributes()
         setupAttributes()
     }

@@ -4,7 +4,7 @@
 
 import UIKit
 
-class TagCollectionBrickworkLayout: UICollectionViewFlowLayout {
+public class TagCollectionBrickworkLayout: UICollectionViewFlowLayout {
     // MARK: - Privates
 
     private func layoutAttributesForPreviousAdjacentItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
@@ -36,7 +36,7 @@ class TagCollectionBrickworkLayout: UICollectionViewFlowLayout {
 
     // MARK: - UICollectionViewFlowLayout
 
-    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+    override public func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         guard let layoutAttributesList = super.layoutAttributesForElements(in: rect) else { return nil }
 
         return layoutAttributesList.map {
@@ -50,7 +50,7 @@ class TagCollectionBrickworkLayout: UICollectionViewFlowLayout {
         }
     }
 
-    override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+    override public func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         guard let layoutAttributes = super.layoutAttributesForItem(at: indexPath)?.copy() as? UICollectionViewLayoutAttributes else { return nil }
 
         if let referenceAttributes = layoutAttributesForLeftAdjacentItem(at: indexPath) {

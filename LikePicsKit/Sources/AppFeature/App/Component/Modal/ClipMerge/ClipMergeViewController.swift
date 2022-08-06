@@ -9,6 +9,7 @@ import Environment
 import Foundation
 import LikePicsUIKit
 import Smoothie
+import TagSelectionModalFeature
 import UIKit
 
 class ClipMergeViewController: UIViewController {

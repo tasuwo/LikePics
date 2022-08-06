@@ -3,10 +3,9 @@
 //
 
 import Foundation
-
 import UIKit
 
-extension UICollectionView {
+public extension UICollectionView {
     var allCells: [UICollectionViewCell] {
         guard numberOfSections > 0 else { return [] }
 

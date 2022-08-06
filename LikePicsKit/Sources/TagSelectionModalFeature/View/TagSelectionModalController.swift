@@ -3,12 +3,13 @@
 //
 
 import Combine
+import Common
 import CompositeKit
 import Domain
 import LikePicsUIKit
 import UIKit
 
-class TagSelectionModalController: UIViewController {
+public class TagSelectionModalController: UIViewController {
     typealias Layout = TagSelectionModalLayout
     typealias Store = CompositeKit.Store<TagSelectionModalState, TagSelectionModalAction, TagSelectionModalDependency>
 
@@ -34,9 +35,9 @@ class TagSelectionModalController: UIViewController {
 
     // MARK: - Initializers
 
-    init(state: TagSelectionModalState,
-         tagAdditionAlertState: TextEditAlertState,
-         dependency: TagSelectionModalDependency)
+    public init(state: TagSelectionModalState,
+                tagAdditionAlertState: TextEditAlertState,
+                dependency: TagSelectionModalDependency)
     {
         self.store = .init(initialState: state, dependency: dependency, reducer: TagSelectionModalReducer())
         self.tagAdditionAlert = .init(state: tagAdditionAlertState)
@@ -46,13 +47,13 @@ class TagSelectionModalController: UIViewController {
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     // MARK: View Life-Cycle Methods
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
         if previousTraitCollection?.preferredContentSizeCategory != traitCollection.preferredContentSizeCategory {
@@ -60,7 +61,7 @@ class TagSelectionModalController: UIViewController {
         }
     }
 
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    override public func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
 
         // HACK: 画面回転時にStackViewの状態がおかしくなるケースがあるため、強制的に表示を更新する
@@ -71,7 +72,7 @@ class TagSelectionModalController: UIViewController {
         })
     }
 
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
 
         configureViewHierarchy()
@@ -250,7 +251,7 @@ extension TagSelectionModalController: UICollectionViewDelegate {
 extension TagSelectionModalController: UICollectionViewDelegateFlowLayout {
     // MARK: - UICollectionViewDelegateFlowLayout
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return .zero }
         return TagCollectionViewCell.preferredSize(title: item.name,
                                                    clipCount: item.clipCount,
@@ -259,11 +260,11 @@ extension TagSelectionModalController: UICollectionViewDelegateFlowLayout {
                                                    visibleDeleteButton: false)
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 12.0
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 8.0
     }
 }
@@ -271,13 +272,13 @@ extension TagSelectionModalController: UICollectionViewDelegateFlowLayout {
 extension TagSelectionModalController: UISearchBarDelegate {
     // MARK: - UISearchBarDelegate
 
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         RunLoop.main.perform {
             self.store.execute(.searchQueryChanged(searchBar.text ?? ""))
         }
     }
 
-    func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+    public func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         // HACK: marked text 入力を待つために遅延を設ける
         DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
             RunLoop.main.perform {
@@ -287,19 +288,19 @@ extension TagSelectionModalController: UISearchBarDelegate {
         return true
     }
 
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+    public func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
     }
 
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+    public func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(false, animated: true)
     }
 
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    public func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
 
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+    public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
 }
@@ -307,7 +308,7 @@ extension TagSelectionModalController: UISearchBarDelegate {
 extension TagSelectionModalController: EmptyMessageViewDelegate {
     // MARK: - EmptyMessageViewDelegate
 
-    func didTapActionButton(_ view: EmptyMessageView) {
+    public func didTapActionButton(_ view: EmptyMessageView) {
         store.execute(.emptyMessageViewActionButtonTapped)
     }
 }
@@ -315,11 +316,11 @@ extension TagSelectionModalController: EmptyMessageViewDelegate {
 extension TagSelectionModalController: TextEditAlertDelegate {
     // MARK: - TextEditAlertDelegate
 
-    func textEditAlert(_ id: UUID, didTapSaveWithText text: String) {
+    public func textEditAlert(_ id: UUID, didTapSaveWithText text: String) {
         store.execute(.alertSaveButtonTapped(text: text))
     }
 
-    func textEditAlertDidCancel(_ id: UUID) {
+    public func textEditAlertDidCancel(_ id: UUID) {
         store.execute(.alertDismissed)
     }
 }
@@ -327,7 +328,7 @@ extension TagSelectionModalController: TextEditAlertDelegate {
 extension TagSelectionModalController: UIAdaptivePresentationControllerDelegate {
     // MARK: - UIAdaptivePresentationControllerDelegate
 
-    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+    public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         store.execute(.didDismissedManually)
     }
 }
@@ -335,5 +336,5 @@ extension TagSelectionModalController: UIAdaptivePresentationControllerDelegate 
 extension TagSelectionModalController: ModalController {
     // MARK: - ModalController
 
-    var id: UUID { store.stateValue.id }
+    public var id: UUID { store.stateValue.id }
 }

@@ -6,7 +6,7 @@ import CoreGraphics
 import Domain
 import Foundation
 
-struct TagSelectionModalState: Equatable {
+public struct TagSelectionModalState: Equatable {
     enum Alert: Equatable {
         case error(String?)
         case addition
@@ -28,7 +28,7 @@ struct TagSelectionModalState: Equatable {
     var isDismissed: Bool
 }
 
-extension TagSelectionModalState {
+public extension TagSelectionModalState {
     init(id: UUID, selections: Set<Tag.Identity>, isSomeItemsHidden: Bool) {
         self.id = id
 

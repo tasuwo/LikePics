@@ -5,7 +5,7 @@
 import CompositeKit
 import Domain
 
-enum TagSelectionModalAction: Action {
+public enum TagSelectionModalAction: Action {
     // MARK: View Life-Cycle
 
     case viewDidLoad

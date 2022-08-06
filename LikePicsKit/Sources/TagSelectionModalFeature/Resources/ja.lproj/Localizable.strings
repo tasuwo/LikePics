@@ -1,0 +1,12 @@
+"tag_selection_view_title" = "タグを選択";
+
+"placeholder_search_tag" = "タグを探す";
+
+"tag_list_view_empty_title" = "タグがありません";
+"tag_list_view_empty_message" = "クリップをタグで分類すると、後から特定のタグに所属したクリップを一覧できます";
+"tag_list_view_empty_action_title" = "はじめてのタグを追加する";
+
+"confirm_alert_ok" = "OK";
+
+"error_tag_rename_duplicated" = "同じ名前のタグが既に存在します";
+"error_tag_default" = "タグの更新に失敗しました";

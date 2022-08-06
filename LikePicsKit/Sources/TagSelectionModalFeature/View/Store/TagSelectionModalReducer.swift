@@ -7,17 +7,17 @@ import CompositeKit
 import Domain
 import Environment
 
-typealias TagSelectionModalDependency = HasUserSettingStorage
+public typealias TagSelectionModalDependency = HasUserSettingStorage
     & HasClipCommandService
     & HasClipQueryService
     & HasModalNotificationCenter
 
-struct TagSelectionModalReducer: Reducer {
-    typealias Dependency = TagSelectionModalDependency
-    typealias State = TagSelectionModalState
-    typealias Action = TagSelectionModalAction
+public struct TagSelectionModalReducer: Reducer {
+    public typealias Dependency = TagSelectionModalDependency
+    public typealias State = TagSelectionModalState
+    public typealias Action = TagSelectionModalAction
 
-    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    public func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
 
         switch action {
@@ -189,10 +189,10 @@ extension TagSelectionModalReducer {
 // MARK: - ModalNotification
 
 extension ModalNotification.Name {
-    static let tagSelectionModalDidSelect = ModalNotification.Name("net.tasuwo.TBox.TagSelectionModalReducer.tagSelectionModalDidSelect")
-    static let tagSelectionModalDidDismiss = ModalNotification.Name("net.tasuwo.TBox.TagSelectionModalReducer.tagSelectionModalDidDismiss")
+    public static let tagSelectionModalDidSelect = ModalNotification.Name("net.tasuwo.TBox.TagSelectionModalReducer.tagSelectionModalDidSelect")
+    public static let tagSelectionModalDidDismiss = ModalNotification.Name("net.tasuwo.TBox.TagSelectionModalReducer.tagSelectionModalDidDismiss")
 }
 
 extension ModalNotification.UserInfoKey {
-    static let selectedTags = ModalNotification.UserInfoKey("net.tasuwo.TBox.TagSelectionModalReducer.selectedTags")
+    public static let selectedTags = ModalNotification.UserInfoKey("net.tasuwo.TBox.TagSelectionModalReducer.selectedTags")
 }

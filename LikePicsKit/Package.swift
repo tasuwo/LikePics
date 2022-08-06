@@ -9,6 +9,7 @@ let package = Package(
     ],
     products: [
         .library(name: "AppFeature", targets: ["AppFeature"]),
+        .library(name: "TagSelectionModalFeature", targets: ["TagSelectionModalFeature"]),
         .library(name: "ShareExtensionFeature", targets: ["ShareExtensionFeature"]),
         .library(name: "Domain", targets: ["Domain"]),
         .library(name: "Persistence", targets: ["Persistence"]),
@@ -34,6 +35,7 @@ let package = Package(
                 "CompositeKit",
                 "Domain",
                 "Environment",
+                "TagSelectionModalFeature",
                 "ClipCreationFeature",
                 "LikePicsUIKit",
                 "Persistence",
@@ -53,6 +55,17 @@ let package = Package(
 
         // MARK: - Feature
 
+        .target(
+            name: "TagSelectionModalFeature",
+            dependencies: [
+                "LikePicsUIKit",
+                "Smoothie",
+                "Domain",
+                "Environment",
+                "Common",
+                "CompositeKit",
+            ]
+        ),
         .target(
             name: "ClipCreationFeature",
             dependencies: [
