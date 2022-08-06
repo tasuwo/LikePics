@@ -2,12 +2,12 @@
 //  Copyright © 2022 Tasuku Tozawa. All rights reserved.
 //
 
+import ClipCreationFeature
 import Combine
 import CompositeKit
 import Domain
 import Environment
 import Foundation
-import LikePicsCore
 import LikePicsUIKit
 import UIKit
 import WebKit

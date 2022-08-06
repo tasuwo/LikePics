@@ -2,12 +2,12 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import ClipCreationFeature
 import Combine
 import Common
 import CompositeKit
 import Domain
 import Environment
-import LikePicsCore
 import LikePicsUIKit
 import Smoothie
 import UIKit
@@ -187,7 +187,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
     }
 }
 
-extension SceneDependencyContainer: LikePicsCore.ViewControllerFactory {
+extension SceneDependencyContainer: ClipCreationFeature.ViewControllerFactory {
     public func makeTagSelectionViewController(selectedTags: Set<Tag.Identity>, delegate: TagSelectionViewControllerDelegate) -> UIViewController? {
         switch container.clipQueryService.queryAllTags() {
         case let .success(query):

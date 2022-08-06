@@ -2,9 +2,9 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import ClipCreationFeature
 import Combine
 import Domain
-import LikePicsCore
 import UIKit
 
 class ShareNavigationRootViewController: UIViewController {

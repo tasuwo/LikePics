@@ -2,11 +2,11 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import ClipCreationFeature
 import Common
 import CoreData
 import Domain
 import Environment
-import LikePicsCore
 import LikePicsUIKit
 import Persistence
 import Smoothie

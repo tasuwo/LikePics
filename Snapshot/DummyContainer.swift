@@ -6,10 +6,10 @@
 //
 
 import AppFeature
+import ClipCreationFeature
 import Combine
 import Common
 import Domain
-import LikePicsCore
 import LikePicsUIKit
 import Smoothie
 import TestHelper

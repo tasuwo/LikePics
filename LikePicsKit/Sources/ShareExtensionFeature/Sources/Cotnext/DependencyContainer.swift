@@ -2,10 +2,10 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import ClipCreationFeature
 import Combine
 import Common
 import Domain
-import LikePicsCore
 import Persistence
 import Smoothie
 import UIKit
@@ -123,7 +123,7 @@ extension DependencyContainer: ViewControllerFactory {
     }
 }
 
-extension DependencyContainer: LikePicsCore.ViewControllerFactory {
+extension DependencyContainer: ClipCreationFeature.ViewControllerFactory {
     public func makeTagSelectionViewController(selectedTags: Set<Domain.Tag.Identity>,
                                                delegate: TagSelectionViewControllerDelegate) -> UIViewController?
     {

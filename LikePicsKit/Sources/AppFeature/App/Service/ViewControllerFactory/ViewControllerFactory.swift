@@ -2,9 +2,9 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import ClipCreationFeature
 import Domain
 import Environment
-import LikePicsCore
 import LikePicsUIKit
 import UIKit
 

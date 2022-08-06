@@ -8,56 +8,25 @@ let package = Package(
         .iOS(.v14), .macOS(.v11)
     ],
     products: [
-        .library(
-            name: "AppFeature",
-            targets: ["AppFeature"]
-        ),
-        .library(
-            name: "ShareExtensionFeature",
-            targets: ["ShareExtensionFeature"]
-        ),
-        .library(
-            name: "Domain",
-            targets: ["Domain"]
-        ),
-        .library(
-            name: "Persistence",
-            targets: ["Persistence"]
-        ),
-        .library(
-            name: "LikePicsCore",
-            targets: ["LikePicsCore"]
-        ),
-        .library(
-            name: "LikePicsUIKit",
-            targets: ["LikePicsUIKit"]
-        ),
-        .library(
-            name: "CompositeKit",
-            targets: ["CompositeKit"]
-        ),
-        .library(
-            name: "Smoothie",
-            targets: ["Smoothie"]
-        ),
-        .library(
-            name: "Common",
-            targets: ["Common"]
-        ),
-        .library(
-            name: "Environment",
-            targets: ["Environment"]
-        ),
-        .library(
-            name: "TestHelper",
-            targets: ["TestHelper"]
-        )
+        .library(name: "AppFeature", targets: ["AppFeature"]),
+        .library(name: "ShareExtensionFeature", targets: ["ShareExtensionFeature"]),
+        .library(name: "Domain", targets: ["Domain"]),
+        .library(name: "Persistence", targets: ["Persistence"]),
+        .library(name: "ClipCreationFeature", targets: ["ClipCreationFeature"]),
+        .library(name: "LikePicsUIKit", targets: ["LikePicsUIKit"]),
+        .library(name: "CompositeKit", targets: ["CompositeKit"]),
+        .library(name: "Smoothie", targets: ["Smoothie"]),
+        .library(name: "Common", targets: ["Common"]),
+        .library(name: "Environment", targets: ["Environment"]),
+        .library(name: "TestHelper", targets: ["TestHelper"])
     ],
     dependencies: [
         .package(name: "Realm", url: "https://github.com/realm/realm-cocoa", .upToNextMinor(from: "10.28.0")),
         .package(name: "Erik", url: "https://github.com/phimage/Erik", .exact("5.1.0"))
     ],
     targets: [
+        // MARK: - App
+
         .target(
             name: "AppFeature",
             dependencies: [
@@ -65,7 +34,7 @@ let package = Package(
                 "CompositeKit",
                 "Domain",
                 "Environment",
-                "LikePicsCore",
+                "ClipCreationFeature",
                 "LikePicsUIKit",
                 "Persistence",
                 "Smoothie"
@@ -76,26 +45,16 @@ let package = Package(
             dependencies: [
                 "Common",
                 "Domain",
-                "LikePicsCore",
+                "ClipCreationFeature",
                 "Persistence",
                 "Smoothie"
             ]
         ),
+
+        // MARK: - Feature
+
         .target(
-            name: "Domain",
-            dependencies: ["Common"]
-        ),
-        .target(
-            name: "Persistence",
-            dependencies: [
-                "Common",
-                "Domain",
-                .product(name: "Realm", package: "Realm"),
-                .product(name: "RealmSwift", package: "Realm")
-            ]
-        ),
-        .target(
-            name: "LikePicsCore",
+            name: "ClipCreationFeature",
             dependencies: [
                 "LikePicsUIKit",
                 "Smoothie",
@@ -106,26 +65,19 @@ let package = Package(
                 .product(name: "Erik", package: "Erik")
             ]
         ),
+
+        // MARK: - Core
+
         .target(
-            name: "LikePicsUIKit",
+            name: "Domain",
+            dependencies: ["Common"]
+        ),
+        .testTarget(
+            name: "DomainTests",
             dependencies: [
-                "Smoothie",
                 "Domain",
-                "Common",
-                "CompositeKit"
+                "TestHelper"
             ]
-        ),
-        .target(
-            name: "CompositeKit",
-            dependencies: []
-        ),
-        .target(
-            name: "Smoothie",
-            dependencies: []
-        ),
-        .target(
-            name: "Common",
-            dependencies: []
         ),
         .target(
             name: "Environment",
@@ -136,23 +88,16 @@ let package = Package(
                 "Smoothie"
             ]
         ),
+
+        // MARK: - Persistence
+
         .target(
-            name: "TestHelper",
+            name: "Persistence",
             dependencies: [
                 "Common",
                 "Domain",
-                "Environment",
-                "Persistence",
-                "Smoothie",
-                "LikePicsCore",
-                "LikePicsUIKit"
-            ]
-        ),
-        .testTarget(
-            name: "DomainTests",
-            dependencies: [
-                "Domain",
-                "TestHelper"
+                .product(name: "Realm", package: "Realm"),
+                .product(name: "RealmSwift", package: "Realm")
             ]
         ),
         .testTarget(
@@ -163,6 +108,36 @@ let package = Package(
             ],
             resources: [
                 .process("Resources/")
+            ]
+        ),
+
+        // MARK: - UI
+
+        .target(
+            name: "LikePicsUIKit",
+            dependencies: [
+                "Smoothie",
+                "Domain",
+                "Common",
+                "CompositeKit"
+            ]
+        ),
+
+        // MARK: - Helper
+
+        .target(name: "CompositeKit"),
+        .target(name: "Smoothie"),
+        .target(name: "Common"),
+        .target(
+            name: "TestHelper",
+            dependencies: [
+                "Common",
+                "Domain",
+                "Environment",
+                "Persistence",
+                "Smoothie",
+                "ClipCreationFeature",
+                "LikePicsUIKit"
             ]
         )
     ]

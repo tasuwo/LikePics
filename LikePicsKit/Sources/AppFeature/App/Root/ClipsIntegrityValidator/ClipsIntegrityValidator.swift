@@ -2,8 +2,8 @@
 //  Copyright ©︎ 2022 Tasuku Tozawa. All rights reserved.
 //
 
+import ClipCreationFeature
 import CompositeKit
-import LikePicsCore
 
 public class ClipsIntegrityValidator {
     typealias Store = CompositeKit.Store<ClipsIntegrityValidatorState, ClipsIntegrityValidatorAction, ClipsIntegrityValidatorDependency>
