@@ -2,9 +2,9 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-public enum ClipItemInformationTransitionType {
+public enum ClipPreviewTransitionType {
     case custom(interactive: Bool)
     case `default`
 
-    static let initialValue: Self = .custom(interactive: false)
+    public static let initialValue: Self = .custom(interactive: false)
 }

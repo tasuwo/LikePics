@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Domain
 import UIKit
 
 public class ClipItemInformationTransitioningController: NSObject {

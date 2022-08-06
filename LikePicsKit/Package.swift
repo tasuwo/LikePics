@@ -84,7 +84,6 @@ let package = Package(
             dependencies: [
                 "Common",
                 "Domain",
-                "LikePicsUIKit",
                 "Smoothie"
             ]
         ),

@@ -5,6 +5,7 @@
 import Combine
 import CompositeKit
 import Environment
+import LikePicsUIKit
 
 typealias ClipPreviewPageBarDependency = HasImageQueryService
     & HasTransitionLock

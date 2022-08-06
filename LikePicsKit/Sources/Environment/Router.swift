@@ -4,7 +4,6 @@
 
 import Domain
 import Foundation
-import LikePicsUIKit
 import WebKit
 
 public protocol Router {
