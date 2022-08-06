@@ -52,7 +52,7 @@ class TemporaryClipStorageTest: XCTestCase {
 
         let clips = realm.objects(ClipObject.self)
         XCTAssertEqual(clips.count, 1)
-        XCTAssertEqual(clips.first?.id, "E621E1F8-C36C-495A-93FC-0C247A3E6E51")
+        XCTAssertEqual(clips.first?.id, UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51"))
         XCTAssertEqual(clips.first?.descriptionText, "my description")
         XCTAssertFalse(clips.first!.isHidden)
         XCTAssertEqual(clips.first?.items.count, 3)

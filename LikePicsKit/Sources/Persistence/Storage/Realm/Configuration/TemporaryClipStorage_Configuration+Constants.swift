@@ -28,7 +28,7 @@ extension TemporaryClipStorage.Configuration {
         switch kind {
         case .group:
             return Realm.Configuration(
-                schemaVersion: 1,
+                schemaVersion: 2,
                 migrationBlock: ClipStorageMigrationService.migrationBlock,
                 deleteRealmIfMigrationNeeded: false,
                 // WARN: 古いクライアントに `TagObject` のテーブルが残っている可能性があるので注意すること

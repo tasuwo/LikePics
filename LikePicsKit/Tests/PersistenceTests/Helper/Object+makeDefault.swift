@@ -6,7 +6,7 @@ import Foundation
 @testable import Persistence
 
 extension ClipObject {
-    static func makeDefault(id: String,
+    static func makeDefault(id: UUID,
                             description: String = "hoge",
                             items: [ClipItemObject] = [],
                             tagIds: [TagIdObject] = [],
@@ -31,11 +31,11 @@ extension ClipObject {
 }
 
 extension ClipItemObject {
-    static func makeDefault(id: String = "",
+    static func makeDefault(id: UUID = UUID(),
                             url: URL? = nil,
-                            clipId: String = "",
+                            clipId: UUID = UUID(),
                             clipIndex: Int = 0,
-                            imageId: String = "",
+                            imageId: UUID = UUID(),
                             imageFileName: String = "",
                             imageUrl: URL? = nil,
                             registeredAt: Date = Date(timeIntervalSince1970: 0),
@@ -56,7 +56,7 @@ extension ClipItemObject {
 }
 
 extension TagIdObject {
-    static func makeDefault(id: String) -> TagIdObject {
+    static func makeDefault(id: UUID) -> TagIdObject {
         let obj = TagIdObject()
         obj.id = id
         return obj
@@ -64,7 +64,7 @@ extension TagIdObject {
 }
 
 extension ReferenceTagObject {
-    static func makeDefault(id: String = "",
+    static func makeDefault(id: UUID = UUID(),
                             name: String = "",
                             isDirty: Bool = false) -> ReferenceTagObject
     {

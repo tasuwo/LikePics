@@ -7,11 +7,11 @@ import Foundation
 import RealmSwift
 
 class ClipItemObject: Object {
-    @Persisted(primaryKey: true) var id: String = ""
+    @Persisted(primaryKey: true) var id: UUID
     @Persisted var url: URL?
-    @Persisted var clipId: String = ""
+    @Persisted var clipId: UUID
     @Persisted var clipIndex: Int = 0
-    @Persisted var imageId: String = ""
+    @Persisted var imageId: UUID
     @Persisted var imageFileName: String = ""
     @Persisted var imageUrl: URL?
     @Persisted var imageHeight: Double = 0
@@ -23,14 +23,11 @@ class ClipItemObject: Object {
 
 extension ClipItemRecipe {
     static func make(by managedObject: ClipItemObject) -> ClipItemRecipe {
-        // swiftlint:disable:next force_unwrapping
-        return .init(id: UUID(uuidString: managedObject.id)!,
+        return .init(id: managedObject.id,
                      url: managedObject.url,
-                     // swiftlint:disable:next force_unwrapping
-                     clipId: UUID(uuidString: managedObject.clipId)!,
+                     clipId: managedObject.clipId,
                      clipIndex: managedObject.clipIndex,
-                     // swiftlint:disable:next force_unwrapping
-                     imageId: UUID(uuidString: managedObject.imageId)!,
+                     imageId: managedObject.imageId,
                      imageFileName: managedObject.imageFileName,
                      imageUrl: managedObject.imageUrl,
                      imageSize: ImageSize(height: managedObject.imageHeight,

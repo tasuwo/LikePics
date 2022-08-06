@@ -7,7 +7,7 @@ import Foundation
 import RealmSwift
 
 class ReferenceTagObject: Object {
-    @Persisted(primaryKey: true) var id: String = ""
+    @Persisted(primaryKey: true) var id: UUID
     @Persisted var name: String = ""
     @Persisted var isHidden = false
     @Persisted var isDirty = false
@@ -15,8 +15,7 @@ class ReferenceTagObject: Object {
 
 extension ReferenceTag {
     static func make(by managedObject: ReferenceTagObject) -> ReferenceTag {
-        // swiftlint:disable:next force_unwrapping
-        return .init(id: UUID(uuidString: managedObject.id)!,
+        return .init(id: managedObject.id,
                      name: managedObject.name,
                      isHidden: managedObject.isHidden,
                      isDirty: managedObject.isDirty)

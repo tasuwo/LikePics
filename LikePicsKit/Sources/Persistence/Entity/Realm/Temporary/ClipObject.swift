@@ -7,7 +7,7 @@ import Foundation
 import RealmSwift
 
 class ClipObject: Object {
-    @Persisted(primaryKey: true) var id: String = ""
+    @Persisted(primaryKey: true) var id: UUID
     @Persisted var descriptionText: String?
     @Persisted var items: List<ClipItemObject>
     @Persisted var tagIds: List<TagIdObject>
@@ -20,11 +20,10 @@ class ClipObject: Object {
 extension Domain.Clip {
     static func make(by managedObject: ClipObject) -> ClipRecipe {
         let items = Array(managedObject.items.map { ClipItemRecipe.make(by: $0) })
-        // swiftlint:disable:next force_unwrapping
-        return .init(id: UUID(uuidString: managedObject.id)!,
+        return .init(id: managedObject.id,
                      description: managedObject.descriptionText,
                      items: items,
-                     tagIds: managedObject.tagIds.compactMap({ UUID(uuidString: $0.id) }),
+                     tagIds: managedObject.tagIds.compactMap({ $0.id }),
                      isHidden: managedObject.isHidden,
                      dataSize: managedObject.dataSize,
                      registeredDate: managedObject.registeredAt,

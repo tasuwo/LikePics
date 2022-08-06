@@ -65,17 +65,17 @@ extension TemporaryClipStorage: TemporaryClipStorageProtocol {
         // Prepare new objects
 
         let newClip = ClipObject()
-        newClip.id = clip.id.uuidString
+        newClip.id = clip.id
         newClip.descriptionText = clip.description
 
         clip.items.forEach { item in
             let newClipItem = ClipItemObject()
 
-            newClipItem.id = item.id.uuidString
+            newClipItem.id = item.id
             newClipItem.url = item.url
-            newClipItem.clipId = clip.id.uuidString
+            newClipItem.clipId = clip.id
             newClipItem.clipIndex = item.clipIndex
-            newClipItem.imageId = item.imageId.uuidString
+            newClipItem.imageId = item.imageId
             newClipItem.imageFileName = item.imageFileName
             newClipItem.imageUrl = item.imageUrl
             newClipItem.imageHeight = item.imageSize.height
@@ -90,7 +90,7 @@ extension TemporaryClipStorage: TemporaryClipStorageProtocol {
         clip.tagIds
             .map {
                 let obj = TagIdObject()
-                obj.id = $0.uuidString
+                obj.id = $0
                 return obj
             }
             .forEach { newClip.tagIds.append($0) }
@@ -114,7 +114,7 @@ extension TemporaryClipStorage: TemporaryClipStorageProtocol {
 
         var clipObjects: [ClipObject] = []
         for clipId in ids {
-            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId.uuidString) else {
+            guard let clip = realm.object(ofType: ClipObject.self, forPrimaryKey: clipId) else {
                 return .failure(.notFound)
             }
             clipObjects.append(clip)

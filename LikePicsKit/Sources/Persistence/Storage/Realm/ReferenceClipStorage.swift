@@ -70,7 +70,7 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
     public func create(tag: ReferenceTag) -> Result<Void, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
-        if realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: tag.id.uuidString) != nil {
+        if realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: tag.id) != nil {
             return .failure(.duplicated)
         }
 
@@ -79,7 +79,7 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
         }
 
         let obj = ReferenceTagObject()
-        obj.id = tag.id.uuidString
+        obj.id = tag.id
         obj.name = tag.name
         obj.isDirty = tag.isDirty
 
@@ -93,7 +93,7 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
     public func updateTag(having id: ReferenceTag.Identity, nameTo name: String) -> Result<Void, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
-        let tag = realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: id.uuidString)
+        let tag = realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: id)
         tag?.name = name
 
         return .success(())
@@ -102,7 +102,7 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
     public func updateTag(having id: ReferenceTag.Identity, byHiding isHidden: Bool) -> Result<Void, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
-        let tag = realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: id.uuidString)
+        let tag = realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: id)
         tag?.isHidden = isHidden
 
         return .success(())
@@ -112,7 +112,7 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         let tags = ids
-            .map { realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: $0.uuidString) }
+            .map { realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: $0) }
         tags.forEach { $0?.isDirty = isDirty }
 
         return .success(())
@@ -124,7 +124,7 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
         ids
-            .compactMap { realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: $0.uuidString) }
+            .compactMap { realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: $0) }
             .forEach { realm.delete($0) }
 
         return .success(())

@@ -6,5 +6,5 @@ import Foundation
 import RealmSwift
 
 class TagIdObject: Object {
-    @Persisted var id: String = ""
+    @Persisted var id: UUID
 }
