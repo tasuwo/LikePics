@@ -5,10 +5,10 @@ strings:
         - templateName: structured-swift5
           output: LikePicsKit/Sources/AppFeature/Generated/String.swift
     - inputs:
-        - LikePicsKit/Sources/LikePicsCore/Resources/ja.lproj
+        - LikePicsKit/Sources/ClipCreationFeature/Resources/ja.lproj
       outputs:
         - templateName: structured-swift5
-          output: LikePicsKit/Sources/LikePicsCore/Sources/Generated/String.swift
+          output: LikePicsKit/Sources/ClipCreationFeature/Sources/Generated/String.swift
     - inputs:
         - LikePicsKit/Sources/LikePicsUIKit/Resources/ja.lproj
       outputs:

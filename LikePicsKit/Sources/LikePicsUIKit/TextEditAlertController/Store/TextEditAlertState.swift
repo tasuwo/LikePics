@@ -4,7 +4,7 @@
 
 import Foundation
 
-struct TextEditAlertState: Equatable {
+public struct TextEditAlertState: Equatable {
     let id: UUID
     let title: String?
     let message: String?
@@ -15,7 +15,7 @@ struct TextEditAlertState: Equatable {
     let isPresenting: Bool
 }
 
-extension TextEditAlertState {
+public extension TextEditAlertState {
     init(title: String?, message: String?, placeholder: String) {
         id = UUID()
 

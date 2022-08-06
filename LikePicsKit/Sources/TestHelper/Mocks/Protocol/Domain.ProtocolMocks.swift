@@ -6,6 +6,7 @@ import Combine
 import Common
 @testable import Domain
 import Foundation
+import UIKit
 
 public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
     public init() { }

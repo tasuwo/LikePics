@@ -6,7 +6,36 @@ import Combine
 import Common
 import CoreGraphics
 import Domain
+import Foundation
 @testable import LikePicsUIKit
 import os
 import Smoothie
 import UIKit
+
+public class HasTextValidatorMock: HasTextValidator {
+    public init() { }
+    public init(textValidator: @escaping (String?) -> Bool) {
+        self._textValidator = textValidator
+    }
+
+    public private(set) var textValidatorSetCallCount = 0
+    private var _textValidator: ((String?) -> Bool)! { didSet { textValidatorSetCallCount += 1 } }
+    public var textValidator: (String?) -> Bool {
+        get { return _textValidator }
+        set { _textValidator = newValue }
+    }
+}
+
+public class HasTransitionLockMock: HasTransitionLock {
+    public init() { }
+    public init(transitionLock: TransitionLock) {
+        self._transitionLock = transitionLock
+    }
+
+    public private(set) var transitionLockSetCallCount = 0
+    private var _transitionLock: TransitionLock! { didSet { transitionLockSetCallCount += 1 } }
+    public var transitionLock: TransitionLock {
+        get { return _transitionLock }
+        set { _transitionLock = newValue }
+    }
+}

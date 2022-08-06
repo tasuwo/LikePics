@@ -5,7 +5,6 @@
 import Domain
 @testable import Environment
 import Foundation
-import LikePicsUIKit
 import Smoothie
 import UIKit
 import WebKit
@@ -25,20 +24,6 @@ public class HasRouterMock: HasRouter {
     public var router: Router {
         get { return _router }
         set { _router = newValue }
-    }
-}
-
-public class HasTextValidatorMock: HasTextValidator {
-    public init() { }
-    public init(textValidator: @escaping (String?) -> Bool) {
-        self._textValidator = textValidator
-    }
-
-    public private(set) var textValidatorSetCallCount = 0
-    private var _textValidator: ((String?) -> Bool)! { didSet { textValidatorSetCallCount += 1 } }
-    public var textValidator: (String?) -> Bool {
-        get { return _textValidator }
-        set { _textValidator = newValue }
     }
 }
 
@@ -237,20 +222,6 @@ public class HasDiskCachesMock: HasDiskCaches {
     public var clipItemDiskCache: DiskCaching {
         get { return _clipItemDiskCache }
         set { _clipItemDiskCache = newValue }
-    }
-}
-
-public class HasTransitionLockMock: HasTransitionLock {
-    public init() { }
-    public init(transitionLock: TransitionLock) {
-        self._transitionLock = transitionLock
-    }
-
-    public private(set) var transitionLockSetCallCount = 0
-    private var _transitionLock: TransitionLock! { didSet { transitionLockSetCallCount += 1 } }
-    public var transitionLock: TransitionLock {
-        get { return _transitionLock }
-        set { _transitionLock = newValue }
     }
 }
 

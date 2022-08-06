@@ -4,6 +4,6 @@
 
 // swiftlint:disable class_delegate_protocol
 
-protocol HasTextEditAlertDelegate {
+public protocol HasTextEditAlertDelegate {
     var textEditAlertDelegate: TextEditAlertDelegate? { get }
 }

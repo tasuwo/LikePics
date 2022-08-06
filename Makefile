@@ -47,9 +47,9 @@ mockolo_generate: ## mockoloによるモック自動生成を行う
 		--destination ../LikePicsKit/Sources/TestHelper/Mocks/Protocol/Smoothie.ProtocolMocks.swift \
 		--testable-imports Smoothie; \
 	./mockolo \
-		--sourcedirs ../LikePicsKit/Sources/LikePicsCore \
-		--destination ../LikePicsKit/Sources/TestHelper/Mocks/Protocol/LikePicsCore.ProtocolMocks.swift \
-		--testable-imports LikePicsCore;
+		--sourcedirs ../LikePicsKit/Sources/ClipCreationFeature \
+		--destination ../LikePicsKit/Sources/TestHelper/Mocks/Protocol/ClipCreationFeature.ProtocolMocks.swift \
+		--testable-imports ClipCreationFeature;
 
 .PHONY: lint
 lint: swiftlint_lint ## 各種Linterを実行する

@@ -4,9 +4,8 @@
 
 import Combine
 import CompositeKit
-import Environment
 
-typealias TextEditAlertDependency = HasTextValidator
+public typealias TextEditAlertDependency = HasTextValidator
     & HasTextEditAlertDelegate
 
 struct TextEditAlertReducer: Reducer {

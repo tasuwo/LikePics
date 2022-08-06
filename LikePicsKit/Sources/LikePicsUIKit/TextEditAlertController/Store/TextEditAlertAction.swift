@@ -4,7 +4,7 @@
 
 import CompositeKit
 
-enum TextEditAlertAction {
+public enum TextEditAlertAction {
     case presented
     case textChanged(text: String)
     case saveActionTapped

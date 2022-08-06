@@ -4,7 +4,7 @@
 
 import Foundation
 
-protocol TextEditAlertDelegate: AnyObject {
+public protocol TextEditAlertDelegate: AnyObject {
     func textEditAlert(_ id: UUID, didTapSaveWithText: String)
     func textEditAlertDidCancel(_ id: UUID)
 }

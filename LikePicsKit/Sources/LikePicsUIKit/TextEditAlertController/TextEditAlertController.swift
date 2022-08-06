@@ -7,8 +7,8 @@ import Common
 import CompositeKit
 import UIKit
 
-class TextEditAlertController: NSObject {
-    typealias Store = CompositeKit.Store<TextEditAlertState, TextEditAlertAction, TextEditAlertDependency>
+public class TextEditAlertController: NSObject {
+    public typealias Store = CompositeKit.Store<TextEditAlertState, TextEditAlertAction, TextEditAlertDependency>
 
     private class AlertController: UIAlertController {
         weak var store: Store?
@@ -32,7 +32,7 @@ class TextEditAlertController: NSObject {
         var textEditAlertDelegate: TextEditAlertDelegate? { _textEditAlertDelegate }
     }
 
-    private(set) var store: Store
+    public private(set) var store: Store
     private let dependency = Dependency()
 
     private weak var presentingAlert: AlertController?
@@ -40,7 +40,7 @@ class TextEditAlertController: NSObject {
 
     private var subscriptions: Set<AnyCancellable> = .init()
 
-    var textEditAlertDelegate: TextEditAlertDelegate? {
+    public var textEditAlertDelegate: TextEditAlertDelegate? {
         get {
             dependency._textEditAlertDelegate
         }
@@ -51,13 +51,13 @@ class TextEditAlertController: NSObject {
 
     // MARK: - Lifecycle
 
-    init(state: TextEditAlertState) {
+    public init(state: TextEditAlertState) {
         self.store = .init(initialState: state, dependency: dependency, reducer: TextEditAlertReducer())
         super.init()
         bind()
     }
 
-    init(store: Store) {
+    public init(store: Store) {
         self.store = store
         super.init()
         bind()
@@ -65,9 +65,9 @@ class TextEditAlertController: NSObject {
 
     // MARK: - Methods
 
-    func present(with text: String,
-                 validator: @escaping (String?) -> Bool,
-                 on viewController: UIViewController)
+    public func present(with text: String,
+                        validator: @escaping (String?) -> Bool,
+                        on viewController: UIViewController)
     {
         guard presentingAlert == nil else {
             return
@@ -80,13 +80,13 @@ class TextEditAlertController: NSObject {
                                     message: store.stateValue.message,
                                     preferredStyle: .alert)
 
-        let saveAction = UIAlertAction(title: L10n.confirmAlertSave, style: .default) { [weak self] _ in
+        let saveAction = UIAlertAction(title: L10n.alertSave, style: .default) { [weak self] _ in
             self?.store.execute(.saveActionTapped)
         }
         alert.addAction(saveAction)
         saveAction.isEnabled = store.stateValue.shouldReturn
 
-        let cancelAction = UIAlertAction(title: L10n.confirmAlertCancel, style: .cancel) { [weak self] _ in
+        let cancelAction = UIAlertAction(title: L10n.alertCancel, style: .cancel) { [weak self] _ in
             self?.store.execute(.cancelActionTapped)
         }
         alert.addAction(cancelAction)
@@ -108,7 +108,7 @@ class TextEditAlertController: NSObject {
         }
     }
 
-    func dismiss(animated: Bool, completion: (() -> Void)?) {
+    public func dismiss(animated: Bool, completion: (() -> Void)?) {
         presentingAlert?.dismiss(animated: animated, completion: completion)
     }
 
@@ -123,11 +123,11 @@ class TextEditAlertController: NSObject {
 // MARK: - UITextFieldDelegate
 
 extension TextEditAlertController: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return store.stateValue.shouldReturn
     }
 
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         RunLoop.main.perform { [weak self] in
             self?.store.execute(.textChanged(text: textField.text ?? ""))
         }
@@ -137,7 +137,7 @@ extension TextEditAlertController: UITextFieldDelegate {
 
 // MARK: - Bind
 
-extension TextEditAlertController {
+public extension TextEditAlertController {
     func bind() {
         store.state
             .receive(on: DispatchQueue.main)
