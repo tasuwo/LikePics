@@ -54,7 +54,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(name: "Realm", url: "https://github.com/realm/realm-cocoa", .exact("10.15.1")),
+        .package(name: "Realm", url: "https://github.com/realm/realm-cocoa", .upToNextMinor(from: "10.28.0")),
         .package(name: "Erik", url: "https://github.com/phimage/Erik", .exact("5.1.0"))
     ],
     targets: [
