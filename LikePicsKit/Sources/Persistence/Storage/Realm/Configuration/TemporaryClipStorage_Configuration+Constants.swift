@@ -29,7 +29,7 @@ extension TemporaryClipStorage.Configuration {
         case .group:
             return Realm.Configuration(
                 schemaVersion: 2,
-                migrationBlock: ClipStorageMigrationService.migrationBlock,
+                migrationBlock: TemporaryClipStorageMigrationService.migrationBlock,
                 deleteRealmIfMigrationNeeded: false,
                 // WARN: 古いクライアントに `TagObject` のテーブルが残っている可能性があるので注意すること
                 objectTypes: [

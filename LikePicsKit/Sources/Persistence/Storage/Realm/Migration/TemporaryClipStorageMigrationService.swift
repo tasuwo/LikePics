@@ -8,7 +8,7 @@ import RealmSwift
 
 // swiftlint:disable force_unwrapping force_cast
 
-enum ClipStorageMigrationService {
+enum TemporaryClipStorageMigrationService {
     static let migrationBlock: MigrationBlock = { migration, oldSchemaVersion in
         if oldSchemaVersion < 1 {
             Self.migrationToV1(migration)
