@@ -6,6 +6,7 @@ import Combine
 import Common
 import CompositeKit
 import Domain
+import Environment
 import LikePicsUIKit
 import Smoothie
 import UIKit
@@ -13,15 +14,11 @@ import UIKit
 public class ClipCreationViewController: UIViewController {
     // MARK: - Type Aliases
 
-    typealias Factory = ViewControllerFactory
     typealias Layout = ClipCreationViewLayout
     typealias Store = CompositeKit.Store<ClipCreationViewState, ClipCreationViewAction, ClipCreationViewDependency>
+    public typealias ModalRouter = TagSelectionModalRouter
 
     // MARK: - Properties
-
-    // MARK: Factory
-
-    private let factory: Factory
 
     // MARK: View
 
@@ -51,6 +48,7 @@ public class ClipCreationViewController: UIViewController {
 
     // MARK: Services
 
+    private let modalRouter: ModalRouter
     private let thumbnailPipeline: Pipeline
     private let imageLoader: ImageLoadable
 
@@ -58,20 +56,21 @@ public class ClipCreationViewController: UIViewController {
 
     private var store: Store
     private var subscriptions: Set<AnyCancellable> = .init()
+    private var modalSubscriptions: Set<AnyCancellable> = .init()
     private let clipsUpdateQueue = DispatchQueue(label: "net.tasuwo.TBoxCore.ClipCreationViewController", qos: .userInteractive)
 
     // MARK: - Initializers
 
-    public init(factory: ViewControllerFactory,
-                state: ClipCreationViewState,
+    public init(state: ClipCreationViewState,
                 dependency: ClipCreationViewDependency,
                 thumbnailPipeline: Pipeline,
-                imageLoader: ImageLoadable)
+                imageLoader: ImageLoadable,
+                modalRouter: ModalRouter)
     {
-        self.factory = factory
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipCreationViewReducer())
         self.thumbnailPipeline = thumbnailPipeline
         self.imageLoader = imageLoader
+        self.modalRouter = modalRouter
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -174,6 +173,10 @@ extension ClipCreationViewController {
             .store(in: &subscriptions)
 
         store.state
+            .bind(\.modal) { [weak self] modal in self?.presentModalIfNeeded(for: modal) }
+            .store(in: &subscriptions)
+
+        store.state
             .bind(\.isDismissed) { [weak self] isDismissed in
                 guard isDismissed else { return }
                 self?.dismissAll(completion: nil)
@@ -199,6 +202,42 @@ extension ClipCreationViewController {
             self?.store.execute(.alertDismissed)
         })
         self.present(alert, animated: true, completion: nil)
+    }
+
+    // MARK: Modal
+
+    private func presentModalIfNeeded(for modal: ClipCreationViewState.Modal?) {
+        switch modal {
+        case let .tagSelection(id: id, tagIds: tagIds):
+            presentTagSelectionModal(id: id, selections: tagIds)
+
+        case .none:
+            break
+        }
+    }
+
+    private func presentTagSelectionModal(id: UUID, selections: Set<Tag.Identity>) {
+        ModalNotificationCenter.default
+            .publisher(for: id, name: .tagSelectionModalDidSelect)
+            .sink { [weak self] notification in
+                let tags = notification.userInfo?[ModalNotification.UserInfoKey.selectedTags] as? [Tag]
+                self?.store.execute(.tagsSelected(tags))
+                self?.modalSubscriptions.removeAll()
+            }
+            .store(in: &modalSubscriptions)
+
+        ModalNotificationCenter.default
+            .publisher(for: id, name: .tagSelectionModalDidDismiss)
+            .sink { [weak self] _ in
+                self?.modalSubscriptions.removeAll()
+                self?.store.execute(.modalCompleted(false))
+            }
+            .store(in: &modalSubscriptions)
+
+        if modalRouter.showTagSelectionModal(id: id, selections: selections) == false {
+            modalSubscriptions.removeAll()
+            store.execute(.modalCompleted(false))
+        }
     }
 
     // MARK: Snapshot
@@ -345,14 +384,6 @@ extension ClipCreationViewController: EmptyMessageViewDelegate {
     }
 }
 
-extension ClipCreationViewController: TagSelectionViewControllerDelegate {
-    // MARK: - TagSelectionViewControllerDelegate
-
-    public func didSelectTags(tags: [Tag]) {
-        store.execute(.tagsSelected(tags))
-    }
-}
-
 extension ClipCreationViewController: ClipCreationViewDelegate {
     // MARK: - ClipCreationViewDelegate
 
@@ -401,7 +432,7 @@ extension ClipCreationViewController: ClipCreationViewDelegate {
     public func didTapTagAdditionButton(_ cell: UICollectionViewCell) {
         guard let indexPath = collectionView.indexPath(for: cell),
               case .tag = Layout.Section(rawValue: indexPath.section) else { return }
-        self.presentTagSelectionView()
+        store.execute(.tapTagAdditionButton)
     }
 
     public func didTapTagDeletionButton(_ cell: UICollectionViewCell) {
@@ -411,13 +442,6 @@ extension ClipCreationViewController: ClipCreationViewDelegate {
             return
         }
         store.execute(.tagRemoveButtonTapped(tag.id))
-    }
-
-    private func presentTagSelectionView() {
-        guard let parent = self.parent else { return }
-        let selectedTags = Set(store.stateValue.tags.filteredEntities().map { $0.id })
-        guard let nextVC = factory.makeTagSelectionViewController(selectedTags: selectedTags, delegate: self) else { return }
-        parent.present(nextVC, animated: true, completion: nil)
     }
 }
 

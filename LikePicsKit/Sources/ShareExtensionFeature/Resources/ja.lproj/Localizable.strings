@@ -6,5 +6,10 @@
   Copyright © 2020 Tasuku Tozawa. All rights reserved.
 */
 
+"tag_list_view_alert_for_add_title" = "新規タグ";
+"tag_list_view_alert_for_add_message" = "このタグの名前を入力してください";
+
 "error_no_url" = "画像を探す対象の有効なWebサイトURLが見つかりませんでした";
 "error_unknown" = "共有に失敗しました";
+
+"placeholder_tag_name" = "タグ名";

@@ -266,14 +266,14 @@ extension SceneDependencyContainer: ClipCreationModalRouter {
                                     userSettingsStorage: container.userSettingStorage,
                                     modalNotificationCenter: .default)
 
-        let viewController = ClipCreationViewController(factory: self,
-                                                        state: .init(id: id,
+        let viewController = ClipCreationViewController(state: .init(id: id,
                                                                      source: .webPageImage,
                                                                      url: currentUrl,
                                                                      isSomeItemsHidden: container.userSettingStorage.readShowHiddenItems()),
                                                         dependency: dependency,
                                                         thumbnailPipeline: container.temporaryThumbnailPipeline,
-                                                        imageLoader: imageLoader)
+                                                        imageLoader: imageLoader,
+                                                        modalRouter: self)
 
         let navigationViewController = UINavigationController(rootViewController: viewController)
 

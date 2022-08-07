@@ -6,8 +6,11 @@ import ClipCreationFeature
 import Combine
 import Common
 import Domain
+import Environment
+import LikePicsUIKit
 import Persistence
 import Smoothie
+import TagSelectionModalFeature
 import UIKit
 
 public protocol ViewControllerFactory {
@@ -17,6 +20,8 @@ public protocol ViewControllerFactory {
 }
 
 public class DependencyContainer {
+    private weak var rootViewController: UIViewController?
+
     private let clipStore: ClipStorable
     private let tagQueryService: ReferenceTagQueryService
     private let currentDateResolver = { Date() }
@@ -24,13 +29,15 @@ public class DependencyContainer {
     private let userSettingsStorage: UserSettingsStorage
     private let thumbnailPipeline: Pipeline
 
-    public init() throws {
+    public init(rootViewController: UIViewController) throws {
         let mainBundleUrl = Bundle.main.bundleURL
             .deletingLastPathComponent()
             .deletingLastPathComponent()
         guard let mainBundle = Bundle(url: mainBundleUrl) else {
             fatalError("Failed to resolve main bundle.")
         }
+
+        self.rootViewController = rootViewController
 
         let imageStorage = try TemporaryImageStorage(configuration: .resolve(for: mainBundle, kind: .group))
         let clipStorage = try TemporaryClipStorage(config: .resolve(for: mainBundle, kind: .group))
@@ -61,6 +68,41 @@ public class DependencyContainer {
     }
 }
 
+extension DependencyContainer {
+    private var topViewController: UIViewController? {
+        guard let detailViewController = rootViewController else { return nil }
+        var topViewController = detailViewController
+        while let presentedViewController = topViewController.presentedViewController {
+            topViewController = presentedViewController
+        }
+        return topViewController
+    }
+
+    private func isPresentingModal(having id: UUID) -> Bool {
+        guard let detailViewController = rootViewController else { return false }
+
+        let isModal = { (id: UUID, viewController: UIViewController) -> Bool in
+            if let viewController = viewController as? ModalController {
+                return viewController.id == id
+            }
+
+            if let viewController = (viewController as? UINavigationController)?.topViewController as? ModalController {
+                return viewController.id == id
+            }
+
+            return false
+        }
+
+        var topViewController = detailViewController
+        while let presentedViewController = topViewController.presentedViewController {
+            if isModal(id, presentedViewController) { return true }
+            topViewController = presentedViewController
+        }
+
+        return isModal(id, topViewController)
+    }
+}
+
 extension DependencyContainer: ViewControllerFactory {
     // MARK: - ViewControllerFactory
 
@@ -85,14 +127,14 @@ extension DependencyContainer: ViewControllerFactory {
                                     imageSourceProvider: WebImageLoadSourceResolver(url: webUrl),
                                     userSettingsStorage: userSettingsStorage,
                                     modalNotificationCenter: .default)
-        return ClipCreationViewController(factory: self,
-                                          state: .init(id: id,
+        return ClipCreationViewController(state: .init(id: id,
                                                        source: .webImage,
                                                        url: webUrl,
                                                        isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems()),
                                           dependency: dependency,
                                           thumbnailPipeline: thumbnailPipeline,
-                                          imageLoader: imageLoader)
+                                          imageLoader: imageLoader,
+                                          modalRouter: self)
     }
 
     public func makeClipTargetCollectionViewController(id: UUID, loaders: [ImageLazyLoadable], fileUrls: [URL]) -> UIViewController
@@ -112,33 +154,54 @@ extension DependencyContainer: ViewControllerFactory {
                                     imageSourceProvider: LocalImageLoadSourceResolver(loaders: loaders, fileUrls: fileUrls),
                                     userSettingsStorage: userSettingsStorage,
                                     modalNotificationCenter: .default)
-        return ClipCreationViewController(factory: self,
-                                          state: .init(id: id,
+        return ClipCreationViewController(state: .init(id: id,
                                                        source: .localImage,
                                                        url: nil,
                                                        isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems()),
                                           dependency: dependency,
                                           thumbnailPipeline: thumbnailPipeline,
-                                          imageLoader: imageLoader)
+                                          imageLoader: imageLoader,
+                                          modalRouter: self)
     }
 }
 
-extension DependencyContainer: ClipCreationFeature.ViewControllerFactory {
-    public func makeTagSelectionViewController(selectedTags: Set<Domain.Tag.Identity>,
-                                               delegate: TagSelectionViewControllerDelegate) -> UIViewController?
-    {
-        switch self.tagQueryService.queryTags() {
-        case let .success(query):
-            let viewModel = TagSelectionViewModel(query: query,
-                                                  selectedTags: selectedTags,
-                                                  commandService: self.tagCommandService,
-                                                  settingStorage: self.userSettingsStorage)
-            let viewController = TagSelectionViewController(viewModel: viewModel, delegate: delegate)
-            return UINavigationController(rootViewController: viewController)
+extension DependencyContainer: TagSelectionModalRouter {
+    // MARK: - TagSelectionModalRouter
 
-        case .failure:
-            return nil
+    public func showTagSelectionModal(id: UUID, selections: Set<Domain.Tag.Identity>) -> Bool {
+        guard isPresentingModal(having: id) == false else { return true }
+
+        struct Dependency: TagSelectionModalDependency {
+            var modalNotificationCenter: ModalNotificationCenter
+            var tagCommandService: TagCommandServiceProtocol
+            var tagQueryService: TagQueryServiceProtocol
+            var userSettingStorage: UserSettingsStorageProtocol
         }
+        let dependency = Dependency(modalNotificationCenter: .default,
+                                    tagCommandService: tagCommandService,
+                                    tagQueryService: tagQueryService,
+                                    userSettingStorage: userSettingsStorage)
+
+        let state = TagSelectionModalState(id: id,
+                                           selections: selections,
+                                           isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems())
+        let tagAdditionAlertState = TextEditAlertState(title: L10n.tagListViewAlertForAddTitle,
+                                                       message: L10n.tagListViewAlertForAddMessage,
+                                                       placeholder: L10n.placeholderTagName)
+        let viewController = TagSelectionModalController(state: state,
+                                                         tagAdditionAlertState: tagAdditionAlertState,
+                                                         dependency: dependency)
+
+        let navigationViewController = UINavigationController(rootViewController: viewController)
+
+        navigationViewController.modalPresentationStyle = .pageSheet
+        navigationViewController.presentationController?.delegate = viewController
+        navigationViewController.isModalInPresentation = false
+
+        guard let topViewController = topViewController else { return false }
+        topViewController.present(navigationViewController, animated: true, completion: nil)
+
+        return true
     }
 }
 

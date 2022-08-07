@@ -14,6 +14,12 @@ internal enum L10n {
     internal static let errorNoUrl = L10n.tr("Localizable", "error_no_url")
     /// 共有に失敗しました
     internal static let errorUnknown = L10n.tr("Localizable", "error_unknown")
+    /// タグ名
+    internal static let placeholderTagName = L10n.tr("Localizable", "placeholder_tag_name")
+    /// このタグの名前を入力してください
+    internal static let tagListViewAlertForAddMessage = L10n.tr("Localizable", "tag_list_view_alert_for_add_message")
+    /// 新規タグ
+    internal static let tagListViewAlertForAddTitle = L10n.tr("Localizable", "tag_list_view_alert_for_add_title")
 }
 
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length

@@ -189,20 +189,3 @@ extension SceneDependencyContainer: ViewControllerFactory {
         return viewController
     }
 }
-
-extension SceneDependencyContainer: ClipCreationFeature.ViewControllerFactory {
-    public func makeTagSelectionViewController(selectedTags: Set<Tag.Identity>, delegate: TagSelectionViewControllerDelegate) -> UIViewController? {
-        switch container.clipQueryService.queryAllTags() {
-        case let .success(query):
-            let viewModel = TagSelectionViewModel(query: query,
-                                                  selectedTags: selectedTags,
-                                                  commandService: container.tagCommandService,
-                                                  settingStorage: container.userSettingStorage)
-            let viewController = TagSelectionViewController(viewModel: viewModel, delegate: delegate)
-            return UINavigationController(rootViewController: viewController)
-
-        case .failure:
-            return nil
-        }
-    }
-}

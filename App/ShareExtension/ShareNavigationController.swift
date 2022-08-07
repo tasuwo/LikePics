@@ -19,7 +19,7 @@ class ShareNavigationController: UINavigationController {
         UISwitch.appearance().onTintColor = UIColor(named: "like_pics_switch")
 
         do {
-            self.factory = try DependencyContainer()
+            self.factory = try DependencyContainer(rootViewController: self)
         } catch {
             fatalError("Unable to start Share Extension.")
         }

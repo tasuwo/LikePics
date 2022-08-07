@@ -26,6 +26,7 @@ enum ClipCreationViewAction: Action {
     case editedUrl(URL?)
     case shouldSaveAsHiddenItem(Bool)
     case shouldSaveAsClip(Bool)
+    case tapTagAdditionButton
     case tagRemoveButtonTapped(Tag.Identity)
     case selected(UUID)
     case deselected(UUID)

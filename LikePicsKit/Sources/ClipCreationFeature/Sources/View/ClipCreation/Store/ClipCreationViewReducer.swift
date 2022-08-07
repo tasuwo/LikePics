@@ -95,6 +95,10 @@ struct ClipCreationViewReducer: Reducer {
             nextState.shouldSaveAsClip = isOn
             return (nextState, .none)
 
+        case .tapTagAdditionButton:
+            nextState.modal = .tagSelection(id: UUID(), tagIds: Set(state.tags.filteredEntities().map({ $0.id })))
+            return (nextState, .none)
+
         case let .tagRemoveButtonTapped(tagId):
             nextState.tags = nextState.tags.removingEntity(having: tagId)
             return (nextState, .none)

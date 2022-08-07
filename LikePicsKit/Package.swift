@@ -48,6 +48,8 @@ let package = Package(
                 "Common",
                 "Domain",
                 "ClipCreationFeature",
+                "TagSelectionModalFeature",
+                "LikePicsUIKit",
                 "Persistence",
                 "Smoothie"
             ]
@@ -63,7 +65,7 @@ let package = Package(
                 "Domain",
                 "Environment",
                 "Common",
-                "CompositeKit",
+                "CompositeKit"
             ]
         ),
         .target(
