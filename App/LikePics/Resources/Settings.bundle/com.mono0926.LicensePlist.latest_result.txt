@@ -34,9 +34,9 @@ name: FileKit, nameSpecified: FileKit, owner: nvzqz, version: 6.0.0, source: htt
 
 name: Kanna, nameSpecified: Kanna, owner: tid-kijyun, version: 5.2.7, source: https://github.com/tid-kijyun/Kanna
 
-name: realm-cocoa, nameSpecified: Realm, owner: realm, version: 10.15.1, source: https://github.com/realm/realm-cocoa
+name: realm-cocoa, nameSpecified: Realm, owner: realm, version: 10.28.4, source: https://github.com/realm/realm-cocoa
 
-name: realm-core, nameSpecified: RealmDatabase, owner: realm, version: 11.4.1, source: https://github.com/realm/realm-core
+name: realm-core, nameSpecified: RealmDatabase, owner: realm, version: 12.4.0, source: https://github.com/realm/realm-core
 
 add-version-numbers: false
 

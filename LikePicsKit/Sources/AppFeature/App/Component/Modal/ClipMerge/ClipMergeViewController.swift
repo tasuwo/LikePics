@@ -31,7 +31,8 @@ class ClipMergeViewController: UIViewController {
 
     // MARK: Service
 
-    private let router: Router
+    // TODO: modalの遷移のみに限定する
+    private let modalRouter: Router & TagSelectionModalRouter
     private let thumbnailPipeline: Pipeline
     private let imageQueryService: ImageQueryServiceProtocol
 
@@ -47,10 +48,11 @@ class ClipMergeViewController: UIViewController {
     init(state: ClipMergeViewState,
          dependency: ClipMergeViewDependency,
          thumbnailPipeline: Pipeline,
-         imageQueryService: ImageQueryServiceProtocol)
+         imageQueryService: ImageQueryServiceProtocol,
+         modalRouter: Router & TagSelectionModalRouter)
     {
         self.store = .init(initialState: state, dependency: dependency, reducer: ClipMergeViewReducer())
-        self.router = dependency.router
+        self.modalRouter = modalRouter
         self.thumbnailPipeline = thumbnailPipeline
         self.imageQueryService = imageQueryService
 
@@ -152,7 +154,7 @@ extension ClipMergeViewController {
             }
             .store(in: &modalSubscriptions)
 
-        if router.showTagSelectionModal(id: id, selections: selections) == false {
+        if modalRouter.showTagSelectionModal(id: id, selections: selections) == false {
             modalSubscriptions.removeAll()
             store.execute(.modalCompleted(false))
         }

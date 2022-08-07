@@ -6,6 +6,9 @@ import Domain
 import Foundation
 import WebKit
 
+/**
+ * - TODO: 個別のRouterに切り出し
+ */
 public protocol Router {
     @discardableResult
     func open(_ url: URL) -> Bool
@@ -38,9 +41,6 @@ public protocol Router {
                               clipId: Clip.Identity,
                               clipItems: [ClipItem],
                               transitioningController: ClipItemListTransitioningControllable) -> Bool
-
-    @discardableResult
-    func showTagSelectionModal(id: UUID, selections: Set<Tag.Identity>) -> Bool
 
     @discardableResult
     func showAlbumSelectionModal(id: UUID) -> Bool

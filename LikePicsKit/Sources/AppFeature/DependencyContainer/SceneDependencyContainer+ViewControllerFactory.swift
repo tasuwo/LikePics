@@ -22,6 +22,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                             dependency: self,
                                             thumbnailPipeline: container.clipThumbnailPipeline,
                                             menuBuilder: ClipCollectionMenuBuilder(storage: container.userSettingStorage),
+                                            modalRouter: self,
                                             appBundle: container.appBundle)
     }
 
@@ -30,6 +31,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                             dependency: self,
                                             thumbnailPipeline: container.clipThumbnailPipeline,
                                             menuBuilder: ClipCollectionMenuBuilder(storage: container.userSettingStorage),
+                                            modalRouter: self,
                                             appBundle: container.appBundle)
     }
 
@@ -166,6 +168,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                                            transitionDispatcher: transitionDispatcher,
                                                            itemListTransitionController: itemListTransitionController,
                                                            previewPrefetcher: container.previewPrefetcher,
+                                                           modalRouter: self,
                                                            appBundle: container.appBundle)
 
         transitionDispatcher.setup(baseViewController: viewController)

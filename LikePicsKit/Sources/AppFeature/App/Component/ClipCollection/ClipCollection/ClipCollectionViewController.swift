@@ -35,7 +35,8 @@ class ClipCollectionViewController: UIViewController {
 
     // MARK: Service
 
-    private let router: Router
+    // TODO: modalのみのルーターに制限する
+    private let modalRouter: Router & TagSelectionModalRouter
     private let thumbnailPipeline: Pipeline
     private let menuBuilder: ClipCollectionMenuBuildable
     private let imageQueryService: ImageQueryServiceProtocol
@@ -64,9 +65,9 @@ class ClipCollectionViewController: UIViewController {
          dependency: ClipCollectionViewRootDependency,
          thumbnailPipeline: Pipeline,
          menuBuilder: ClipCollectionMenuBuildable,
+         modalRouter: Router & TagSelectionModalRouter,
          appBundle: Bundle)
     {
-        self.router = dependency.router
         self.thumbnailPipeline = thumbnailPipeline
         self.menuBuilder = menuBuilder
         self.imageQueryService = dependency.imageQueryService
@@ -75,6 +76,7 @@ class ClipCollectionViewController: UIViewController {
             .proxy(RootState.clipsMapping, RootAction.clipsMapping)
             .eraseToAnyStoring()
         self.appBundle = appBundle
+        self.modalRouter = modalRouter
 
         super.init(nibName: nil, bundle: nil)
 
@@ -454,7 +456,7 @@ extension ClipCollectionViewController {
             }
             .store(in: &modalSubscriptions)
 
-        if router.showAlbumSelectionModal(id: id) == false {
+        if modalRouter.showAlbumSelectionModal(id: id) == false {
             modalSubscriptions.removeAll()
             store.execute(.modalCompleted(false))
         }
@@ -481,7 +483,7 @@ extension ClipCollectionViewController {
             }
             .store(in: &modalSubscriptions)
 
-        if router.showTagSelectionModal(id: id, selections: selections) == false {
+        if modalRouter.showTagSelectionModal(id: id, selections: selections) == false {
             modalSubscriptions.removeAll()
             store.execute(.modalCompleted(false))
         }
@@ -497,7 +499,7 @@ extension ClipCollectionViewController {
             }
             .store(in: &modalSubscriptions)
 
-        if router.showClipMergeModal(id: id, clips: clips) == false {
+        if modalRouter.showClipMergeModal(id: id, clips: clips) == false {
             modalSubscriptions.removeAll()
             store.execute(.modalCompleted(false))
         }
@@ -858,6 +860,7 @@ extension ClipCollectionViewController: Restorable {
                                             dependency: rootStore.dependency,
                                             thumbnailPipeline: thumbnailPipeline,
                                             menuBuilder: menuBuilder,
+                                            modalRouter: modalRouter,
                                             appBundle: appBundle)
     }
 }

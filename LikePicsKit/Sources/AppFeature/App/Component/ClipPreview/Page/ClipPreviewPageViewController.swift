@@ -42,7 +42,8 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     // MARK: Service
 
-    private let router: Router
+    // TODO: Modal向けのprotocolに絞る
+    private let modalRouter: TagSelectionModalRouter & Router
     private let factory: ViewControllerFactory
 
     // MARK: Store
@@ -73,6 +74,7 @@ class ClipPreviewPageViewController: UIPageViewController {
          transitionDispatcher: ClipPreviewPageTransitionDispatcherType,
          itemListTransitionController: ClipItemListTransitioningControllable,
          previewPrefetcher: PreviewPrefetchable,
+         modalRouter: TagSelectionModalRouter & Router,
          appBundle: Bundle)
     {
         let rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipPreviewPageViewRootReducer)
@@ -89,7 +91,7 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.transitionDispatcher = transitionDispatcher
         self.factory = factory
 
-        self.router = dependency.router
+        self.modalRouter = modalRouter
 
         self.itemListTransitionController = itemListTransitionController
 
@@ -296,10 +298,10 @@ extension ClipPreviewPageViewController {
             }
             .store(in: &modalSubscriptions)
 
-        let succeeded = router.showClipItemListView(id: id,
-                                                    clipId: clip.id,
-                                                    clipItems: clip.items,
-                                                    transitioningController: itemListTransitionController)
+        let succeeded = modalRouter.showClipItemListView(id: id,
+                                                         clipId: clip.id,
+                                                         clipItems: clip.items,
+                                                         transitioningController: itemListTransitionController)
         if !succeeded {
             modalSubscriptions.removeAll()
             store.execute(.modalCompleted(false))
@@ -324,7 +326,7 @@ extension ClipPreviewPageViewController {
             }
             .store(in: &modalSubscriptions)
 
-        if router.showAlbumSelectionModal(id: id) == false {
+        if modalRouter.showAlbumSelectionModal(id: id) == false {
             modalSubscriptions.removeAll()
             store.execute(.modalCompleted(false))
         }
@@ -351,7 +353,7 @@ extension ClipPreviewPageViewController {
             }
             .store(in: &modalSubscriptions)
 
-        if router.showTagSelectionModal(id: id, selections: selections) == false {
+        if modalRouter.showTagSelectionModal(id: id, selections: selections) == false {
             modalSubscriptions.removeAll()
             store.execute(.modalCompleted(false))
         }

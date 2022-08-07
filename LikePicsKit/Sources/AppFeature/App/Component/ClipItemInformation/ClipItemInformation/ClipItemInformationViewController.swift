@@ -30,7 +30,8 @@ class ClipItemInformationViewController: UIViewController {
 
     // MARK: Service
 
-    private let router: Router
+    // TODO: modalのみのrouterに絞る
+    private let modalRouter: Router & TagSelectionModalRouter
 
     // MARK: Store
 
@@ -48,12 +49,13 @@ class ClipItemInformationViewController: UIViewController {
     init(state: ClipItemInformationViewState,
          siteUrlEditAlertState: TextEditAlertState,
          dependency: ClipItemInformationViewDependency,
-         transitioningController: ClipItemInformationTransitioningControllable)
+         transitioningController: ClipItemInformationTransitioningControllable,
+         modalRouter: TagSelectionModalRouter & Router)
     {
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipItemInformationViewReducer())
         self.siteUrlEditAlert = .init(state: siteUrlEditAlertState)
         self.transitioningController = transitioningController
-        self.router = dependency.router
+        self.modalRouter = modalRouter
 
         super.init(nibName: nil, bundle: nil)
 
@@ -246,7 +248,7 @@ extension ClipItemInformationViewController {
             }
             .store(in: &modalSubscriptions)
 
-        if router.showTagSelectionModal(id: id, selections: selections) == false {
+        if modalRouter.showTagSelectionModal(id: id, selections: selections) == false {
             modalSubscriptions.removeAll()
             store.execute(.modalCompleted(false))
         }
@@ -270,7 +272,7 @@ extension ClipItemInformationViewController {
             }
             .store(in: &modalSubscriptions)
 
-        if router.showAlbumSelectionModal(id: id) == false {
+        if modalRouter.showAlbumSelectionModal(id: id) == false {
             modalSubscriptions.removeAll()
             store.execute(.modalCompleted(false))
         }

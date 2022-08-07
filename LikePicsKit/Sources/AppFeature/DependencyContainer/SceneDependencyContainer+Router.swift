@@ -162,7 +162,8 @@ extension SceneDependencyContainer: Router {
         let viewController = ClipItemInformationViewController(state: state,
                                                                siteUrlEditAlertState: siteUrlEditAlertState,
                                                                dependency: self,
-                                                               transitioningController: transitioningController)
+                                                               transitioningController: transitioningController,
+                                                               modalRouter: self)
         viewController.transitioningDelegate = transitioningController
         viewController.modalPresentationStyle = .fullScreen
 
@@ -194,31 +195,6 @@ extension SceneDependencyContainer: Router {
 
         guard let topViewController = topViewController else { return false }
         topViewController.present(viewController, animated: true, completion: nil)
-
-        return true
-    }
-
-    public func showTagSelectionModal(id: UUID, selections: Set<Tag.Identity>) -> Bool {
-        guard isPresentingModal(having: id) == false else { return true }
-
-        let state = TagSelectionModalState(id: id,
-                                           selections: selections,
-                                           isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
-        let tagAdditionAlertState = TextEditAlertState(title: L10n.tagListViewAlertForAddTitle,
-                                                       message: L10n.tagListViewAlertForAddMessage,
-                                                       placeholder: L10n.placeholderTagName)
-        let viewController = TagSelectionModalController(state: state,
-                                                         tagAdditionAlertState: tagAdditionAlertState,
-                                                         dependency: self)
-
-        let navigationViewController = UINavigationController(rootViewController: viewController)
-
-        navigationViewController.modalPresentationStyle = .pageSheet
-        navigationViewController.presentationController?.delegate = viewController
-        navigationViewController.isModalInPresentation = false
-
-        guard let topViewController = topViewController else { return false }
-        topViewController.present(navigationViewController, animated: true, completion: nil)
 
         return true
     }
@@ -255,7 +231,8 @@ extension SceneDependencyContainer: Router {
         let viewController = ClipMergeViewController(state: state,
                                                      dependency: self,
                                                      thumbnailPipeline: container.temporaryThumbnailPipeline,
-                                                     imageQueryService: container.imageQueryService)
+                                                     imageQueryService: container.imageQueryService,
+                                                     modalRouter: self)
 
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
@@ -348,5 +325,34 @@ extension SceneDependencyContainer: Router {
                 _ = self.showClipCollectionView(for: albumId)
             })
         }
+    }
+}
+
+extension SceneDependencyContainer: TagSelectionModalRouter {
+    // MARK: - TagSelectionModalRouter
+
+    public func showTagSelectionModal(id: UUID, selections: Set<Tag.Identity>) -> Bool {
+        guard isPresentingModal(having: id) == false else { return true }
+
+        let state = TagSelectionModalState(id: id,
+                                           selections: selections,
+                                           isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
+        let tagAdditionAlertState = TextEditAlertState(title: L10n.tagListViewAlertForAddTitle,
+                                                       message: L10n.tagListViewAlertForAddMessage,
+                                                       placeholder: L10n.placeholderTagName)
+        let viewController = TagSelectionModalController(state: state,
+                                                         tagAdditionAlertState: tagAdditionAlertState,
+                                                         dependency: self)
+
+        let navigationViewController = UINavigationController(rootViewController: viewController)
+
+        navigationViewController.modalPresentationStyle = .pageSheet
+        navigationViewController.presentationController?.delegate = viewController
+        navigationViewController.isModalInPresentation = false
+
+        guard let topViewController = topViewController else { return false }
+        topViewController.present(navigationViewController, animated: true, completion: nil)
+
+        return true
     }
 }
