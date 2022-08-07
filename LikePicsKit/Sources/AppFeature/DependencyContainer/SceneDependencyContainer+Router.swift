@@ -173,31 +173,49 @@ extension SceneDependencyContainer: Router {
         return true
     }
 
-    public func showClipItemListView(id: UUID,
-                                     clipId: Clip.Identity,
-                                     clipItems: [ClipItem],
-                                     transitioningController: ClipItemListTransitioningControllable) -> Bool
-    {
-        let state = ClipItemListState(id: id,
-                                      clipId: clipId,
-                                      clipItems: clipItems,
-                                      isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
-        let viewController = ClipItemListViewController(state: .init(listState: state,
-                                                                     navigationBarState: .init(),
-                                                                     toolBarState: .init()),
-                                                        siteUrlEditAlertState: .init(title: L10n.alertForEditSiteUrlTitle,
-                                                                                     message: L10n.alertForEditClipItemsSiteUrlMessage,
-                                                                                     placeholder: L10n.placeholderUrl),
-                                                        dependency: self,
-                                                        thumbnailPipeline: container.clipItemThumbnailPipeline)
-        viewController.transitioningDelegate = transitioningController
-        viewController.modalPresentationStyle = .fullScreen
-
-        guard let topViewController = topViewController else { return false }
-        topViewController.present(viewController, animated: true, completion: nil)
-
+    public func showFindView() -> Bool {
+        let state = FindViewState()
+        let viewController = FindViewController(state: state, dependency: self, modalRouter: self)
+        guard let detailViewController = rootViewController?.currentViewController else { return false }
+        detailViewController.show(viewController, sender: nil)
         return true
     }
+
+    public func routeToClipCollectionView(for tag: Tag) {
+        guard let rootViewController = rootViewController else { return }
+        dismissAllModals { isSucceeded in
+            guard isSucceeded else { return }
+
+            rootViewController.select(.tags)
+
+            guard let rootViewController = self.topViewController else { return }
+            (rootViewController as? UINavigationController)?.popToRootViewController(animated: false)
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100), execute: {
+                _ = self.showClipCollectionView(for: tag)
+            })
+        }
+    }
+
+    public func routeToClipCollectionView(forAlbumId albumId: Album.Identity) {
+        guard let rootViewController = rootViewController else { return }
+        dismissAllModals { isSucceeded in
+            guard isSucceeded else { return }
+
+            rootViewController.select(.albums)
+
+            guard let rootViewController = self.topViewController else { return }
+            (rootViewController as? UINavigationController)?.popToRootViewController(animated: false)
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100), execute: {
+                _ = self.showClipCollectionView(for: albumId)
+            })
+        }
+    }
+}
+
+extension SceneDependencyContainer: AlbumSelectionModalRouter {
+    // MARK: - AlbumSelectionModalRouter
 
     public func showAlbumSelectionModal(id: UUID) -> Bool {
         guard isPresentingModal(having: id) == false else { return true }
@@ -223,36 +241,10 @@ extension SceneDependencyContainer: Router {
 
         return true
     }
+}
 
-    public func showClipMergeModal(id: UUID, clips: [Clip]) -> Bool {
-        guard isPresentingModal(having: id) == false else { return true }
-
-        let state = ClipMergeViewState(id: id, clips: clips)
-        let viewController = ClipMergeViewController(state: state,
-                                                     dependency: self,
-                                                     thumbnailPipeline: container.temporaryThumbnailPipeline,
-                                                     imageQueryService: container.imageQueryService,
-                                                     modalRouter: self)
-
-        let navigationViewController = UINavigationController(rootViewController: viewController)
-
-        navigationViewController.modalPresentationStyle = .pageSheet
-        navigationViewController.presentationController?.delegate = viewController
-        navigationViewController.isModalInPresentation = false
-
-        guard let topViewController = topViewController else { return false }
-        topViewController.present(navigationViewController, animated: true, completion: nil)
-
-        return true
-    }
-
-    public func showFindView() -> Bool {
-        let state = FindViewState()
-        let viewController = FindViewController(state: state, dependency: self, router: self)
-        guard let detailViewController = rootViewController?.currentViewController else { return false }
-        detailViewController.show(viewController, sender: nil)
-        return true
-    }
+extension SceneDependencyContainer: ClipCreationModalRouter {
+    // MARK: - ClipCreationModalRouter
 
     public func showClipCreationModal(id: UUID, webView: WKWebView) -> Bool {
         guard isPresentingModal(having: id) == false else { return true }
@@ -294,37 +286,61 @@ extension SceneDependencyContainer: Router {
 
         return true
     }
+}
 
-    public func routeToClipCollectionView(for tag: Tag) {
-        guard let rootViewController = rootViewController else { return }
-        dismissAllModals { isSucceeded in
-            guard isSucceeded else { return }
+extension SceneDependencyContainer: ClipItemListModalRouter {
+    // MARK: - ClipItemListModalRouter
 
-            rootViewController.select(.tags)
+    public func showClipItemListModal(id: UUID,
+                                      clipId: Clip.Identity,
+                                      clipItems: [ClipItem],
+                                      transitioningController: ClipItemListTransitioningControllable) -> Bool
+    {
+        let state = ClipItemListState(id: id,
+                                      clipId: clipId,
+                                      clipItems: clipItems,
+                                      isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
+        let viewController = ClipItemListViewController(state: .init(listState: state,
+                                                                     navigationBarState: .init(),
+                                                                     toolBarState: .init()),
+                                                        siteUrlEditAlertState: .init(title: L10n.alertForEditSiteUrlTitle,
+                                                                                     message: L10n.alertForEditClipItemsSiteUrlMessage,
+                                                                                     placeholder: L10n.placeholderUrl),
+                                                        dependency: self,
+                                                        thumbnailPipeline: container.clipItemThumbnailPipeline)
+        viewController.transitioningDelegate = transitioningController
+        viewController.modalPresentationStyle = .fullScreen
 
-            guard let rootViewController = self.topViewController else { return }
-            (rootViewController as? UINavigationController)?.popToRootViewController(animated: false)
+        guard let topViewController = topViewController else { return false }
+        topViewController.present(viewController, animated: true, completion: nil)
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100), execute: {
-                _ = self.showClipCollectionView(for: tag)
-            })
-        }
+        return true
     }
+}
 
-    public func routeToClipCollectionView(forAlbumId albumId: Album.Identity) {
-        guard let rootViewController = rootViewController else { return }
-        dismissAllModals { isSucceeded in
-            guard isSucceeded else { return }
+extension SceneDependencyContainer: ClipMergeModalRouter {
+    // MARK: - ClipMergeModalRouter
 
-            rootViewController.select(.albums)
+    public func showClipMergeModal(id: UUID, clips: [Clip]) -> Bool {
+        guard isPresentingModal(having: id) == false else { return true }
 
-            guard let rootViewController = self.topViewController else { return }
-            (rootViewController as? UINavigationController)?.popToRootViewController(animated: false)
+        let state = ClipMergeViewState(id: id, clips: clips)
+        let viewController = ClipMergeViewController(state: state,
+                                                     dependency: self,
+                                                     thumbnailPipeline: container.temporaryThumbnailPipeline,
+                                                     imageQueryService: container.imageQueryService,
+                                                     modalRouter: self)
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100), execute: {
-                _ = self.showClipCollectionView(for: albumId)
-            })
-        }
+        let navigationViewController = UINavigationController(rootViewController: viewController)
+
+        navigationViewController.modalPresentationStyle = .pageSheet
+        navigationViewController.presentationController?.delegate = viewController
+        navigationViewController.isModalInPresentation = false
+
+        guard let topViewController = topViewController else { return false }
+        topViewController.present(navigationViewController, animated: true, completion: nil)
+
+        return true
     }
 }
 

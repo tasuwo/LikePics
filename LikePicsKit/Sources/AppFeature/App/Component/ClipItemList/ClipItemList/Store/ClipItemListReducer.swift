@@ -342,13 +342,3 @@ private extension Clip {
                      isHidden: isHidden)
     }
 }
-
-// MARK: - ModalNotification
-
-extension ModalNotification.Name {
-    static let clipItemList = ModalNotification.Name("net.tasuwo.TBox.ClipItemListReducer.clipItemList")
-}
-
-extension ModalNotification.UserInfoKey {
-    static let selectedPreviewItem = ModalNotification.UserInfoKey("net.tasuwo.TBox.ClipItemListReducer.selectedPreviewItem")
-}

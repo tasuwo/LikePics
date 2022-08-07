@@ -370,9 +370,3 @@ private extension ClipCreationViewReducer.DownloadError {
         }
     }
 }
-
-// MARK: - ModalNotification
-
-public extension ModalNotification.Name {
-    static let clipCreationModalDidFinish = ModalNotification.Name("net.tasuwo.TBox.ClipCreationViewReducer.ClipCreationModal")
-}

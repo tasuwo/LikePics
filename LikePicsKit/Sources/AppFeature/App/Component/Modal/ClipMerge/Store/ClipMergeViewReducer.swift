@@ -125,13 +125,3 @@ extension ClipMergeViewReducer {
         return nextState
     }
 }
-
-// MARK: - ModalNotification
-
-extension ModalNotification.Name {
-    static let clipMergeModal = ModalNotification.Name("net.tasuwo.TBox.ClipMergeViewReducer.clipMergeModal")
-}
-
-extension ModalNotification.UserInfoKey {
-    static let clipMergeCompleted = ModalNotification.UserInfoKey("net.tasuwo.TBox.ClipMergeViewReducer.clipMergeCompleted")
-}

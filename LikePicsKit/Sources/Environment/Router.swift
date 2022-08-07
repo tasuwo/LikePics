@@ -4,7 +4,6 @@
 
 import Domain
 import Foundation
-import WebKit
 
 /**
  * - TODO: 個別のRouterに切り出し
@@ -37,22 +36,7 @@ public protocol Router {
                                  transitioningController: ClipItemInformationTransitioningControllable) -> Bool
 
     @discardableResult
-    func showClipItemListView(id: UUID,
-                              clipId: Clip.Identity,
-                              clipItems: [ClipItem],
-                              transitioningController: ClipItemListTransitioningControllable) -> Bool
-
-    @discardableResult
-    func showAlbumSelectionModal(id: UUID) -> Bool
-
-    @discardableResult
-    func showClipMergeModal(id: UUID, clips: [Clip]) -> Bool
-
-    @discardableResult
     func showFindView() -> Bool
-
-    @discardableResult
-    func showClipCreationModal(id: UUID, webView: WKWebView) -> Bool
 
     func routeToClipCollectionView(for tag: Tag)
 

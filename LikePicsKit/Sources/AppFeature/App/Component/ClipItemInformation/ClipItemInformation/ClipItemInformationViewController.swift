@@ -13,6 +13,7 @@ import UIKit
 class ClipItemInformationViewController: UIViewController {
     typealias Store = CompositeKit.Store<ClipItemInformationViewState, ClipItemInformationViewAction, ClipItemInformationViewDependency>
     typealias Layout = ClipItemInformationLayout
+    typealias ModalRouter = TagSelectionModalRouter & AlbumSelectionModalRouter
 
     // MARK: - Properties
 
@@ -30,8 +31,7 @@ class ClipItemInformationViewController: UIViewController {
 
     // MARK: Service
 
-    // TODO: modalのみのrouterに絞る
-    private let modalRouter: Router & TagSelectionModalRouter
+    private let modalRouter: ModalRouter
 
     // MARK: Store
 
@@ -50,7 +50,7 @@ class ClipItemInformationViewController: UIViewController {
          siteUrlEditAlertState: TextEditAlertState,
          dependency: ClipItemInformationViewDependency,
          transitioningController: ClipItemInformationTransitioningControllable,
-         modalRouter: TagSelectionModalRouter & Router)
+         modalRouter: ModalRouter)
     {
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipItemInformationViewReducer())
         self.siteUrlEditAlert = .init(state: siteUrlEditAlertState)

@@ -19,6 +19,8 @@ class ClipCollectionViewController: UIViewController {
     typealias Layout = ClipCollectionViewLayout
     typealias Store = AnyStoring<ClipCollectionState, ClipCollectionAction, ClipCollectionDependency>
 
+    typealias ModalRouter = TagSelectionModalRouter & AlbumSelectionModalRouter & ClipMergeModalRouter
+
     // MARK: - Properties
 
     // MARK: View
@@ -35,8 +37,7 @@ class ClipCollectionViewController: UIViewController {
 
     // MARK: Service
 
-    // TODO: modalのみのルーターに制限する
-    private let modalRouter: Router & TagSelectionModalRouter
+    private let modalRouter: ModalRouter
     private let thumbnailPipeline: Pipeline
     private let menuBuilder: ClipCollectionMenuBuildable
     private let imageQueryService: ImageQueryServiceProtocol
@@ -65,7 +66,7 @@ class ClipCollectionViewController: UIViewController {
          dependency: ClipCollectionViewRootDependency,
          thumbnailPipeline: Pipeline,
          menuBuilder: ClipCollectionMenuBuildable,
-         modalRouter: Router & TagSelectionModalRouter,
+         modalRouter: ModalRouter,
          appBundle: Bundle)
     {
         self.thumbnailPipeline = thumbnailPipeline

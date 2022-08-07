@@ -3,6 +3,12 @@
 //
 
 import Domain
+import Foundation
+
+public protocol TagSelectionModalRouter {
+    @discardableResult
+    func showTagSelectionModal(id: UUID, selections: Set<Tag.Identity>) -> Bool
+}
 
 public extension ModalNotification.Name {
     static let tagSelectionModalDidSelect = ModalNotification.Name("net.tasuwo.TBox.TagSelectionModalReducer.tagSelectionModalDidSelect")

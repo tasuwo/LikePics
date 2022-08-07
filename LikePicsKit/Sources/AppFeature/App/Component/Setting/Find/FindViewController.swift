@@ -14,6 +14,7 @@ import WebKit
 
 class FindViewController: UIViewController {
     typealias Store = CompositeKit.Store<FindViewState, FindViewAction, FindViewDependency>
+    typealias ModalRouter = ClipCreationModalRouter
 
     // MARK: - Properties
 
@@ -42,23 +43,23 @@ class FindViewController: UIViewController {
 
     // MARK: Services
 
-    private let router: Router
+    private let modalRouter: ModalRouter
 
     init(webView: WKWebView,
          state: FindViewState,
          dependency: FindViewDependency,
-         router: Router)
+         modalRouter: ModalRouter)
     {
         self.webView = webView
         self.store = Store(initialState: state, dependency: dependency, reducer: FindViewReducer())
-        self.router = router
+        self.modalRouter = modalRouter
 
         super.init(nibName: nil, bundle: nil)
     }
 
     convenience init(state: FindViewState,
                      dependency: FindViewDependency,
-                     router: Router)
+                     modalRouter: ModalRouter)
     {
         let webView = WKWebView()
 
@@ -66,7 +67,7 @@ class FindViewController: UIViewController {
         let request = URLRequest(url: URL(string: "https://google.com")!)
         webView.load(request)
 
-        self.init(webView: webView, state: state, dependency: dependency, router: router)
+        self.init(webView: webView, state: state, dependency: dependency, modalRouter: modalRouter)
     }
 
     deinit {
@@ -178,7 +179,7 @@ extension FindViewController {
             }
             .store(in: &subscriptions)
 
-        if router.showClipCreationModal(id: id, webView: webView) == false {
+        if modalRouter.showClipCreationModal(id: id, webView: webView) == false {
             modalSubscription?.cancel()
             modalSubscription = nil
             store.execute(.modalDismissed)
@@ -376,6 +377,6 @@ extension FindViewController: Restorable {
         return FindViewController(webView: webView,
                                   state: store.stateValue,
                                   dependency: store.dependency,
-                                  router: router)
+                                  modalRouter: modalRouter)
     }
 }

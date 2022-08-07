@@ -18,6 +18,8 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     typealias Store = AnyStoring<ClipPreviewPageViewState, ClipPreviewPageViewAction, ClipPreviewPageViewDependency>
 
+    typealias ModalRouter = TagSelectionModalRouter & AlbumSelectionModalRouter & ClipItemListModalRouter
+
     // MARK: - Properties
 
     // MARK: View
@@ -42,8 +44,7 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     // MARK: Service
 
-    // TODO: Modal向けのprotocolに絞る
-    private let modalRouter: TagSelectionModalRouter & Router
+    private let modalRouter: ModalRouter
     private let factory: ViewControllerFactory
 
     // MARK: Store
@@ -74,7 +75,7 @@ class ClipPreviewPageViewController: UIPageViewController {
          transitionDispatcher: ClipPreviewPageTransitionDispatcherType,
          itemListTransitionController: ClipItemListTransitioningControllable,
          previewPrefetcher: PreviewPrefetchable,
-         modalRouter: TagSelectionModalRouter & Router,
+         modalRouter: ModalRouter,
          appBundle: Bundle)
     {
         let rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipPreviewPageViewRootReducer)
@@ -298,10 +299,10 @@ extension ClipPreviewPageViewController {
             }
             .store(in: &modalSubscriptions)
 
-        let succeeded = modalRouter.showClipItemListView(id: id,
-                                                         clipId: clip.id,
-                                                         clipItems: clip.items,
-                                                         transitioningController: itemListTransitionController)
+        let succeeded = modalRouter.showClipItemListModal(id: id,
+                                                          clipId: clip.id,
+                                                          clipItems: clip.items,
+                                                          transitioningController: itemListTransitionController)
         if !succeeded {
             modalSubscriptions.removeAll()
             store.execute(.modalCompleted(false))

@@ -171,14 +171,3 @@ extension AlbumSelectionModalReducer {
         return nextState
     }
 }
-
-// MARK: - ModalNotification
-
-extension ModalNotification.Name {
-    static let albumSelectionModal = ModalNotification.Name("net.tasuwo.TBox.AlbumSelectionModalReducer.albumSelectionModal")
-    static let albumSelectionModalDidDismiss = ModalNotification.Name("net.tasuwo.TBox.AlbumSelectionModalReducer.albumSelectionModalDidDismiss")
-}
-
-extension ModalNotification.UserInfoKey {
-    static let selectedAlbumId = ModalNotification.UserInfoKey("net.tasuwo.TBox.AlbumSelectionModalReducer.selectedAlbumId")
-}
