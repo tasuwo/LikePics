@@ -185,14 +185,3 @@ extension TagSelectionModalReducer {
         return nextState
     }
 }
-
-// MARK: - ModalNotification
-
-extension ModalNotification.Name {
-    public static let tagSelectionModalDidSelect = ModalNotification.Name("net.tasuwo.TBox.TagSelectionModalReducer.tagSelectionModalDidSelect")
-    public static let tagSelectionModalDidDismiss = ModalNotification.Name("net.tasuwo.TBox.TagSelectionModalReducer.tagSelectionModalDidDismiss")
-}
-
-extension ModalNotification.UserInfoKey {
-    public static let selectedTags = ModalNotification.UserInfoKey("net.tasuwo.TBox.TagSelectionModalReducer.selectedTags")
-}
