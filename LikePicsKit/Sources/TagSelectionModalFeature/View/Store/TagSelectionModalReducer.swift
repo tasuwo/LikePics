@@ -8,8 +8,8 @@ import Domain
 import Environment
 
 public typealias TagSelectionModalDependency = HasUserSettingStorage
-    & HasClipCommandService
-    & HasClipQueryService
+    & HasTagQueryService
+    & HasTagCommandService
     & HasModalNotificationCenter
 
 public struct TagSelectionModalReducer: Reducer {
@@ -68,7 +68,7 @@ public struct TagSelectionModalReducer: Reducer {
         // MARK: Alert Completion
 
         case let .alertSaveButtonTapped(text: name):
-            switch dependency.clipCommandService.create(tagWithName: name) {
+            switch dependency.tagCommandService.create(tagWithName: name) {
             case let .success(tagId):
                 let newTags = state.tags.updated(selectedIds: state.tags._selectedIds.union(Set([tagId])))
                 nextState.tags = newTags
@@ -100,7 +100,7 @@ public struct TagSelectionModalReducer: Reducer {
 extension TagSelectionModalReducer {
     static func prepareQueryEffects(_ state: State, _ dependency: Dependency) -> (State, [Effect<Action>]) {
         let query: TagListQuery
-        switch dependency.clipQueryService.queryAllTags() {
+        switch dependency.tagQueryService.queryTags() {
         case let .success(result):
             query = result
 

@@ -16,7 +16,7 @@ import TestHelper
 
 class DummyContainer: AppDependencyContaining {
     var modalNotificationCenter: ModalNotificationCenter
-    var clipCommandService: ClipCommandServiceProtocol
+    var clipCommandService: ClipCommandService
     var clipQueryService: ClipQueryServiceProtocol
     var clipSearchHistoryService: ClipSearchHistoryService
     var clipSearchSettingService: ClipSearchSettingService

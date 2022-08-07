@@ -103,3 +103,9 @@ extension ClipQueryCacheService: ClipQueryServiceProtocol {
         return internalService.queryAllTags()
     }
 }
+
+extension ClipQueryCacheService: TagQueryServiceProtocol {
+    public func queryTags() -> Result<TagListQuery, ClipStorageError> {
+        return internalService.queryAllTags()
+    }
+}

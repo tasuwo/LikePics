@@ -29,6 +29,7 @@ public typealias AppDependencyContaining = HasPasteboard
     & HasIntegrityValidationService
     & HasCloudStackLoader
     & HasTagCommandService
+    & HasTagQueryService
     & HasNop
     & HasClipStore
     & HasDiskCaches
@@ -349,6 +350,10 @@ extension AppDependencyContainer: HasCloudStackLoader {
 
 extension AppDependencyContainer: HasTagCommandService {
     public var tagCommandService: TagCommandServiceProtocol { _clipCommandService }
+}
+
+extension AppDependencyContainer: HasTagQueryService {
+    public var tagQueryService: TagQueryServiceProtocol { _clipQueryService }
 }
 
 extension AppDependencyContainer: HasNop {}

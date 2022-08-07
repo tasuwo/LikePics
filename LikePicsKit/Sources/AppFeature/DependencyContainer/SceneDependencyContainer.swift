@@ -81,3 +81,11 @@ extension SceneDependencyContainer: HasDiskCaches {
 extension SceneDependencyContainer: HasAppBundle {
     public var appBundle: Bundle { container.appBundle }
 }
+
+extension SceneDependencyContainer: HasTagCommandService {
+    public var tagCommandService: TagCommandServiceProtocol { container.tagCommandService }
+}
+
+extension SceneDependencyContainer: HasTagQueryService {
+    public var tagQueryService: TagQueryServiceProtocol { container.tagQueryService }
+}
