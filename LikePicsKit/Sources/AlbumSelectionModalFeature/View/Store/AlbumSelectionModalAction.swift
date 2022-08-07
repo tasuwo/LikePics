@@ -5,7 +5,7 @@
 import CompositeKit
 import Domain
 
-enum AlbumSelectionModalAction: Action {
+public enum AlbumSelectionModalAction: Action {
     // MARK: View Life-Cycle
 
     case viewDidLoad

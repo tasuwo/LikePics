@@ -1,0 +1,11 @@
+"album_selection_view_title" = "アルバムへ追加";
+
+"album_list_view_empty_title" = "アルバムがありません";
+"album_list_view_empty_message" = "複数のクリップをアルバムにまとめることができます";
+"album_list_view_empty_action_title" = "はじめてのアルバムを追加する";
+
+"album_list_view_error_at_add_album" = "アルバムの追加に失敗しました";
+
+"placeholder_search_album" = "アルバムを探す";
+
+"confirm_alert_ok" = "OK";

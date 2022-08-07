@@ -35,6 +35,7 @@ let package = Package(
                 "CompositeKit",
                 "Domain",
                 "Environment",
+                "AlbumSelectionModalFeature",
                 "TagSelectionModalFeature",
                 "ClipCreationFeature",
                 "LikePicsUIKit",
@@ -57,6 +58,17 @@ let package = Package(
 
         // MARK: - Feature
 
+        .target(
+            name: "AlbumSelectionModalFeature",
+            dependencies: [
+                "LikePicsUIKit",
+                "Smoothie",
+                "Domain",
+                "Environment",
+                "Common",
+                "CompositeKit"
+            ]
+        ),
         .target(
             name: "TagSelectionModalFeature",
             dependencies: [

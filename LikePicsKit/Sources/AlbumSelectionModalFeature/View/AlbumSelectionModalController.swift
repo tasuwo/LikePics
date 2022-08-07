@@ -9,7 +9,7 @@ import LikePicsUIKit
 import Smoothie
 import UIKit
 
-class AlbumSelectionModalController: UIViewController {
+public class AlbumSelectionModalController: UIViewController {
     typealias Layout = AlbumSelectionModalLayout
     typealias Store = CompositeKit.Store<AlbumSelectionModalState, AlbumSelectionModalAction, AlbumSelectionModalDependency>
 
@@ -39,11 +39,11 @@ class AlbumSelectionModalController: UIViewController {
 
     // MARK: - Initializers
 
-    init(state: AlbumSelectionModalState,
-         albumAdditionAlertState: TextEditAlertState,
-         dependency: AlbumSelectionModalDependency,
-         thumbnailPipeline: Pipeline,
-         imageQueryService: ImageQueryServiceProtocol)
+    public init(state: AlbumSelectionModalState,
+                albumAdditionAlertState: TextEditAlertState,
+                dependency: AlbumSelectionModalDependency,
+                thumbnailPipeline: Pipeline,
+                imageQueryService: ImageQueryServiceProtocol)
     {
         self.store = .init(initialState: state, dependency: dependency, reducer: AlbumSelectionModalReducer())
         self.albumAdditionAlert = .init(state: albumAdditionAlertState)
@@ -61,12 +61,12 @@ class AlbumSelectionModalController: UIViewController {
 
     // MARK: - View Life-Cycle Methods
 
-    override func viewDidDisappear(_ animated: Bool) {
+    override public func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         store.execute(.viewDidDisappear)
     }
 
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
 
         configureViewHierarchy()
@@ -215,7 +215,7 @@ extension AlbumSelectionModalController {
 extension AlbumSelectionModalController: UICollectionViewDelegate {
     // MARK: - UICollectionViewDelegate
 
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let album = self.dataSource.itemIdentifier(for: indexPath) else { return }
         store.execute(.selected(album.identity))
     }
@@ -224,13 +224,13 @@ extension AlbumSelectionModalController: UICollectionViewDelegate {
 extension AlbumSelectionModalController: UISearchBarDelegate {
     // MARK: - UISearchBarDelegate
 
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         RunLoop.main.perform {
             self.store.execute(.searchQueryChanged(searchBar.text ?? ""))
         }
     }
 
-    func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+    public func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         // HACK: marked text 入力を待つために遅延を設ける
         DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
             RunLoop.main.perform {
@@ -240,19 +240,19 @@ extension AlbumSelectionModalController: UISearchBarDelegate {
         return true
     }
 
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+    public func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
     }
 
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+    public func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(false, animated: true)
     }
 
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    public func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
 
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+    public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
 }
@@ -260,7 +260,7 @@ extension AlbumSelectionModalController: UISearchBarDelegate {
 extension AlbumSelectionModalController: EmptyMessageViewDelegate {
     // MARK: - EmptyMessageViewDelegate
 
-    func didTapActionButton(_ view: EmptyMessageView) {
+    public func didTapActionButton(_ view: EmptyMessageView) {
         store.execute(.emptyMessageViewActionButtonTapped)
     }
 }
@@ -268,11 +268,11 @@ extension AlbumSelectionModalController: EmptyMessageViewDelegate {
 extension AlbumSelectionModalController: TextEditAlertDelegate {
     // MARK: - TextEditAlertDelegate
 
-    func textEditAlert(_ id: UUID, didTapSaveWithText text: String) {
+    public func textEditAlert(_ id: UUID, didTapSaveWithText text: String) {
         store.execute(.alertSaveButtonTapped(text: text))
     }
 
-    func textEditAlertDidCancel(_ id: UUID) {
+    public func textEditAlertDidCancel(_ id: UUID) {
         store.execute(.alertDismissed)
     }
 }
@@ -280,7 +280,7 @@ extension AlbumSelectionModalController: TextEditAlertDelegate {
 extension AlbumSelectionModalController: UIAdaptivePresentationControllerDelegate {
     // MARK: - UIAdaptivePresentationControllerDelegate
 
-    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+    public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         store.execute(.didDismissedManually)
     }
 }
@@ -288,5 +288,5 @@ extension AlbumSelectionModalController: UIAdaptivePresentationControllerDelegat
 extension AlbumSelectionModalController: ModalController {
     // MARK: - ModalController
 
-    var id: UUID { store.stateValue.id }
+    public var id: UUID { store.stateValue.id }
 }

@@ -1,0 +1,11 @@
+"album_selection_view_title" = "Add to Album";
+
+"album_selection_view_empty_title" = "No Albums";
+"album_selection_view_empty_message" = "You can collect clips into an album";
+"album_selection_view_empty_action_title" = "Add your first Album";
+
+"album_list_view_error_at_add_album" = "Failed to add album.";
+
+"placeholder_search_album" = "Search Albums";
+
+"confirm_alert_ok" = "OK";

@@ -7,17 +7,17 @@ import CompositeKit
 import Domain
 import Environment
 
-typealias AlbumSelectionModalDependency = HasUserSettingStorage
+public typealias AlbumSelectionModalDependency = HasUserSettingStorage
     & HasClipCommandService
     & HasClipQueryService
     & HasModalNotificationCenter
 
-struct AlbumSelectionModalReducer: Reducer {
-    typealias Dependency = AlbumSelectionModalDependency
-    typealias State = AlbumSelectionModalState
-    typealias Action = AlbumSelectionModalAction
+public struct AlbumSelectionModalReducer: Reducer {
+    public typealias Dependency = AlbumSelectionModalDependency
+    public typealias State = AlbumSelectionModalState
+    public typealias Action = AlbumSelectionModalAction
 
-    func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
+    public func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?) {
         var nextState = state
 
         switch action {

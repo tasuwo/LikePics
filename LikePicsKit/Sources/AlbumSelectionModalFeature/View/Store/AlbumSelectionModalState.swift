@@ -6,7 +6,7 @@ import CoreGraphics
 import Domain
 import Foundation
 
-struct AlbumSelectionModalState: Equatable {
+public struct AlbumSelectionModalState: Equatable {
     enum Alert: Equatable {
         case error(String?)
         case addition
@@ -29,7 +29,7 @@ struct AlbumSelectionModalState: Equatable {
     var isDismissed: Bool
 }
 
-extension AlbumSelectionModalState {
+public extension AlbumSelectionModalState {
     init(id: UUID, isSomeItemsHidden: Bool) {
         self.id = id
 
