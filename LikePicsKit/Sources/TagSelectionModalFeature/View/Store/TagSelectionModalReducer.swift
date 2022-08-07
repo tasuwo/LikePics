@@ -60,7 +60,7 @@ public struct TagSelectionModalReducer: Reducer {
 
         case .saveButtonTapped:
             var userInfo: [ModalNotification.UserInfoKey: Any] = [:]
-            userInfo[.selectedTags] = Set(state.tags.orderedSelectedEntities())
+            userInfo[.selectedTags] = state.tags.orderedSelectedEntities()
             dependency.modalNotificationCenter.post(id: state.id, name: .tagSelectionModalDidSelect, userInfo: userInfo)
             nextState.isDismissed = true
             return (nextState, .none)

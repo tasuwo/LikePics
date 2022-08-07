@@ -140,8 +140,11 @@ extension ClipMergeViewController {
         ModalNotificationCenter.default
             .publisher(for: id, name: .tagSelectionModalDidSelect)
             .sink { [weak self] notification in
-                let tags = notification.userInfo?[ModalNotification.UserInfoKey.selectedTags] as? Set<Tag>
-                self?.store.execute(.tagsSelected(tags))
+                if let tags = notification.userInfo?[ModalNotification.UserInfoKey.selectedTags] as? [Tag] {
+                    self?.store.execute(.tagsSelected(Set(tags)))
+                } else {
+                    self?.store.execute(.tagsSelected(nil))
+                }
                 self?.modalSubscriptions.removeAll()
             }
             .store(in: &modalSubscriptions)

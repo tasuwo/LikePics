@@ -337,7 +337,7 @@ extension ClipPreviewPageViewController {
         ModalNotificationCenter.default
             .publisher(for: id, name: .tagSelectionModalDidSelect)
             .sink { [weak self] notification in
-                if let tags = notification.userInfo?[ModalNotification.UserInfoKey.selectedTags] as? Set<Tag> {
+                if let tags = notification.userInfo?[ModalNotification.UserInfoKey.selectedTags] as? [Tag] {
                     self?.store.execute(.tagsSelected(Set(tags.map({ $0.id }))))
                 } else {
                     self?.store.execute(.tagsSelected(nil))
