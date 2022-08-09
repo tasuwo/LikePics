@@ -470,9 +470,34 @@ extension ClipCommandService: ClipCommandServiceProtocol {
             }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateTag(having: id, byHiding: isHidden).map { _ in () }
+                try self.referenceClipStorage.beginTransaction()
+
+                switch self.clipStorage.updateTag(having: id, byHiding: isHidden) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                    self.logger.error("タグの更新に失敗: \(error.localizedDescription, privacy: .public)")
+                    return .failure(error)
+                }
+
+                switch self.referenceClipStorage.updateTag(having: id, byHiding: isHidden) {
+                case .success:
+                    break
+
+                case let .failure(error):
+                    try? self.clipStorage.cancelTransactionIfNeeded()
+                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                    self.logger.error("タグの更新に失敗: \(error.localizedDescription, privacy: .public)")
+                    return .failure(error)
+                }
+
                 try self.clipStorage.commitTransaction()
-                return result
+                try self.referenceClipStorage.commitTransaction()
+
+                return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
