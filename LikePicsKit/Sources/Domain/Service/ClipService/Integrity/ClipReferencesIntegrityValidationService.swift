@@ -75,8 +75,14 @@ public class ClipReferencesIntegrityValidationService {
                         self.logger.error("タグの更新に失敗: \(error.localizedDescription, privacy: .public)")
                     }
                 }
+
+                if referenceTag.clipCount != tag.clipCount {
+                    if case let .failure(error) = self.referenceClipStorage.updateTag(having: referenceTag.identity, clipCountTo: tag.clipCount) {
+                        self.logger.error("タグの更新に失敗: \(error.localizedDescription, privacy: .public)")
+                    }
+                }
             } else {
-                if case let .failure(error) = self.referenceClipStorage.create(tag: .init(id: tag.id, name: tag.name, isHidden: tag.isHidden)) {
+                if case let .failure(error) = self.referenceClipStorage.create(tag: .init(id: tag.id, name: tag.name, isHidden: tag.isHidden, clipCount: tag.clipCount)) {
                     self.logger.error("参照タグ(name='\(tag.name, privacy: .public)', id='\(tag.id, privacy: .public)'の作成に失敗: \(error.localizedDescription, privacy: .public)")
                 }
             }

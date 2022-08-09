@@ -284,6 +284,16 @@ public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
         fatalError("readAllTagsHandler returns can't have a default value thus its handler must be set")
     }
 
+    public private(set) var readAllTagsHavingCallCount = 0
+    public var readAllTagsHavingHandler: ((Set<Tag.Identity>) -> (Result<[ReferenceTag], ClipStorageError>))?
+    public func readAllTags(having ids: Set<Tag.Identity>) -> Result<[ReferenceTag], ClipStorageError> {
+        readAllTagsHavingCallCount += 1
+        if let readAllTagsHavingHandler = readAllTagsHavingHandler {
+            return readAllTagsHavingHandler(ids)
+        }
+        fatalError("readAllTagsHavingHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var createCallCount = 0
     public var createHandler: ((ReferenceTag) -> (Result<Void, ClipStorageError>))?
     public func create(tag: ReferenceTag) -> Result<Void, ClipStorageError> {
@@ -312,6 +322,16 @@ public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
             return updateTagHavingHandler(id, isHidden)
         }
         fatalError("updateTagHavingHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var updateTagHavingClipCountToCallCount = 0
+    public var updateTagHavingClipCountToHandler: ((ReferenceTag.Identity, Int?) -> (Result<Void, ClipStorageError>))?
+    public func updateTag(having id: ReferenceTag.Identity, clipCountTo clipCount: Int?) -> Result<Void, ClipStorageError> {
+        updateTagHavingClipCountToCallCount += 1
+        if let updateTagHavingClipCountToHandler = updateTagHavingClipCountToHandler {
+            return updateTagHavingClipCountToHandler(id, clipCount)
+        }
+        fatalError("updateTagHavingClipCountToHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var updateTagsCallCount = 0
@@ -1101,13 +1121,33 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
     }
 
     public private(set) var readTagsCallCount = 0
-    public var readTagsHandler: ((Clip.Identity) -> (Result<[Tag], ClipStorageError>))?
-    public func readTags(forClipHaving clipId: Clip.Identity) -> Result<[Tag], ClipStorageError> {
+    public var readTagsHandler: ((Set<Tag.Identity>) -> (Result<[Tag], ClipStorageError>))?
+    public func readTags(having ids: Set<Tag.Identity>) -> Result<[Tag], ClipStorageError> {
         readTagsCallCount += 1
         if let readTagsHandler = readTagsHandler {
-            return readTagsHandler(clipId)
+            return readTagsHandler(ids)
         }
         fatalError("readTagsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var readTagsForClipHavingCallCount = 0
+    public var readTagsForClipHavingHandler: ((Clip.Identity) -> (Result<[Tag], ClipStorageError>))?
+    public func readTags(forClipHaving clipId: Clip.Identity) -> Result<[Tag], ClipStorageError> {
+        readTagsForClipHavingCallCount += 1
+        if let readTagsForClipHavingHandler = readTagsForClipHavingHandler {
+            return readTagsForClipHavingHandler(clipId)
+        }
+        fatalError("readTagsForClipHavingHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var readTagsForClipsHavingCallCount = 0
+    public var readTagsForClipsHavingHandler: (([Clip.Identity]) -> (Result<[Tag], ClipStorageError>))?
+    public func readTags(forClipsHaving clipIds: [Clip.Identity]) -> Result<[Tag], ClipStorageError> {
+        readTagsForClipsHavingCallCount += 1
+        if let readTagsForClipsHavingHandler = readTagsForClipsHavingHandler {
+            return readTagsForClipsHavingHandler(clipIds)
+        }
+        fatalError("readTagsForClipsHavingHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var readClipItemsCallCount = 0

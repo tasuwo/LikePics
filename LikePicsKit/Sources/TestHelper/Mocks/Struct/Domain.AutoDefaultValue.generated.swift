@@ -166,12 +166,14 @@ public extension ReferenceTag {
         id: UUID = UUID(),
         name: String = "",
         isHidden: Bool = false,
+        clipCount: Int? = nil,
         isDirty: Bool = false
     ) -> Self {
         return .init(
             id: id,
             name: name,
             isHidden: isHidden,
+            clipCount: clipCount,
             isDirty: isDirty
         )
     }

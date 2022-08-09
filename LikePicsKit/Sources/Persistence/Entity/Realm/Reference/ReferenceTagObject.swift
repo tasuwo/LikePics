@@ -10,6 +10,7 @@ class ReferenceTagObject: Object {
     @Persisted(primaryKey: true) var id: UUID
     @Persisted var name: String = ""
     @Persisted var isHidden = false
+    @Persisted var clipCount: Int?
     @Persisted var isDirty = false
 }
 
@@ -18,6 +19,7 @@ extension ReferenceTag {
         return .init(id: managedObject.id,
                      name: managedObject.name,
                      isHidden: managedObject.isHidden,
+                     clipCount: managedObject.clipCount,
                      isDirty: managedObject.isDirty)
     }
 }

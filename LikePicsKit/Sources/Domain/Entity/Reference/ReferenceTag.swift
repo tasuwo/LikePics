@@ -9,14 +9,16 @@ public struct ReferenceTag: Codable, Equatable, Hashable {
     public let id: UUID
     public let name: String
     public let isHidden: Bool
+    public let clipCount: Int?
     public let isDirty: Bool
 
     // MARK: - Lifecycle
 
-    public init(id: UUID, name: String, isHidden: Bool, isDirty: Bool = false) {
+    public init(id: UUID, name: String, isHidden: Bool, clipCount: Int?, isDirty: Bool = false) {
         self.id = id
         self.name = name
         self.isHidden = isHidden
+        self.clipCount = clipCount
         self.isDirty = isDirty
     }
 }
@@ -31,6 +33,6 @@ extension ReferenceTag: Identifiable {
 
 extension ReferenceTag {
     func map(to: Tag.Type) -> Tag {
-        return .init(id: self.id, name: self.name, isHidden: self.isHidden)
+        return .init(id: self.id, name: self.name, isHidden: self.isHidden, clipCount: self.clipCount)
     }
 }

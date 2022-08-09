@@ -37,6 +37,22 @@ public class ClipCommandService {
     }
 }
 
+extension ClipCommandService {
+    func syncTagsClipCount(for ids: Set<Tag.Identity>) {
+        do {
+            try referenceClipStorage.beginTransaction()
+
+            try clipStorage.readTags(having: ids).get().forEach {
+                try referenceClipStorage.updateTag(having: $0.id, clipCountTo: $0.clipCount).get()
+            }
+
+            try referenceClipStorage.commitTransaction()
+        } catch {
+            logger.error("clipCoutの同期に失敗")
+        }
+    }
+}
+
 extension ClipCommandService: ClipCommandServiceProtocol {
     // MARK: - ClipCommandServiceProtocol
 
@@ -79,6 +95,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.commitTransaction()
                 try self.imageStorage.commitTransaction()
 
+                self.syncTagsClipCount(for: Set(clip.tagIds))
+
                 return .success(clipId)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
@@ -111,7 +129,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     return .failure(error)
                 }
 
-                switch self.referenceClipStorage.create(tag: .init(id: tag.identity, name: tag.name, isHidden: tag.isHidden)) {
+                switch self.referenceClipStorage.create(tag: .init(id: tag.identity, name: tag.name, isHidden: tag.isHidden, clipCount: tag.clipCount)) {
                 case .success:
                     break
 
@@ -196,6 +214,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
 
                 try self.clipStorage.commitTransaction()
 
+                self.syncTagsClipCount(for: Set(tagIds))
+
                 return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
@@ -226,6 +246,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
 
                 try self.clipStorage.commitTransaction()
 
+                self.syncTagsClipCount(for: Set(tagIds))
+
                 return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
@@ -244,6 +266,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
             do {
                 try self.clipStorage.beginTransaction()
 
+                let updatingTagIds = try? self.clipStorage.readTags(forClipsHaving: clipIds).get().map { $0.id }
+
                 switch self.clipStorage.updateClips(having: clipIds, byReplacingTagsHaving: tagIds) {
                 case .success:
                     break
@@ -255,6 +279,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 }
 
                 try self.clipStorage.commitTransaction()
+
+                self.syncTagsClipCount(for: Set((updatingTagIds ?? []) + tagIds))
 
                 return .success(())
             } catch {

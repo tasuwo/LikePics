@@ -172,10 +172,38 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func readTags(having ids: Set<Domain.Tag.Identity>) -> Result<[Domain.Tag], ClipStorageError> {
+        do {
+            switch try self.fetchTags(for: Array(ids)) {
+            case let .success(tags):
+                return .success(tags.compactMap { $0.map(to: Domain.Tag.self) })
+
+            case let .failure(error):
+                return .failure(error)
+            }
+        } catch {
+            self.logger.error("Failed to read tags. (error=\(error.localizedDescription, privacy: .public))")
+            return .failure(.internalError)
+        }
+    }
+
     public func readTags(forClipHaving clipId: Domain.Clip.Identity) -> Result<[Domain.Tag], ClipStorageError> {
         do {
             let request: NSFetchRequest<Tag> = Tag.fetchRequest()
             request.predicate = NSPredicate(format: "SUBQUERY(clips, $clip, $clip.id == %@).@count > 0", clipId as CVarArg)
+            let tags = try self.context.fetch(request)
+                .compactMap { $0.map(to: Domain.Tag.self) }
+            return .success(tags)
+        } catch {
+            self.logger.error("Failed to read tags. (error=\(error.localizedDescription, privacy: .public))")
+            return .failure(.internalError)
+        }
+    }
+
+    public func readTags(forClipsHaving clipIds: [Domain.Clip.Identity]) -> Result<[Domain.Tag], ClipStorageError> {
+        do {
+            let request: NSFetchRequest<Tag> = Tag.fetchRequest()
+            request.predicate = NSPredicate(format: "SUBQUERY(clips, $clip, $clip.id IN %@).@count > 0", clipIds as CVarArg)
             let tags = try self.context.fetch(request)
                 .compactMap { $0.map(to: Domain.Tag.self) }
             return .success(tags)

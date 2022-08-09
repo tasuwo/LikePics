@@ -65,6 +65,14 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
         return .success(Array(tags))
     }
 
+    public func readAllTags(having ids: Set<Domain.Tag.Identity>) -> Result<[Domain.ReferenceTag], ClipStorageError> {
+        guard let realm = try? Realm(configuration: self.configuration) else { return .failure(.internalError) }
+        let tags = realm.objects(ReferenceTagObject.self)
+            .filter { ids.contains($0.id) }
+            .map { ReferenceTag.make(by: $0) }
+        return .success(Array(tags))
+    }
+
     // MARK: Create
 
     public func create(tag: ReferenceTag) -> Result<Void, ClipStorageError> {
@@ -81,6 +89,7 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
         let obj = ReferenceTagObject()
         obj.id = tag.id
         obj.name = tag.name
+        obj.clipCount = tag.clipCount
         obj.isDirty = tag.isDirty
 
         realm.add(obj, update: .modified)
@@ -104,6 +113,15 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
 
         let tag = realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: id)
         tag?.isHidden = isHidden
+
+        return .success(())
+    }
+
+    public func updateTag(having id: Domain.ReferenceTag.Identity, clipCountTo clipCount: Int?) -> Result<Void, ClipStorageError> {
+        guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
+
+        let tag = realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: id)
+        tag?.clipCount = clipCount
 
         return .success(())
     }

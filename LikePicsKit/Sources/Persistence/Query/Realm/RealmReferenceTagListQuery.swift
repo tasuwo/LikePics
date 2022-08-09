@@ -46,6 +46,6 @@ extension RealmReferenceTagListQuery: TagListQuery {
 
 private extension Domain.Tag {
     static func make(by tag: ReferenceTagObject) -> Self {
-        return .init(id: tag.id, name: tag.name, isHidden: tag.isHidden)
+        return .init(id: tag.id, name: tag.name, isHidden: tag.isHidden, clipCount: tag.clipCount)
     }
 }

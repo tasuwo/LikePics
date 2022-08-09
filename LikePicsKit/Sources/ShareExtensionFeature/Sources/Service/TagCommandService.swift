@@ -27,7 +27,7 @@ extension TagCommandService: TagCommandServiceProtocol {
 
             let id = UUID()
 
-            switch self.storage.create(tag: .init(id: id, name: name, isHidden: false, isDirty: true)) {
+            switch self.storage.create(tag: .init(id: id, name: name, isHidden: false, clipCount: 0, isDirty: true)) {
             case .success:
                 break
 

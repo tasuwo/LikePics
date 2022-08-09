@@ -16,6 +16,9 @@ enum ReferenceClipStorageMigrationService {
         if oldSchemaVersion < 2 {
             Self.migrationToV2(migration)
         }
+        if oldSchemaVersion < 3 {
+            Self.migrationToV3(migration)
+        }
     }
 
     private static func migrationToV1(_ migration: Migration) {
@@ -28,6 +31,12 @@ enum ReferenceClipStorageMigrationService {
         migration.enumerateObjects(ofType: ReferenceTagObject.className()) { oldObject, newObject in
             let string = oldObject!["id"] as! String
             newObject!["id"] = UUID(uuidString: string)!
+        }
+    }
+
+    private static func migrationToV3(_ migration: Migration) {
+        migration.enumerateObjects(ofType: ReferenceTagObject.className()) { _, newObject in
+            newObject!["clipCount"] = nil
         }
     }
 }

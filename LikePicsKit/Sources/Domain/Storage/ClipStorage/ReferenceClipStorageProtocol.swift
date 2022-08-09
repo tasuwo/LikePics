@@ -15,6 +15,7 @@ public protocol ReferenceClipStorageProtocol {
 
     func readAllDirtyTags() -> Result<[ReferenceTag], ClipStorageError>
     func readAllTags() -> Result<[ReferenceTag], ClipStorageError>
+    func readAllTags(having ids: Set<Tag.Identity>) -> Result<[ReferenceTag], ClipStorageError>
 
     // MARK: Create
 
@@ -24,6 +25,7 @@ public protocol ReferenceClipStorageProtocol {
 
     func updateTag(having id: ReferenceTag.Identity, nameTo name: String) -> Result<Void, ClipStorageError>
     func updateTag(having id: ReferenceTag.Identity, byHiding isHidden: Bool) -> Result<Void, ClipStorageError>
+    func updateTag(having id: ReferenceTag.Identity, clipCountTo clipCount: Int?) -> Result<Void, ClipStorageError>
     func updateTags(having ids: [ReferenceTag.Identity], toDirty isDirty: Bool) -> Result<Void, ClipStorageError>
 
     // MARK: Delete
