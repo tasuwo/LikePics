@@ -14,5 +14,5 @@ public protocol ClipItemInformationViewDelegate: AnyObject {
     func clipItemInformationView(_ view: ClipItemInformationView, shouldHide isHidden: Bool)
     func clipItemInformationView(_ view: ClipItemInformationView, startEditingSiteUrl url: URL?)
     func clipItemInformationView(_ view: ClipItemInformationView, didSelectTag tag: Tag)
-    func clipItemInformationView(_ view: ClipItemInformationView, didSelectAlbum album: ListingAlbum)
+    func clipItemInformationView(_ view: ClipItemInformationView, didSelectAlbum album: ListingAlbumTitle)
 }

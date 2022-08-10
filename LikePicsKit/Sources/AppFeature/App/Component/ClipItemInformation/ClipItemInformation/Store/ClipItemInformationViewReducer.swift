@@ -206,7 +206,7 @@ extension ClipItemInformationViewReducer {
             .catch { _ in Just(Action.failedToLoadTags) }
         let tagsQueryEffect = Effect(tagsStream, underlying: tagsQuery, completeWith: .failedToLoadTags)
 
-        let albumsQuery: ListingAlbumListQuery
+        let albumsQuery: ListingAlbumTitleListQuery
         switch dependency.clipQueryService.queryAlbums(containingClipHavingClipId: state.clipId) {
         case let .success(result):
             albumsQuery = result
@@ -266,7 +266,7 @@ extension ClipItemInformationViewReducer {
                       previousState: previousState)
     }
 
-    private static func performFilter(albums: [ListingAlbum], previousState: State) -> State {
+    private static func performFilter(albums: [ListingAlbumTitle], previousState: State) -> State {
         performFilter(clip: previousState.clip,
                       item: previousState.item,
                       tags: previousState.tags.orderedEntities(),
@@ -288,7 +288,7 @@ extension ClipItemInformationViewReducer {
     private static func performFilter(clip: Clip?,
                                       item: ClipItem?,
                                       tags: [Tag],
-                                      albums: [ListingAlbum],
+                                      albums: [ListingAlbumTitle],
                                       isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {

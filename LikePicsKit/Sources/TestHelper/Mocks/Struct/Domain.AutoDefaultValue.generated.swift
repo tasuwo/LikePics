@@ -143,7 +143,7 @@ public extension ImageSize {
     }
 }
 
-public extension ListingAlbum {
+public extension ListingAlbumTitle {
     static func makeDefault(
         id: UUID = UUID(),
         title: String = "",

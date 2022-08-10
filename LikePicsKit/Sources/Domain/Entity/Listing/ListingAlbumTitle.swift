@@ -5,7 +5,7 @@
 import Foundation
 
 // sourcery: AutoDefaultValuePublic
-public struct ListingAlbum: Codable, Equatable, Hashable {
+public struct ListingAlbumTitle: Codable, Equatable, Hashable {
     public let id: UUID
     public let title: String
     public let isHidden: Bool
@@ -28,7 +28,7 @@ public struct ListingAlbum: Codable, Equatable, Hashable {
     }
 }
 
-extension ListingAlbum: Identifiable {
+extension ListingAlbumTitle: Identifiable {
     public typealias Identity = UUID
 
     public var identity: UUID {

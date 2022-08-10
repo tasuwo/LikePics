@@ -31,7 +31,7 @@ extension Persistence.Album {
 }
 
 extension Persistence.Album {
-    func map(to: Domain.ListingAlbum.Type) -> Domain.ListingAlbum? {
+    func map(to: Domain.ListingAlbumTitle.Type) -> Domain.ListingAlbumTitle? {
         guard let id = self.id,
               let title = self.title,
               let createdDate = self.createdDate,
@@ -40,10 +40,10 @@ extension Persistence.Album {
             return nil
         }
 
-        return Domain.ListingAlbum(id: id,
-                                   title: title,
-                                   isHidden: self.isHidden,
-                                   registeredDate: createdDate,
-                                   updatedDate: updateDate)
+        return Domain.ListingAlbumTitle(id: id,
+                                        title: title,
+                                        isHidden: self.isHidden,
+                                        registeredDate: createdDate,
+                                        updatedDate: updateDate)
     }
 }

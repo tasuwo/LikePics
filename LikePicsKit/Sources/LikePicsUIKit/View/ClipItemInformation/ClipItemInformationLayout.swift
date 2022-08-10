@@ -24,7 +24,7 @@ public enum ClipItemInformationLayout {
 
     enum Item: Hashable, Equatable {
         case tag(Tag)
-        case album(ListingAlbum)
+        case album(ListingAlbumTitle)
         case meta(Info)
         case url(UrlSetting)
     }
@@ -60,10 +60,10 @@ public enum ClipItemInformationLayout {
     public struct Information: Equatable {
         public let clip: Clip?
         public let tags: [Tag]
-        public let albums: [ListingAlbum]
+        public let albums: [ListingAlbumTitle]
         public let item: ClipItem?
 
-        public init(clip: Clip?, tags: [Tag], albums: [ListingAlbum], item: ClipItem?) {
+        public init(clip: Clip?, tags: [Tag], albums: [ListingAlbumTitle], item: ClipItem?) {
             self.clip = clip
             self.tags = tags
             self.albums = albums
@@ -337,8 +337,8 @@ extension ClipItemInformationLayout {
         }
     }
 
-    private static func configureAlbumCell() -> UICollectionView.CellRegistration<UICollectionViewListCell, ListingAlbum> {
-        return UICollectionView.CellRegistration<UICollectionViewListCell, ListingAlbum> { cell, _, album in
+    private static func configureAlbumCell() -> UICollectionView.CellRegistration<UICollectionViewListCell, ListingAlbumTitle> {
+        return UICollectionView.CellRegistration<UICollectionViewListCell, ListingAlbumTitle> { cell, _, album in
             var contentConfiguration = UIListContentConfiguration.valueCell()
             contentConfiguration.text = album.title
             contentConfiguration.textProperties.color = Asset.Color.likePicsRed.color

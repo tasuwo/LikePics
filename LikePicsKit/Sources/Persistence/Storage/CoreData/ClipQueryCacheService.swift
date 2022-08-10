@@ -91,7 +91,7 @@ extension ClipQueryCacheService: ClipQueryServiceProtocol {
         return internalService.queryAlbum(having: id)
     }
 
-    public func queryAlbums(containingClipHavingClipId id: Domain.Clip.Identity) -> Result<ListingAlbumListQuery, ClipStorageError> {
+    public func queryAlbums(containingClipHavingClipId id: Domain.Clip.Identity) -> Result<ListingAlbumTitleListQuery, ClipStorageError> {
         return internalService.queryAlbums(containingClipHavingClipId: id)
     }
 

@@ -162,8 +162,8 @@ public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
     }
 
     public private(set) var queryAlbumsCallCount = 0
-    public var queryAlbumsHandler: ((Clip.Identity) -> (Result<ListingAlbumListQuery, ClipStorageError>))?
-    public func queryAlbums(containingClipHavingClipId id: Clip.Identity) -> Result<ListingAlbumListQuery, ClipStorageError> {
+    public var queryAlbumsHandler: ((Clip.Identity) -> (Result<ListingAlbumTitleListQuery, ClipStorageError>))?
+    public func queryAlbums(containingClipHavingClipId id: Clip.Identity) -> Result<ListingAlbumTitleListQuery, ClipStorageError> {
         queryAlbumsCallCount += 1
         if let queryAlbumsHandler = queryAlbumsHandler {
             return queryAlbumsHandler(id)
@@ -651,15 +651,15 @@ public class CloudUsageContextStorageProtocolMock: CloudUsageContextStorageProto
     }
 }
 
-public class ListingAlbumListQueryMock: ListingAlbumListQuery {
+public class ListingAlbumTitleListQueryMock: ListingAlbumTitleListQuery {
     public init() { }
-    public init(albums: CurrentValueSubject<[ListingAlbum], Error>) {
+    public init(albums: CurrentValueSubject<[ListingAlbumTitle], Error>) {
         self._albums = albums
     }
 
     public private(set) var albumsSetCallCount = 0
-    private var _albums: CurrentValueSubject<[ListingAlbum], Error>! { didSet { albumsSetCallCount += 1 } }
-    public var albums: CurrentValueSubject<[ListingAlbum], Error> {
+    private var _albums: CurrentValueSubject<[ListingAlbumTitle], Error>! { didSet { albumsSetCallCount += 1 } }
+    public var albums: CurrentValueSubject<[ListingAlbumTitle], Error> {
         get { return _albums }
         set { _albums = newValue }
     }

@@ -7,11 +7,11 @@ import CoreData
 import Domain
 import UIKit
 
-class CoreDataListingAlbumListQuery: NSObject {
+class CoreDataListingAlbumTitleListQuery: NSObject {
     typealias RequestFactory = () -> NSFetchRequest<AlbumItem>
 
     private let requestFactory: RequestFactory
-    private var subject: CurrentValueSubject<[Domain.ListingAlbum], Error>
+    private var subject: CurrentValueSubject<[Domain.ListingAlbumTitle], Error>
     private var controller: NSFetchedResultsController<AlbumItem>? {
         willSet {
             self.controller?.delegate = nil
@@ -26,7 +26,7 @@ class CoreDataListingAlbumListQuery: NSObject {
 
         let request = requestFactory()
         let currentAlbums = try context.fetch(request)
-            .compactMap { $0.album?.map(to: Domain.ListingAlbum.self) }
+            .compactMap { $0.album?.map(to: Domain.ListingAlbumTitle.self) }
 
         self.subject = .init(currentAlbums)
 
@@ -56,7 +56,7 @@ class CoreDataListingAlbumListQuery: NSObject {
     }
 }
 
-extension CoreDataListingAlbumListQuery: NSFetchedResultsControllerDelegate {
+extension CoreDataListingAlbumTitleListQuery: NSFetchedResultsControllerDelegate {
     // MARK: - NSFetchedResultsControllerDelegate
 
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
@@ -64,23 +64,23 @@ extension CoreDataListingAlbumListQuery: NSFetchedResultsControllerDelegate {
     {
         controller.managedObjectContext.perform { [weak self] in
             guard let self = self else { return }
-            let albums: [Domain.ListingAlbum] = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
+            let albums: [Domain.ListingAlbumTitle] = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers
                 .compactMap { controller.managedObjectContext.object(with: $0) as? AlbumItem }
-                .compactMap { $0.album?.map(to: Domain.ListingAlbum.self) }
+                .compactMap { $0.album?.map(to: Domain.ListingAlbumTitle.self) }
             self.subject.send(albums)
         }
     }
 }
 
-extension CoreDataListingAlbumListQuery: ListingAlbumListQuery {
+extension CoreDataListingAlbumTitleListQuery: ListingAlbumTitleListQuery {
     // MARK: - ListingAlbumListQuery
 
-    var albums: CurrentValueSubject<[Domain.ListingAlbum], Error> {
+    var albums: CurrentValueSubject<[Domain.ListingAlbumTitle], Error> {
         return subject
     }
 }
 
-extension CoreDataListingAlbumListQuery: ViewContextObserver {
+extension CoreDataListingAlbumTitleListQuery: ViewContextObserver {
     // MARK: - ViewContextObserver
 
     func didReplaced(context: NSManagedObjectContext) {

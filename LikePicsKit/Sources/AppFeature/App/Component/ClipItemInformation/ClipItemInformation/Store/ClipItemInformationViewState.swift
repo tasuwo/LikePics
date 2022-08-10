@@ -22,7 +22,7 @@ struct ClipItemInformationViewState: Equatable {
     var clip: Clip?
     var tags: EntityCollectionSnapshot<Tag>
     var item: ClipItem?
-    var albums: EntityCollectionSnapshot<ListingAlbum>
+    var albums: EntityCollectionSnapshot<ListingAlbumTitle>
 
     var isSuspendedCollectionViewUpdate: Bool
     var isSomeItemsHidden: Bool

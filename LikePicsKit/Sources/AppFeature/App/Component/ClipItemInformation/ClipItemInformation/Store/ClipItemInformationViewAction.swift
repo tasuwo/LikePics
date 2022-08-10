@@ -25,7 +25,7 @@ enum ClipItemInformationViewAction: Action {
     case tagsUpdated([Tag])
     case failedToLoadTags
 
-    case albumsUpdated([ListingAlbum])
+    case albumsUpdated([ListingAlbumTitle])
     case failedToLoadAlbums
 
     case settingUpdated(isSomeItemsHidden: Bool)
@@ -42,7 +42,7 @@ enum ClipItemInformationViewAction: Action {
     case urlOpenMenuSelected(URL?)
     case urlCopyMenuSelected(URL?)
     case tagTapped(Tag)
-    case albumTapped(ListingAlbum)
+    case albumTapped(ListingAlbumTitle)
 
     // MARK: Modal Completion
 

@@ -339,7 +339,7 @@ extension ClipItemInformationViewController: ClipItemInformationViewDelegate {
         store.execute(.tagTapped(tag))
     }
 
-    func clipItemInformationView(_ view: ClipItemInformationView, didSelectAlbum album: ListingAlbum) {
+    func clipItemInformationView(_ view: ClipItemInformationView, didSelectAlbum album: ListingAlbumTitle) {
         store.execute(.albumTapped(album))
     }
 }
