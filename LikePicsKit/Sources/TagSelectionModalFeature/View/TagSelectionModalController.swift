@@ -97,7 +97,7 @@ extension TagSelectionModalController {
                 guard let self = self else { return }
                 var snapshot = Layout.Snapshot()
                 snapshot.appendSections([.main])
-                snapshot.appendItems(state.tags.orderedFilteredEntities())
+                snapshot.appendItems(state.tags.orderedFilteredEntities().map({ Layout.Item(tag: $0, displayCount: !state.isSomeItemsHidden) }))
                 self.dataSource.apply(snapshot, animatingDifferences: true)
                 self.selectionApplier.didApplyDataSource(snapshot: state.tags)
             }
@@ -189,9 +189,9 @@ extension TagSelectionModalController {
         collectionView.allowsSelection = true
         collectionView.allowsMultipleSelection = true
         dataSource = Layout.configureDataSource(collectionView)
-        selectionApplier = UICollectionViewSelectionLazyApplier(collectionView: collectionView,
-                                                                dataSource: dataSource,
-                                                                itemBuilder: { $0 })
+        selectionApplier = UICollectionViewSelectionLazyApplier(collectionView: collectionView, dataSource: dataSource) { [weak store] model in
+            return Layout.Item(tag: model, displayCount: !(store?.stateValue.isSomeItemsHidden ?? false))
+        }
     }
 
     private func configureSearchBar() {
@@ -238,12 +238,12 @@ extension TagSelectionModalController: UICollectionViewDelegate {
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let tagId = dataSource.itemIdentifier(for: indexPath)?.identity else { return }
+        guard let tagId = dataSource.itemIdentifier(for: indexPath)?.tag.identity else { return }
         store.execute(.selected(tagId))
     }
 
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        guard let tagId = dataSource.itemIdentifier(for: indexPath)?.identity else { return }
+        guard let tagId = dataSource.itemIdentifier(for: indexPath)?.tag.identity else { return }
         store.execute(.deselected(tagId))
     }
 }
@@ -253,10 +253,10 @@ extension TagSelectionModalController: UICollectionViewDelegateFlowLayout {
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return .zero }
-        return TagCollectionViewCell.preferredSize(title: item.name,
-                                                   clipCount: item.clipCount,
-                                                   isHidden: item.isHidden,
-                                                   visibleCountIfPossible: true,
+        return TagCollectionViewCell.preferredSize(title: item.tag.name,
+                                                   clipCount: item.tag.clipCount,
+                                                   isHidden: item.tag.isHidden,
+                                                   visibleCountIfPossible: !store.stateValue.isSomeItemsHidden,
                                                    visibleDeleteButton: false)
     }
 

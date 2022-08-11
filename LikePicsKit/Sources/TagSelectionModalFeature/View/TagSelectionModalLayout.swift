@@ -14,7 +14,10 @@ enum TagSelectionModalLayout {
         case main
     }
 
-    typealias Item = Tag
+    struct Item: Hashable {
+        let tag: Tag
+        let displayCount: Bool
+    }
 }
 
 extension TagSelectionModalLayout {
@@ -38,14 +41,14 @@ extension TagSelectionModalLayout {
 
     static func configureCell() -> UICollectionView.CellRegistration<TagCollectionViewCell, Item> {
         return .init(cellNib: TagCollectionViewCell.nib) { cell, _, item in
-            cell.title = item.name
+            cell.title = item.tag.name
             cell.displayMode = .checkAtSelect
-            cell.visibleCountIfPossible = true
-            if let clipCount = item.clipCount {
+            cell.visibleCountIfPossible = item.displayCount
+            if let clipCount = item.tag.clipCount {
                 cell.count = clipCount
             }
             cell.visibleDeleteButton = false
-            cell.isHiddenTag = item.isHidden
+            cell.isHiddenTag = item.tag.isHidden
         }
     }
 }
