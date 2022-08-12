@@ -28,14 +28,15 @@ extension TemporaryClipStorage.Configuration {
         switch kind {
         case .group:
             return Realm.Configuration(
-                schemaVersion: 2,
+                schemaVersion: 3,
                 migrationBlock: TemporaryClipStorageMigrationService.migrationBlock,
                 deleteRealmIfMigrationNeeded: false,
                 // WARN: 古いクライアントに `TagObject` のテーブルが残っている可能性があるので注意すること
                 objectTypes: [
                     ClipObject.self,
                     ClipItemObject.self,
-                    TagIdObject.self
+                    TagIdObject.self,
+                    AlbumIdObject.self
                 ]
             )
         }

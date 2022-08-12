@@ -16,6 +16,9 @@ enum TemporaryClipStorageMigrationService {
         if oldSchemaVersion < 2 {
             Self.migrationToV2(migration)
         }
+        if oldSchemaVersion < 3 {
+            Self.migrationToV3(migration)
+        }
     }
 
     private static func migrationToV1(_ migration: Migration) {
@@ -49,6 +52,12 @@ enum TemporaryClipStorageMigrationService {
         migration.enumerateObjects(ofType: TagIdObject.className()) { oldObject, newObject in
             let idString = oldObject!["id"] as! String
             newObject!["id"] = UUID(uuidString: idString)!
+        }
+    }
+
+    private static func migrationToV3(_ migration: Migration) {
+        migration.enumerateObjects(ofType: ClipObject.className()) { _, newObject in
+            newObject!["albumIds"] = List<AlbumIdObject>()
         }
     }
 }

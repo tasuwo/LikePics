@@ -10,11 +10,12 @@ public extension ReferenceClipStorage.Configuration {
         let realmFileName = "reference-clips.realm"
 
         var configuration = Realm.Configuration(
-            schemaVersion: 3,
+            schemaVersion: 4,
             migrationBlock: ReferenceClipStorageMigrationService.migrationBlock,
             deleteRealmIfMigrationNeeded: false,
             objectTypes: [
-                ReferenceTagObject.self
+                ReferenceTagObject.self,
+                ReferenceAlbumObject.self
             ]
         )
 

@@ -11,6 +11,7 @@ class ClipObject: Object {
     @Persisted var descriptionText: String?
     @Persisted var items: List<ClipItemObject>
     @Persisted var tagIds: List<TagIdObject>
+    @Persisted var albumIds: List<AlbumIdObject>
     @Persisted var isHidden = false
     @Persisted var dataSize: Int = 0
     @Persisted var registeredAt = Date()
@@ -24,6 +25,7 @@ extension Domain.Clip {
                      description: managedObject.descriptionText,
                      items: items,
                      tagIds: managedObject.tagIds.compactMap({ $0.id }),
+                     albumIds: managedObject.albumIds.compactMap({ $0.id }),
                      isHidden: managedObject.isHidden,
                      dataSize: managedObject.dataSize,
                      registeredDate: managedObject.registeredAt,
