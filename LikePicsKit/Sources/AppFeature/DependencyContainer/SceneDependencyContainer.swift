@@ -89,3 +89,11 @@ extension SceneDependencyContainer: HasTagCommandService {
 extension SceneDependencyContainer: HasTagQueryService {
     public var tagQueryService: TagQueryServiceProtocol { container.tagQueryService }
 }
+
+extension SceneDependencyContainer: HasAlbumCommandService {
+    public var albumCommandService: AlbumCommandServiceProtocol { container.albumCommandService }
+}
+
+extension SceneDependencyContainer: HasListingAlbumTitleQueryService {
+    public var listingAlbumTitleQueryService: ListingAlbumTitleQueryServiceProtocol { container.listingAlbumTitleQueryService }
+}

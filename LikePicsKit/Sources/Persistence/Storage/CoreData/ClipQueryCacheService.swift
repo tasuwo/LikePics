@@ -113,3 +113,5 @@ extension ClipQueryCacheService: TagQueryServiceProtocol {
         return internalService.queryAllTags()
     }
 }
+
+extension ClipQueryCacheService: ListingAlbumTitleQueryServiceProtocol {}

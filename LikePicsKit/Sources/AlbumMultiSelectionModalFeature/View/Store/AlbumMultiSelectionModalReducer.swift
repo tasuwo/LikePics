@@ -8,8 +8,8 @@ import Domain
 import Environment
 
 public typealias AlbumMultiSelectionModalDependency = HasUserSettingStorage
-    & HasClipCommandService
-    & HasClipQueryService
+    & HasAlbumCommandService
+    & HasListingAlbumTitleQueryService
     & HasModalNotificationCenter
 
 public struct AlbumMultiSelectionModalReducer: Reducer {
@@ -65,7 +65,7 @@ public struct AlbumMultiSelectionModalReducer: Reducer {
         // MARK: Alert Completion
 
         case let .alertSaveButtonTapped(text: text):
-            switch dependency.clipCommandService.create(albumWithTitle: text) {
+            switch dependency.albumCommandService.create(albumWithTitle: text) {
             case .success:
                 nextState.alert = nil
 
@@ -93,7 +93,7 @@ public struct AlbumMultiSelectionModalReducer: Reducer {
 extension AlbumMultiSelectionModalReducer {
     static func prepareQueryEffects(_ state: State, _ dependency: Dependency) -> (State, [Effect<Action>]) {
         let query: ListingAlbumTitleListQuery
-        switch dependency.clipQueryService.queryAllAlbumTitles() {
+        switch dependency.listingAlbumTitleQueryService.queryAllAlbumTitles() {
         case let .success(result):
             query = result
 

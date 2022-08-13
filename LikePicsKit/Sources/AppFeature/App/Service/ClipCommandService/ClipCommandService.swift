@@ -966,3 +966,19 @@ extension ClipCommandService: TagCommandServiceProtocol {
         }
     }
 }
+
+extension ClipCommandService: AlbumCommandServiceProtocol {
+    public func create(albumWithTitle title: String) -> Result<Album.Identity, AlbumCommandServiceError> {
+        let result: Result<Album.Identity, ClipStorageError> = create(albumWithTitle: title)
+        switch result {
+        case let .success(albumId):
+            return .success(albumId)
+
+        case .failure(.duplicated):
+            return .failure(.duplicated)
+
+        default:
+            return .failure(.internalError)
+        }
+    }
+}

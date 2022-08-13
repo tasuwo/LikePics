@@ -35,6 +35,8 @@ public typealias AppDependencyContaining = HasPasteboard
     & HasDiskCaches
     & HasImageLoaderSettings
     & HasAppBundle
+    & HasAlbumCommandService
+    & HasListingAlbumTitleQueryService
 
 public class AppDependencyContainer {
     // MARK: - Properties
@@ -354,6 +356,14 @@ extension AppDependencyContainer: HasTagCommandService {
 
 extension AppDependencyContainer: HasTagQueryService {
     public var tagQueryService: TagQueryServiceProtocol { _clipQueryService }
+}
+
+extension AppDependencyContainer: HasAlbumCommandService {
+    public var albumCommandService: AlbumCommandServiceProtocol { _clipCommandService }
+}
+
+extension AppDependencyContainer: HasListingAlbumTitleQueryService {
+    public var listingAlbumTitleQueryService: ListingAlbumTitleQueryServiceProtocol { _clipQueryService }
 }
 
 extension AppDependencyContainer: HasNop {}
