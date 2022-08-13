@@ -323,13 +323,13 @@ extension ClipQueryService: ClipQueryServiceProtocol {
         assert(Thread.isMainThread)
 
         do {
-            let factory: CoreDataListingAlbumTitleListQuery.RequestFactory = {
+            let factory: CoreDataListingAlbumTitleListForClipQuery.RequestFactory = {
                 let request: NSFetchRequest<AlbumItem> = AlbumItem.fetchRequest()
                 request.sortDescriptors = [NSSortDescriptor(keyPath: \AlbumItem.index, ascending: false)]
                 request.predicate = NSPredicate(format: "clip.id == %@", id as CVarArg)
                 return request
             }
-            let query = try CoreDataListingAlbumTitleListQuery(requestFactory: factory, context: context)
+            let query = try CoreDataListingAlbumTitleListForClipQuery(requestFactory: factory, context: context)
             observers.append(.init(value: query))
 
             return .success(query)

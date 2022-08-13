@@ -7,7 +7,7 @@ import CoreData
 import Domain
 import UIKit
 
-class CoreDataListingAlbumTitleListQuery: NSObject {
+class CoreDataListingAlbumTitleListForClipQuery: NSObject {
     typealias RequestFactory = () -> NSFetchRequest<AlbumItem>
 
     private let requestFactory: RequestFactory
@@ -56,7 +56,7 @@ class CoreDataListingAlbumTitleListQuery: NSObject {
     }
 }
 
-extension CoreDataListingAlbumTitleListQuery: NSFetchedResultsControllerDelegate {
+extension CoreDataListingAlbumTitleListForClipQuery: NSFetchedResultsControllerDelegate {
     // MARK: - NSFetchedResultsControllerDelegate
 
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
@@ -72,7 +72,7 @@ extension CoreDataListingAlbumTitleListQuery: NSFetchedResultsControllerDelegate
     }
 }
 
-extension CoreDataListingAlbumTitleListQuery: ListingAlbumTitleListQuery {
+extension CoreDataListingAlbumTitleListForClipQuery: ListingAlbumTitleListQuery {
     // MARK: - ListingAlbumListQuery
 
     var albums: CurrentValueSubject<[Domain.ListingAlbumTitle], Error> {
@@ -80,7 +80,7 @@ extension CoreDataListingAlbumTitleListQuery: ListingAlbumTitleListQuery {
     }
 }
 
-extension CoreDataListingAlbumTitleListQuery: ViewContextObserver {
+extension CoreDataListingAlbumTitleListForClipQuery: ViewContextObserver {
     // MARK: - ViewContextObserver
 
     func didReplaced(context: NSManagedObjectContext) {
