@@ -135,8 +135,12 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
             return .failure(.duplicated)
         }
 
+        let albums = realm.objects(ReferenceAlbumObject.self)
+            .sorted(byKeyPath: "index")
+
         let obj = ReferenceAlbumObject()
         obj.id = album.id
+        obj.index = 1
         obj.title = album.title
         obj.isHidden = album.isHidden
         obj.registeredDate = album.registeredDate
@@ -144,6 +148,12 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
         obj.isDirty = album.isDirty
 
         realm.add(obj, update: .modified)
+
+        var currentIndex = 2
+        albums.forEach {
+            $0.index = currentIndex
+            currentIndex += 1
+        }
 
         return .success(())
     }
@@ -202,6 +212,15 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
 
         let tag = realm.object(ofType: ReferenceAlbumObject.self, forPrimaryKey: id)
         tag?.isHidden = isHidden
+        tag?.updatedDate = updatedDate
+
+        return .success(())
+    }
+
+    public func updateAlbum(having id: ReferenceAlbum.Identity, updatedAt updatedDate: Date) -> Result<Void, ClipStorageError> {
+        guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
+
+        let tag = realm.object(ofType: ReferenceAlbumObject.self, forPrimaryKey: id)
         tag?.updatedDate = updatedDate
 
         return .success(())

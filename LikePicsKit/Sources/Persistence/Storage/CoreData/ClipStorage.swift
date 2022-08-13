@@ -548,7 +548,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func updateAlbum(having albumId: Domain.Album.Identity, byAddingClipsHaving clipIds: [Domain.Clip.Identity]) -> Result<Void, ClipStorageError> {
+    public func updateAlbum(having albumId: Domain.Album.Identity, byAddingClipsHaving clipIds: [Domain.Clip.Identity], at date: Date) -> Result<Void, ClipStorageError> {
         do {
             guard case let .success(album) = try self.fetchAlbum(for: albumId) else { return .failure(.notFound) }
             guard case let .success(clips) = try self.fetchClips(for: clipIds) else { return .failure(.notFound) }
@@ -576,7 +576,7 @@ extension ClipStorage: ClipStorageProtocol {
                 albumItem.clip = clip
                 albumItems.add(albumItem)
             }
-            album.updatedDate = Date()
+            album.updatedDate = date
 
             return .success(())
         } catch {
@@ -585,7 +585,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func updateAlbum(having albumId: Domain.Album.Identity, byDeletingClipsHaving clipIds: [Domain.Clip.Identity]) -> Result<Void, ClipStorageError> {
+    public func updateAlbum(having albumId: Domain.Album.Identity, byDeletingClipsHaving clipIds: [Domain.Clip.Identity], at date: Date) -> Result<Void, ClipStorageError> {
         do {
             guard case let .success(album) = try self.fetchAlbum(for: albumId) else { return .failure(.notFound) }
             guard case let .success(clips) = try self.fetchClips(for: clipIds) else { return .failure(.notFound) }
@@ -612,7 +612,7 @@ extension ClipStorage: ClipStorageProtocol {
                         currentIndex += 1
                     }
                 }
-            album.updatedDate = Date()
+            album.updatedDate = date
 
             return .success(())
         } catch {
@@ -621,7 +621,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func updateAlbum(having albumId: Domain.Album.Identity, byReorderingClipsHaving clipIds: [Domain.Clip.Identity]) -> Result<Void, ClipStorageError> {
+    public func updateAlbum(having albumId: Domain.Album.Identity, byReorderingClipsHaving clipIds: [Domain.Clip.Identity], at date: Date) -> Result<Void, ClipStorageError> {
         do {
             guard case let .success(album) = try self.fetchAlbum(for: albumId) else {
                 self.logger.error("更新対象のアルバムが見つからなかったため、アルバム内のアイテムの並び替えに失敗しました (id: \(albumId, privacy: .public))")
@@ -646,6 +646,8 @@ extension ClipStorage: ClipStorageProtocol {
                 currentIndex += 1
             }
 
+            album.updatedDate = date
+
             return .success(())
         } catch {
             self.logger.error("Failed to update album. (error=\(error.localizedDescription, privacy: .public))")
@@ -653,14 +655,14 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func updateAlbum(having albumId: Domain.Album.Identity, titleTo title: String) -> Result<Domain.Album, ClipStorageError> {
+    public func updateAlbum(having albumId: Domain.Album.Identity, titleTo title: String, at date: Date) -> Result<Domain.Album, ClipStorageError> {
         do {
             guard case .failure = try self.fetchAlbum(for: title) else { return .failure(.duplicated) }
             guard case let .success(album) = try self.fetchAlbum(for: albumId) else { return .failure(.notFound) }
             guard let result = album.map(to: Domain.Album.self) else { return .failure(.internalError) }
 
             album.title = title
-            album.updatedDate = Date()
+            album.updatedDate = date
 
             return .success(result)
         } catch {
@@ -669,12 +671,12 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func updateAlbum(having albumId: Domain.Album.Identity, byHiding isHidden: Bool) -> Result<Domain.Album, ClipStorageError> {
+    public func updateAlbum(having albumId: Domain.Album.Identity, byHiding isHidden: Bool, at date: Date) -> Result<Domain.Album, ClipStorageError> {
         do {
             guard case let .success(album) = try self.fetchAlbum(for: albumId) else { return .failure(.notFound) }
 
             album.isHidden = isHidden
-            album.updatedDate = Date()
+            album.updatedDate = date
 
             return .success(album.map(to: Domain.Album.self)!)
         } catch {

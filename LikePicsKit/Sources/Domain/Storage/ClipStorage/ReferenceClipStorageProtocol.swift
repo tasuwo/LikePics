@@ -35,6 +35,7 @@ public protocol ReferenceClipStorageProtocol {
     func updateTags(having ids: [ReferenceTag.Identity], toDirty isDirty: Bool) -> Result<Void, ClipStorageError>
     func updateAlbum(having id: ReferenceAlbum.Identity, titleTo title: String, updatedAt updatedDate: Date) -> Result<Void, ClipStorageError>
     func updateAlbum(having id: ReferenceAlbum.Identity, byHiding isHidden: Bool, updatedAt updatedDate: Date) -> Result<Void, ClipStorageError>
+    func updateAlbum(having id: ReferenceAlbum.Identity, updatedAt updatedDate: Date) -> Result<Void, ClipStorageError>
     func updateAlbums(byReordering albumIds: [ReferenceAlbum.Identity]) -> Result<Void, ClipStorageError>
     func updateAlbums(having ids: [ReferenceAlbum.Identity], toDirty isDirty: Bool) -> Result<Void, ClipStorageError>
 

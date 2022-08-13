@@ -161,11 +161,18 @@ extension ClipCommandService: ClipCommandServiceProtocol {
             }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.create(albumWithTitle: title).map { $0.id }
+                try self.referenceClipStorage.beginTransaction()
+
+                let album = try self.clipStorage.create(albumWithTitle: title).get()
+                _ = try self.referenceClipStorage.create(album: .init(id: album.id, title: album.title, isHidden: album.isHidden, registeredDate: album.registeredDate, updatedDate: album.updatedDate)).get()
+
                 try self.clipStorage.commitTransaction()
-                return result
+                try self.referenceClipStorage.commitTransaction()
+
+                return .success(album.id)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.commitTransaction()
                 self.logger.error("アルバムの作成に失敗: \(error.localizedDescription, privacy: .public)")
                 return .failure(.internalError)
             }
@@ -337,11 +344,19 @@ extension ClipCommandService: ClipCommandServiceProtocol {
             }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateAlbum(having: albumId, byAddingClipsHaving: clipIds).map { _ in () }
+                try self.referenceClipStorage.beginTransaction()
+
+                let currentDate = Date()
+                _ = try self.clipStorage.updateAlbum(having: albumId, byAddingClipsHaving: clipIds, at: currentDate).get()
+                _ = try self.referenceClipStorage.updateAlbum(having: albumId, updatedAt: currentDate).get()
+
                 try self.clipStorage.commitTransaction()
-                return result
+                try self.referenceClipStorage.commitTransaction()
+
+                return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 self.logger.error("アルバムの更新に失敗: \(error.localizedDescription, privacy: .public)")
                 return .failure(.internalError)
             }
@@ -356,11 +371,19 @@ extension ClipCommandService: ClipCommandServiceProtocol {
             }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateAlbum(having: albumId, byDeletingClipsHaving: clipIds).map { _ in () }
+                try self.referenceClipStorage.beginTransaction()
+
+                let currentDate = Date()
+                _ = try self.clipStorage.updateAlbum(having: albumId, byDeletingClipsHaving: clipIds, at: currentDate).get()
+                _ = try self.referenceClipStorage.updateAlbum(having: albumId, updatedAt: currentDate).get()
+
                 try self.clipStorage.commitTransaction()
-                return result
+                try self.referenceClipStorage.commitTransaction()
+
+                return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 self.logger.error("アルバムの更新に失敗: \(error.localizedDescription, privacy: .public)")
                 return .failure(.internalError)
             }
@@ -375,11 +398,19 @@ extension ClipCommandService: ClipCommandServiceProtocol {
             }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateAlbum(having: albumId, byReorderingClipsHaving: clipIds).map { _ in () }
+                try self.referenceClipStorage.beginTransaction()
+
+                let currentDate = Date()
+                _ = try self.clipStorage.updateAlbum(having: albumId, byReorderingClipsHaving: clipIds, at: currentDate).get()
+                _ = try self.referenceClipStorage.updateAlbum(having: albumId, updatedAt: currentDate).get()
+
                 try self.clipStorage.commitTransaction()
-                return result
+                try self.referenceClipStorage.commitTransaction()
+
+                return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 self.logger.error("アルバムの更新に失敗: \(error.localizedDescription, privacy: .public)")
                 return .failure(.internalError)
             }
@@ -394,11 +425,19 @@ extension ClipCommandService: ClipCommandServiceProtocol {
             }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateAlbum(having: albumId, titleTo: title).map { _ in () }
+                try self.referenceClipStorage.beginTransaction()
+
+                let currentDate = Date()
+                _ = try self.clipStorage.updateAlbum(having: albumId, titleTo: title, at: currentDate).get()
+                _ = try self.referenceClipStorage.updateAlbum(having: albumId, titleTo: title, updatedAt: currentDate).get()
+
                 try self.clipStorage.commitTransaction()
-                return result
+                try self.referenceClipStorage.commitTransaction()
+
+                return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 self.logger.error("アルバムの更新に失敗: \(error.localizedDescription, privacy: .public)")
                 return .failure(.internalError)
             }
@@ -413,11 +452,19 @@ extension ClipCommandService: ClipCommandServiceProtocol {
             }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateAlbum(having: albumId, byHiding: isHidden).map { _ in () }
+                try self.referenceClipStorage.beginTransaction()
+
+                let currentDate = Date()
+                _ = try self.clipStorage.updateAlbum(having: albumId, byHiding: isHidden, at: currentDate).get()
+                _ = try self.referenceClipStorage.updateAlbum(having: albumId, byHiding: isHidden, updatedAt: currentDate).get()
+
                 try self.clipStorage.commitTransaction()
-                return result
+                try self.referenceClipStorage.commitTransaction()
+
+                return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 self.logger.error("アルバムの更新に失敗: \(error.localizedDescription, privacy: .public)")
                 return .failure(.internalError)
             }
@@ -432,11 +479,18 @@ extension ClipCommandService: ClipCommandServiceProtocol {
             }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateAlbums(byReordering: albumIds).map { _ in () }
+                try self.referenceClipStorage.beginTransaction()
+
+                _ = try self.clipStorage.updateAlbums(byReordering: albumIds).get()
+                _ = try self.referenceClipStorage.updateAlbums(byReordering: albumIds).get()
+
                 try self.clipStorage.commitTransaction()
-                return result
+                try self.referenceClipStorage.commitTransaction()
+
+                return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 self.logger.error("アルバムの更新に失敗: \(error.localizedDescription, privacy: .public)")
                 return .failure(.internalError)
             }
@@ -819,11 +873,18 @@ extension ClipCommandService: ClipCommandServiceProtocol {
             }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.deleteAlbum(having: id).map { _ in () }
+                try self.referenceClipStorage.beginTransaction()
+
+                _ = try self.clipStorage.deleteAlbum(having: id).get()
+                _ = try self.referenceClipStorage.deleteAlbums(having: [id]).get()
+
                 try self.clipStorage.commitTransaction()
-                return result
+                try self.referenceClipStorage.commitTransaction()
+
+                return .success(())
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
                 self.logger.error("アルバムの削除に失敗: \(error.localizedDescription, privacy: .public)")
                 return .failure(.internalError)
             }
