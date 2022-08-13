@@ -498,6 +498,51 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func updateClip(having clipId: Domain.Clip.Identity, byReplacingAlbumsHaving albumIds: [Domain.Album.Identity]) -> Result<[Domain.Clip], ClipStorageError> {
+        do {
+            guard case let .success(clip) = try self.fetchClip(for: clipId) else { return .failure(.notFound) }
+
+            let oldAlbumItems: [AlbumItem] = try {
+                let request: NSFetchRequest<AlbumItem> = AlbumItem.fetchRequest()
+                request.sortDescriptors = [NSSortDescriptor(keyPath: \AlbumItem.id, ascending: true)]
+                request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+                    NSPredicate(format: "clip.id == %@", clipId as CVarArg)
+                ])
+                return try context.fetch(request)
+            }()
+            let oldAlbumIds = oldAlbumItems.compactMap { $0.album?.id }
+
+            let additionalAlbumIds = Set(albumIds).subtracting(Set(oldAlbumIds))
+            additionalAlbumIds.forEach { albumId in
+                let album = try self.fetchAlbum(for: albumId)
+                let albumItems = album.mutableSetValue(forKey: "items")
+
+                let maxIndex = albumItems
+                    .compactMap { $0 as? AlbumItem }
+                    .max(by: { $0.index < $1.index })?
+                    .index ?? 0
+                let albumItem = AlbumItem(context: self.context)
+                albumItem.id = UUID()
+                albumItem.index = maxIndex + Int64(index + 1)
+                albumItem.clip = clip
+                albumItems.add(albumItem)
+                album.updatedDate = date
+            }
+
+            let extraAlbumIds = Set(oldAlbumIds).subtracting(Set(albumIds))
+            oldAlbumItems.filter {
+                guard let albumId = $0.album?.id else { return false }
+                return extraAlbumIds.contains(albumId)
+            }.forEach {
+                self.context.delete($0)
+            }
+
+        } catch {
+            self.logger.error("Failed to update clips. (error=\(error.localizedDescription, privacy: .public))")
+            return .failure(.internalError)
+        }
+    }
+
     public func updateClip(having clipId: Domain.Clip.Identity, byReorderingItemsHaving itemIds: [Domain.ClipItem.Identity]) -> Result<Void, ClipStorageError> {
         do {
             guard case let .success(clip) = try self.fetchClip(for: clipId) else {
