@@ -95,6 +95,14 @@ extension TemporaryClipStorage: TemporaryClipStorageProtocol {
             }
             .forEach { newClip.tagIds.append($0) }
 
+        clip.albumIds
+            .map {
+                let obj = AlbumIdObject()
+                obj.id = $0
+                return obj
+            }
+            .forEach { newClip.albumIds.append($0) }
+
         newClip.dataSize = clip.dataSize
         newClip.isHidden = clip.isHidden
         newClip.registeredAt = clip.registeredDate
