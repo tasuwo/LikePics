@@ -172,6 +172,19 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func readAllAlbums() -> Result<[Domain.Album], ClipStorageError> {
+        do {
+            let request: NSFetchRequest<Album> = Album.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(keyPath: \Album.index, ascending: true)]
+            let albums = try self.context.fetch(request)
+                .compactMap { $0.map(to: Domain.Album.self) }
+            return .success(albums)
+        } catch {
+            self.logger.error("Failed to read tags. (error=\(error.localizedDescription, privacy: .public))")
+            return .failure(.internalError)
+        }
+    }
+
     public func readTags(having ids: Set<Domain.Tag.Identity>) -> Result<[Domain.Tag], ClipStorageError> {
         do {
             switch try self.fetchTags(for: Array(ids)) {

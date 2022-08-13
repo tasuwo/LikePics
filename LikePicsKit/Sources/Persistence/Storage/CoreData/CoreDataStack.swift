@@ -186,6 +186,9 @@ extension CoreDataStack {
             var insertedTagObjectIDs = [NSManagedObjectID]()
             var updatedTagObjectIDs = [NSManagedObjectID]()
             var deletedTagObjectIDs = [NSManagedObjectID]()
+            var insertedAlbumObjectIDs = [NSManagedObjectID]()
+            var updatedAlbumObjectIDs = [NSManagedObjectID]()
+            var deletedAlbumObjectIDs = [NSManagedObjectID]()
             var insertedAlbumItemObjectIDs = [NSManagedObjectID]()
             var updatedAlbumItemObjectIDs = [NSManagedObjectID]()
             var deletedAlbumItemObjectIDs = [NSManagedObjectID]()
@@ -202,6 +205,20 @@ extension CoreDataStack {
 
                         case .delete:
                             deletedTagObjectIDs.append(change.changedObjectID)
+
+                        @unknown default:
+                            break
+                        }
+                    } else if change.isAlbumChange {
+                        switch change.changeType {
+                        case .insert:
+                            insertedAlbumObjectIDs.append(change.changedObjectID)
+
+                        case .update:
+                            updatedAlbumObjectIDs.append(change.changedObjectID)
+
+                        case .delete:
+                            deletedAlbumObjectIDs.append(change.changedObjectID)
 
                         @unknown default:
                             break
@@ -227,6 +244,9 @@ extension CoreDataStack {
             self.cloudStackObserver?.didRemoteChangedTags(inserted: insertedTagObjectIDs,
                                                           updated: updatedTagObjectIDs,
                                                           deleted: deletedTagObjectIDs)
+            self.cloudStackObserver?.didRemoteChangedAlbums(inserted: insertedAlbumObjectIDs,
+                                                            updated: updatedAlbumObjectIDs,
+                                                            deleted: deletedAlbumObjectIDs)
             self.cloudStackObserver?.didRemoteChangedAlbumItems(inserted: insertedAlbumItemObjectIDs,
                                                                 updated: updatedAlbumItemObjectIDs,
                                                                 deleted: deletedAlbumItemObjectIDs)
@@ -239,6 +259,10 @@ extension CoreDataStack {
 private extension NSPersistentHistoryChange {
     var isTagChange: Bool {
         return self.changedObjectID.entity.name == Tag.entity().name
+    }
+
+    var isAlbumChange: Bool {
+        return self.changedObjectID.entity.name == Album.entity().name
     }
 
     var isAlbumItemChange: Bool {
