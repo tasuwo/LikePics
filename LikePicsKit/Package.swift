@@ -51,6 +51,7 @@ let package = Package(
             dependencies: [
                 "Common",
                 "Domain",
+                "AlbumMultiSelectionModalFeature",
                 "ClipCreationFeature",
                 "TagSelectionModalFeature",
                 "LikePicsUIKit",

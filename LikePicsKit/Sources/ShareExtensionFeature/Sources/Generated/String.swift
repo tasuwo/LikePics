@@ -10,10 +10,16 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum L10n {
+    /// このアルバムの名前を入力してください
+    internal static let albumListViewAlertForAddMessage = L10n.tr("Localizable", "album_list_view_alert_for_add_message")
+    /// 新規アルバム
+    internal static let albumListViewAlertForAddTitle = L10n.tr("Localizable", "album_list_view_alert_for_add_title")
     /// 画像を探す対象の有効なWebサイトURLが見つかりませんでした
     internal static let errorNoUrl = L10n.tr("Localizable", "error_no_url")
     /// 共有に失敗しました
     internal static let errorUnknown = L10n.tr("Localizable", "error_unknown")
+    /// アルバム名
+    internal static let placeholderAlbumName = L10n.tr("Localizable", "placeholder_album_name")
     /// タグ名
     internal static let placeholderTagName = L10n.tr("Localizable", "placeholder_tag_name")
     /// このタグの名前を入力してください

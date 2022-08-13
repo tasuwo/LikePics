@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import AlbumMultiSelectionModalFeature
 import ClipCreationFeature
 import Combine
 import Common
@@ -24,8 +25,9 @@ public class DependencyContainer {
 
     private let clipStore: ClipStorable
     private let tagQueryService: ReferenceTagQueryService
+    private let albumQueryService: ReferenceAlbumQueryService
     private let currentDateResolver = { Date() }
-    private let tagCommandService: TagCommandService
+    private let commandService: CommandService
     private let userSettingsStorage: UserSettingsStorage
     private let thumbnailPipeline: Pipeline
 
@@ -46,8 +48,9 @@ public class DependencyContainer {
         self.clipStore = TemporaryClipCommandService(clipStorage: clipStorage, imageStorage: imageStorage)
 
         self.tagQueryService = try ReferenceTagQueryService(config: .resolve(for: mainBundle))
+        self.albumQueryService = try ReferenceAlbumQueryService(config: .resolve(for: mainBundle))
 
-        self.tagCommandService = TagCommandService(storage: referenceClipStorage)
+        self.commandService = CommandService(storage: referenceClipStorage)
 
         self.userSettingsStorage = UserSettingsStorage(appBundle: mainBundle)
 
@@ -178,7 +181,7 @@ extension DependencyContainer: TagSelectionModalRouter {
             var userSettingStorage: UserSettingsStorageProtocol
         }
         let dependency = Dependency(modalNotificationCenter: .default,
-                                    tagCommandService: tagCommandService,
+                                    tagCommandService: commandService,
                                     tagQueryService: tagQueryService,
                                     userSettingStorage: userSettingsStorage)
 
@@ -209,7 +212,39 @@ extension DependencyContainer: AlbumMultiSelectionModalRouter {
     // MARK: - AlbumMultiSelectionModalRouter
 
     public func showAlbumMultiSelectionModal(id: UUID, selections: Set<Domain.Album.Identity>) -> Bool {
-        fatalError("TODO")
+        guard isPresentingModal(having: id) == false else { return true }
+
+        struct Dependency: AlbumMultiSelectionModalDependency {
+            var albumCommandService: Domain.AlbumCommandServiceProtocol
+            var listingAlbumTitleQueryService: Domain.ListingAlbumTitleQueryServiceProtocol
+            var modalNotificationCenter: Domain.ModalNotificationCenter
+            var userSettingStorage: Domain.UserSettingsStorageProtocol
+        }
+        let dependency = Dependency(albumCommandService: commandService,
+                                    listingAlbumTitleQueryService: albumQueryService,
+                                    modalNotificationCenter: .default,
+                                    userSettingStorage: userSettingsStorage)
+
+        let state = AlbumMultiSelectionModalState(id: id,
+                                                  selections: selections,
+                                                  isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems())
+        let albumAdditionAlertState = TextEditAlertState(title: L10n.albumListViewAlertForAddTitle,
+                                                         message: L10n.albumListViewAlertForAddMessage,
+                                                         placeholder: L10n.placeholderAlbumName)
+        let viewController = AlbumMultiSelectionModalController(state: state,
+                                                                albumAdditionAlertState: albumAdditionAlertState,
+                                                                dependency: dependency)
+
+        let navigationViewController = UINavigationController(rootViewController: viewController)
+
+        navigationViewController.modalPresentationStyle = .pageSheet
+        navigationViewController.presentationController?.delegate = viewController
+        navigationViewController.isModalInPresentation = false
+
+        guard let topViewController = topViewController else { return false }
+        topViewController.present(navigationViewController, animated: true, completion: nil)
+
+        return true
     }
 }
 
