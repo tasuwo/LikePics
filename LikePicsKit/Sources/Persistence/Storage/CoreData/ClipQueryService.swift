@@ -355,6 +355,23 @@ extension ClipQueryService: ClipQueryServiceProtocol {
         }
     }
 
+    public func queryAllAlbumTitles() -> Result<ListingAlbumTitleListQuery, ClipStorageError> {
+        assert(Thread.isMainThread)
+
+        do {
+            let factory: CoreDataListingAlbumTitleListQuery.RequestFactory = {
+                let request: NSFetchRequest<Album> = Album.fetchRequest()
+                request.sortDescriptors = [NSSortDescriptor(keyPath: \Album.index, ascending: true)]
+                return request
+            }
+            let query = try CoreDataListingAlbumTitleListQuery(requestFactory: factory, context: self.context)
+            self.observers.append(.init(value: query))
+            return .success(query)
+        } catch {
+            return .failure(.internalError)
+        }
+    }
+
     public func queryAllTags() -> Result<TagListQuery, ClipStorageError> {
         assert(Thread.isMainThread)
 

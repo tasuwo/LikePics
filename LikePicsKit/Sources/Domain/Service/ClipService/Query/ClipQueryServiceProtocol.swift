@@ -23,5 +23,6 @@ public protocol ClipQueryServiceProtocol {
     func queryAlbum(having id: Album.Identity) -> Result<AlbumQuery, ClipStorageError>
     func queryAlbums(containingClipHavingClipId id: Clip.Identity) -> Result<ListingAlbumTitleListQuery, ClipStorageError>
     func queryAllAlbums() -> Result<AlbumListQuery, ClipStorageError>
+    func queryAllAlbumTitles() -> Result<ListingAlbumTitleListQuery, ClipStorageError>
     func queryAllTags() -> Result<TagListQuery, ClipStorageError>
 }

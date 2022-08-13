@@ -92,8 +92,8 @@ public struct AlbumMultiSelectionModalReducer: Reducer {
 
 extension AlbumMultiSelectionModalReducer {
     static func prepareQueryEffects(_ state: State, _ dependency: Dependency) -> (State, [Effect<Action>]) {
-        let query: AlbumListQuery
-        switch dependency.clipQueryService.queryAllAlbums() {
+        let query: ListingAlbumTitleListQuery
+        switch dependency.clipQueryService.queryAllAlbumTitles() {
         case let .success(result):
             query = result
 
@@ -103,14 +103,14 @@ extension AlbumMultiSelectionModalReducer {
 
         let albumsStream = query.albums
             .catch { _ in Just([]) }
-            .map { albums in Action.albumsUpdated(albums.map({ ListingAlbumTitle($0) })) as Action? }
+            .map { Action.albumsUpdated($0) as Action? }
         let albumsEffect = Effect(albumsStream, underlying: query)
 
         let settingsStream = dependency.userSettingStorage.showHiddenItems
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
-        let nextState = performFilter(albums: query.albums.value.map({ ListingAlbumTitle($0) }),
+        let nextState = performFilter(albums: query.albums.value,
                                       searchQuery: state.searchQuery,
                                       isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
                                       previousState: state)

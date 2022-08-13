@@ -99,6 +99,10 @@ extension ClipQueryCacheService: ClipQueryServiceProtocol {
         return internalService.queryAllAlbums()
     }
 
+    public func queryAllAlbumTitles() -> Result<ListingAlbumTitleListQuery, ClipStorageError> {
+        return internalService.queryAllAlbumTitles()
+    }
+
     public func queryAllTags() -> Result<TagListQuery, ClipStorageError> {
         return internalService.queryAllTags()
     }
