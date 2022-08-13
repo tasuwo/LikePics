@@ -66,7 +66,9 @@ public struct AlbumMultiSelectionModalReducer: Reducer {
 
         case let .alertSaveButtonTapped(text: text):
             switch dependency.albumCommandService.create(albumWithTitle: text) {
-            case .success:
+            case let .success(albumId):
+                let newAlbums = state.albums.updated(selectedIds: state.albums._selectedIds.union(Set([albumId])))
+                nextState.albums = newAlbums
                 nextState.alert = nil
 
             case .failure:
