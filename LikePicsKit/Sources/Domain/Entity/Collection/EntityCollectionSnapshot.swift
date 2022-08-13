@@ -85,8 +85,8 @@ public extension EntityCollectionSnapshot {
 
         return .init(order: newOrder,
                      entities: newEntities,
-                     selectedIds: _selectedIds,
-                     filteredIds: _filteredIds)
+                     selectedIds: _selectedIds.subtracting([id]),
+                     filteredIds: _filteredIds.subtracting([id]))
     }
 }
 
