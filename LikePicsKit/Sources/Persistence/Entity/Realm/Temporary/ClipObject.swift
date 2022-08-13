@@ -25,7 +25,7 @@ extension Domain.Clip {
                      description: managedObject.descriptionText,
                      items: items,
                      tagIds: managedObject.tagIds.compactMap({ $0.id }),
-                     albumIds: managedObject.albumIds.compactMap({ $0.id }),
+                     albumIds: Set(managedObject.albumIds.compactMap({ $0.id })),
                      isHidden: managedObject.isHidden,
                      dataSize: managedObject.dataSize,
                      registeredDate: managedObject.registeredAt,

@@ -6,7 +6,7 @@ import Domain
 import Foundation
 
 public protocol ClipRecipeFactoryProtocol {
-    func make(url: URL?, hidesClip: Bool, partialRecipes: [ClipItemPartialRecipe], tagIds: [Tag.Identity]) -> (ClipRecipe, [ImageContainer])
+    func make(url: URL?, hidesClip: Bool, partialRecipes: [ClipItemPartialRecipe], tagIds: [Tag.Identity], albumIds: Set<Album.Identity>) -> (ClipRecipe, [ImageContainer])
 }
 
 public struct ClipRecipeFactory {
@@ -31,7 +31,8 @@ extension ClipRecipeFactory: ClipRecipeFactoryProtocol {
     public func make(url: URL?,
                      hidesClip: Bool,
                      partialRecipes: [ClipItemPartialRecipe],
-                     tagIds: [Tag.Identity]) -> (ClipRecipe, [ImageContainer])
+                     tagIds: [Tag.Identity],
+                     albumIds: Set<Album.Identity>) -> (ClipRecipe, [ImageContainer])
     {
         let currentDate = self.currentDateResolver()
         let clipId = self.uuidIssuer()
@@ -50,6 +51,7 @@ extension ClipRecipeFactory: ClipRecipeFactoryProtocol {
                               isHidden: hidesClip,
                               clipItems: itemAndContainers.map { $0.0 },
                               tagIds: tagIds,
+                              albumIds: albumIds,
                               dataSize: itemAndContainers.map({ $1.data.count }).reduce(0, +),
                               registeredDate: currentDate,
                               currentDate: currentDate)
@@ -58,11 +60,12 @@ extension ClipRecipeFactory: ClipRecipeFactoryProtocol {
 }
 
 private extension ClipRecipe {
-    init(clipId: Clip.Identity, isHidden: Bool, clipItems: [ClipItemRecipe], tagIds: [Tag.Identity], dataSize: Int, registeredDate: Date, currentDate: Date) {
+    init(clipId: Clip.Identity, isHidden: Bool, clipItems: [ClipItemRecipe], tagIds: [Tag.Identity], albumIds: Set<Album.Identity>, dataSize: Int, registeredDate: Date, currentDate: Date) {
         self.init(id: clipId,
                   description: nil,
                   items: clipItems,
                   tagIds: tagIds,
+                  albumIds: albumIds,
                   isHidden: isHidden,
                   dataSize: dataSize,
                   registeredDate: registeredDate,

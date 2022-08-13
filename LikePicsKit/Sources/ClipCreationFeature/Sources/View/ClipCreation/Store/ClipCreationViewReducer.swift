@@ -278,6 +278,7 @@ extension ClipCreationViewReducer {
                                  shouldSaveAsClip: state.shouldSaveAsClip,
                                  shouldSaveAsHiddenItem: state.shouldSaveAsHiddenItem,
                                  tagIds: Array(state.tags._filteredIds),
+                                 albumIds: [], // TODO:
                                  partialRecipes: partialRecipes,
                                  dependency: dependency)
                     .publisher
@@ -320,6 +321,7 @@ extension ClipCreationViewReducer {
                              shouldSaveAsClip: Bool,
                              shouldSaveAsHiddenItem: Bool,
                              tagIds: [Tag.Identity],
+                             albumIds: Set<Album.Identity>,
                              partialRecipes: [ClipItemPartialRecipe],
                              dependency: Dependency) -> Result<Action?, DownloadError>
     {
@@ -327,7 +329,8 @@ extension ClipCreationViewReducer {
             let result = dependency.clipRecipeFactory.make(url: url,
                                                            hidesClip: shouldSaveAsHiddenItem,
                                                            partialRecipes: partialRecipes,
-                                                           tagIds: tagIds)
+                                                           tagIds: tagIds,
+                                                           albumIds: albumIds)
             switch dependency.clipStore.create(clip: result.0, withContainers: result.1, forced: false) {
             case .success:
                 return .success(.imagesSaved)
@@ -341,7 +344,8 @@ extension ClipCreationViewReducer {
                 let result = dependency.clipRecipeFactory.make(url: url,
                                                                hidesClip: shouldSaveAsHiddenItem,
                                                                partialRecipes: [partialRecipe],
-                                                               tagIds: tagIds)
+                                                               tagIds: tagIds,
+                                                               albumIds: albumIds)
                 results.append(dependency.clipStore.create(clip: result.0, withContainers: result.1, forced: false))
             }
             if let firstError = results.compactMap({ $0.failureValue }).first {

@@ -245,6 +245,10 @@ extension ClipStorage: ClipStorageProtocol {
         do {
             // Check parameters
 
+            guard case .failure(.notFound) = try self.fetchClip(for: clip.id) else {
+                return .failure(.duplicated)
+            }
+
             var appendingTags: [Tag] = []
             for tagId in clip.tagIds {
                 // IDが同一の既存のタグがあれば、そちらを利用する
@@ -290,6 +294,30 @@ extension ClipStorage: ClipStorageProtocol {
             newClip.isHidden = clip.isHidden
             newClip.createdDate = clip.registeredDate
             newClip.updatedDate = clip.updatedDate
+
+            // Album
+
+            for albumId in clip.albumIds {
+                guard case let .success(album) = try self.fetchAlbum(for: albumId) else {
+                    self.logger.error("クリップ作成のためのアルバム(ID: \(albumId, privacy: .public))が見つかりませんでした。無視してクリップを作成します")
+                    continue
+                }
+
+                let albumItems = album.mutableSetValue(forKey: "items")
+
+                let maxIndex = albumItems
+                    .compactMap { $0 as? AlbumItem }
+                    .max(by: { $0.index < $1.index })?
+                    .index ?? 0
+
+                let albumItem = AlbumItem(context: self.context)
+                albumItem.id = UUID()
+                albumItem.index = maxIndex + 1
+                albumItem.clip = newClip
+                albumItems.add(albumItem)
+
+                album.updatedDate = Date()
+            }
 
             return .success(newClip.map(to: Domain.Clip.self)!)
         } catch {

@@ -600,6 +600,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                                                 updatedDate: date)
                                       ],
                                       tagIds: originalTags.map { $0.id },
+                                      albumIds: Set(albumIds),
                                       isHidden: originalClip.isHidden,
                                       dataSize: item.imageDataSize,
                                       registeredDate: date,
@@ -608,18 +609,6 @@ extension ClipCommandService: ClipCommandServiceProtocol {
 
                 for newClip in newClips {
                     switch self.clipStorage.create(clip: newClip) {
-                    case .success:
-                        break
-
-                    case let .failure(error):
-                        try? self.clipStorage.cancelTransactionIfNeeded()
-                        self.logger.error("クリップの分割に失敗: \(error.localizedDescription, privacy: .public)")
-                        return .failure(error)
-                    }
-                }
-
-                for albumId in albumIds {
-                    switch self.clipStorage.updateAlbum(having: albumId, byAddingClipsHaving: newClips.map({ $0.id })) {
                     case .success:
                         break
 
@@ -703,6 +692,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                                         description: nil,
                                         items: newItems,
                                         tagIds: tagIds,
+                                        albumIds: Set(albumIds),
                                         isHidden: false,
                                         dataSize: dataSize,
                                         registeredDate: Date(),
@@ -716,18 +706,6 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                     try? self.clipStorage.cancelTransactionIfNeeded()
                     self.logger.error("新規クリップの作成の削除に失敗: \(error.localizedDescription, privacy: .public)")
                     return .failure(.internalError)
-                }
-
-                for albumId in albumIds {
-                    switch self.clipStorage.updateAlbum(having: albumId, byAddingClipsHaving: [clipId]) {
-                    case .success:
-                        break
-
-                    case let .failure(error):
-                        try? self.clipStorage.cancelTransactionIfNeeded()
-                        self.logger.error("アルバムへの追加に失敗: \(error.localizedDescription, privacy: .public)")
-                        return .failure(error)
-                    }
                 }
 
                 try self.clipStorage.commitTransaction()
