@@ -12,6 +12,8 @@ public struct ListingAlbumTitle: Codable, Equatable, Hashable {
     public let registeredDate: Date
     public let updatedDate: Date
 
+    private let _searchableTitle: String?
+
     // MARK: - Lifecycle
 
     public init(id: UUID,
@@ -25,6 +27,17 @@ public struct ListingAlbumTitle: Codable, Equatable, Hashable {
         self.isHidden = isHidden
         self.registeredDate = registeredDate
         self.updatedDate = updatedDate
+
+        self._searchableTitle = title.transformToSearchableText()
+    }
+
+    public init(_ album: Album) {
+        self.id = album.id
+        self.title = album.title
+        self.isHidden = album.isHidden
+        self.registeredDate = album.registeredDate
+        self.updatedDate = album.updatedDate
+        self._searchableTitle = album.searchableText
     }
 }
 
@@ -34,4 +47,8 @@ extension ListingAlbumTitle: Identifiable {
     public var identity: UUID {
         return id
     }
+}
+
+extension ListingAlbumTitle: Searchable {
+    public var searchableText: String? { _searchableTitle }
 }

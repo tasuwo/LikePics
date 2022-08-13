@@ -131,10 +131,6 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
             return .failure(.duplicated)
         }
 
-        if realm.objects(ReferenceAlbumObject.self).filter("name = '\(album.title)'").isEmpty == false {
-            return .failure(.duplicated)
-        }
-
         let albums = realm.objects(ReferenceAlbumObject.self)
             .sorted(byKeyPath: "index")
 

@@ -9,6 +9,8 @@ let package = Package(
     ],
     products: [
         .library(name: "AppFeature", targets: ["AppFeature"]),
+        .library(name: "AlbumMultiSelectionModalFeature", targets: ["TagSelectionModalFeature"]),
+        .library(name: "AlbumSelectionModalFeature", targets: ["TagSelectionModalFeature"]),
         .library(name: "TagSelectionModalFeature", targets: ["TagSelectionModalFeature"]),
         .library(name: "ShareExtensionFeature", targets: ["ShareExtensionFeature"]),
         .library(name: "Domain", targets: ["Domain"]),
@@ -35,6 +37,7 @@ let package = Package(
                 "CompositeKit",
                 "Domain",
                 "Environment",
+                "AlbumMultiSelectionModalFeature",
                 "AlbumSelectionModalFeature",
                 "TagSelectionModalFeature",
                 "ClipCreationFeature",
@@ -58,6 +61,17 @@ let package = Package(
 
         // MARK: - Feature
 
+        .target(
+            name: "AlbumMultiSelectionModalFeature",
+            dependencies: [
+                "LikePicsUIKit",
+                "Smoothie",
+                "Domain",
+                "Environment",
+                "Common",
+                "CompositeKit"
+            ]
+        ),
         .target(
             name: "AlbumSelectionModalFeature",
             dependencies: [

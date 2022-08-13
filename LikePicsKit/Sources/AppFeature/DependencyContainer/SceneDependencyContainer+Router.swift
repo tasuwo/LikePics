@@ -2,6 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import AlbumMultiSelectionModalFeature
 import AlbumSelectionModalFeature
 import ClipCreationFeature
 import Common
@@ -212,6 +213,35 @@ extension SceneDependencyContainer: Router {
                 _ = self.showClipCollectionView(for: albumId)
             })
         }
+    }
+}
+
+extension SceneDependencyContainer: AlbumMultiSelectionModalRouter {
+    // MARK: - AlbumMultiSelectionModalRouter
+
+    public func showAlbumMultiSelectionModal(id: UUID, selections: Set<Album.Identity>) -> Bool {
+        guard isPresentingModal(having: id) == false else { return true }
+
+        let state = AlbumMultiSelectionModalState(id: id,
+                                                  selections: selections,
+                                                  isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
+        let albumAdditionAlertState = TextEditAlertState(title: L10n.albumListViewAlertForAddTitle,
+                                                         message: L10n.albumListViewAlertForAddMessage,
+                                                         placeholder: L10n.placeholderAlbumName)
+        let viewController = AlbumMultiSelectionModalController(state: state,
+                                                                albumAdditionAlertState: albumAdditionAlertState,
+                                                                dependency: self)
+
+        let navigationViewController = UINavigationController(rootViewController: viewController)
+
+        navigationViewController.modalPresentationStyle = .pageSheet
+        navigationViewController.presentationController?.delegate = viewController
+        navigationViewController.isModalInPresentation = false
+
+        guard let topViewController = topViewController else { return false }
+        topViewController.present(navigationViewController, animated: true, completion: nil)
+
+        return true
     }
 }
 
