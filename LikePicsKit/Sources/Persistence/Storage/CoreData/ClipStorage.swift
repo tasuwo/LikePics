@@ -409,6 +409,38 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func create(_ album: Domain.Album) -> Result<Domain.Album, ClipStorageError> {
+        do {
+            guard case .failure = try self.fetchAlbum(for: album.id) else {
+                self.logger.error("Failed to create album. Duplicated.")
+                return .failure(.duplicated)
+            }
+
+            let request: NSFetchRequest<Album> = Album.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(keyPath: \Album.index, ascending: true)]
+            let albums = try self.context.fetch(request)
+
+            let newAlbum = Album(context: self.context)
+            newAlbum.id = album.id
+            newAlbum.title = album.title
+            newAlbum.index = 1
+            newAlbum.createdDate = album.registeredDate
+            newAlbum.updatedDate = album.updatedDate
+            newAlbum.isHidden = album.isHidden
+
+            var currentIndex: Int64 = 2
+            albums.forEach {
+                $0.index = currentIndex
+                currentIndex += 1
+            }
+
+            return .success(newAlbum.map(to: Domain.Album.self)!)
+        } catch {
+            self.logger.error("Failed to create tag. (error=\(error.localizedDescription, privacy: .public)")
+            return .failure(.internalError)
+        }
+    }
+
     public func updateClips(having ids: [Domain.Clip.Identity], byHiding isHidden: Bool) -> Result<[Domain.Clip], ClipStorageError> {
         do {
             guard case let .success(clips) = try self.fetchClips(for: ids) else {

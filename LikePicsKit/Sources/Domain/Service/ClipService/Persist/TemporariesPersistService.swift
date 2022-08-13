@@ -141,6 +141,66 @@ extension TemporariesPersistService {
             return false
         }
     }
+
+    /**
+     * - Note: テスト用にアクセスレベルを緩めてある
+     */
+    func persistTemporaryDirtyAlbums() -> Bool {
+        do {
+            guard let dirtyAlbums = referenceClipStorage.readAllDirtyAlbums().successValue else {
+                logger.error("一時保存領域のDirtyなタグ群の取得に失敗")
+                return false
+            }
+
+            try beginTransaction()
+
+            var succeeds: [ReferenceAlbum] = []
+            var duplicates: [ReferenceAlbum] = []
+            for dirtyAlbum in dirtyAlbums {
+                switch commandQueue.sync({ [weak self] in self?.clipStorage.create(dirtyAlbum.map(to: Album.self)) }) {
+                case .success:
+                    succeeds.append(dirtyAlbum)
+
+                case .failure(.duplicated):
+                    duplicates.append(dirtyAlbum)
+
+                case let .failure(error):
+                    try cancelTransaction()
+                    logger.error("一時保存領域のDirtyなアルバム群の永続化に失敗: \(error.localizedDescription)")
+                    return false
+
+                case .none:
+                    try cancelTransaction()
+                    logger.error("一時保存領域のDirtyなアルバム群の永続化に失敗")
+                    return false
+                }
+            }
+
+            if succeeds.isEmpty == false {
+                if let error = referenceClipStorage.updateAlbums(having: succeeds.map({ $0.id }), toDirty: false).failureValue {
+                    try cancelTransaction()
+                    logger.error("一時保存領域の永続化成功済のアルバムのDirtyフラグを折るのに失敗: \(error.localizedDescription)")
+                    return false
+                }
+            }
+
+            if duplicates.isEmpty == false {
+                if let error = referenceClipStorage.deleteTags(having: duplicates.map { $0.id }).failureValue {
+                    try cancelTransaction()
+                    logger.error("一時保存領域内の重複した名前を持つアルバムの削除に失敗: \(error.localizedDescription)")
+                    return false
+                }
+            }
+
+            try commitTransaction()
+
+            return true
+        } catch {
+            try? cancelTransaction()
+            logger.error("一時保存領域のDirtyなタグの永続化中に例外が発生: \(error.localizedDescription)")
+            return false
+        }
+    }
 }
 
 // MARK: Persist Clips
@@ -238,6 +298,10 @@ extension TemporariesPersistService: TemporariesPersistServiceProtocol {
         defer { isRunning = false }
 
         guard persistTemporaryDirtyTags() else {
+            return false
+        }
+
+        guard persistTemporaryDirtyAlbums() else {
             return false
         }
 
