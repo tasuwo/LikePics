@@ -498,7 +498,7 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
-    public func updateClip(having clipId: Domain.Clip.Identity, byReplacingAlbumsHaving albumIds: [Domain.Album.Identity]) -> Result<[Domain.Clip], ClipStorageError> {
+    public func updateClip(having clipId: Domain.Clip.Identity, byReplacingAlbumsHaving albumIds: [Domain.Album.Identity]) -> Result<Void, ClipStorageError> {
         do {
             guard case let .success(clip) = try self.fetchClip(for: clipId) else { return .failure(.notFound) }
 
@@ -513,8 +513,8 @@ extension ClipStorage: ClipStorageProtocol {
             let oldAlbumIds = oldAlbumItems.compactMap { $0.album?.id }
 
             let additionalAlbumIds = Set(albumIds).subtracting(Set(oldAlbumIds))
-            additionalAlbumIds.forEach { albumId in
-                let album = try self.fetchAlbum(for: albumId)
+            try additionalAlbumIds.forEach { albumId in
+                let album = try self.fetchAlbum(for: albumId).get()
                 let albumItems = album.mutableSetValue(forKey: "items")
 
                 let maxIndex = albumItems
@@ -523,20 +523,23 @@ extension ClipStorage: ClipStorageProtocol {
                     .index ?? 0
                 let albumItem = AlbumItem(context: self.context)
                 albumItem.id = UUID()
-                albumItem.index = maxIndex + Int64(index + 1)
+                albumItem.index = maxIndex + 1
                 albumItem.clip = clip
                 albumItems.add(albumItem)
-                album.updatedDate = date
+                album.updatedDate = Date()
             }
 
             let extraAlbumIds = Set(oldAlbumIds).subtracting(Set(albumIds))
-            oldAlbumItems.filter {
-                guard let albumId = $0.album?.id else { return false }
-                return extraAlbumIds.contains(albumId)
-            }.forEach {
-                self.context.delete($0)
-            }
+            oldAlbumItems
+                .filter {
+                    guard let albumId = $0.album?.id else { return false }
+                    return extraAlbumIds.contains(albumId)
+                }
+                .forEach {
+                    self.context.delete($0)
+                }
 
+            return .success(())
         } catch {
             self.logger.error("Failed to update clips. (error=\(error.localizedDescription, privacy: .public))")
             return .failure(.internalError)

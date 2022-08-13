@@ -7,8 +7,15 @@ import UIKit
 public struct ListSectionHeaderRightItem {
     let title: String
     let action: UIAction
-    let font: UIFont
+    let font: UIFont?
     let insets: UIEdgeInsets
+
+    public init(title: String, action: UIAction, font: UIFont?, insets: UIEdgeInsets) {
+        self.title = title
+        self.action = action
+        self.font = font
+        self.insets = insets
+    }
 }
 
 public class ListSectionHeaderView: UICollectionReusableView {

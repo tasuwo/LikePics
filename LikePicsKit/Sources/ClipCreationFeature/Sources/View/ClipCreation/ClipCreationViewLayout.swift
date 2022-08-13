@@ -27,15 +27,21 @@ public enum ClipCreationViewLayout {
 
     public enum Section: Int {
         case tag
+        case album
         case meta
         case image
     }
 
     public enum Item: Hashable {
         case tagAddition
+        case album(ListingAlbumTitle)
         case tag(Tag)
         case meta(Info)
         case image(UUID)
+    }
+
+    enum ElementKind: String {
+        case header
     }
 
     public struct Info: Equatable, Hashable {
@@ -53,11 +59,14 @@ public enum ClipCreationViewLayout {
 // MARK: - Layout
 
 extension ClipCreationViewLayout {
-    static func createLayout() -> UICollectionViewLayout {
+    static func createLayout(albumTrailingSwipeActionProvider: @escaping (IndexPath) -> UISwipeActionsConfiguration?) -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, environment -> NSCollectionLayoutSection? in
             switch Section(rawValue: sectionIndex) {
             case .tag:
                 return self.createTagsLayoutSection()
+
+            case .album:
+                return self.createAlbumsLayoutSection(trailingSwipeActionProvider: albumTrailingSwipeActionProvider, environment: environment)
 
             case .meta:
                 var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
@@ -87,6 +96,22 @@ extension ClipCreationViewLayout {
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = CGFloat(8)
         section.contentInsets = NSDirectionalEdgeInsets(top: 24, leading: 20, bottom: 5, trailing: 20)
+
+        return section
+    }
+
+    private static func createAlbumsLayoutSection(trailingSwipeActionProvider: @escaping (IndexPath) -> UISwipeActionsConfiguration?,
+                                                  environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection
+    {
+        var configuration = UICollectionLayoutListConfiguration(appearance: .grouped)
+        configuration.backgroundColor = .clear
+        configuration.trailingSwipeActionsConfigurationProvider = trailingSwipeActionProvider
+        let section = NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
+
+        let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
+        section.boundarySupplementaryItems = [
+            .init(layoutSize: titleSize, elementKind: ElementKind.header.rawValue, alignment: .top)
+        ]
 
         return section
     }
@@ -131,12 +156,14 @@ extension ClipCreationViewLayout {
     static func configureDataSource(collectionView: UICollectionView,
                                     cellDataSource: ClipSelectionCollectionViewCellDataSource,
                                     thumbnailPipeline: Pipeline,
-                                    imageLoader: ImageLoadable) -> (Proxy, DataSource)
+                                    imageLoader: ImageLoadable,
+                                    albumEditHandler: @escaping () -> Void) -> (Proxy, DataSource)
     {
         let proxy = Proxy()
 
         let tagAdditionCellRegistration = self.configureTagAdditionCell(delegate: proxy)
         let tagCellRegistration = self.configureTagCell(delegate: proxy)
+        let albumCellRegistration = self.configureAlbumCell()
         let metaCellRegistration = self.configureMetaCell(proxy: proxy)
         let imageCellRegistration = self.configureImageCell(dataSource: cellDataSource,
                                                             thumbnailPipeline: thumbnailPipeline,
@@ -153,12 +180,55 @@ extension ClipCreationViewLayout {
             case let .tag(tag):
                 return collectionView.dequeueConfiguredReusableCell(using: tagCellRegistration, for: indexPath, item: tag)
 
+            case let .album(album):
+                return collectionView.dequeueConfiguredReusableCell(using: albumCellRegistration, for: indexPath, item: album)
+
             case let .image(source):
                 return collectionView.dequeueConfiguredReusableCell(using: imageCellRegistration, for: indexPath, item: source)
             }
         }
 
+        let headerRegistration = configureHeader(albumEditHandler: albumEditHandler)
+        dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in
+            switch ElementKind(rawValue: elementKind) {
+            case .header:
+                return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
+
+            default:
+                return nil
+            }
+        }
+
         return (proxy, dataSource)
+    }
+
+    private static func configureHeader(albumEditHandler: @escaping () -> Void) -> UICollectionView.SupplementaryRegistration<ListSectionHeaderView> {
+        return .init(elementKind: ElementKind.header.rawValue) { view, _, indexPath in
+            let title: String = {
+                switch Section(rawValue: indexPath.section) {
+                case .album:
+                    return L10n.AlbumSection.Header.title
+
+                default:
+                    return ""
+                }
+            }()
+            view.title = title
+            view.setTitleTextStyle(.headline)
+
+            switch Section(rawValue: indexPath.section) {
+            case .album:
+                view.setRightItems([
+                    .init(title: L10n.AlbumSection.Header.addButton,
+                          action: UIAction(handler: { _ in albumEditHandler() }),
+                          font: nil,
+                          insets: .zero)
+                ])
+
+            default:
+                view.setRightItems([])
+            }
+        }
     }
 
     private static func configureTagAdditionCell(delegate: ButtonCellDelegate) -> UICollectionView.CellRegistration<ButtonCell, Void> {
@@ -176,6 +246,18 @@ extension ClipCreationViewLayout {
             cell.visibleDeleteButton = true
             cell.delegate = delegate
             cell.isHiddenTag = tag.isHidden
+        }
+    }
+
+    private static func configureAlbumCell() -> UICollectionView.CellRegistration<UICollectionViewListCell, ListingAlbumTitle> {
+        return UICollectionView.CellRegistration<UICollectionViewListCell, ListingAlbumTitle> { cell, _, album in
+            var contentConfiguration = UIListContentConfiguration.valueCell()
+            contentConfiguration.text = album.title
+            cell.contentConfiguration = contentConfiguration
+
+            var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
+            backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackground.color
+            cell.backgroundConfiguration = backgroundConfiguration
         }
     }
 

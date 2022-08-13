@@ -27,6 +27,8 @@ enum ClipCreationViewAction: Action {
     case shouldSaveAsHiddenItem(Bool)
     case shouldSaveAsClip(Bool)
     case tapTagAdditionButton
+    case tapAlbumAdditionButton
+    case tapAlbumDeletionButton(Album.Identity, completion: (Bool) -> Void)
     case tagRemoveButtonTapped(Tag.Identity)
     case selected(UUID)
     case deselected(UUID)
@@ -34,6 +36,7 @@ enum ClipCreationViewAction: Action {
     // MARK: Modal Completion
 
     case tagsSelected([Tag]?)
+    case albumsSelected([ListingAlbumTitle]?)
     case modalCompleted(Bool)
 
     // MARK: Alert Completion

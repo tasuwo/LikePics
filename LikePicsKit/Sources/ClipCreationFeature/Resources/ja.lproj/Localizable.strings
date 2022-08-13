@@ -51,6 +51,10 @@
 "error_tag_add_default" = "タグの追加に失敗しました";
 "error_tag_add_duplicated" = "同名のタグを追加することはできません";
 
+"album_section.header.title" = "アルバム";
+"album_section.header.add_button" = "追加";
+"album_section.swipe_action.delete" = "削除";
+
 "confirm_alert_ok" = "OK";
 
 // MARK: - Clip Meta

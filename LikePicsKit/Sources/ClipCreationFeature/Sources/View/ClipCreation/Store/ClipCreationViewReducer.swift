@@ -99,6 +99,14 @@ struct ClipCreationViewReducer: Reducer {
             nextState.modal = .tagSelection(id: UUID(), tagIds: Set(state.tags.filteredEntities().map({ $0.id })))
             return (nextState, .none)
 
+        case .tapAlbumAdditionButton:
+            nextState.modal = .albumSelection(id: UUID(), albumIds: Set(state.albums.filteredEntities().map({ $0.id })))
+            return (nextState, .none)
+
+        case let .tapAlbumDeletionButton(albumId, _):
+            nextState.albums = state.albums.removingEntity(having: albumId)
+            return (nextState, .none)
+
         case let .tagRemoveButtonTapped(tagId):
             nextState.tags = nextState.tags.removingEntity(having: tagId)
             return (nextState, .none)
@@ -121,6 +129,13 @@ struct ClipCreationViewReducer: Reducer {
                 return (nextState, .none)
             }
             return (Self.performFilter(tags: tags, previousState: state), .none)
+
+        case let .albumsSelected(albums):
+            guard let albums = albums else {
+                nextState.modal = nil
+                return (nextState, .none)
+            }
+            return (Self.performFilter(albums: albums, previousState: state), .none)
 
         case .modalCompleted:
             nextState.modal = nil
@@ -223,17 +238,27 @@ private extension ImageLoadSourceResolverError {
 extension ClipCreationViewReducer {
     private static func performFilter(tags: [Tag], previousState: State) -> State {
         performFilter(tags: tags,
+                      albums: previousState.albums.orderedEntities(),
+                      isSomeItemsHidden: previousState.isSomeItemsHidden,
+                      previousState: previousState)
+    }
+
+    private static func performFilter(albums: [ListingAlbumTitle], previousState: State) -> State {
+        performFilter(tags: previousState.tags.orderedEntities(),
+                      albums: albums,
                       isSomeItemsHidden: previousState.isSomeItemsHidden,
                       previousState: previousState)
     }
 
     private static func performFilter(isSomeItemsHidden: Bool, previousState: State) -> State {
         performFilter(tags: previousState.tags.orderedEntities(),
+                      albums: previousState.albums.orderedEntities(),
                       isSomeItemsHidden: isSomeItemsHidden,
                       previousState: previousState)
     }
 
     private static func performFilter(tags: [Tag],
+                                      albums: [ListingAlbumTitle],
                                       isSomeItemsHidden: Bool,
                                       previousState: State) -> State
     {
@@ -242,10 +267,16 @@ extension ClipCreationViewReducer {
         let filteredTagIds = tags
             .filter { isSomeItemsHidden ? $0.isHidden == false : true }
             .map { $0.id }
+        let filteredAlbumIds = albums
+            .filter { isSomeItemsHidden ? $0.isHidden == false : true }
+            .map { $0.id }
 
         nextState.tags = nextState.tags
             .updated(entities: tags)
             .updated(filteredIds: Set(filteredTagIds))
+        nextState.albums = nextState.albums
+            .updated(entities: albums)
+            .updated(filteredIds: Set(filteredAlbumIds))
         nextState.isSomeItemsHidden = isSomeItemsHidden
 
         return nextState
@@ -278,7 +309,7 @@ extension ClipCreationViewReducer {
                                  shouldSaveAsClip: state.shouldSaveAsClip,
                                  shouldSaveAsHiddenItem: state.shouldSaveAsHiddenItem,
                                  tagIds: Array(state.tags._filteredIds),
-                                 albumIds: [], // TODO:
+                                 albumIds: state.albums._filteredIds,
                                  partialRecipes: partialRecipes,
                                  dependency: dependency)
                     .publisher

@@ -16,7 +16,7 @@ public class ClipCreationViewController: UIViewController {
 
     typealias Layout = ClipCreationViewLayout
     typealias Store = CompositeKit.Store<ClipCreationViewState, ClipCreationViewAction, ClipCreationViewDependency>
-    public typealias ModalRouter = TagSelectionModalRouter
+    public typealias ModalRouter = TagSelectionModalRouter & AlbumMultiSelectionModalRouter
 
     // MARK: - Properties
 
@@ -208,11 +208,38 @@ extension ClipCreationViewController {
 
     private func presentModalIfNeeded(for modal: ClipCreationViewState.Modal?) {
         switch modal {
+        case let .albumSelection(id: id, albumIds: albumIds):
+            presentAlbumSelectionModal(id: id, selections: albumIds)
+
         case let .tagSelection(id: id, tagIds: tagIds):
             presentTagSelectionModal(id: id, selections: tagIds)
 
         case .none:
             break
+        }
+    }
+
+    private func presentAlbumSelectionModal(id: UUID, selections: Set<Album.Identity>) {
+        ModalNotificationCenter.default
+            .publisher(for: id, name: .albumMultiSelectionModalDidSelect)
+            .sink { [weak self] notification in
+                let albums = notification.userInfo?[ModalNotification.UserInfoKey.selectedAlbums] as? [ListingAlbumTitle]
+                self?.store.execute(.albumsSelected(albums))
+                self?.modalSubscriptions.removeAll()
+            }
+            .store(in: &modalSubscriptions)
+
+        ModalNotificationCenter.default
+            .publisher(for: id, name: .albumMultiSelectionModalDidDismiss)
+            .sink { [weak self] _ in
+                self?.modalSubscriptions.removeAll()
+                self?.store.execute(.modalCompleted(false))
+            }
+            .store(in: &modalSubscriptions)
+
+        if modalRouter.showAlbumMultiSelectionModal(id: id, selections: selections) == false {
+            modalSubscriptions.removeAll()
+            store.execute(.modalCompleted(false))
         }
     }
 
@@ -246,6 +273,9 @@ extension ClipCreationViewController {
         var snapshot = Layout.Snapshot()
         snapshot.appendSections([.tag])
         snapshot.appendItems([Layout.Item.tagAddition] + state.tags.orderedFilteredEntities().map({ Layout.Item.tag($0) }))
+
+        snapshot.appendSections([.album])
+        snapshot.appendItems(state.albums.orderedFilteredEntities().map({ Layout.Item.album($0) }))
 
         snapshot.appendSections([.meta])
         snapshot.appendItems([
@@ -296,7 +326,15 @@ extension ClipCreationViewController {
         }
         navigationItem.setRightBarButton(itemDone, animated: true)
 
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: Layout.createLayout())
+        let layout = Layout.createLayout(albumTrailingSwipeActionProvider: { [weak self] indexPath in
+            guard let self = self else { return nil }
+            guard case let .album(album) = self.dataSource.itemIdentifier(for: indexPath) else { return nil }
+            let deleteAction = UIContextualAction(style: .destructive, title: L10n.AlbumSection.SwipeAction.delete, handler: { _, _, completion in
+                self.store.execute(.tapAlbumDeletionButton(album.id, completion: completion))
+            })
+            return UISwipeActionsConfiguration(actions: [deleteAction])
+        })
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
         collectionView.allowsSelection = true
         collectionView.allowsMultipleSelection = true
@@ -331,7 +369,8 @@ extension ClipCreationViewController {
         let (proxy, dataSource) = Layout.configureDataSource(collectionView: collectionView,
                                                              cellDataSource: self,
                                                              thumbnailPipeline: thumbnailPipeline,
-                                                             imageLoader: imageLoader)
+                                                             imageLoader: imageLoader,
+                                                             albumEditHandler: { [weak self] in self?.store.execute(.tapAlbumAdditionButton) })
         self.dataSource = dataSource
         proxy.delegate = self
         self.proxy = proxy

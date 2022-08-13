@@ -205,4 +205,12 @@ extension DependencyContainer: TagSelectionModalRouter {
     }
 }
 
+extension DependencyContainer: AlbumMultiSelectionModalRouter {
+    // MARK: - AlbumMultiSelectionModalRouter
+
+    public func showAlbumMultiSelectionModal(id: UUID, selections: Set<Domain.Album.Identity>) -> Bool {
+        fatalError("TODO")
+    }
+}
+
 extension TemporaryClipCommandService: ClipStorable {}

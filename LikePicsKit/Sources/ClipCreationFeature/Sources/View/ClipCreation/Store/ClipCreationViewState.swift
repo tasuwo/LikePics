@@ -35,6 +35,7 @@ public struct ClipCreationViewState: Equatable {
 
     enum Modal: Equatable {
         case tagSelection(id: UUID, tagIds: Set<Tag.Identity>)
+        case albumSelection(id: UUID, albumIds: Set<Album.Identity>)
     }
 
     enum Alert: Equatable {
@@ -53,6 +54,7 @@ public struct ClipCreationViewState: Equatable {
 
     var url: URL?
     var tags: EntityCollectionSnapshot<Tag>
+    var albums: EntityCollectionSnapshot<ListingAlbumTitle>
     var imageLoadSources: ImageLoadSourcesSnapshot
     var shouldSaveAsHiddenItem: Bool
     var shouldSaveAsClip: Bool
@@ -73,6 +75,7 @@ public extension ClipCreationViewState {
         self.source = source
         self.url = url
         self.tags = .init()
+        self.albums = .init()
         self.imageLoadSources = .init(order: [], selections: [], imageSourceById: [:])
         self.shouldSaveAsHiddenItem = false
         self.shouldSaveAsClip = false
