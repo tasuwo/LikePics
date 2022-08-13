@@ -29,6 +29,7 @@ class ClipReferencesIntegrityValidationServiceTest: XCTestCase {
         clipStorage.readAllTagsHandler = { .success([]) }
         referenceClipStorage.readAllTagsHandler = { .success([]) }
         referenceClipStorage.updateTagHandler = { _, _ in .success(()) }
+        referenceClipStorage.updateAlbumsHandler = { _ in .success(()) }
         referenceClipStorage.createHandler = { _ in .success(()) }
         referenceClipStorage.deleteTagsHandler = { _ in .success(()) }
     }
@@ -41,6 +42,9 @@ class ClipReferencesIntegrityValidationServiceTest: XCTestCase {
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, name: "piyo"),
             ])
         }
+        clipStorage.readAllAlbumsHandler = {
+            return .success([])
+        }
         referenceClipStorage.readAllTagsHandler = {
             return .success([
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge", isDirty: false),
@@ -48,14 +52,17 @@ class ClipReferencesIntegrityValidationServiceTest: XCTestCase {
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, name: "piyo", isDirty: false),
             ])
         }
+        referenceClipStorage.readAllAlbumsHandler = {
+            return .success([])
+        }
 
         service.validateAndFixIntegrityIfNeeded()
 
-        XCTAssertEqual(referenceClipStorage.beginTransactionCallCount, 1)
+        XCTAssertEqual(referenceClipStorage.beginTransactionCallCount, 2)
         XCTAssertEqual(referenceClipStorage.updateTagCallCount, 0)
         XCTAssertEqual(referenceClipStorage.deleteTagsCallCount, 0)
         XCTAssertEqual(referenceClipStorage.createCallCount, 0)
-        XCTAssertEqual(referenceClipStorage.commitTransactionCallCount, 1)
+        XCTAssertEqual(referenceClipStorage.commitTransactionCallCount, 2)
         XCTAssertEqual(referenceClipStorage.cancelTransactionIfNeededCallCount, 0)
     }
 
@@ -68,6 +75,9 @@ class ClipReferencesIntegrityValidationServiceTest: XCTestCase {
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!, name: "pue"),
             ])
         }
+        clipStorage.readAllAlbumsHandler = {
+            return .success([])
+        }
         referenceClipStorage.readAllTagsHandler = {
             return .success([
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge", isDirty: false),
@@ -76,14 +86,17 @@ class ClipReferencesIntegrityValidationServiceTest: XCTestCase {
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!, name: "wwww", isDirty: true),
             ])
         }
+        referenceClipStorage.readAllAlbumsHandler = {
+            return .success([])
+        }
 
         service.validateAndFixIntegrityIfNeeded()
 
-        XCTAssertEqual(referenceClipStorage.beginTransactionCallCount, 1)
+        XCTAssertEqual(referenceClipStorage.beginTransactionCallCount, 2)
         XCTAssertEqual(referenceClipStorage.updateTagCallCount, 0)
         XCTAssertEqual(referenceClipStorage.deleteTagsCallCount, 0)
         XCTAssertEqual(referenceClipStorage.createCallCount, 0)
-        XCTAssertEqual(referenceClipStorage.commitTransactionCallCount, 1)
+        XCTAssertEqual(referenceClipStorage.commitTransactionCallCount, 2)
         XCTAssertEqual(referenceClipStorage.cancelTransactionIfNeededCallCount, 0)
     }
 
@@ -96,6 +109,9 @@ class ClipReferencesIntegrityValidationServiceTest: XCTestCase {
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!, name: "pue"),
             ])
         }
+        clipStorage.readAllAlbumsHandler = {
+            return .success([])
+        }
         referenceClipStorage.readAllTagsHandler = {
             return .success([
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge", isDirty: false),
@@ -103,6 +119,9 @@ class ClipReferencesIntegrityValidationServiceTest: XCTestCase {
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, name: "piyo", isDirty: false),
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!, name: "wwww", isDirty: false),
             ])
+        }
+        referenceClipStorage.readAllAlbumsHandler = {
+            return .success([])
         }
         referenceClipStorage.updateTagHandler = { tagId, name in
             switch tagId {
@@ -121,11 +140,11 @@ class ClipReferencesIntegrityValidationServiceTest: XCTestCase {
 
         service.validateAndFixIntegrityIfNeeded()
 
-        XCTAssertEqual(referenceClipStorage.beginTransactionCallCount, 1)
+        XCTAssertEqual(referenceClipStorage.beginTransactionCallCount, 2)
         XCTAssertEqual(referenceClipStorage.updateTagCallCount, 2)
         XCTAssertEqual(referenceClipStorage.deleteTagsCallCount, 0)
         XCTAssertEqual(referenceClipStorage.createCallCount, 0)
-        XCTAssertEqual(referenceClipStorage.commitTransactionCallCount, 1)
+        XCTAssertEqual(referenceClipStorage.commitTransactionCallCount, 2)
         XCTAssertEqual(referenceClipStorage.cancelTransactionIfNeededCallCount, 0)
     }
 
@@ -138,11 +157,17 @@ class ClipReferencesIntegrityValidationServiceTest: XCTestCase {
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!, name: "pon"),
             ])
         }
+        clipStorage.readAllAlbumsHandler = {
+            return .success([])
+        }
         referenceClipStorage.readAllTagsHandler = {
             return .success([
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!, name: "hoge", isDirty: false),
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, name: "piyo", isDirty: false),
             ])
+        }
+        referenceClipStorage.readAllAlbumsHandler = {
+            return .success([])
         }
         referenceClipStorage.createHandler = { tag in
             switch tag.id {
@@ -161,11 +186,11 @@ class ClipReferencesIntegrityValidationServiceTest: XCTestCase {
 
         service.validateAndFixIntegrityIfNeeded()
 
-        XCTAssertEqual(referenceClipStorage.beginTransactionCallCount, 1)
+        XCTAssertEqual(referenceClipStorage.beginTransactionCallCount, 2)
         XCTAssertEqual(referenceClipStorage.updateTagCallCount, 0)
         XCTAssertEqual(referenceClipStorage.deleteTagsCallCount, 0)
         XCTAssertEqual(referenceClipStorage.createCallCount, 2)
-        XCTAssertEqual(referenceClipStorage.commitTransactionCallCount, 1)
+        XCTAssertEqual(referenceClipStorage.commitTransactionCallCount, 2)
         XCTAssertEqual(referenceClipStorage.cancelTransactionIfNeededCallCount, 0)
     }
 
@@ -176,6 +201,9 @@ class ClipReferencesIntegrityValidationServiceTest: XCTestCase {
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, name: "piyo"),
             ])
         }
+        clipStorage.readAllAlbumsHandler = {
+            return .success([])
+        }
         referenceClipStorage.readAllTagsHandler = {
             return .success([
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E50")!, name: "pue", isDirty: true),
@@ -185,14 +213,17 @@ class ClipReferencesIntegrityValidationServiceTest: XCTestCase {
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!, name: "pon", isDirty: true),
             ])
         }
+        referenceClipStorage.readAllAlbumsHandler = {
+            return .success([])
+        }
 
         service.validateAndFixIntegrityIfNeeded()
 
-        XCTAssertEqual(referenceClipStorage.beginTransactionCallCount, 1)
+        XCTAssertEqual(referenceClipStorage.beginTransactionCallCount, 2)
         XCTAssertEqual(referenceClipStorage.updateTagCallCount, 0)
         XCTAssertEqual(referenceClipStorage.deleteTagsCallCount, 0)
         XCTAssertEqual(referenceClipStorage.createCallCount, 0)
-        XCTAssertEqual(referenceClipStorage.commitTransactionCallCount, 1)
+        XCTAssertEqual(referenceClipStorage.commitTransactionCallCount, 2)
         XCTAssertEqual(referenceClipStorage.cancelTransactionIfNeededCallCount, 0)
     }
 
@@ -203,6 +234,9 @@ class ClipReferencesIntegrityValidationServiceTest: XCTestCase {
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, name: "piyo"),
             ])
         }
+        clipStorage.readAllAlbumsHandler = {
+            return .success([])
+        }
         referenceClipStorage.readAllTagsHandler = {
             return .success([
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E50")!, name: "pue", isDirty: false),
@@ -211,6 +245,9 @@ class ClipReferencesIntegrityValidationServiceTest: XCTestCase {
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!, name: "piyo", isDirty: false),
                 .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!, name: "pon", isDirty: false),
             ])
+        }
+        referenceClipStorage.readAllAlbumsHandler = {
+            return .success([])
         }
         referenceClipStorage.deleteTagsHandler = { tagIds in
             XCTAssertEqual(Set(tagIds), Set([
@@ -223,11 +260,11 @@ class ClipReferencesIntegrityValidationServiceTest: XCTestCase {
 
         service.validateAndFixIntegrityIfNeeded()
 
-        XCTAssertEqual(referenceClipStorage.beginTransactionCallCount, 1)
+        XCTAssertEqual(referenceClipStorage.beginTransactionCallCount, 2)
         XCTAssertEqual(referenceClipStorage.updateTagCallCount, 0)
         XCTAssertEqual(referenceClipStorage.deleteTagsCallCount, 1)
         XCTAssertEqual(referenceClipStorage.createCallCount, 0)
-        XCTAssertEqual(referenceClipStorage.commitTransactionCallCount, 1)
+        XCTAssertEqual(referenceClipStorage.commitTransactionCallCount, 2)
         XCTAssertEqual(referenceClipStorage.cancelTransactionIfNeededCallCount, 0)
     }
 }

@@ -181,6 +181,16 @@ public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
         fatalError("queryAllAlbumsHandler returns can't have a default value thus its handler must be set")
     }
 
+    public private(set) var queryAllAlbumTitlesCallCount = 0
+    public var queryAllAlbumTitlesHandler: (() -> (Result<ListingAlbumTitleListQuery, ClipStorageError>))?
+    public func queryAllAlbumTitles() -> Result<ListingAlbumTitleListQuery, ClipStorageError> {
+        queryAllAlbumTitlesCallCount += 1
+        if let queryAllAlbumTitlesHandler = queryAllAlbumTitlesHandler {
+            return queryAllAlbumTitlesHandler()
+        }
+        fatalError("queryAllAlbumTitlesHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var queryAllTagsCallCount = 0
     public var queryAllTagsHandler: (() -> (Result<TagListQuery, ClipStorageError>))?
     public func queryAllTags() -> Result<TagListQuery, ClipStorageError> {
@@ -225,133 +235,6 @@ public class PasteboardMock: Pasteboard {
             return getHandler()
         }
         return nil
-    }
-}
-
-public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
-    public init() { }
-    public init(isInTransaction: Bool = false) {
-        self.isInTransaction = isInTransaction
-    }
-
-    public private(set) var isInTransactionSetCallCount = 0
-    public var isInTransaction: Bool = false { didSet { isInTransactionSetCallCount += 1 } }
-
-    public private(set) var beginTransactionCallCount = 0
-    public var beginTransactionHandler: (() throws -> Void)?
-    public func beginTransaction() throws {
-        beginTransactionCallCount += 1
-        if let beginTransactionHandler = beginTransactionHandler {
-            try beginTransactionHandler()
-        }
-    }
-
-    public private(set) var commitTransactionCallCount = 0
-    public var commitTransactionHandler: (() throws -> Void)?
-    public func commitTransaction() throws {
-        commitTransactionCallCount += 1
-        if let commitTransactionHandler = commitTransactionHandler {
-            try commitTransactionHandler()
-        }
-    }
-
-    public private(set) var cancelTransactionIfNeededCallCount = 0
-    public var cancelTransactionIfNeededHandler: (() throws -> Void)?
-    public func cancelTransactionIfNeeded() throws {
-        cancelTransactionIfNeededCallCount += 1
-        if let cancelTransactionIfNeededHandler = cancelTransactionIfNeededHandler {
-            try cancelTransactionIfNeededHandler()
-        }
-    }
-
-    public private(set) var readAllDirtyTagsCallCount = 0
-    public var readAllDirtyTagsHandler: (() -> (Result<[ReferenceTag], ClipStorageError>))?
-    public func readAllDirtyTags() -> Result<[ReferenceTag], ClipStorageError> {
-        readAllDirtyTagsCallCount += 1
-        if let readAllDirtyTagsHandler = readAllDirtyTagsHandler {
-            return readAllDirtyTagsHandler()
-        }
-        fatalError("readAllDirtyTagsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var readAllTagsCallCount = 0
-    public var readAllTagsHandler: (() -> (Result<[ReferenceTag], ClipStorageError>))?
-    public func readAllTags() -> Result<[ReferenceTag], ClipStorageError> {
-        readAllTagsCallCount += 1
-        if let readAllTagsHandler = readAllTagsHandler {
-            return readAllTagsHandler()
-        }
-        fatalError("readAllTagsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var readAllTagsHavingCallCount = 0
-    public var readAllTagsHavingHandler: ((Set<Tag.Identity>) -> (Result<[ReferenceTag], ClipStorageError>))?
-    public func readAllTags(having ids: Set<Tag.Identity>) -> Result<[ReferenceTag], ClipStorageError> {
-        readAllTagsHavingCallCount += 1
-        if let readAllTagsHavingHandler = readAllTagsHavingHandler {
-            return readAllTagsHavingHandler(ids)
-        }
-        fatalError("readAllTagsHavingHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var createCallCount = 0
-    public var createHandler: ((ReferenceTag) -> (Result<Void, ClipStorageError>))?
-    public func create(tag: ReferenceTag) -> Result<Void, ClipStorageError> {
-        createCallCount += 1
-        if let createHandler = createHandler {
-            return createHandler(tag)
-        }
-        fatalError("createHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var updateTagCallCount = 0
-    public var updateTagHandler: ((ReferenceTag.Identity, String) -> (Result<Void, ClipStorageError>))?
-    public func updateTag(having id: ReferenceTag.Identity, nameTo name: String) -> Result<Void, ClipStorageError> {
-        updateTagCallCount += 1
-        if let updateTagHandler = updateTagHandler {
-            return updateTagHandler(id, name)
-        }
-        fatalError("updateTagHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var updateTagHavingCallCount = 0
-    public var updateTagHavingHandler: ((ReferenceTag.Identity, Bool) -> (Result<Void, ClipStorageError>))?
-    public func updateTag(having id: ReferenceTag.Identity, byHiding isHidden: Bool) -> Result<Void, ClipStorageError> {
-        updateTagHavingCallCount += 1
-        if let updateTagHavingHandler = updateTagHavingHandler {
-            return updateTagHavingHandler(id, isHidden)
-        }
-        fatalError("updateTagHavingHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var updateTagHavingClipCountToCallCount = 0
-    public var updateTagHavingClipCountToHandler: ((ReferenceTag.Identity, Int?) -> (Result<Void, ClipStorageError>))?
-    public func updateTag(having id: ReferenceTag.Identity, clipCountTo clipCount: Int?) -> Result<Void, ClipStorageError> {
-        updateTagHavingClipCountToCallCount += 1
-        if let updateTagHavingClipCountToHandler = updateTagHavingClipCountToHandler {
-            return updateTagHavingClipCountToHandler(id, clipCount)
-        }
-        fatalError("updateTagHavingClipCountToHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var updateTagsCallCount = 0
-    public var updateTagsHandler: (([ReferenceTag.Identity], Bool) -> (Result<Void, ClipStorageError>))?
-    public func updateTags(having ids: [ReferenceTag.Identity], toDirty isDirty: Bool) -> Result<Void, ClipStorageError> {
-        updateTagsCallCount += 1
-        if let updateTagsHandler = updateTagsHandler {
-            return updateTagsHandler(ids, isDirty)
-        }
-        fatalError("updateTagsHandler returns can't have a default value thus its handler must be set")
-    }
-
-    public private(set) var deleteTagsCallCount = 0
-    public var deleteTagsHandler: (([ReferenceTag.Identity]) -> (Result<Void, ClipStorageError>))?
-    public func deleteTags(having ids: [ReferenceTag.Identity]) -> Result<Void, ClipStorageError> {
-        deleteTagsCallCount += 1
-        if let deleteTagsHandler = deleteTagsHandler {
-            return deleteTagsHandler(ids)
-        }
-        fatalError("deleteTagsHandler returns can't have a default value thus its handler must be set")
     }
 }
 
@@ -1120,6 +1003,16 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
         fatalError("readAllTagsHandler returns can't have a default value thus its handler must be set")
     }
 
+    public private(set) var readAllAlbumsCallCount = 0
+    public var readAllAlbumsHandler: (() -> (Result<[Album], ClipStorageError>))?
+    public func readAllAlbums() -> Result<[Album], ClipStorageError> {
+        readAllAlbumsCallCount += 1
+        if let readAllAlbumsHandler = readAllAlbumsHandler {
+            return readAllAlbumsHandler()
+        }
+        fatalError("readAllAlbumsHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var readTagsCallCount = 0
     public var readTagsHandler: ((Set<Tag.Identity>) -> (Result<[Tag], ClipStorageError>))?
     public func readTags(having ids: Set<Tag.Identity>) -> Result<[Tag], ClipStorageError> {
@@ -1210,6 +1103,16 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
         fatalError("createAlbumWithTitleHandler returns can't have a default value thus its handler must be set")
     }
 
+    public private(set) var createAlbumCallCount = 0
+    public var createAlbumHandler: ((Album) -> (Result<Album, ClipStorageError>))?
+    public func create(_ album: Album) -> Result<Album, ClipStorageError> {
+        createAlbumCallCount += 1
+        if let createAlbumHandler = createAlbumHandler {
+            return createAlbumHandler(album)
+        }
+        fatalError("createAlbumHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var updateClipsCallCount = 0
     public var updateClipsHandler: (([Clip.Identity], Bool) -> (Result<[Clip], ClipStorageError>))?
     public func updateClips(having ids: [Clip.Identity], byHiding: Bool) -> Result<[Clip], ClipStorageError> {
@@ -1251,13 +1154,23 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
     }
 
     public private(set) var updateClipCallCount = 0
-    public var updateClipHandler: ((Clip.Identity, [ClipItem.Identity]) -> (Result<Void, ClipStorageError>))?
-    public func updateClip(having clipId: Clip.Identity, byReorderingItemsHaving itemIds: [ClipItem.Identity]) -> Result<Void, ClipStorageError> {
+    public var updateClipHandler: ((Clip.Identity, [Album.Identity]) -> (Result<Void, ClipStorageError>))?
+    public func updateClip(having clipId: Clip.Identity, byReplacingAlbumsHaving albumIds: [Album.Identity]) -> Result<Void, ClipStorageError> {
         updateClipCallCount += 1
         if let updateClipHandler = updateClipHandler {
-            return updateClipHandler(clipId, itemIds)
+            return updateClipHandler(clipId, albumIds)
         }
         fatalError("updateClipHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var updateClipHavingCallCount = 0
+    public var updateClipHavingHandler: ((Clip.Identity, [ClipItem.Identity]) -> (Result<Void, ClipStorageError>))?
+    public func updateClip(having clipId: Clip.Identity, byReorderingItemsHaving itemIds: [ClipItem.Identity]) -> Result<Void, ClipStorageError> {
+        updateClipHavingCallCount += 1
+        if let updateClipHavingHandler = updateClipHavingHandler {
+            return updateClipHavingHandler(clipId, itemIds)
+        }
+        fatalError("updateClipHavingHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var updateClipItemsCallCount = 0
@@ -1271,51 +1184,51 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
     }
 
     public private(set) var updateAlbumCallCount = 0
-    public var updateAlbumHandler: ((Album.Identity, [Clip.Identity]) -> (Result<Void, ClipStorageError>))?
-    public func updateAlbum(having albumId: Album.Identity, byAddingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
+    public var updateAlbumHandler: ((Album.Identity, [Clip.Identity], Date) -> (Result<Void, ClipStorageError>))?
+    public func updateAlbum(having albumId: Album.Identity, byAddingClipsHaving clipIds: [Clip.Identity], at date: Date) -> Result<Void, ClipStorageError> {
         updateAlbumCallCount += 1
         if let updateAlbumHandler = updateAlbumHandler {
-            return updateAlbumHandler(albumId, clipIds)
+            return updateAlbumHandler(albumId, clipIds, date)
         }
         fatalError("updateAlbumHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var updateAlbumHavingCallCount = 0
-    public var updateAlbumHavingHandler: ((Album.Identity, [Clip.Identity]) -> (Result<Void, ClipStorageError>))?
-    public func updateAlbum(having albumId: Album.Identity, byDeletingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
+    public var updateAlbumHavingHandler: ((Album.Identity, [Clip.Identity], Date) -> (Result<Void, ClipStorageError>))?
+    public func updateAlbum(having albumId: Album.Identity, byDeletingClipsHaving clipIds: [Clip.Identity], at date: Date) -> Result<Void, ClipStorageError> {
         updateAlbumHavingCallCount += 1
         if let updateAlbumHavingHandler = updateAlbumHavingHandler {
-            return updateAlbumHavingHandler(albumId, clipIds)
+            return updateAlbumHavingHandler(albumId, clipIds, date)
         }
         fatalError("updateAlbumHavingHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var updateAlbumHavingByReorderingClipsHavingCallCount = 0
-    public var updateAlbumHavingByReorderingClipsHavingHandler: ((Album.Identity, [Clip.Identity]) -> (Result<Void, ClipStorageError>))?
-    public func updateAlbum(having albumId: Album.Identity, byReorderingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
+    public var updateAlbumHavingByReorderingClipsHavingHandler: ((Album.Identity, [Clip.Identity], Date) -> (Result<Void, ClipStorageError>))?
+    public func updateAlbum(having albumId: Album.Identity, byReorderingClipsHaving clipIds: [Clip.Identity], at date: Date) -> Result<Void, ClipStorageError> {
         updateAlbumHavingByReorderingClipsHavingCallCount += 1
         if let updateAlbumHavingByReorderingClipsHavingHandler = updateAlbumHavingByReorderingClipsHavingHandler {
-            return updateAlbumHavingByReorderingClipsHavingHandler(albumId, clipIds)
+            return updateAlbumHavingByReorderingClipsHavingHandler(albumId, clipIds, date)
         }
         fatalError("updateAlbumHavingByReorderingClipsHavingHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var updateAlbumHavingTitleToCallCount = 0
-    public var updateAlbumHavingTitleToHandler: ((Album.Identity, String) -> (Result<Album, ClipStorageError>))?
-    public func updateAlbum(having albumId: Album.Identity, titleTo title: String) -> Result<Album, ClipStorageError> {
+    public var updateAlbumHavingTitleToHandler: ((Album.Identity, String, Date) -> (Result<Album, ClipStorageError>))?
+    public func updateAlbum(having albumId: Album.Identity, titleTo title: String, at date: Date) -> Result<Album, ClipStorageError> {
         updateAlbumHavingTitleToCallCount += 1
         if let updateAlbumHavingTitleToHandler = updateAlbumHavingTitleToHandler {
-            return updateAlbumHavingTitleToHandler(albumId, title)
+            return updateAlbumHavingTitleToHandler(albumId, title, date)
         }
         fatalError("updateAlbumHavingTitleToHandler returns can't have a default value thus its handler must be set")
     }
 
     public private(set) var updateAlbumHavingByHidingCallCount = 0
-    public var updateAlbumHavingByHidingHandler: ((Album.Identity, Bool) -> (Result<Album, ClipStorageError>))?
-    public func updateAlbum(having albumId: Album.Identity, byHiding: Bool) -> Result<Album, ClipStorageError> {
+    public var updateAlbumHavingByHidingHandler: ((Album.Identity, Bool, Date) -> (Result<Album, ClipStorageError>))?
+    public func updateAlbum(having albumId: Album.Identity, byHiding: Bool, at date: Date) -> Result<Album, ClipStorageError> {
         updateAlbumHavingByHidingCallCount += 1
         if let updateAlbumHavingByHidingHandler = updateAlbumHavingByHidingHandler {
-            return updateAlbumHavingByHidingHandler(albumId, byHiding)
+            return updateAlbumHavingByHidingHandler(albumId, byHiding, date)
         }
         fatalError("updateAlbumHavingByHidingHandler returns can't have a default value thus its handler must be set")
     }
@@ -1522,6 +1435,233 @@ public class PreviewPrefetchableMock: PreviewPrefetchable {
     }
 }
 
+public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
+    public init() { }
+    public init(isInTransaction: Bool = false) {
+        self.isInTransaction = isInTransaction
+    }
+
+    public private(set) var isInTransactionSetCallCount = 0
+    public var isInTransaction: Bool = false { didSet { isInTransactionSetCallCount += 1 } }
+
+    public private(set) var beginTransactionCallCount = 0
+    public var beginTransactionHandler: (() throws -> Void)?
+    public func beginTransaction() throws {
+        beginTransactionCallCount += 1
+        if let beginTransactionHandler = beginTransactionHandler {
+            try beginTransactionHandler()
+        }
+    }
+
+    public private(set) var commitTransactionCallCount = 0
+    public var commitTransactionHandler: (() throws -> Void)?
+    public func commitTransaction() throws {
+        commitTransactionCallCount += 1
+        if let commitTransactionHandler = commitTransactionHandler {
+            try commitTransactionHandler()
+        }
+    }
+
+    public private(set) var cancelTransactionIfNeededCallCount = 0
+    public var cancelTransactionIfNeededHandler: (() throws -> Void)?
+    public func cancelTransactionIfNeeded() throws {
+        cancelTransactionIfNeededCallCount += 1
+        if let cancelTransactionIfNeededHandler = cancelTransactionIfNeededHandler {
+            try cancelTransactionIfNeededHandler()
+        }
+    }
+
+    public private(set) var readAllDirtyTagsCallCount = 0
+    public var readAllDirtyTagsHandler: (() -> (Result<[ReferenceTag], ClipStorageError>))?
+    public func readAllDirtyTags() -> Result<[ReferenceTag], ClipStorageError> {
+        readAllDirtyTagsCallCount += 1
+        if let readAllDirtyTagsHandler = readAllDirtyTagsHandler {
+            return readAllDirtyTagsHandler()
+        }
+        fatalError("readAllDirtyTagsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var readAllTagsCallCount = 0
+    public var readAllTagsHandler: (() -> (Result<[ReferenceTag], ClipStorageError>))?
+    public func readAllTags() -> Result<[ReferenceTag], ClipStorageError> {
+        readAllTagsCallCount += 1
+        if let readAllTagsHandler = readAllTagsHandler {
+            return readAllTagsHandler()
+        }
+        fatalError("readAllTagsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var readAllTagsHavingCallCount = 0
+    public var readAllTagsHavingHandler: ((Set<Tag.Identity>) -> (Result<[ReferenceTag], ClipStorageError>))?
+    public func readAllTags(having ids: Set<Tag.Identity>) -> Result<[ReferenceTag], ClipStorageError> {
+        readAllTagsHavingCallCount += 1
+        if let readAllTagsHavingHandler = readAllTagsHavingHandler {
+            return readAllTagsHavingHandler(ids)
+        }
+        fatalError("readAllTagsHavingHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var readAllDirtyAlbumsCallCount = 0
+    public var readAllDirtyAlbumsHandler: (() -> (Result<[ReferenceAlbum], ClipStorageError>))?
+    public func readAllDirtyAlbums() -> Result<[ReferenceAlbum], ClipStorageError> {
+        readAllDirtyAlbumsCallCount += 1
+        if let readAllDirtyAlbumsHandler = readAllDirtyAlbumsHandler {
+            return readAllDirtyAlbumsHandler()
+        }
+        fatalError("readAllDirtyAlbumsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var readAllAlbumsCallCount = 0
+    public var readAllAlbumsHandler: (() -> (Result<[ReferenceAlbum], ClipStorageError>))?
+    public func readAllAlbums() -> Result<[ReferenceAlbum], ClipStorageError> {
+        readAllAlbumsCallCount += 1
+        if let readAllAlbumsHandler = readAllAlbumsHandler {
+            return readAllAlbumsHandler()
+        }
+        fatalError("readAllAlbumsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var readAllAlbumsHavingCallCount = 0
+    public var readAllAlbumsHavingHandler: ((Set<ReferenceAlbum.Identity>) -> (Result<[ReferenceAlbum], ClipStorageError>))?
+    public func readAllAlbums(having ids: Set<ReferenceAlbum.Identity>) -> Result<[ReferenceAlbum], ClipStorageError> {
+        readAllAlbumsHavingCallCount += 1
+        if let readAllAlbumsHavingHandler = readAllAlbumsHavingHandler {
+            return readAllAlbumsHavingHandler(ids)
+        }
+        fatalError("readAllAlbumsHavingHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var createCallCount = 0
+    public var createHandler: ((ReferenceTag) -> (Result<Void, ClipStorageError>))?
+    public func create(tag: ReferenceTag) -> Result<Void, ClipStorageError> {
+        createCallCount += 1
+        if let createHandler = createHandler {
+            return createHandler(tag)
+        }
+        fatalError("createHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var createAlbumCallCount = 0
+    public var createAlbumHandler: ((ReferenceAlbum) -> (Result<Void, ClipStorageError>))?
+    public func create(album: ReferenceAlbum) -> Result<Void, ClipStorageError> {
+        createAlbumCallCount += 1
+        if let createAlbumHandler = createAlbumHandler {
+            return createAlbumHandler(album)
+        }
+        fatalError("createAlbumHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var updateTagCallCount = 0
+    public var updateTagHandler: ((ReferenceTag.Identity, String) -> (Result<Void, ClipStorageError>))?
+    public func updateTag(having id: ReferenceTag.Identity, nameTo name: String) -> Result<Void, ClipStorageError> {
+        updateTagCallCount += 1
+        if let updateTagHandler = updateTagHandler {
+            return updateTagHandler(id, name)
+        }
+        fatalError("updateTagHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var updateTagHavingCallCount = 0
+    public var updateTagHavingHandler: ((ReferenceTag.Identity, Bool) -> (Result<Void, ClipStorageError>))?
+    public func updateTag(having id: ReferenceTag.Identity, byHiding isHidden: Bool) -> Result<Void, ClipStorageError> {
+        updateTagHavingCallCount += 1
+        if let updateTagHavingHandler = updateTagHavingHandler {
+            return updateTagHavingHandler(id, isHidden)
+        }
+        fatalError("updateTagHavingHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var updateTagHavingClipCountToCallCount = 0
+    public var updateTagHavingClipCountToHandler: ((ReferenceTag.Identity, Int?) -> (Result<Void, ClipStorageError>))?
+    public func updateTag(having id: ReferenceTag.Identity, clipCountTo clipCount: Int?) -> Result<Void, ClipStorageError> {
+        updateTagHavingClipCountToCallCount += 1
+        if let updateTagHavingClipCountToHandler = updateTagHavingClipCountToHandler {
+            return updateTagHavingClipCountToHandler(id, clipCount)
+        }
+        fatalError("updateTagHavingClipCountToHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var updateTagsCallCount = 0
+    public var updateTagsHandler: (([ReferenceTag.Identity], Bool) -> (Result<Void, ClipStorageError>))?
+    public func updateTags(having ids: [ReferenceTag.Identity], toDirty isDirty: Bool) -> Result<Void, ClipStorageError> {
+        updateTagsCallCount += 1
+        if let updateTagsHandler = updateTagsHandler {
+            return updateTagsHandler(ids, isDirty)
+        }
+        fatalError("updateTagsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var updateAlbumCallCount = 0
+    public var updateAlbumHandler: ((ReferenceAlbum.Identity, String, Date) -> (Result<Void, ClipStorageError>))?
+    public func updateAlbum(having id: ReferenceAlbum.Identity, titleTo title: String, updatedAt updatedDate: Date) -> Result<Void, ClipStorageError> {
+        updateAlbumCallCount += 1
+        if let updateAlbumHandler = updateAlbumHandler {
+            return updateAlbumHandler(id, title, updatedDate)
+        }
+        fatalError("updateAlbumHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var updateAlbumHavingCallCount = 0
+    public var updateAlbumHavingHandler: ((ReferenceAlbum.Identity, Bool, Date) -> (Result<Void, ClipStorageError>))?
+    public func updateAlbum(having id: ReferenceAlbum.Identity, byHiding isHidden: Bool, updatedAt updatedDate: Date) -> Result<Void, ClipStorageError> {
+        updateAlbumHavingCallCount += 1
+        if let updateAlbumHavingHandler = updateAlbumHavingHandler {
+            return updateAlbumHavingHandler(id, isHidden, updatedDate)
+        }
+        fatalError("updateAlbumHavingHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var updateAlbumHavingUpdatedAtCallCount = 0
+    public var updateAlbumHavingUpdatedAtHandler: ((ReferenceAlbum.Identity, Date) -> (Result<Void, ClipStorageError>))?
+    public func updateAlbum(having id: ReferenceAlbum.Identity, updatedAt updatedDate: Date) -> Result<Void, ClipStorageError> {
+        updateAlbumHavingUpdatedAtCallCount += 1
+        if let updateAlbumHavingUpdatedAtHandler = updateAlbumHavingUpdatedAtHandler {
+            return updateAlbumHavingUpdatedAtHandler(id, updatedDate)
+        }
+        fatalError("updateAlbumHavingUpdatedAtHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var updateAlbumsCallCount = 0
+    public var updateAlbumsHandler: (([ReferenceAlbum.Identity]) -> (Result<Void, ClipStorageError>))?
+    public func updateAlbums(byReordering albumIds: [ReferenceAlbum.Identity]) -> Result<Void, ClipStorageError> {
+        updateAlbumsCallCount += 1
+        if let updateAlbumsHandler = updateAlbumsHandler {
+            return updateAlbumsHandler(albumIds)
+        }
+        fatalError("updateAlbumsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var updateAlbumsHavingCallCount = 0
+    public var updateAlbumsHavingHandler: (([ReferenceAlbum.Identity], Bool) -> (Result<Void, ClipStorageError>))?
+    public func updateAlbums(having ids: [ReferenceAlbum.Identity], toDirty isDirty: Bool) -> Result<Void, ClipStorageError> {
+        updateAlbumsHavingCallCount += 1
+        if let updateAlbumsHavingHandler = updateAlbumsHavingHandler {
+            return updateAlbumsHavingHandler(ids, isDirty)
+        }
+        fatalError("updateAlbumsHavingHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var deleteTagsCallCount = 0
+    public var deleteTagsHandler: (([ReferenceTag.Identity]) -> (Result<Void, ClipStorageError>))?
+    public func deleteTags(having ids: [ReferenceTag.Identity]) -> Result<Void, ClipStorageError> {
+        deleteTagsCallCount += 1
+        if let deleteTagsHandler = deleteTagsHandler {
+            return deleteTagsHandler(ids)
+        }
+        fatalError("deleteTagsHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var deleteAlbumsCallCount = 0
+    public var deleteAlbumsHandler: (([ReferenceAlbum.Identity]) -> (Result<Void, ClipStorageError>))?
+    public func deleteAlbums(having ids: [ReferenceAlbum.Identity]) -> Result<Void, ClipStorageError> {
+        deleteAlbumsCallCount += 1
+        if let deleteAlbumsHandler = deleteAlbumsHandler {
+            return deleteAlbumsHandler(ids)
+        }
+        fatalError("deleteAlbumsHandler returns can't have a default value thus its handler must be set")
+    }
+}
+
 public class TemporaryImageStorageProtocolMock: TemporaryImageStorageProtocol {
     public init() { }
 
@@ -1689,6 +1829,20 @@ public class TemporariesPersistServiceProtocolMock: TemporariesPersistServicePro
             return persistIfNeededHandler()
         }
         return false
+    }
+}
+
+public class AlbumCommandServiceProtocolMock: AlbumCommandServiceProtocol {
+    public init() { }
+
+    public private(set) var createCallCount = 0
+    public var createHandler: ((String) -> (Result<Album.Identity, AlbumCommandServiceError>))?
+    public func create(albumWithTitle title: String) -> Result<Album.Identity, AlbumCommandServiceError> {
+        createCallCount += 1
+        if let createHandler = createHandler {
+            return createHandler(title)
+        }
+        fatalError("createHandler returns can't have a default value thus its handler must be set")
     }
 }
 

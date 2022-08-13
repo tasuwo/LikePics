@@ -31,6 +31,21 @@ public struct ListingAlbumTitle: Codable, Equatable, Hashable {
         self._searchableTitle = title.transformToSearchableText()
     }
 
+    public init(id: UUID,
+                title: String,
+                isHidden: Bool,
+                registeredDate: Date,
+                updatedDate: Date,
+                _searchableTitle: String?)
+    {
+        self.id = id
+        self.title = title
+        self.isHidden = isHidden
+        self.registeredDate = registeredDate
+        self.updatedDate = updatedDate
+        self._searchableTitle = _searchableTitle
+    }
+
     public init(_ album: Album) {
         self.id = album.id
         self.title = album.title

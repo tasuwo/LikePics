@@ -13,11 +13,13 @@ class ClipStorageTest: XCTestCase {
     var container: NSPersistentContainer!
     var managedContext: NSManagedObjectContext!
     var service: ClipStorage!
+    var currentDate: Date!
 
     override func setUp() {
         container = setUp_CoreDataStack()
         managedContext = container.newBackgroundContext()
         service = ClipStorage(context: managedContext)
+        currentDate = Date()
     }
 
     func setUp_CoreDataStack() -> NSPersistentContainer {
@@ -431,7 +433,8 @@ class ClipStorageTest: XCTestCase {
                                          byAddingClipsHaving: [
                                              UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
                                              UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!
-                                         ])
+                                         ],
+                                         at: currentDate)
         try! managedContext.save()
 
         XCTAssertEqual(result.failureValue, .duplicated)
@@ -457,7 +460,8 @@ class ClipStorageTest: XCTestCase {
                                 byAddingClipsHaving: [
                                     UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
                                     UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!
-                                ])
+                                ],
+                                at: currentDate)
         try! managedContext.save()
 
         let request: NSFetchRequest<Persistence.Album> = Album.fetchRequest()
@@ -502,7 +506,8 @@ class ClipStorageTest: XCTestCase {
                                 byAddingClipsHaving: [
                                     UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
                                     UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!
-                                ])
+                                ],
+                                at: currentDate)
         try! managedContext.save()
 
         let request: NSFetchRequest<Persistence.Album> = Album.fetchRequest()
@@ -559,7 +564,8 @@ class ClipStorageTest: XCTestCase {
                                 byAddingClipsHaving: [
                                     UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!,
                                     UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!
-                                ])
+                                ],
+                                at: currentDate)
         try! managedContext.save()
 
         let request: NSFetchRequest<Persistence.Album> = Album.fetchRequest()
@@ -622,7 +628,8 @@ class ClipStorageTest: XCTestCase {
                                          byDeletingClipsHaving: [
                                              UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
                                              UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!
-                                         ])
+                                         ],
+                                         at: currentDate)
         try! managedContext.save()
 
         XCTAssertEqual(result.failureValue, .notFound)
@@ -661,7 +668,8 @@ class ClipStorageTest: XCTestCase {
                                          byDeletingClipsHaving: [
                                              UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
                                              UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!
-                                         ])
+                                         ],
+                                         at: currentDate)
         try! managedContext.save()
 
         guard case .success = result else {
@@ -737,7 +745,8 @@ class ClipStorageTest: XCTestCase {
                                              UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
                                              UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
                                              UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!,
-                                         ])
+                                         ],
+                                         at: currentDate)
         try! managedContext.save()
 
         XCTAssertEqual(result.failureValue, .invalidParameter)
@@ -778,7 +787,8 @@ class ClipStorageTest: XCTestCase {
                                              UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
                                              UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
                                              UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!,
-                                         ])
+                                         ],
+                                         at: currentDate)
         try! managedContext.save()
 
         XCTAssertEqual(result.failureValue, .invalidParameter)
@@ -819,7 +829,8 @@ class ClipStorageTest: XCTestCase {
                                              UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
                                              UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
                                              UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!,
-                                         ])
+                                         ],
+                                         at: currentDate)
         try! managedContext.save()
 
         guard case .success = result else {

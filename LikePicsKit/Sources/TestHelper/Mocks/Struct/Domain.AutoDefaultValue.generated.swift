@@ -113,6 +113,7 @@ public extension ClipRecipe {
         description: String? = nil,
         items: [ClipItemRecipe] = [],
         tagIds: [UUID] = [],
+        albumIds: Set<UUID> = [],
         isHidden: Bool = false,
         dataSize: Int = 0,
         registeredDate: Date = Date(timeIntervalSince1970: 0),
@@ -123,6 +124,7 @@ public extension ClipRecipe {
             description: description,
             items: items,
             tagIds: tagIds,
+            albumIds: albumIds,
             isHidden: isHidden,
             dataSize: dataSize,
             registeredDate: registeredDate,
@@ -149,14 +151,36 @@ public extension ListingAlbumTitle {
         title: String = "",
         isHidden: Bool = false,
         registeredDate: Date = Date(timeIntervalSince1970: 0),
-        updatedDate: Date = Date(timeIntervalSince1970: 0)
+        updatedDate: Date = Date(timeIntervalSince1970: 0),
+        _searchableTitle: String? = nil
     ) -> Self {
         return .init(
             id: id,
             title: title,
             isHidden: isHidden,
             registeredDate: registeredDate,
-            updatedDate: updatedDate
+            updatedDate: updatedDate,
+            _searchableTitle: _searchableTitle
+        )
+    }
+}
+
+public extension ReferenceAlbum {
+    static func makeDefault(
+        id: UUID = UUID(),
+        title: String = "",
+        isHidden: Bool = false,
+        registeredDate: Date = Date(timeIntervalSince1970: 0),
+        updatedDate: Date = Date(timeIntervalSince1970: 0),
+        isDirty: Bool = false
+    ) -> Self {
+        return .init(
+            id: id,
+            title: title,
+            isHidden: isHidden,
+            registeredDate: registeredDate,
+            updatedDate: updatedDate,
+            isDirty: isDirty
         )
     }
 }
