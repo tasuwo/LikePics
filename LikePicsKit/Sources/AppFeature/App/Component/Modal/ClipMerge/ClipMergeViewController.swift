@@ -15,6 +15,7 @@ import UIKit
 class ClipMergeViewController: UIViewController {
     typealias Layout = ClipMergeViewLayout
     typealias Store = CompositeKit.Store<ClipMergeViewState, ClipMergeViewAction, ClipMergeViewDependency>
+    typealias ModalRouter = TagSelectionModalRouter
 
     // MARK: - Properties
 
@@ -31,8 +32,7 @@ class ClipMergeViewController: UIViewController {
 
     // MARK: Service
 
-    // TODO: modalの遷移のみに限定する
-    private let modalRouter: Router & TagSelectionModalRouter
+    private let modalRouter: ModalRouter
     private let thumbnailPipeline: Pipeline
     private let imageQueryService: ImageQueryServiceProtocol
 
@@ -49,7 +49,7 @@ class ClipMergeViewController: UIViewController {
          dependency: ClipMergeViewDependency,
          thumbnailPipeline: Pipeline,
          imageQueryService: ImageQueryServiceProtocol,
-         modalRouter: Router & TagSelectionModalRouter)
+         modalRouter: ModalRouter)
     {
         self.store = .init(initialState: state, dependency: dependency, reducer: ClipMergeViewReducer())
         self.modalRouter = modalRouter
