@@ -53,6 +53,7 @@ public protocol ClipStorageProtocol {
     // MARK: Delete
 
     func deleteClips(having ids: [Clip.Identity]) -> Result<[Clip], ClipStorageError>
+    func deleteClip(having id: Clip.Identity) -> Result<Clip, ClipStorageError>
     func deleteClipItem(having id: ClipItem.Identity) -> Result<ClipItem, ClipStorageError>
     func deleteAlbum(having id: Album.Identity) -> Result<Album, ClipStorageError>
     func deleteTags(having ids: [Tag.Identity]) -> Result<[Tag], ClipStorageError>

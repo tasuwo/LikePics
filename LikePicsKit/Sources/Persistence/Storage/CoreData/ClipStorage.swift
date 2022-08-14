@@ -817,6 +817,20 @@ extension ClipStorage: ClipStorageProtocol {
         }
     }
 
+    public func deleteClip(having id: Domain.Clip.Identity) -> Result<Domain.Clip, ClipStorageError> {
+        do {
+            guard case let .success(clip) = try self.fetchClip(for: id) else { return .failure(.notFound) }
+            let deleteTarget = clip.map(to: Domain.Clip.self)!
+
+            self.context.delete(clip)
+
+            return .success(deleteTarget)
+        } catch {
+            self.logger.error("Failed to delete clip. (error=\(error.localizedDescription, privacy: .public))")
+            return .failure(.internalError)
+        }
+    }
+
     public func deleteClips(having ids: [Domain.Clip.Identity]) -> Result<[Domain.Clip], ClipStorageError> {
         do {
             guard case let .success(clips) = try self.fetchClips(for: ids) else { return .failure(.notFound) }

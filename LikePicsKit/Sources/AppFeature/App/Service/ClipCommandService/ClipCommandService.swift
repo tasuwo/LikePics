@@ -76,17 +76,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.beginTransaction()
                 try self.imageStorage.beginTransaction()
 
-                let clipId: Clip.Identity
-                switch self.clipStorage.create(clip: clip) {
-                case let .success(clip):
-                    clipId = clip.id
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.imageStorage.cancelTransactionIfNeeded()
-                    self.logger.error("クリップの保存に失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(error)
-                }
+                let clipId = try self.clipStorage.create(clip: clip).get().id
 
                 containers.forEach { container in
                     try? self.imageStorage.create(container.data, id: container.id)
@@ -98,6 +88,11 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 self.syncTagsClipCount(for: Set(clip.tagIds))
 
                 return .success(clipId)
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.imageStorage.cancelTransactionIfNeeded()
+                self.logger.error("クリップの保存に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.imageStorage.cancelTransactionIfNeeded()
@@ -117,33 +112,24 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.beginTransaction()
                 try self.referenceClipStorage.beginTransaction()
 
-                let tag: Tag
-                switch self.clipStorage.create(tagWithName: name) {
-                case let .success(result):
-                    tag = result
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
-                    self.logger.error("タグの作成に失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(error)
-                }
-
-                switch self.referenceClipStorage.create(tag: .init(id: tag.identity, name: tag.name, isHidden: tag.isHidden, clipCount: tag.clipCount)) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
-                    self.logger.error("タグの作成に失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(error)
-                }
+                let tag = try self.clipStorage.create(tagWithName: name).get()
+                let referenceTag = ReferenceTag(
+                    id: tag.identity,
+                    name: tag.name,
+                    isHidden: tag.isHidden,
+                    clipCount: tag.clipCount
+                )
+                _ = try self.referenceClipStorage.create(tag: referenceTag).get()
 
                 try self.clipStorage.commitTransaction()
                 try self.referenceClipStorage.commitTransaction()
 
                 return .success(tag.id)
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                self.logger.error("タグの作成に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
@@ -164,12 +150,24 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.referenceClipStorage.beginTransaction()
 
                 let album = try self.clipStorage.create(albumWithTitle: title).get()
-                _ = try self.referenceClipStorage.create(album: .init(id: album.id, title: album.title, isHidden: album.isHidden, registeredDate: album.registeredDate, updatedDate: album.updatedDate)).get()
+                let referenceClip = ReferenceAlbum(
+                    id: album.id,
+                    title: album.title,
+                    isHidden: album.isHidden,
+                    registeredDate: album.registeredDate,
+                    updatedDate: album.updatedDate
+                )
+                _ = try self.referenceClipStorage.create(album: referenceClip).get()
 
                 try self.clipStorage.commitTransaction()
                 try self.referenceClipStorage.commitTransaction()
 
                 return .success(album.id)
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                self.logger.error("アルバムの作成に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.commitTransaction()
@@ -189,9 +187,13 @@ extension ClipCommandService: ClipCommandServiceProtocol {
             }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateClips(having: ids, byHiding: isHidden).map { _ in () }
+                _ = try self.clipStorage.updateClips(having: ids, byHiding: isHidden).get()
                 try self.clipStorage.commitTransaction()
-                return result
+                return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                self.logger.error("クリップの更新に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.error("クリップの更新に失敗: \(error.localizedDescription, privacy: .public)")
@@ -208,22 +210,16 @@ extension ClipCommandService: ClipCommandServiceProtocol {
             }
             do {
                 try self.clipStorage.beginTransaction()
-
-                switch self.clipStorage.updateClips(having: clipIds, byAddingTagsHaving: tagIds) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    self.logger.error("クリップの更新に失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(error)
-                }
-
+                _ = try self.clipStorage.updateClips(having: clipIds, byAddingTagsHaving: tagIds).get()
                 try self.clipStorage.commitTransaction()
 
                 self.syncTagsClipCount(for: Set(tagIds))
 
                 return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                self.logger.error("クリップの更新に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.error("クリップの更新に失敗: \(error.localizedDescription, privacy: .public)")
@@ -240,22 +236,16 @@ extension ClipCommandService: ClipCommandServiceProtocol {
             }
             do {
                 try self.clipStorage.beginTransaction()
-
-                switch self.clipStorage.updateClips(having: clipIds, byDeletingTagsHaving: tagIds) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    self.logger.error("クリップの更新に失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(error)
-                }
-
+                _ = try self.clipStorage.updateClips(having: clipIds, byDeletingTagsHaving: tagIds).get()
                 try self.clipStorage.commitTransaction()
 
                 self.syncTagsClipCount(for: Set(tagIds))
 
                 return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                self.logger.error("クリップの更新に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.error("クリップの更新に失敗: \(error.localizedDescription, privacy: .public)")
@@ -274,22 +264,17 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.beginTransaction()
 
                 let updatingTagIds = try? self.clipStorage.readTags(forClipsHaving: clipIds).get().map { $0.id }
-
-                switch self.clipStorage.updateClips(having: clipIds, byReplacingTagsHaving: tagIds) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    self.logger.error("クリップの更新に失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(error)
-                }
+                _ = try self.clipStorage.updateClips(having: clipIds, byReplacingTagsHaving: tagIds).get()
 
                 try self.clipStorage.commitTransaction()
 
                 self.syncTagsClipCount(for: Set((updatingTagIds ?? []) + tagIds))
 
                 return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                self.logger.error("クリップの更新に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.error("クリップの更新に失敗: \(error.localizedDescription, privacy: .public)")
@@ -306,9 +291,13 @@ extension ClipCommandService: ClipCommandServiceProtocol {
             }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateClipItems(having: ids, byUpdatingSiteUrl: siteUrl)
+                _ = try self.clipStorage.updateClipItems(having: ids, byUpdatingSiteUrl: siteUrl).get()
                 try self.clipStorage.commitTransaction()
-                return result
+                return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                self.logger.error("アルバムの更新に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.error("アルバムの更新に失敗: \(error.localizedDescription, privacy: .public)")
@@ -325,9 +314,13 @@ extension ClipCommandService: ClipCommandServiceProtocol {
             }
             do {
                 try self.clipStorage.beginTransaction()
-                let result = self.clipStorage.updateClip(having: id, byReorderingItemsHaving: itemIds)
+                _ = try self.clipStorage.updateClip(having: id, byReorderingItemsHaving: itemIds).get()
                 try self.clipStorage.commitTransaction()
-                return result
+                return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                self.logger.error("アルバムの更新に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.error("アルバムの更新に失敗: \(error.localizedDescription, privacy: .public)")
@@ -354,6 +347,11 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.referenceClipStorage.commitTransaction()
 
                 return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                self.logger.error("アルバムの更新に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
@@ -381,6 +379,11 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.referenceClipStorage.commitTransaction()
 
                 return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                self.logger.error("アルバムの更新に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
@@ -408,6 +411,11 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.referenceClipStorage.commitTransaction()
 
                 return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                self.logger.error("アルバムの更新に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
@@ -435,6 +443,11 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.referenceClipStorage.commitTransaction()
 
                 return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                self.logger.error("アルバムの更新に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
@@ -462,6 +475,11 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.referenceClipStorage.commitTransaction()
 
                 return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                self.logger.error("アルバムの更新に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
@@ -488,6 +506,11 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.referenceClipStorage.commitTransaction()
 
                 return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                self.logger.error("アルバムの更新に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
@@ -507,32 +530,18 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.beginTransaction()
                 try self.referenceClipStorage.beginTransaction()
 
-                switch self.clipStorage.updateTag(having: id, nameTo: name) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
-                    self.logger.error("タグの更新に失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(error)
-                }
-
-                switch self.referenceClipStorage.updateTag(having: id, nameTo: name) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
-                    self.logger.error("タグの更新に失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(error)
-                }
+                _ = try self.clipStorage.updateTag(having: id, nameTo: name).get()
+                _ = try self.referenceClipStorage.updateTag(having: id, nameTo: name).get()
 
                 try self.clipStorage.commitTransaction()
                 try self.referenceClipStorage.commitTransaction()
 
                 return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                self.logger.error("タグの更新に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
@@ -552,32 +561,18 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.beginTransaction()
                 try self.referenceClipStorage.beginTransaction()
 
-                switch self.clipStorage.updateTag(having: id, byHiding: isHidden) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
-                    self.logger.error("タグの更新に失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(error)
-                }
-
-                switch self.referenceClipStorage.updateTag(having: id, byHiding: isHidden) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
-                    self.logger.error("タグの更新に失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(error)
-                }
+                _ = try self.clipStorage.updateTag(having: id, byHiding: isHidden).get()
+                _ = try self.referenceClipStorage.updateTag(having: id, byHiding: isHidden).get()
 
                 try self.clipStorage.commitTransaction()
                 try self.referenceClipStorage.commitTransaction()
 
                 return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                self.logger.error("タグの更新に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
@@ -596,44 +591,9 @@ extension ClipCommandService: ClipCommandServiceProtocol {
             do {
                 try self.clipStorage.beginTransaction()
 
-                let albumIds: [Domain.Album.Identity]
-                switch self.clipStorage.readAlbumIds(containsClipsHaving: [id]) {
-                case let .success(ids):
-                    albumIds = ids
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    self.logger.error("クリップの分割に失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(.internalError)
-                }
-
-                let originalTags: [Domain.Tag]
-                switch self.clipStorage.readTags(forClipHaving: id) {
-                case let .success(tags):
-                    originalTags = tags
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    self.logger.error("クリップの分割に失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(error)
-                }
-
-                let originalClip: Domain.Clip
-                switch self.clipStorage.deleteClips(having: [id]) {
-                case let .success(clips) where clips.count == 1:
-                    // swiftlint:disable:next force_unwrapping
-                    originalClip = clips.first!
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    self.logger.error("クリップの分割に失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(error)
-
-                default:
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    self.logger.error("クリップの分割に失敗")
-                    return .failure(.internalError)
-                }
+                let albumIds = try self.clipStorage.readAlbumIds(containsClipsHaving: [id]).get()
+                let originalTags = try self.clipStorage.readTags(forClipHaving: id).get()
+                let originalClip = try self.clipStorage.deleteClip(having: id).get()
 
                 let newClips: [ClipRecipe] = originalClip.items.map { item in
                     let clipId = UUID()
@@ -661,21 +621,15 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                                       updatedDate: date)
                 }
 
-                for newClip in newClips {
-                    switch self.clipStorage.create(clip: newClip) {
-                    case .success:
-                        break
-
-                    case let .failure(error):
-                        try? self.clipStorage.cancelTransactionIfNeeded()
-                        self.logger.error("クリップの分割に失敗: \(error.localizedDescription, privacy: .public)")
-                        return .failure(error)
-                    }
-                }
+                try newClips.forEach { _ = try self.clipStorage.create(clip: $0).get() }
 
                 try self.clipStorage.commitTransaction()
 
                 return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                self.logger.error("クリップの分割に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.error("クリップの分割に失敗: \(error.localizedDescription, privacy: .public)")
@@ -693,37 +647,9 @@ extension ClipCommandService: ClipCommandServiceProtocol {
             do {
                 try self.clipStorage.beginTransaction()
 
-                let albumIds: [Album.Identity]
-                switch self.clipStorage.readAlbumIds(containsClipsHaving: clipIds) {
-                case let .success(result):
-                    albumIds = result
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    self.logger.error("アルバムの読み取りに失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(error)
-                }
-
-                let items: [ClipItem]
-                switch self.clipStorage.readClipItems(having: itemIds) {
-                case let .success(result):
-                    items = result
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    self.logger.error("ClipItemの読み取りに失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(error)
-                }
-
-                switch self.clipStorage.deleteClips(having: clipIds) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    self.logger.error("クリップの削除に失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(error)
-                }
+                let albumIds = try self.clipStorage.readAlbumIds(containsClipsHaving: clipIds).get()
+                let items = try self.clipStorage.readClipItems(having: itemIds).get()
+                _ = try self.clipStorage.deleteClips(having: clipIds).get()
 
                 let clipId = UUID()
                 let newItems = items.enumerated().map { index, item in
@@ -752,19 +678,15 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                                         registeredDate: Date(),
                                         updatedDate: Date())
 
-                switch self.clipStorage.create(clip: recipe) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    self.logger.error("新規クリップの作成の削除に失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(.internalError)
-                }
+                _ = try self.clipStorage.create(clip: recipe).get()
 
                 try self.clipStorage.commitTransaction()
 
                 return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                self.logger.error("クリップのマージに失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 self.logger.error("クリップのマージに失敗: \(error.localizedDescription, privacy: .public)")
@@ -785,17 +707,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.beginTransaction()
                 try self.imageStorage.beginTransaction()
 
-                let clips: [Clip]
-                switch self.clipStorage.deleteClips(having: ids) {
-                case let .success(result):
-                    clips = result
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.imageStorage.cancelTransactionIfNeeded()
-                    self.logger.error("クリップの削除に失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(error)
-                }
+                let clips = try self.clipStorage.deleteClips(having: ids).get()
 
                 let existsFiles = try clips
                     .flatMap { $0.items }
@@ -812,6 +724,11 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.imageStorage.commitTransaction()
 
                 return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.imageStorage.cancelTransactionIfNeeded()
+                self.logger.error("クリップの削除に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.imageStorage.cancelTransactionIfNeeded()
@@ -831,22 +748,13 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.beginTransaction()
                 try self.imageStorage.beginTransaction()
 
-                switch self.clipStorage.deleteClipItem(having: item.id) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.imageStorage.cancelTransactionIfNeeded()
-                    self.logger.error("ClipItemの削除に失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(error)
-                }
+                _ = try self.clipStorage.deleteClipItem(having: item.id).get()
 
                 guard try self.imageStorage.exists(having: item.imageId) else {
                     try? self.clipStorage.cancelTransactionIfNeeded()
                     try? self.imageStorage.cancelTransactionIfNeeded()
                     self.logger.error("ClipItemの削除に失敗: 画像が見つからなかった")
-                    return .failure(.internalError)
+                    return .failure(.notFound)
                 }
 
                 try? self.imageStorage.delete(having: item.imageId)
@@ -856,6 +764,11 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.imageStorage.commitTransaction()
 
                 return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.imageStorage.cancelTransactionIfNeeded()
+                self.logger.error("ClipItemの削除に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.imageStorage.cancelTransactionIfNeeded()
@@ -882,6 +795,11 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.referenceClipStorage.commitTransaction()
 
                 return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                self.logger.error("アルバムの削除に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
@@ -901,32 +819,18 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.beginTransaction()
                 try self.referenceClipStorage.beginTransaction()
 
-                switch self.clipStorage.deleteTags(having: ids) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
-                    self.logger.error("タグの削除に失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(error)
-                }
-
-                switch self.referenceClipStorage.deleteTags(having: ids) {
-                case .success:
-                    break
-
-                case let .failure(error):
-                    try? self.clipStorage.cancelTransactionIfNeeded()
-                    try? self.referenceClipStorage.cancelTransactionIfNeeded()
-                    self.logger.error("タグの削除に失敗: \(error.localizedDescription, privacy: .public)")
-                    return .failure(error)
-                }
+                _ = try self.clipStorage.deleteTags(having: ids).get()
+                _ = try self.referenceClipStorage.deleteTags(having: ids).get()
 
                 try self.clipStorage.commitTransaction()
                 try self.referenceClipStorage.commitTransaction()
 
                 return .success(())
+            } catch let error as ClipStorageError {
+                try? self.clipStorage.cancelTransactionIfNeeded()
+                try? self.referenceClipStorage.cancelTransactionIfNeeded()
+                self.logger.error("タグの削除に失敗: \(error.localizedDescription, privacy: .public)")
+                return .failure(error)
             } catch {
                 try? self.clipStorage.cancelTransactionIfNeeded()
                 try? self.referenceClipStorage.cancelTransactionIfNeeded()
