@@ -93,6 +93,10 @@ public extension EntityCollectionSnapshot {
 // MARK: - Read
 
 public extension EntityCollectionSnapshot {
+    var ids: Set<Entity.Identity> {
+        Set(_entities.keys)
+    }
+
     func isEmpty() -> Bool {
         return _filteredIds.isEmpty
     }

@@ -308,8 +308,8 @@ extension ClipCreationViewReducer {
                 return Self.save(url: state.url,
                                  shouldSaveAsClip: state.shouldSaveAsClip,
                                  shouldSaveAsHiddenItem: state.shouldSaveAsHiddenItem,
-                                 tagIds: Array(state.tags._filteredIds),
-                                 albumIds: state.albums._filteredIds,
+                                 tagIds: Array(state.tags.ids),
+                                 albumIds: state.albums.ids,
                                  partialRecipes: partialRecipes,
                                  dependency: dependency)
                     .publisher
