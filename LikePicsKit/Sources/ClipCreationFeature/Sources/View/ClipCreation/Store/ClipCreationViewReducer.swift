@@ -96,11 +96,11 @@ struct ClipCreationViewReducer: Reducer {
             return (nextState, .none)
 
         case .tapTagAdditionButton:
-            nextState.modal = .tagSelection(id: UUID(), tagIds: Set(state.tags.filteredEntities().map({ $0.id })))
+            nextState.modal = .tagSelection(id: UUID(), tagIds: Set(state.tags.ids))
             return (nextState, .none)
 
         case .tapAlbumAdditionButton:
-            nextState.modal = .albumSelection(id: UUID(), albumIds: Set(state.albums.filteredEntities().map({ $0.id })))
+            nextState.modal = .albumSelection(id: UUID(), albumIds: Set(state.albums.ids))
             return (nextState, .none)
 
         case let .tapAlbumDeletionButton(albumId, _):
