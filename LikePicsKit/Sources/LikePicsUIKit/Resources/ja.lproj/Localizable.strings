@@ -31,6 +31,8 @@
 "clip_information_view_label_clip_item_registered_date" = "作成日";
 "clip_information_view_label_clip_item_updated_date" = "更新日";
 
+"clip_information_view_album_swipe_action_delete" = "削除";
+
 "uncategorized_cell_title" = "未分類のクリップを閲覧する";
 
 "search_history_section_title" = "最近の検索";

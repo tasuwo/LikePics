@@ -113,6 +113,15 @@ struct ClipItemInformationViewReducer: Reducer {
             dependency.router.routeToClipCollectionView(forAlbumId: album.identity)
             return (nextState, .none)
 
+        case let .albumDeleted(album):
+            switch dependency.clipCommandService.updateAlbum(having: album.id, byDeletingClipsHaving: [state.clipId]) {
+            case .success: ()
+
+            case .failure:
+                nextState.alert = .error(L10n.failedToUpdateClip)
+            }
+            return (nextState, .none)
+
         // MARK: Modal Completion
 
         case let .tagsSelected(tagIds):

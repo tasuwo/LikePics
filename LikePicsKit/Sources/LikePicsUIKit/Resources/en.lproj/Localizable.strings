@@ -31,6 +31,8 @@
 "clip_information_view_label_clip_item_registered_date" = "Created";
 "clip_information_view_label_clip_item_updated_date" = "Modified";
 
+"clip_information_view_album_swipe_action_delete" = "Delete";
+
 "uncategorized_cell_title" = "Uncategorized clips";
 
 "search_history_section_title" = "Recents";

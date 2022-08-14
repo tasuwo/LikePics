@@ -25,6 +25,8 @@ internal enum L10n {
     internal static let alertOk = L10n.tr("Localizable", "alert_ok")
     /// 保存
     internal static let alertSave = L10n.tr("Localizable", "alert_save")
+    /// 削除
+    internal static let clipInformationViewAlbumSwipeActionDelete = L10n.tr("Localizable", "clip_information_view_album_swipe_action_delete")
     /// コピー
     internal static let clipInformationViewContextMenuCopy = L10n.tr("Localizable", "clip_information_view_context_menu_copy")
     /// 開く

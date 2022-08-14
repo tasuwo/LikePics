@@ -90,7 +90,15 @@ public class ClipItemInformationView: UIView {
     // MARK: Collection View
 
     private func setupCollectionView() {
-        self.collectionView.collectionViewLayout = Factory.createLayout()
+        let layout = Layout.createLayout(albumTrailingSwipeActionProvider: { [weak self] indexPath in
+            guard let self = self else { return nil }
+            guard case let .album(album) = self.collectionViewDataSource.itemIdentifier(for: indexPath) else { return nil }
+            let deleteAction = UIContextualAction(style: .destructive, title: L10n.clipInformationViewAlbumSwipeActionDelete, handler: { _, _, completion in
+                self.delegate?.clipItemInformationView(self, didRequestDeleteAlbum: album, completion: completion)
+            })
+            return UISwipeActionsConfiguration(actions: [deleteAction])
+        })
+        self.collectionView.collectionViewLayout = layout
         self.collectionView.delegate = self
 
         let (dataSource, proxy) = Factory.makeDataSource(

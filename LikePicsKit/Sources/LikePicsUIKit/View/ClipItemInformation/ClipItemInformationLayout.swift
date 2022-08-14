@@ -75,11 +75,14 @@ public enum ClipItemInformationLayout {
 // MARK: - Layout
 
 extension ClipItemInformationLayout {
-    static func createLayout() -> UICollectionViewLayout {
+    static func createLayout(albumTrailingSwipeActionProvider: @escaping (IndexPath) -> UISwipeActionsConfiguration?) -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, environment -> NSCollectionLayoutSection? in
             switch Section(rawValue: sectionIndex) {
             case .tags:
                 return createTagsLayoutSection()
+
+            case .albums:
+                return createAlbumLayoutSection(trailingSwipeActionProvider: albumTrailingSwipeActionProvider, environment: environment)
 
             default:
                 return createPlainLayoutSection(environment: environment)
@@ -102,6 +105,23 @@ extension ClipItemInformationLayout {
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = CGFloat(12)
         section.contentInsets = .init(top: 16, leading: 0, bottom: 0, trailing: 0)
+
+        let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .estimated(44))
+        section.boundarySupplementaryItems = [
+            .init(layoutSize: titleSize, elementKind: ElementKind.header.rawValue, alignment: .top)
+        ]
+
+        return section
+    }
+
+    private static func createAlbumLayoutSection(trailingSwipeActionProvider: @escaping (IndexPath) -> UISwipeActionsConfiguration?,
+                                                 environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection
+    {
+        var configuration = UICollectionLayoutListConfiguration(appearance: .grouped)
+        configuration.backgroundColor = .clear
+        configuration.trailingSwipeActionsConfigurationProvider = trailingSwipeActionProvider
+        let section = NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
 
         let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                heightDimension: .estimated(44))

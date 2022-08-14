@@ -342,6 +342,10 @@ extension ClipItemInformationViewController: ClipItemInformationViewDelegate {
     func clipItemInformationView(_ view: ClipItemInformationView, didSelectAlbum album: ListingAlbumTitle) {
         store.execute(.albumTapped(album))
     }
+
+    func clipItemInformationView(_ view: ClipItemInformationView, didRequestDeleteAlbum album: ListingAlbumTitle, completion: @escaping (Bool) -> Void) {
+        store.execute(.albumDeleted(album))
+    }
 }
 
 extension ClipItemInformationViewController: TextEditAlertDelegate {

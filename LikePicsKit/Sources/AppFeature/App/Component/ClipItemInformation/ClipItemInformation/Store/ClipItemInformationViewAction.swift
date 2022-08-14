@@ -43,6 +43,7 @@ enum ClipItemInformationViewAction: Action {
     case urlCopyMenuSelected(URL?)
     case tagTapped(Tag)
     case albumTapped(ListingAlbumTitle)
+    case albumDeleted(ListingAlbumTitle)
 
     // MARK: Modal Completion
 
