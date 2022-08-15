@@ -1,1 +1,3 @@
-- Fixed a crash that occurred when adding clips to an album from multiple iOS/iPadOS devices simultaniously under iCloud sync.
+- You can add albums at clip creation.
+- You can remove albums on clip information view.
+- Fix a bug that sometimes unexpected tags added at clip creation.
