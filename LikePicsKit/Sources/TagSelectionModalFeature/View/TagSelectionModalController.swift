@@ -212,6 +212,11 @@ extension TagSelectionModalController {
         let saveItem = UIBarButtonItem(systemItem: .save, primaryAction: .init(handler: { [weak self] _ in
             self?.store.execute(.saveButtonTapped)
         }), menu: nil)
+        [addItem, saveItem].forEach {
+            // HACK: ShareExtentionだと、tintColorがテキスト色にうまく反映されないケースがあるので、ここで反映する
+            $0.setTitleTextAttributes([.foregroundColor: Asset.Color.likePicsRed.color], for: .normal)
+            $0.setTitleTextAttributes([.foregroundColor: Asset.Color.likePicsRed.color.withAlphaComponent(0.4)], for: .disabled)
+        }
 
         navigationItem.leftBarButtonItem = addItem
         navigationItem.rightBarButtonItem = saveItem

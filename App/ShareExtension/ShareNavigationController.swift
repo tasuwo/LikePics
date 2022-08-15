@@ -14,7 +14,7 @@ class ShareNavigationController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.tintColor = UIColor(named: "like_pics_red")
+        UIView.appearance().tintColor = UIColor(named: "like_pics_red")
         UIBarButtonItem.appearance().tintColor = UIColor(named: "like_pics_red")
         UISwitch.appearance().onTintColor = UIColor(named: "like_pics_switch")
 

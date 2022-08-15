@@ -321,7 +321,7 @@ extension ClipCreationViewController {
         [itemReload, itemDone].forEach {
             // HACK: ShareExtentionだと、tintColorがテキスト色にうまく反映されないケースがあるので、ここで反映する
             $0.setTitleTextAttributes([.foregroundColor: Asset.Color.likePicsRed.color], for: .normal)
-            $0.setTitleTextAttributes([.foregroundColor: UIColor.lightGray.withAlphaComponent(0.6)], for: .disabled)
+            $0.setTitleTextAttributes([.foregroundColor: Asset.Color.likePicsRed.color.withAlphaComponent(0.4)], for: .disabled)
             $0.isEnabled = false
         }
         navigationItem.setRightBarButton(itemDone, animated: true)
