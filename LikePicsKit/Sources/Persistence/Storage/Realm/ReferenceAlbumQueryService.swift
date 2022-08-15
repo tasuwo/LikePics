@@ -25,6 +25,6 @@ extension ReferenceAlbumQueryService: ListingAlbumTitleQueryServiceProtocol {
 
     public func queryAllAlbumTitles() -> Result<ListingAlbumTitleListQuery, ClipStorageError> {
         guard let realm = try? Realm(configuration: self.configuration) else { return .failure(.internalError) }
-        return .success(RealmReferenceAlbumListQuery(results: realm.objects(ReferenceAlbumObject.self)))
+        return .success(RealmReferenceAlbumListQuery(results: realm.objects(ReferenceAlbumObject.self).sorted(by: \.index)))
     }
 }

@@ -25,6 +25,6 @@ extension ReferenceTagQueryService: TagQueryServiceProtocol {
 
     public func queryTags() -> Result<TagListQuery, ClipStorageError> {
         guard let realm = try? Realm(configuration: self.configuration) else { return .failure(.internalError) }
-        return .success(RealmReferenceTagListQuery(results: realm.objects(ReferenceTagObject.self)))
+        return .success(RealmReferenceTagListQuery(results: realm.objects(ReferenceTagObject.self).sorted(by: \.name)))
     }
 }
