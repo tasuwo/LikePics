@@ -625,6 +625,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
 
                 try self.clipStorage.commitTransaction()
 
+                self.syncTagsClipCount(for: Set(originalTags.map({ $0.id })))
+
                 return .success(())
             } catch let error as ClipStorageError {
                 try? self.clipStorage.cancelTransactionIfNeeded()
@@ -649,6 +651,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
 
                 let albumIds = try self.clipStorage.readAlbumIds(containsClipsHaving: clipIds).get()
                 let items = try self.clipStorage.readClipItems(having: itemIds).get()
+                let originalTags = try self.clipStorage.readTags(forClipsHaving: clipIds).get()
                 _ = try self.clipStorage.deleteClips(having: clipIds).get()
 
                 let clipId = UUID()
@@ -682,6 +685,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
 
                 try self.clipStorage.commitTransaction()
 
+                self.syncTagsClipCount(for: Set(originalTags.map({ $0.id }) + tagIds))
+
                 return .success(())
             } catch let error as ClipStorageError {
                 try? self.clipStorage.cancelTransactionIfNeeded()
@@ -707,6 +712,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 try self.clipStorage.beginTransaction()
                 try self.imageStorage.beginTransaction()
 
+                let originalTags = try self.clipStorage.readTags(forClipsHaving: ids).get()
                 let clips = try self.clipStorage.deleteClips(having: ids).get()
 
                 let existsFiles = try clips
@@ -722,6 +728,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
 
                 try self.clipStorage.commitTransaction()
                 try self.imageStorage.commitTransaction()
+
+                self.syncTagsClipCount(for: Set(originalTags.map({ $0.id })))
 
                 return .success(())
             } catch let error as ClipStorageError {
