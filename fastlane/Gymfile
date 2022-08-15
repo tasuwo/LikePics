@@ -1,6 +1,6 @@
 # vim: syntax=ruby
 
-project("./App/LikePics.xcodeproj")
+workspace("./LikePics.xcworkspace")
 scheme("LikePics")
 sdk("iphoneos")
 output_directory("./build")
