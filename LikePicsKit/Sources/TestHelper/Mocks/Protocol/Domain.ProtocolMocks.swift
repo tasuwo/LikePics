@@ -1273,6 +1273,16 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
         fatalError("deleteClipsHandler returns can't have a default value thus its handler must be set")
     }
 
+    public private(set) var deleteClipCallCount = 0
+    public var deleteClipHandler: ((Clip.Identity) -> (Result<Clip, ClipStorageError>))?
+    public func deleteClip(having id: Clip.Identity) -> Result<Clip, ClipStorageError> {
+        deleteClipCallCount += 1
+        if let deleteClipHandler = deleteClipHandler {
+            return deleteClipHandler(id)
+        }
+        fatalError("deleteClipHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var deleteClipItemCallCount = 0
     public var deleteClipItemHandler: ((ClipItem.Identity) -> (Result<ClipItem, ClipStorageError>))?
     public func deleteClipItem(having id: ClipItem.Identity) -> Result<ClipItem, ClipStorageError> {
