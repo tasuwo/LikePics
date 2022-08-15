@@ -134,6 +134,12 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
         let albums = realm.objects(ReferenceAlbumObject.self)
             .sorted(byKeyPath: "index")
 
+        var currentIndex = 2
+        albums.forEach {
+            $0.index = currentIndex
+            currentIndex += 1
+        }
+
         let obj = ReferenceAlbumObject()
         obj.id = album.id
         obj.index = 1
@@ -144,12 +150,6 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
         obj.isDirty = album.isDirty
 
         realm.add(obj, update: .modified)
-
-        var currentIndex = 2
-        albums.forEach {
-            $0.index = currentIndex
-            currentIndex += 1
-        }
 
         return .success(())
     }
