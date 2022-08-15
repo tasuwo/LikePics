@@ -112,7 +112,10 @@ let package = Package(
 
         .target(
             name: "Domain",
-            dependencies: ["Common"]
+            dependencies: [
+                "Common",
+                "Smoothie"
+            ]
         ),
         .testTarget(
             name: "DomainTests",
