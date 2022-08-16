@@ -4,7 +4,7 @@
 
 import Foundation
 
-// sourcery: AutoDefaultValuePublic
+// sourcery: AutoDefaultValue, AutoDefaultValueUsePublic
 public struct ClipItemRecipe {
     public let id: UUID
     public let url: URL?
