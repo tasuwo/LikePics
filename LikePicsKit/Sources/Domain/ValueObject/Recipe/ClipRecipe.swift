@@ -18,6 +18,7 @@ public struct ClipRecipe {
 
     // MARK: - Lifecycle
 
+    // sourcery: AutoDefaultValueUseThisInitializer
     public init(id: UUID,
                 description: String?,
                 items: [ClipItemRecipe],

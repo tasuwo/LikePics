@@ -10,8 +10,7 @@ public extension Album {
         clips: [Clip] = [],
         isHidden: Bool = false,
         registeredDate: Date = Date(timeIntervalSince1970: 0),
-        updatedDate: Date = Date(timeIntervalSince1970: 0),
-        _searchableTitle: String? = nil
+        updatedDate: Date = Date(timeIntervalSince1970: 0)
     ) -> Self {
         return .init(
             id: id,
@@ -19,8 +18,7 @@ public extension Album {
             clips: clips,
             isHidden: isHidden,
             registeredDate: registeredDate,
-            updatedDate: updatedDate,
-            _searchableTitle: _searchableTitle
+            updatedDate: updatedDate
         )
     }
 }
@@ -151,16 +149,14 @@ public extension ListingAlbumTitle {
         title: String = "",
         isHidden: Bool = false,
         registeredDate: Date = Date(timeIntervalSince1970: 0),
-        updatedDate: Date = Date(timeIntervalSince1970: 0),
-        _searchableTitle: String? = nil
+        updatedDate: Date = Date(timeIntervalSince1970: 0)
     ) -> Self {
         return .init(
             id: id,
             title: title,
             isHidden: isHidden,
             registeredDate: registeredDate,
-            updatedDate: updatedDate,
-            _searchableTitle: _searchableTitle
+            updatedDate: updatedDate
         )
     }
 }
@@ -208,15 +204,13 @@ public extension Tag {
         id: UUID = UUID(),
         name: String = "",
         isHidden: Bool = false,
-        clipCount: Int? = nil,
-        _searchableName: String? = nil
+        clipCount: Int? = nil
     ) -> Self {
         return .init(
             id: id,
             name: name,
             isHidden: isHidden,
-            clipCount: clipCount,
-            _searchableName: _searchableName
+            clipCount: clipCount
         )
     }
 }

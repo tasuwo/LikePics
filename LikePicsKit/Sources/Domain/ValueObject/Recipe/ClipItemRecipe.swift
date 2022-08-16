@@ -20,6 +20,7 @@ public struct ClipItemRecipe {
 
     // MARK: - Lifecycle
 
+    // sourcery: AutoDefaultValueUseThisInitializer
     public init(id: UUID,
                 url: URL?,
                 clipId: Clip.Identity,

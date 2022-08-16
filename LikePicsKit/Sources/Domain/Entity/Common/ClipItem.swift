@@ -20,6 +20,7 @@ public struct ClipItem: Codable, Equatable, Hashable {
 
     // MARK: - Lifecycle
 
+    // sourcery: AutoDefaultValueUseThisInitializer
     public init(id: UUID,
                 url: URL?,
                 clipId: Clip.Identity,

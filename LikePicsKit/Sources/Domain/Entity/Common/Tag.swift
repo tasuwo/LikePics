@@ -15,6 +15,7 @@ public struct Tag: Codable, Equatable, Hashable {
 
     // MARK: - Lifecycle
 
+    // sourcery: AutoDefaultValueUseThisInitializer
     public init(id: UUID,
                 name: String,
                 isHidden: Bool,
@@ -26,20 +27,6 @@ public struct Tag: Codable, Equatable, Hashable {
         self.clipCount = clipCount
 
         self._searchableName = name.transformToSearchableText()
-    }
-
-    init(id: UUID,
-         name: String,
-         isHidden: Bool,
-         clipCount: Int?,
-         // swiftlint:disable:next identifier_name
-         _searchableName: String?)
-    {
-        self.id = id
-        self.name = name
-        self.isHidden = isHidden
-        self.clipCount = clipCount
-        self._searchableName = _searchableName
     }
 }
 

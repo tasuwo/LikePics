@@ -14,6 +14,7 @@ public struct ReferenceTag: Codable, Equatable, Hashable {
 
     // MARK: - Lifecycle
 
+    // sourcery: AutoDefaultValueUseThisInitializer
     public init(id: UUID, name: String, isHidden: Bool, clipCount: Int?, isDirty: Bool = false) {
         self.id = id
         self.name = name

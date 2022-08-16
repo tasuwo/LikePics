@@ -18,6 +18,7 @@ public struct ImageSize: Codable, Equatable, Hashable {
 
     // MARK: - Lifecycle
 
+    // sourcery: AutoDefaultValueUseThisInitializer
     public init(height: Double, width: Double) {
         self.height = height
         self.width = width

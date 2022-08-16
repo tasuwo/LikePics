@@ -37,6 +37,7 @@ public struct Clip: Codable, Equatable, Hashable {
 
     // MARK: - Lifecycle
 
+    // sourcery: AutoDefaultValueUseThisInitializer
     public init(id: UUID,
                 description: String?,
                 items: [ClipItem],

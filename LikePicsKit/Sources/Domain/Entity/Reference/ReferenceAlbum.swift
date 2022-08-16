@@ -15,6 +15,7 @@ public struct ReferenceAlbum: Codable, Equatable, Hashable {
 
     // MARK: - Lifecycle
 
+    // sourcery: AutoDefaultValueUseThisInitializer
     public init(id: UUID, title: String, isHidden: Bool, registeredDate: Date, updatedDate: Date, isDirty: Bool = false) {
         self.id = id
         self.title = title
