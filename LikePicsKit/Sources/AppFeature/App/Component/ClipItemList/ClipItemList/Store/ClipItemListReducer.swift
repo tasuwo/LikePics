@@ -82,7 +82,7 @@ struct ClipItemListReducer: Reducer {
 
         case let .selected(itemId):
             if state.isEditing {
-                nextState.items = state.items.updated(selectedIds: state.items._selectedIds.union(Set([itemId])))
+                nextState.items = state.items.selected(itemId)
                 return (nextState, .none)
             } else {
                 var userInfo: [ModalNotification.UserInfoKey: Any] = [:]
@@ -93,8 +93,7 @@ struct ClipItemListReducer: Reducer {
 
         case let .deselected(itemId):
             guard state.isEditing else { return (nextState, .none) }
-            let newSelections = state.items._selectedIds.subtracting(Set([itemId]))
-            nextState.items = nextState.items.updated(selectedIds: newSelections)
+            nextState.items = state.items.deselected(itemId)
             return (nextState, .none)
 
         case .itemsReorderFailed:
@@ -219,12 +218,12 @@ extension ClipItemListReducer {
         switch action {
         case .cancel:
             nextState.isEditing = false
-            nextState.items = nextState.items.updated(selectedIds: .init())
+            nextState.items = nextState.items.deselectedAll()
             return (nextState, .none)
 
         case .select:
             nextState.isEditing = true
-            nextState.items = nextState.items.updated(selectedIds: .init())
+            nextState.items = nextState.items.deselectedAll()
             return (nextState, .none)
 
         case .resume:
@@ -246,7 +245,7 @@ extension ClipItemListReducer {
         case let .share(succeeded):
             if succeeded {
                 nextState.isEditing = false
-                nextState.items = nextState.items.updated(selectedIds: .init())
+                nextState.items = nextState.items.deselectedAll()
             }
             nextState.alert = nil
             return (nextState, .none)
@@ -263,7 +262,7 @@ extension ClipItemListReducer {
             }
 
             nextState.isEditing = false
-            nextState.items = nextState.items.updated(selectedIds: .init())
+            nextState.items = nextState.items.deselectedAll()
 
             if existsError {
                 nextState.alert = .error(L10n.errorAtDeleteClipItem)
@@ -272,10 +271,10 @@ extension ClipItemListReducer {
             return (nextState, .none)
 
         case let .editUrl(url):
-            switch dependency.clipCommandService.updateClipItems(having: Array(state.items._selectedIds), byUpdatingSiteUrl: url) {
+            switch dependency.clipCommandService.updateClipItems(having: Array(state.items.selectedIds), byUpdatingSiteUrl: url) {
             case .success:
                 nextState.isEditing = false
-                nextState.items = nextState.items.updated(selectedIds: .init())
+                nextState.items = nextState.items.deselectedAll()
 
             case .failure:
                 nextState.alert = .error(L10n.errorAtUpdateSiteUrlClipItem)

@@ -58,19 +58,19 @@ public extension UICollectionViewSelectionLazyApplier {
     func applySelection(snapshot: EntityCollectionSnapshot<Entity>) {
         queue.async {
             defer {
-                self.previousSelections = snapshot._selectedIds
+                self.previousSelections = snapshot.selectedIds
             }
 
             let deselections: Set<Entity.Identity> = {
                 guard self.previousSelections.isEmpty == false else { return .init() }
-                return self.previousSelections.subtracting(snapshot._selectedIds)
+                return self.previousSelections.subtracting(snapshot.selectedIds)
             }()
 
             let selections: Set<Entity.Identity> = {
                 guard self.previousSelections.isEmpty == false else {
-                    return snapshot._selectedIds.union(self.suspendedSelections.subtracting(deselections))
+                    return snapshot.selectedIds.union(self.suspendedSelections.subtracting(deselections))
                 }
-                let additions = snapshot._selectedIds.subtracting(self.previousSelections)
+                let additions = snapshot.selectedIds.subtracting(self.previousSelections)
                 return additions.union(self.suspendedSelections.subtracting(deselections))
             }()
 

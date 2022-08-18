@@ -124,11 +124,11 @@ extension ClipItemListViewController {
             .store(in: &subscriptions)
 
         store.state
-            .removeDuplicates(by: \.items._selectedIds)
+            .removeDuplicates(by: \.items.selectedIds)
             .throttle(for: 0.1, scheduler: RunLoop.main, latest: true)
             .sink { [weak self] state in
                 self?.selectionApplier.applySelection(snapshot: state.items)
-                self?.navigationBarController.store.execute(.updatedSelectionCount(state.items.selectedIds().count))
+                self?.navigationBarController.store.execute(.updatedSelectionCount(state.items.selectedIds.count))
                 self?.toolBarController.store.execute(.selected(state.items.selectedEntities()))
             }
             .store(in: &subscriptions)
@@ -231,7 +231,7 @@ extension ClipItemListViewController {
 
             guard var configuration = cell.contentConfiguration as? ClipItemContentConfiguration else { return }
             configuration.page = item.order
-            configuration.numberOfPage = store.stateValue.items._entities.count
+            configuration.numberOfPage = store.stateValue.items.count
             cell.contentConfiguration = configuration
         }
     }
@@ -475,8 +475,8 @@ extension ClipItemListViewController: ClipItemListPresenting {
     // MARK: - ClipItemListPresenting
 
     func animatingCell(_ animator: ClipItemListAnimator, id: ClipPreviewPresentableCellIdentifier) -> ClipItemListPresentingCell? {
-        guard let item = store.stateValue.items._entities[id.itemId],
-              let indexPath = dataSource.indexPath(for: .init(item.value, at: 0, of: 0)) else { return nil }
+        guard let item = store.stateValue.items.entity(having: id.itemId),
+              let indexPath = dataSource.indexPath(for: .init(item, at: 0, of: 0)) else { return nil }
         return collectionView.cellForItem(at: indexPath) as? ClipItemCell
     }
 
@@ -490,8 +490,8 @@ extension ClipItemListViewController: ClipItemListPresenting {
     }
 
     func displayAnimatingCell(_ animator: ClipItemListAnimator, id: ClipPreviewPresentableCellIdentifier, containerView: UIView) {
-        guard let item = store.stateValue.items._entities[id.itemId],
-              let indexPath = dataSource.indexPath(for: .init(item.value, at: 0, of: 0)) else { return }
+        guard let item = store.stateValue.items.entity(having: id.itemId),
+              let indexPath = dataSource.indexPath(for: .init(item, at: 0, of: 0)) else { return }
 
         // HACK: SplitModeで不正なframeになってしまう問題を解消する
         //       frameだけ設定してもダメで、reloadDataもしないとcellのframeが更新されない
@@ -512,9 +512,9 @@ extension ClipItemListViewController: ClipItemListPresenting {
     }
 
     func thumbnailFrame(_ animator: ClipItemListAnimator, id: ClipPreviewPresentableCellIdentifier, on containerView: UIView) -> CGRect {
-        guard let item = store.stateValue.items._entities[id.itemId] else { return .zero }
+        guard let item = store.stateValue.items.entity(having: id.itemId) else { return .zero }
         guard let selectedCell = animatingCell(animator, id: id) else { return .zero }
-        return selectedCell.convert(selectedCell.calcImageFrame(size: item.value.imageSize.cgSize), to: containerView)
+        return selectedCell.convert(selectedCell.calcImageFrame(size: item.imageSize.cgSize), to: containerView)
     }
 
     func baseView(_ animator: ClipItemListAnimator) -> UIView? {

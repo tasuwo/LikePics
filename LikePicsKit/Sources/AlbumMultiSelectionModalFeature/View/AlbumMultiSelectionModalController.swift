@@ -97,7 +97,7 @@ extension AlbumMultiSelectionModalController {
             .store(in: &subscriptions)
 
         store.state
-            .removeDuplicates(by: \.albums._selectedIds)
+            .removeDuplicates(by: \.albums.selectedIds)
             .sink { [weak self] state in self?.selectionApplier.applySelection(snapshot: state.albums) }
             .store(in: &subscriptions)
 

@@ -80,14 +80,14 @@ extension ClipCollectionState {
     var title: String? {
         if operation != .selecting {
             if let description = sourceDescription {
-                return "\(description) (\(clips._filteredIds.count))"
+                return "\(description) (\(clips.filteredIds.count))"
             } else {
                 return nil
             }
         }
-        return clips._selectedIds.isEmpty
+        return clips.selectedIds.isEmpty
             ? L10n.clipCollectionViewTitleSelect
-            : L10n.clipCollectionViewTitleSelecting(clips._selectedIds.count)
+            : L10n.clipCollectionViewTitleSelecting(clips.selectedIds.count)
     }
 }
 

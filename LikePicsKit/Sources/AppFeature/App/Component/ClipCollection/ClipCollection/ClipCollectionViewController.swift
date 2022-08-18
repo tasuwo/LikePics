@@ -228,7 +228,7 @@ extension ClipCollectionViewController {
             .store(in: &subscriptions)
 
         store.state
-            .removeDuplicates(by: \.clips._selectedIds)
+            .removeDuplicates(by: \.clips.selectedIds)
             .throttle(for: 0.5, scheduler: RunLoop.main, latest: true)
             .sink { [weak self] state in self?.selectionApplier.applySelection(snapshot: state.clips) }
             .store(in: &subscriptions)

@@ -7,9 +7,9 @@
 public struct EntityCollectionSnapshot<Entity: Identifiable & Codable & Hashable>: Equatable, Codable {
     private let order: [Entity.Identity]
 
-    public let _entities: [Entity.Identity: Ordered<Entity>]
-    public let _selectedIds: Set<Entity.Identity>
-    public let _filteredIds: Set<Entity.Identity>
+    private let _entities: [Entity.Identity: Ordered<Entity>]
+    private let _selectedIds: Set<Entity.Identity>
+    private let _filteredIds: Set<Entity.Identity>
 
     // MARK: - Initializers
 
@@ -17,10 +17,12 @@ public struct EntityCollectionSnapshot<Entity: Identifiable & Codable & Hashable
                 selectedIds: Set<Entity.Identity> = .init(),
                 filteredIds: Set<Entity.Identity> = .init())
     {
-        self.order = entities.map(\.identity)
+        let order = entities.map(\.identity)
+        let ids = Set(order)
+        self.order = order
         self._entities = entities.indexed()
-        self._selectedIds = selectedIds
-        self._filteredIds = filteredIds
+        self._selectedIds = selectedIds.intersection(ids)
+        self._filteredIds = filteredIds.intersection(ids)
     }
 
     private init(order: [Entity.Identity],
@@ -44,10 +46,33 @@ public extension EntityCollectionSnapshot {
                      filteredIds: _filteredIds)
     }
 
-    func updated(selectedIds: Set<Entity.Identity>) -> Self {
+    func selected(_ id: Entity.Identity, allowsMultipleSelection: Bool = true) -> Self {
+        guard _entities.keys.contains(id) else { return self }
         return .init(order: order,
                      entities: _entities,
-                     selectedIds: selectedIds,
+                     selectedIds: allowsMultipleSelection ? _selectedIds.union([id]) : Set([id]),
+                     filteredIds: _filteredIds)
+    }
+
+    func selectedAllFilteredEntities() -> Self {
+        return .init(order: order,
+                     entities: _entities,
+                     selectedIds: _filteredIds,
+                     filteredIds: _filteredIds)
+    }
+
+    func deselected(_ id: Entity.Identity) -> Self {
+        guard _selectedIds.contains(id) else { return self }
+        return .init(order: order,
+                     entities: _entities,
+                     selectedIds: _selectedIds.subtracting([id]),
+                     filteredIds: _filteredIds)
+    }
+
+    func deselectedAll() -> Self {
+        return .init(order: order,
+                     entities: _entities,
+                     selectedIds: .init(),
                      filteredIds: _filteredIds)
     }
 
@@ -55,7 +80,7 @@ public extension EntityCollectionSnapshot {
         return .init(order: order,
                      entities: _entities,
                      selectedIds: _selectedIds,
-                     filteredIds: filteredIds)
+                     filteredIds: filteredIds.intersection(Set(_entities.keys)))
     }
 
     func removingEntity(having id: Entity.Identity) -> Self {
@@ -97,6 +122,18 @@ public extension EntityCollectionSnapshot {
         Set(_entities.keys)
     }
 
+    var count: Int {
+        _entities.count
+    }
+
+    var selectedIds: Set<Entity.Identity> {
+        _selectedIds
+    }
+
+    var filteredIds: Set<Entity.Identity> {
+        _filteredIds
+    }
+
     func isEmpty() -> Bool {
         return _filteredIds.isEmpty
     }
@@ -105,14 +142,13 @@ public extension EntityCollectionSnapshot {
         return _entities[id]?.value
     }
 
+    func orderedEntity(having id: Entity.Identity) -> Ordered<Entity>? {
+        return _entities[id]
+    }
+
     func orderedEntities() -> [Entity] {
         order
             .compactMap { _entities[$0]?.value }
-    }
-
-    func selectedIds() -> Set<Entity.Identity> {
-        _selectedIds
-            .intersection(Set(_entities.keys))
     }
 
     func selectedEntities() -> Set<Entity> {
@@ -132,11 +168,6 @@ public extension EntityCollectionSnapshot {
     func filteredEntity(having id: Entity.Identity) -> Entity? {
         guard _filteredIds.contains(id) else { return nil }
         return _entities[id]?.value
-    }
-
-    func filteredIds() -> Set<Entity.Identity> {
-        _filteredIds
-            .intersection(Set(_entities.keys))
     }
 
     func filteredEntities() -> Set<Entity> {

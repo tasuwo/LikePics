@@ -43,13 +43,11 @@ public struct TagSelectionModalReducer: Reducer {
         // MARK: Selection
 
         case let .selected(tagId):
-            let newTags = state.tags.updated(selectedIds: state.tags._selectedIds.union(Set([tagId])))
-            nextState.tags = newTags
+            nextState.tags = state.tags.selected(tagId)
             return (nextState, .none)
 
         case let .deselected(tagId):
-            let newTags = state.tags.updated(selectedIds: state.tags._selectedIds.subtracting(Set([tagId])))
-            nextState.tags = newTags
+            nextState.tags = state.tags.deselected(tagId)
             return (nextState, .none)
 
         // MARK: Button Action
@@ -70,8 +68,7 @@ public struct TagSelectionModalReducer: Reducer {
         case let .alertSaveButtonTapped(text: name):
             switch dependency.tagCommandService.create(tagWithName: name) {
             case let .success(tagId):
-                let newTags = state.tags.updated(selectedIds: state.tags._selectedIds.union(Set([tagId])))
-                nextState.tags = newTags
+                nextState.tags = state.tags.selected(tagId)
                 nextState.alert = nil
 
             case .failure(.duplicated):

@@ -41,19 +41,12 @@ struct ClipCollectionReducer: Reducer {
         // MARK: Selection
 
         case let .selected(clipId):
-            guard let clip = state.clips._entities[clipId] else { return (nextState, .none) }
+            guard let clip = state.clips.orderedEntity(having: clipId) else { return (nextState, .none) }
 
-            let selections: Set<Clip.Identity> = {
-                if state.operation.isAllowedMultipleSelection {
-                    return state.clips._selectedIds.union(Set([clipId]))
-                } else {
-                    return Set([clipId])
-                }
-            }()
-            nextState.clips = state.clips.updated(selectedIds: selections)
+            nextState.clips = state.clips.selected(clipId, allowsMultipleSelection: state.operation.isAllowedMultipleSelection)
 
             if !state.operation.isAllowedMultipleSelection {
-                dependency.router.showClipPreviewView(filteredClipIds: state.clips._filteredIds,
+                dependency.router.showClipPreviewView(filteredClipIds: state.clips.filteredIds,
                                                       clips: state.clips.orderedEntities(),
                                                       query: .clips(state.source),
                                                       indexPath: ClipCollection.IndexPath(clipIndex: clip.index, itemIndex: 0))
@@ -62,9 +55,7 @@ struct ClipCollectionReducer: Reducer {
             return (nextState, .none)
 
         case let .deselected(clipId):
-            guard state.clips._selectedIds.contains(clipId) else { return (state, .none) }
-            let newSelections = state.clips._selectedIds.subtracting(Set([clipId]))
-            nextState.clips = nextState.clips.updated(selectedIds: newSelections)
+            nextState.clips = nextState.clips.deselected(clipId)
             return (nextState, .none)
 
         case let .reordered(clipIds):
@@ -412,23 +403,23 @@ extension ClipCollectionReducer {
             nextState.operation = .none
             nextState.layout = state.preservedLayout ?? state.layout
             nextState.preservedLayout = nil
-            nextState.clips = nextState.clips.updated(selectedIds: .init())
+            nextState.clips = nextState.clips.deselectedAll()
             return (nextState, .none)
 
         case .selectAll:
             guard state.operation.isAllowedMultipleSelection else { return (state, .none) }
-            nextState.clips = nextState.clips.updated(selectedIds: state.clips._filteredIds)
+            nextState.clips = nextState.clips.selectedAllFilteredEntities()
             return (nextState, .none)
 
         case .deselectAll:
-            nextState.clips = nextState.clips.updated(selectedIds: .init())
+            nextState.clips = nextState.clips.deselectedAll()
             return (nextState, .none)
 
         case .select:
             nextState.operation = .selecting
             nextState.layout = .grid
             nextState.preservedLayout = state.layout
-            nextState.clips = nextState.clips.updated(selectedIds: .init())
+            nextState.clips = nextState.clips.deselectedAll()
             return (nextState, .none)
 
         case .changeLayout:
@@ -448,17 +439,17 @@ extension ClipCollectionReducer {
         var nextState = state
         switch action {
         case .addToAlbum:
-            nextState.modal = .albumSelection(id: UUID(), clipIds: nextState.clips.selectedIds())
+            nextState.modal = .albumSelection(id: UUID(), clipIds: nextState.clips.selectedIds)
             nextState.alert = nil
             return (nextState, .none)
 
         case .addTags:
-            nextState.modal = .tagSelectionForClips(id: UUID(), clipIds: nextState.clips.selectedIds())
+            nextState.modal = .tagSelectionForClips(id: UUID(), clipIds: nextState.clips.selectedIds)
             nextState.alert = nil
             return (nextState, .none)
 
         case .hide:
-            switch dependency.clipCommandService.updateClips(having: Array(state.clips._selectedIds), byHiding: true) {
+            switch dependency.clipCommandService.updateClips(having: Array(state.clips.selectedIds), byHiding: true) {
             case .success:
                 nextState = nextState.editingEnded()
 
@@ -468,7 +459,7 @@ extension ClipCollectionReducer {
             return (nextState, .none)
 
         case .reveal:
-            switch dependency.clipCommandService.updateClips(having: Array(state.clips._selectedIds), byHiding: false) {
+            switch dependency.clipCommandService.updateClips(having: Array(state.clips.selectedIds), byHiding: false) {
             case .success:
                 nextState = nextState.editingEnded()
 
@@ -483,7 +474,7 @@ extension ClipCollectionReducer {
             return (nextState, .none)
 
         case .delete:
-            switch dependency.clipCommandService.deleteClips(having: Array(state.clips._selectedIds)) {
+            switch dependency.clipCommandService.deleteClips(having: Array(state.clips.selectedIds)) {
             case .success:
                 nextState = nextState.editingEnded()
                 nextState.alert = nil
@@ -495,7 +486,7 @@ extension ClipCollectionReducer {
 
         case .removeFromAlbum:
             guard case let .album(albumId) = state.source else { return (state, .none) }
-            switch dependency.clipCommandService.updateAlbum(having: albumId, byDeletingClipsHaving: Array(state.clips._selectedIds)) {
+            switch dependency.clipCommandService.updateAlbum(having: albumId, byDeletingClipsHaving: Array(state.clips.selectedIds)) {
             case .success:
                 nextState = nextState.editingEnded()
 
@@ -527,7 +518,7 @@ extension ClipCollectionReducer {
 private extension ClipCollectionState {
     func editingEnded() -> Self {
         var nextState = self
-        nextState.clips = nextState.clips.updated(selectedIds: .init())
+        nextState.clips = nextState.clips.deselectedAll()
         nextState.operation = .none
         nextState.layout = preservedLayout ?? layout
         nextState.preservedLayout = nil

@@ -31,24 +31,24 @@ struct ClipCollectionToolBarReducer: Reducer {
         // MARK: ToolBar
 
         case .addButtonTapped:
-            nextState.alert = .addition(targetCount: nextState.parentState.clips.selectedIds().count)
+            nextState.alert = .addition(targetCount: nextState.parentState.clips.selectedIds.count)
             return (nextState, .none)
 
         case .changeVisibilityButtonTapped:
-            nextState.alert = .changeVisibility(targetCount: nextState.parentState.clips.selectedIds().count)
+            nextState.alert = .changeVisibility(targetCount: nextState.parentState.clips.selectedIds.count)
             return (nextState, .none)
 
         case .shareButtonTapped:
             let imageIds = state.parentState.clips.selectedEntities()
                 .flatMap { $0.items.map { $0.imageId } }
-            nextState.alert = .share(imageIds: imageIds, targetCount: nextState.parentState.clips.selectedIds().count)
+            nextState.alert = .share(imageIds: imageIds, targetCount: nextState.parentState.clips.selectedIds.count)
             return (nextState, .none)
 
         case .deleteButtonTapped:
             if state.source.isAlbum {
                 nextState.alert = .chooseDeletionType
             } else {
-                nextState.alert = .deletion(targetCount: nextState.parentState.clips.selectedIds().count)
+                nextState.alert = .deletion(targetCount: nextState.parentState.clips.selectedIds.count)
             }
             return (nextState, .none)
 
@@ -58,7 +58,7 @@ struct ClipCollectionToolBarReducer: Reducer {
         // MARK: Alert Completion
 
         case .alertDeleteSelected:
-            nextState.alert = .deletion(targetCount: nextState.parentState.clips.selectedIds().count)
+            nextState.alert = .deletion(targetCount: nextState.parentState.clips.selectedIds.count)
             return (nextState, .none)
 
         case .alertAddToAlbumConfirmed,
@@ -78,8 +78,7 @@ struct ClipCollectionToolBarReducer: Reducer {
 private extension ClipCollectionToolBarState {
     func updatingAppearance() -> Self {
         var nextState = self
-        // `selectedIds()`だと負荷が大きいため、`_selectedIds`を参照する
-        let isEnabled = !parentState.clips._selectedIds.isEmpty
+        let isEnabled = !parentState.clips.selectedIds.isEmpty
 
         nextState.isHidden = operation != .selecting
         nextState.items = [
@@ -87,8 +86,7 @@ private extension ClipCollectionToolBarState {
             Item(kind: .changeVisibility, isEnabled: isEnabled),
             Item(kind: .share, isEnabled: isEnabled),
             Item(kind: .delete, isEnabled: isEnabled),
-            // `selectedIds()`だと負荷が大きいため、`_selectedIds`を参照する
-            Item(kind: .merge, isEnabled: isEnabled && parentState.clips._selectedIds.count > 1)
+            Item(kind: .merge, isEnabled: isEnabled && parentState.clips.selectedIds.count > 1)
         ]
 
         return nextState

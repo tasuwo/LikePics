@@ -42,13 +42,11 @@ public struct AlbumMultiSelectionModalReducer: Reducer {
         // MARK: Button Action
 
         case let .selected(albumId):
-            let newAlbums = state.albums.updated(selectedIds: state.albums._selectedIds.union(Set([albumId])))
-            nextState.albums = newAlbums
+            nextState.albums = state.albums.selected(albumId)
             return (nextState, .none)
 
         case let .deselected(albumId):
-            let newAlbums = state.albums.updated(selectedIds: state.albums._selectedIds.subtracting(Set([albumId])))
-            nextState.albums = newAlbums
+            nextState.albums = state.albums.deselected(albumId)
             return (nextState, .none)
 
         case .emptyMessageViewActionButtonTapped, .addButtonTapped:
@@ -67,8 +65,7 @@ public struct AlbumMultiSelectionModalReducer: Reducer {
         case let .alertSaveButtonTapped(text: text):
             switch dependency.albumCommandService.create(albumWithTitle: text) {
             case let .success(albumId):
-                let newAlbums = state.albums.updated(selectedIds: state.albums._selectedIds.union(Set([albumId])))
-                nextState.albums = newAlbums
+                nextState.albums = state.albums.selected(albumId)
                 nextState.alert = nil
 
             case .failure:

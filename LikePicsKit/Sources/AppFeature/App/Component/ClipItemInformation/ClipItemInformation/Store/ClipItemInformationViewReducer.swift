@@ -68,7 +68,7 @@ struct ClipItemInformationViewReducer: Reducer {
         // MARK: Control
 
         case .tagAdditionButtonTapped:
-            nextState.modal = .tagSelection(id: UUID(), tagIds: state.tags._filteredIds)
+            nextState.modal = .tagSelection(id: UUID(), tagIds: state.tags.filteredIds)
             return (nextState, .none)
 
         case .albumAdditionButtonTapped:

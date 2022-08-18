@@ -53,8 +53,8 @@ extension ClipCollectionViewRootState {
                                                                                                             operation: parent.clipCollectionState.operation,
                                                                                                             rightItems: parent.navigationBarRightItems,
                                                                                                             leftItems: parent.navigationBarLeftItems,
-                                                                                                            clipCount: parent.clipCollectionState.clips._filteredIds.count,
-                                                                                                            selectionCount: parent.clipCollectionState.clips._selectedIds.count)
+                                                                                                            clipCount: parent.clipCollectionState.clips.filteredIds.count,
+                                                                                                            selectionCount: parent.clipCollectionState.clips.selectedIds.count)
                                                                                                   },
                                                                                                   set: { state, parent in
                                                                                                       var nextParent = parent
