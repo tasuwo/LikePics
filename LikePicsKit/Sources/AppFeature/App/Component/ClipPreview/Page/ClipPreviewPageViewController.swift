@@ -404,13 +404,13 @@ extension ClipPreviewPageViewController: UIPageViewControllerDataSource {
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         guard let viewController = viewController as? ClipPreviewViewController else { return nil }
-        guard let item = store.stateValue.clips.pickPreviousItem(ofItemHaving: viewController.itemId) else { return nil }
+        guard let item = store.stateValue.clips.pickPreviousVisibleItem(ofItemHaving: viewController.itemId) else { return nil }
         return factory.makeClipPreviewViewController(for: item)
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         guard let viewController = viewController as? ClipPreviewViewController else { return nil }
-        guard let item = store.stateValue.clips.pickNextItem(ofItemHaving: viewController.itemId) else { return nil }
+        guard let item = store.stateValue.clips.pickNextVisibleItem(ofItemHaving: viewController.itemId) else { return nil }
         return factory.makeClipPreviewViewController(for: item)
     }
 }

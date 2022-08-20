@@ -78,7 +78,7 @@ struct PreviewingClips: Equatable {
         return clip.items[indexPath.itemIndex]
     }
 
-    func clip(ofHaving clipId: Clip.Identity) -> Clip? {
+    func clip(having clipId: Clip.Identity) -> Clip? {
         guard let index = indexByClipId[clipId] else { return nil }
         return clip(atIndex: index)
     }
@@ -89,11 +89,40 @@ struct PreviewingClips: Equatable {
         return value[indexPath.clipIndex]
     }
 
+    func visibleClip(having clipId: Clip.Identity) -> Bool {
+        guard let clip = clip(having: clipId) else { return false }
+        return filteredClipIds.contains(clip.id)
+    }
+
+    func index(ofClipHaving clipId: Clip.Identity) -> Int? {
+        return indexByClipId[clipId]
+    }
+
     func indexPath(ofItemHaving itemId: ClipItem.Identity) -> ClipCollection.IndexPath? {
         return indexPathByClipItemId[itemId]
     }
 
-    func pickNextItem(ofItemHaving itemId: ClipItem.Identity) -> ClipItem? {
+    func visibleIndexPath(afterClipAt clipIndex: Int) -> ClipCollection.IndexPath? {
+        guard clipIndex + 1 < value.count else { return nil }
+        for clipIndex in clipIndex + 1 ... value.count - 1 {
+            if filteredClipIds.contains(value[clipIndex].id) {
+                return .init(clipIndex: clipIndex, itemIndex: 0)
+            }
+        }
+        return nil
+    }
+
+    func visibleIndexPath(beforeClipAt clipIndex: Int) -> ClipCollection.IndexPath? {
+        guard clipIndex - 1 >= 0 else { return nil }
+        for clipIndex in (0 ... clipIndex - 1).reversed() {
+            if filteredClipIds.contains(value[clipIndex].id) {
+                return .init(clipIndex: clipIndex, itemIndex: value[clipIndex].items.count - 1)
+            }
+        }
+        return nil
+    }
+
+    func pickNextVisibleItem(ofItemHaving itemId: ClipItem.Identity) -> ClipItem? {
         guard let indexPath = indexPathByClipItemId[itemId] else { return nil }
         guard value.indices.contains(indexPath.clipIndex) else { return nil }
 
@@ -112,7 +141,7 @@ struct PreviewingClips: Equatable {
         }
     }
 
-    func pickPreviousItem(ofItemHaving itemId: ClipItem.Identity) -> ClipItem? {
+    func pickPreviousVisibleItem(ofItemHaving itemId: ClipItem.Identity) -> ClipItem? {
         guard let indexPath = indexPathByClipItemId[itemId] else { return nil }
         guard value.indices.contains(indexPath.clipIndex) else { return nil }
 

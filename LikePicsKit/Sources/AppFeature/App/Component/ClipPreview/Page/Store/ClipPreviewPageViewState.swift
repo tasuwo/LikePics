@@ -58,6 +58,15 @@ extension ClipPreviewPageViewState {
     var currentItem: ClipItem? {
         clips.clipItem(atIndexPath: currentIndexPath)
     }
+
+    func updated(by result: ClipPreviewIndexCoordinator.Result) -> Self {
+        var newState = self
+        newState.currentIndexPath = result.indexPath
+        newState.pageChange = result.pageChange
+        newState.isPageAnimated = result.isPageAnimated
+        newState.isDismissed = result.isDismissed
+        return newState
+    }
 }
 
 extension ClipPreviewPageViewState.PageChange {
