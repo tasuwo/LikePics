@@ -27,6 +27,7 @@ public class ClipPreviewViewController: UIViewController {
 
     private let state: ClipPreviewViewState
     var itemId: ClipItem.Identity { state.itemId }
+    private var alreadyPreviewLoaded = false
 
     // MARK: - Initializers
 
@@ -60,6 +61,20 @@ public class ClipPreviewViewController: UIViewController {
 
         loadPreview()
     }
+
+    override public func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        // 遷移アニメーションががくつかないよう、このタイミングでPreviewを読み込む
+        if !alreadyPreviewLoaded {
+            alreadyPreviewLoaded = true
+            let provider = ImageDataProvider(imageId: state.imageId,
+                                             cacheKey: "preview-\(itemId.uuidString)",
+                                             imageQueryService: imageQueryService)
+            let request = ImageRequest(source: .provider(provider))
+            loadImage(request, with: pipeline, on: previewView)
+        }
+    }
 }
 
 // MARK: - Configuration
@@ -83,13 +98,15 @@ extension ClipPreviewViewController {
             previewView.source = .thumbnail(image, originalSize: state.imageSize)
         } else {
             previewView.source = .thumbnail(nil, originalSize: state.imageSize)
-        }
+            alreadyPreviewLoaded = true
 
-        let provider = ImageDataProvider(imageId: state.imageId,
-                                         cacheKey: "preview-\(itemId.uuidString)",
-                                         imageQueryService: imageQueryService)
-        let request = ImageRequest(source: .provider(provider))
-        loadImage(request, with: pipeline, on: previewView)
+            // サムネイルが存在しない場合は、アニメーションのがくつきよりもPreviewを早く表示することを優先する
+            let provider = ImageDataProvider(imageId: state.imageId,
+                                             cacheKey: "preview-\(itemId.uuidString)",
+                                             imageQueryService: imageQueryService)
+            let request = ImageRequest(source: .provider(provider))
+            loadImage(request, with: pipeline, on: previewView)
+        }
     }
 
     private func readThumbnail(forItemId itemId: ClipItem.Identity) -> UIImage? {
