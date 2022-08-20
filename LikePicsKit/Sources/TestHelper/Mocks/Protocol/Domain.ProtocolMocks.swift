@@ -592,11 +592,12 @@ public class TagQueryMock: TagQuery {
 
 public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
     public init() { }
-    public init(userInterfaceStyle: AnyPublisher<UserInterfaceStyle, Never>, showHiddenItems: AnyPublisher<Bool, Never>, enabledICloudSync: AnyPublisher<Bool, Never>, ignoreCloudUnavailableAlert: AnyPublisher<Bool, Never>) {
+    public init(userInterfaceStyle: AnyPublisher<UserInterfaceStyle, Never>, showHiddenItems: AnyPublisher<Bool, Never>, enabledICloudSync: AnyPublisher<Bool, Never>, ignoreCloudUnavailableAlert: AnyPublisher<Bool, Never>, clipPreviewPlayConfiguration: AnyPublisher<ClipPreviewPlayConfiguration, Never>) {
         self._userInterfaceStyle = userInterfaceStyle
         self._showHiddenItems = showHiddenItems
         self._enabledICloudSync = enabledICloudSync
         self._ignoreCloudUnavailableAlert = ignoreCloudUnavailableAlert
+        self._clipPreviewPlayConfiguration = clipPreviewPlayConfiguration
     }
 
     public private(set) var userInterfaceStyleSetCallCount = 0
@@ -625,6 +626,13 @@ public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
     public var ignoreCloudUnavailableAlert: AnyPublisher<Bool, Never> {
         get { return _ignoreCloudUnavailableAlert }
         set { _ignoreCloudUnavailableAlert = newValue }
+    }
+
+    public private(set) var clipPreviewPlayConfigurationSetCallCount = 0
+    private var _clipPreviewPlayConfiguration: AnyPublisher<ClipPreviewPlayConfiguration, Never>! { didSet { clipPreviewPlayConfigurationSetCallCount += 1 } }
+    public var clipPreviewPlayConfiguration: AnyPublisher<ClipPreviewPlayConfiguration, Never> {
+        get { return _clipPreviewPlayConfiguration }
+        set { _clipPreviewPlayConfiguration = newValue }
     }
 
     public private(set) var readUserInterfaceStyleCallCount = 0
@@ -667,6 +675,16 @@ public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
         return false
     }
 
+    public private(set) var readClipPreviewPlayConfigurationCallCount = 0
+    public var readClipPreviewPlayConfigurationHandler: (() -> (ClipPreviewPlayConfiguration))?
+    public func readClipPreviewPlayConfiguration() -> ClipPreviewPlayConfiguration {
+        readClipPreviewPlayConfigurationCallCount += 1
+        if let readClipPreviewPlayConfigurationHandler = readClipPreviewPlayConfigurationHandler {
+            return readClipPreviewPlayConfigurationHandler()
+        }
+        fatalError("readClipPreviewPlayConfigurationHandler returns can't have a default value thus its handler must be set")
+    }
+
     public private(set) var setCallCount = 0
     public var setHandler: ((UserInterfaceStyle) -> Void)?
     public func set(userInterfaceStyle: UserInterfaceStyle) {
@@ -700,6 +718,15 @@ public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
         setIgnoreCloudUnavailableAlertCallCount += 1
         if let setIgnoreCloudUnavailableAlertHandler = setIgnoreCloudUnavailableAlertHandler {
             setIgnoreCloudUnavailableAlertHandler(ignoreCloudUnavailableAlert)
+        }
+    }
+
+    public private(set) var setClipPreviewPlayConfigurationCallCount = 0
+    public var setClipPreviewPlayConfigurationHandler: ((ClipPreviewPlayConfiguration) -> Void)?
+    public func set(clipPreviewPlayConfiguration: ClipPreviewPlayConfiguration) {
+        setClipPreviewPlayConfigurationCallCount += 1
+        if let setClipPreviewPlayConfigurationHandler = setClipPreviewPlayConfigurationHandler {
+            setClipPreviewPlayConfigurationHandler(clipPreviewPlayConfiguration)
         }
     }
 }
