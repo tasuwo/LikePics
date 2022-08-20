@@ -68,6 +68,18 @@ struct ClipPreviewPageViewReducer: Reducer {
             }
             return (nextState, .none)
 
+        case let .nextPageRequested(id):
+            guard state.playingAt == id else { return (nextState, .none) }
+            guard let nextIndexPath = state.clips.pickNextVisibleItem(from: state.currentIndexPath, by: state.playConfiguration) else { return (nextState, .none) }
+            nextState.currentIndexPath = nextIndexPath
+            nextState.isPageAnimated = true
+            nextState.pageChange = state.playConfiguration.transition.pageChange
+            let stream = Deferred { [interval = state.playConfiguration.interval] in
+                Just<Action?>(.nextPageRequested(id))
+                    .delay(for: .seconds(interval), tolerance: 0, scheduler: RunLoop.main)
+            }
+            return (nextState, [Effect(stream)])
+
         // MARK: Bar
 
         case let .barEventOccurred(event):
@@ -230,8 +242,13 @@ extension ClipPreviewPageViewReducer {
             return (nextState, .none)
 
         case .played:
-            // TODO:
-            return (nextState, .none)
+            let id = UUID()
+            nextState.playingAt = id
+            let stream = Deferred { [interval = state.playConfiguration.interval] in
+                Just<Action?>(.nextPageRequested(id))
+                    .delay(for: .seconds(interval), tolerance: 0, scheduler: RunLoop.main)
+            }
+            return (nextState, [Effect(stream)])
 
         case .playConfigRequested:
             // TODO:
@@ -305,6 +322,18 @@ extension ClipPreviewPageViewReducer {
                 nextState.alert = .error(L10n.clipCollectionErrorAtRemoveItemFromClip)
             }
             return (nextState, .none)
+        }
+    }
+}
+
+private extension ClipPreviewPlayConfiguration.Transition {
+    var pageChange: ClipPreviewPageViewState.PageChange {
+        switch self {
+        case .forward:
+            return .forward
+
+        case .reverse:
+            return .reverse
         }
     }
 }

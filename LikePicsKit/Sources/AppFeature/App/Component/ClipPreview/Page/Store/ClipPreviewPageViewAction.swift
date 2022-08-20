@@ -4,6 +4,7 @@
 
 import CompositeKit
 import Domain
+import Foundation
 
 enum ClipPreviewPageViewAction: Action {
     // MARK: View Life-Cycle
@@ -21,6 +22,7 @@ enum ClipPreviewPageViewAction: Action {
     // MARK: Transition
 
     case clipInformationViewPresented
+    case nextPageRequested(UUID)
 
     // MARK: Bar
 

@@ -25,6 +25,7 @@ struct ClipPreviewPageViewState: Equatable {
 
     var clips: PreviewingClips
     var playConfiguration: ClipPreviewPlayConfiguration
+    var playingAt: UUID?
 
     var currentIndexPath: ClipCollection.IndexPath
     var pageChange: PageChange?
@@ -50,6 +51,7 @@ extension ClipPreviewPageViewState {
         alert = nil
         isDismissed = false
         isPageAnimated = true
+        playingAt = nil
     }
 }
 

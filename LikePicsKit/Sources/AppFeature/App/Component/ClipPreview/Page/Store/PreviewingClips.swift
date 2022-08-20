@@ -123,40 +123,122 @@ struct PreviewingClips: Equatable {
     }
 
     func pickNextVisibleItem(ofItemHaving itemId: ClipItem.Identity) -> ClipItem? {
+        pickNextVisibleItem(ofItemHaving: itemId, range: .overall, isLoopOn: false)
+    }
+
+    func pickPreviousVisibleItem(ofItemHaving itemId: ClipItem.Identity) -> ClipItem? {
+        pickPreviousVisibleItem(ofItemHaving: itemId, range: .overall, isLoopOn: false)
+    }
+
+    func pickNextVisibleItem(from indexPath: ClipCollection.IndexPath, by config: ClipPreviewPlayConfiguration) -> ClipCollection.IndexPath? {
+        guard let currentItem = clipItem(atIndexPath: indexPath) else { return nil }
+
+        switch config.order {
+        case .forward:
+            guard let nextItem = pickNextVisibleItem(ofItemHaving: currentItem.id, range: config.range, isLoopOn: config.isLoopOn) else { return nil }
+            return self.indexPath(ofItemHaving: nextItem.id)
+
+        case .reverse:
+            guard let nextItem = pickPreviousVisibleItem(ofItemHaving: currentItem.id, range: config.range, isLoopOn: config.isLoopOn) else { return nil }
+            return self.indexPath(ofItemHaving: nextItem.id)
+
+        case .random:
+            switch config.range {
+            case .overall:
+                guard let clipId = filteredClipIds.randomElement(),
+                      let item = clip(having: clipId)?.items.randomElement() else { return nil }
+                return self.indexPath(ofItemHaving: item.id)
+
+            case .clip:
+                guard let item = clip(atIndex: indexPath.clipIndex)?.items.randomElement() else { return nil }
+                return self.indexPath(ofItemHaving: item.id)
+            }
+        }
+    }
+
+    private func pickNextVisibleItem(ofItemHaving itemId: ClipItem.Identity, range: ClipPreviewPlayConfiguration.Range, isLoopOn: Bool) -> ClipItem? {
         guard let indexPath = indexPathByClipItemId[itemId] else { return nil }
         guard value.indices.contains(indexPath.clipIndex) else { return nil }
 
         let currentClip = value[indexPath.clipIndex]
 
         if indexPath.itemIndex + 1 < currentClip.items.count {
+            // Clip内に次のItemが存在した
             return currentClip.items[indexPath.itemIndex + 1]
         } else {
-            guard indexPath.clipIndex + 1 < value.count else { return nil }
-            for clipIndex in indexPath.clipIndex + 1 ... value.count - 1 {
-                if filteredClipIds.contains(value[clipIndex].id) {
-                    return value[clipIndex].items.first
+            // Clip内に次のItemが存在しなかった
+            if indexPath.clipIndex + 1 < value.count {
+                // 次のClipが存在した
+                if isLoopOn, range == .clip {
+                    // Clipの先頭のItemに戻す
+                    return currentClip.items.first
+                } else {
+                    for clipIndex in indexPath.clipIndex + 1 ... value.count - 1 {
+                        if filteredClipIds.contains(value[clipIndex].id) {
+                            return value[clipIndex].items.first
+                        }
+                    }
+                    return nil
+                }
+            } else {
+                // 最後のClipだった
+                if isLoopOn {
+                    switch range {
+                    case .clip:
+                        // Clipの先頭のItemに戻す
+                        return currentClip.items.first
+
+                    case .overall:
+                        // 先頭のClipの先頭のItemに戻す
+                        return value.first?.items.first
+                    }
+                } else {
+                    return nil
                 }
             }
-            return nil
         }
     }
 
-    func pickPreviousVisibleItem(ofItemHaving itemId: ClipItem.Identity) -> ClipItem? {
+    private func pickPreviousVisibleItem(ofItemHaving itemId: ClipItem.Identity, range: ClipPreviewPlayConfiguration.Range, isLoopOn: Bool) -> ClipItem? {
         guard let indexPath = indexPathByClipItemId[itemId] else { return nil }
         guard value.indices.contains(indexPath.clipIndex) else { return nil }
 
         let currentClip = value[indexPath.clipIndex]
 
         if indexPath.itemIndex - 1 >= 0 {
+            // Clip内に前のItemが存在した
             return currentClip.items[indexPath.itemIndex - 1]
         } else {
-            guard indexPath.clipIndex - 1 >= 0 else { return nil }
-            for clipIndex in (0 ... indexPath.clipIndex - 1).reversed() {
-                if filteredClipIds.contains(value[clipIndex].id) {
-                    return value[clipIndex].items.last
+            // Clip内に前のItemが存在しなかった
+            if indexPath.clipIndex - 1 >= 0 {
+                // 前のClipが存在した
+                if isLoopOn, range == .clip {
+                    // Clipの末尾のItemに戻す
+                    return currentClip.items.last
+                } else {
+                    for clipIndex in (0 ... indexPath.clipIndex - 1).reversed() {
+                        if filteredClipIds.contains(value[clipIndex].id) {
+                            return value[clipIndex].items.last
+                        }
+                    }
+                    return nil
+                }
+            } else {
+                // 最初のClipだった
+                if isLoopOn {
+                    switch range {
+                    case .clip:
+                        // Clipの末尾のItemに戻す
+                        return currentClip.items.last
+
+                    case .overall:
+                        // 末尾のClipの末尾のItemに戻す
+                        return value.last?.items.last
+                    }
+                } else {
+                    return nil
                 }
             }
-            return nil
         }
     }
 
