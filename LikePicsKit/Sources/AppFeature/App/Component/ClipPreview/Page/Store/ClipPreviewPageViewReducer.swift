@@ -51,6 +51,10 @@ struct ClipPreviewPageViewReducer: Reducer {
         case let .settingUpdated(isSomeItemsHidden: isSomeItemsHidden):
             return Self.performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state)
 
+        case let .playConfigUpdated(config: config):
+            nextState.playConfiguration = config
+            return (nextState, .none)
+
         // MARK: Transition
 
         case .clipInformationViewPresented:
@@ -146,6 +150,11 @@ extension ClipPreviewPageViewReducer {
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
         effects.append(settingsEffect)
+
+        let playConfigStream = dependency.userSettingStorage.clipPreviewPlayConfiguration
+            .map { Action.playConfigUpdated(config: $0) as Action? }
+        let playConfigEffect = Effect(playConfigStream)
+        effects.append(playConfigEffect)
 
         return (state, effects)
     }

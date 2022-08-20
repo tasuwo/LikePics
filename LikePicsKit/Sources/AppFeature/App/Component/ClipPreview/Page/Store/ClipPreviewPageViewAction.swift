@@ -16,6 +16,7 @@ enum ClipPreviewPageViewAction: Action {
     case failedToLoadClip
     case clipsUpdated([Clip])
     case settingUpdated(isSomeItemsHidden: Bool)
+    case playConfigUpdated(config: ClipPreviewPlayConfiguration)
 
     // MARK: Transition
 

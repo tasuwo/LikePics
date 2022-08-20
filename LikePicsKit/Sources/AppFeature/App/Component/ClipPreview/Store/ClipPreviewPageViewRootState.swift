@@ -12,11 +12,13 @@ struct ClipPreviewPageViewRootState: Equatable {
 
 extension ClipPreviewPageViewRootState {
     init(clips: [Clip],
+         playConfiguration: ClipPreviewPlayConfiguration,
          query: ClipPreviewPageQuery,
          isSomeItemsHidden: Bool,
          indexPath: ClipCollection.IndexPath)
     {
         pageViewState = ClipPreviewPageViewState(clips: clips,
+                                                 playConfiguration: playConfiguration,
                                                  query: query,
                                                  isSomeItemsHidden: isSomeItemsHidden,
                                                  indexPath: indexPath)

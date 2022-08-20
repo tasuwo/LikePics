@@ -24,6 +24,7 @@ struct ClipPreviewPageViewState: Equatable {
     let query: ClipPreviewPageQuery
 
     var clips: PreviewingClips
+    var playConfiguration: ClipPreviewPlayConfiguration
 
     var currentIndexPath: ClipCollection.IndexPath
     var pageChange: PageChange?
@@ -37,6 +38,7 @@ struct ClipPreviewPageViewState: Equatable {
 
 extension ClipPreviewPageViewState {
     init(clips: [Clip],
+         playConfiguration: ClipPreviewPlayConfiguration,
          query: ClipPreviewPageQuery,
          isSomeItemsHidden: Bool,
          indexPath: ClipCollection.IndexPath)
@@ -44,6 +46,7 @@ extension ClipPreviewPageViewState {
         self.query = query
         self.currentIndexPath = indexPath
         self.clips = .init(clips: clips, isSomeItemsHidden: isSomeItemsHidden)
+        self.playConfiguration = playConfiguration
         alert = nil
         isDismissed = false
         isPageAnimated = true

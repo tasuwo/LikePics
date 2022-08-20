@@ -157,6 +157,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                     userSettingStorage: container.userSettingStorage)
 
         let state = ClipPreviewPageViewRootState(clips: clips,
+                                                 playConfiguration: container.userSettingStorage.readClipPreviewPlayConfiguration(),
                                                  query: query,
                                                  isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems(),
                                                  indexPath: indexPath)
