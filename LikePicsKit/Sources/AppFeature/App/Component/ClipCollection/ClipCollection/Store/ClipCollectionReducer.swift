@@ -46,8 +46,7 @@ struct ClipCollectionReducer: Reducer {
             nextState.clips = state.clips.selected(clipId, allowsMultipleSelection: state.operation.isAllowedMultipleSelection)
 
             if !state.operation.isAllowedMultipleSelection {
-                dependency.router.showClipPreviewView(filteredClipIds: state.clips.filteredIds,
-                                                      clips: state.clips.orderedEntities(),
+                dependency.router.showClipPreviewView(clips: state.clips.orderedEntities(),
                                                       query: .clips(state.source),
                                                       indexPath: ClipCollection.IndexPath(clipIndex: clip.index, itemIndex: 0))
             }

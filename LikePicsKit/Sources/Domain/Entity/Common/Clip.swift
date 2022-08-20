@@ -58,9 +58,8 @@ public struct Clip: Codable, Equatable, Hashable {
     // MARK: - Methods
 
     public func removedItem(at index: Int) -> Self {
-        let newItems = self.items.enumerated()
-            .filter { $0.offset != index }
-            .map { $0.element }
+        var newItems = self.items
+        newItems.remove(at: index)
         return .init(id: self.id,
                      description: self.description,
                      items: newItems,

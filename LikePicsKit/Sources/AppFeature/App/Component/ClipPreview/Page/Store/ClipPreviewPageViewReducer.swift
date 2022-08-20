@@ -36,17 +36,6 @@ struct ClipPreviewPageViewReducer: Reducer {
 
         // MARK: State Observation
 
-        case let .indicesCalculated(indexByClipId: indexByClipId,
-                                    indexPathByClipItemId: indexPathByClipItemId):
-            guard indexByClipId != nextState.indexByClipId
-                || indexPathByClipItemId != nextState.indexPathByClipItemId
-            else {
-                return (nextState, .none)
-            }
-            nextState.indexByClipId = indexByClipId
-            nextState.indexPathByClipItemId = indexPathByClipItemId
-            return (nextState, .none)
-
         case let .pageChanged(indexPath: indexPath):
             nextState.pageChange = nil
             nextState.currentIndexPath = indexPath
@@ -113,7 +102,7 @@ struct ClipPreviewPageViewReducer: Reducer {
             return (nextState, .none)
 
         case let .itemRequested(itemId):
-            guard let itemId = itemId, let indexPath = state.indexPathByClipItemId[itemId] else {
+            guard let itemId = itemId, let indexPath = state.clips.indexPath(ofItemHaving: itemId) else {
                 return (nextState, .none)
             }
             nextState.isPageAnimated = false
@@ -169,14 +158,14 @@ extension ClipPreviewPageViewReducer {
                                       previousState: State) -> (State, [Effect<Action>])
     {
         performFilter(clips: clips,
-                      isSomeItemsHidden: previousState.isSomeItemsHidden,
+                      isSomeItemsHidden: previousState.clips.isSomeItemsHidden,
                       previousState: previousState)
     }
 
     private static func performFilter(isSomeItemsHidden: Bool,
                                       previousState: State) -> (State, [Effect<Action>])
     {
-        performFilter(clips: previousState.clips,
+        performFilter(clips: previousState.clips.value,
                       isSomeItemsHidden: isSomeItemsHidden,
                       previousState: previousState)
     }
@@ -187,41 +176,12 @@ extension ClipPreviewPageViewReducer {
     {
         var nextState = previousState
 
-        let calcStream = Deferred {
-            Future<Action?, Never> { [clips] promise in
-                var indexByClipId: [Clip.Identity: Int] = [:]
-                var indexPathByClipItemId: [ClipItem.Identity: ClipCollection.IndexPath] = [:]
-                DispatchQueue.global().async {
-                    zip(clips.indices, clips).forEach { clipIndex, clip in
-                        indexByClipId[clip.id] = clipIndex
-                        zip(clip.items.indices, clip.items).forEach { itemIndex, item in
-                            indexPathByClipItemId[item.id] = ClipCollection.IndexPath(clipIndex: clipIndex, itemIndex: itemIndex)
-                        }
-                    }
+        nextState.clips = PreviewingClips(clips: clips, isSomeItemsHidden: isSomeItemsHidden)
+        nextState = coordinateCurrentIndexPath(previousState: previousState,
+                                               nextClips: clips,
+                                               nextFilteredClipIds: nextState.clips.filteredClipIds)
 
-                    promise(.success(.indicesCalculated(indexByClipId: indexByClipId,
-                                                        indexPathByClipItemId: indexPathByClipItemId)))
-                }
-            }
-        }
-
-        // 差分があった場合のみ後続で計算を行う
-        guard previousState.isSomeItemsHidden != isSomeItemsHidden
-            || previousState.clips != clips
-        else {
-            return (previousState, [Effect(calcStream)])
-        }
-
-        let nextFilteredClipIds = clips
-            .filter { isSomeItemsHidden ? !$0.isHidden : true }
-            .map { $0.id }
-        nextState = coordinateCurrentIndexPath(previousState: nextState, nextClips: clips, nextFilteredClipIds: Set(nextFilteredClipIds))
-
-        nextState.clips = clips
-        nextState.filteredClipIds = Set(nextFilteredClipIds)
-        nextState.isSomeItemsHidden = isSomeItemsHidden
-
-        return (nextState, [Effect(calcStream)])
+        return (nextState, [])
     }
 }
 
@@ -382,24 +342,12 @@ extension ClipPreviewPageViewReducer {
                 return (nextState, .none)
             }
 
-            let clipIndex = state.currentIndexPath.clipIndex
-            let itemIndex = state.currentIndexPath.itemIndex
-
-            guard nextState.clips.indices.contains(clipIndex),
-                  nextState.clips[clipIndex].items.indices.contains(itemIndex)
-            else {
-                return (nextState, .none)
-            }
-
             switch dependency.clipCommandService.deleteClips(having: [currentClipId]) {
             case .success:
-                var nextClips = nextState.clips
-                nextClips.remove(at: clipIndex)
-
+                nextState.clips = nextState.clips.removedClip(atIndex: state.currentIndexPath.clipIndex)
                 nextState = coordinateCurrentIndexPath(previousState: nextState,
-                                                       nextClips: nextClips,
-                                                       nextFilteredClipIds: nextState.filteredClipIds)
-                nextState.clips = nextClips
+                                                       nextClips: nextState.clips.value,
+                                                       nextFilteredClipIds: nextState.clips.filteredClipIds)
 
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtDeleteClip)
@@ -411,24 +359,12 @@ extension ClipPreviewPageViewReducer {
                 return (nextState, .none)
             }
 
-            let clipIndex = state.currentIndexPath.clipIndex
-            let itemIndex = state.currentIndexPath.itemIndex
-
-            guard nextState.clips.indices.contains(clipIndex),
-                  nextState.clips[clipIndex].items.indices.contains(itemIndex)
-            else {
-                return (nextState, .none)
-            }
-
             switch dependency.clipCommandService.deleteClipItem(item) {
             case .success:
-                var nextClips = state.clips
-                nextClips[clipIndex] = state.clips[clipIndex].removedItem(at: itemIndex)
-
+                nextState.clips = nextState.clips.removedClipItem(atIndexPath: state.currentIndexPath)
                 nextState = coordinateCurrentIndexPath(previousState: nextState,
-                                                       nextClips: nextClips,
-                                                       nextFilteredClipIds: nextState.filteredClipIds)
-                nextState.clips = nextClips
+                                                       nextClips: nextState.clips.value,
+                                                       nextFilteredClipIds: nextState.clips.filteredClipIds)
 
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtRemoveItemFromClip)

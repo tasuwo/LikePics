@@ -137,13 +137,11 @@ extension SceneDependencyContainer: Router {
         return true
     }
 
-    public func showClipPreviewView(filteredClipIds: Set<Clip.Identity>,
-                                    clips: [Clip],
+    public func showClipPreviewView(clips: [Clip],
                                     query: ClipPreviewPageQuery,
                                     indexPath: ClipCollection.IndexPath) -> Bool
     {
-        let viewController = makeClipPreviewPageViewController(filteredClipIds: filteredClipIds,
-                                                               clips: clips,
+        let viewController = makeClipPreviewPageViewController(clips: clips,
                                                                query: query,
                                                                indexPath: indexPath)
         guard let detailViewController = rootViewController?.currentViewController else { return false }

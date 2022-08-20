@@ -30,7 +30,7 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private var currentIndexPath: ClipCollection.IndexPath? {
         guard let viewController = currentViewController else { return nil }
-        return store.stateValue.indexPath(of: viewController.itemId)
+        return store.stateValue.clips.indexPath(ofItemHaving: viewController.itemId)
     }
 
     private let transitionDispatcher: ClipPreviewPageTransitionDispatcherType
@@ -404,13 +404,13 @@ extension ClipPreviewPageViewController: UIPageViewControllerDataSource {
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         guard let viewController = viewController as? ClipPreviewViewController else { return nil }
-        guard let item = store.stateValue.item(before: viewController.itemId) else { return nil }
+        guard let item = store.stateValue.clips.pickPreviousItem(ofItemHaving: viewController.itemId) else { return nil }
         return factory.makeClipPreviewViewController(for: item)
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         guard let viewController = viewController as? ClipPreviewViewController else { return nil }
-        guard let item = store.stateValue.item(after: viewController.itemId) else { return nil }
+        guard let item = store.stateValue.clips.pickNextItem(ofItemHaving: viewController.itemId) else { return nil }
         return factory.makeClipPreviewViewController(for: item)
     }
 }
@@ -471,7 +471,7 @@ extension ClipPreviewPageViewController: ClipItemInformationPresentable {
     // MARK: - ClipItemInformationPresentable
 
     func isPreviewing(_ animator: ClipItemInformationAnimator, clipItem: InfoViewingClipItem) -> Bool {
-        guard let indexPath = store.stateValue.indexPathByClipItemId[clipItem.itemId] else {
+        guard let indexPath = store.stateValue.clips.indexPath(ofItemHaving: clipItem.itemId) else {
             return false
         }
         return store.stateValue.currentIndexPath == indexPath

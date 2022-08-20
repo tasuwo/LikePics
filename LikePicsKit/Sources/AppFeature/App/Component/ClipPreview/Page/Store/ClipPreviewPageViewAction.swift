@@ -12,8 +12,6 @@ enum ClipPreviewPageViewAction: Action {
 
     // MARK: State Observation
 
-    case indicesCalculated(indexByClipId: [Clip.Identity: Int],
-                           indexPathByClipItemId: [ClipItem.Identity: ClipCollection.IndexPath])
     case pageChanged(indexPath: ClipCollection.IndexPath)
     case failedToLoadClip
     case clipsUpdated([Clip])
