@@ -42,6 +42,12 @@ private extension ClipPreviewPageBarAction {
         case .infoButtonTapped:
             return .infoRequested
 
+        case .playButtonTapped:
+            return .played
+
+        case .playConfigButtonTapped:
+            return .playConfigRequested
+
         case .browseButtonTapped:
             return .browsed
 

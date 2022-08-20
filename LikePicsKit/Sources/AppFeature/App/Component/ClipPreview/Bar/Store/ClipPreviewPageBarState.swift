@@ -21,7 +21,7 @@ struct ClipPreviewPageBarState: Equatable {
             case add
             case share
             case delete
-            case info
+            case option
         }
 
         let kind: Kind

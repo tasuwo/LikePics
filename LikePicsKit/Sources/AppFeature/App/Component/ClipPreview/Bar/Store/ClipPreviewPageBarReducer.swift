@@ -55,7 +55,9 @@ struct ClipPreviewPageBarReducer: Reducer {
         case .backButtonTapped,
              .listButtonTapped,
              .infoButtonTapped,
-             .browseButtonTapped:
+             .browseButtonTapped,
+             .playButtonTapped,
+             .playConfigButtonTapped:
             // 画面遷移中であった場合、ボタン操作は無視する
             guard dependency.transitionLock.isFree else { return (nextState, .none) }
             return (nextState, .none)
@@ -137,6 +139,7 @@ private extension ClipPreviewPageBarState {
                 .init(kind: .back, isEnabled: true)
             ]
             nextState.rightBarButtonItems = [
+                .init(kind: .option, isEnabled: true),
                 .init(kind: .browse, isEnabled: existsUrlAtCurrentItem),
                 .init(kind: .add, isEnabled: true),
                 .init(kind: .list, isEnabled: true),
@@ -154,7 +157,7 @@ private extension ClipPreviewPageBarState {
             nextState.leftBarButtonItems = [
                 .init(kind: .back, isEnabled: true)
             ]
-            nextState.rightBarButtonItems = [.init(kind: .info, isEnabled: true)]
+            nextState.rightBarButtonItems = [.init(kind: .option, isEnabled: true)]
         }
 
         return nextState

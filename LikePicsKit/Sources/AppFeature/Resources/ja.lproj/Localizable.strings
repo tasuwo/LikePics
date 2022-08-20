@@ -251,6 +251,9 @@
 // MARK: Clip Preview
 
 "clip_preview_error_at_load_image" = "画像の読み込みに失敗しました";
+"clip_preview.option_menu_item_title.info" = "情報";
+"clip_preview.option_menu_item_title.play" = "再生";
+"clip_preview.option_menu_item_title.play_config" = "再生設定";
 
 // MARK: Clip Information
 

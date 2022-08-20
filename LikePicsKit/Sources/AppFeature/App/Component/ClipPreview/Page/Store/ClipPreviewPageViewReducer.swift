@@ -220,6 +220,14 @@ extension ClipPreviewPageViewReducer {
             }
             return (nextState, .none)
 
+        case .played:
+            // TODO:
+            return (nextState, .none)
+
+        case .playConfigRequested:
+            // TODO:
+            return (nextState, .none)
+
         case .browsed:
             if let url = state.currentItem?.url {
                 dependency.router.open(url)

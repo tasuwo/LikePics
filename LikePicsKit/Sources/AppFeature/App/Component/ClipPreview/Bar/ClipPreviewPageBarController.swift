@@ -28,7 +28,7 @@ class ClipPreviewPageBarController {
     private var addItem: UIBarButtonItem!
     private var shareItem: UIBarButtonItem!
     private var deleteItem: UIBarButtonItem!
-    private var infoItem: UIBarButtonItem!
+    private var optionItem: UIBarButtonItem!
     private var listItem: UIBarButtonItem!
     private var backItem: UIBarButtonItem!
 
@@ -277,6 +277,7 @@ extension ClipPreviewPageBarController {
             action: nil
         )
         flexibleItem.accessibilityIdentifier = "\(String(describing: Self.self)).flexibleItem"
+
         browseItem = UIBarButtonItem(
             image: UIImage(systemName: "globe"),
             primaryAction: .init(handler: { [weak self] _ in
@@ -285,6 +286,7 @@ extension ClipPreviewPageBarController {
             menu: nil
         )
         browseItem.accessibilityIdentifier = "\(String(describing: Self.self)).browseItem"
+
         addItem = UIBarButtonItem(
             systemItem: .add,
             primaryAction: .init(handler: { [weak self] _ in
@@ -293,6 +295,7 @@ extension ClipPreviewPageBarController {
             menu: nil
         )
         addItem.accessibilityIdentifier = "\(String(describing: Self.self)).addItem"
+
         shareItem = UIBarButtonItem(
             image: UIImage(systemName: "square.and.arrow.up"),
             primaryAction: .init(handler: { [weak self] _ in
@@ -301,6 +304,7 @@ extension ClipPreviewPageBarController {
             menu: nil
         )
         shareItem.accessibilityIdentifier = "\(String(describing: Self.self)).shareItem"
+
         deleteItem = UIBarButtonItem(
             systemItem: .trash,
             primaryAction: .init(handler: { [weak self] _ in
@@ -309,14 +313,23 @@ extension ClipPreviewPageBarController {
             menu: nil
         )
         deleteItem.accessibilityIdentifier = "\(String(describing: Self.self)).deleteItem"
-        infoItem = UIBarButtonItem(
-            image: UIImage(systemName: "info.circle"),
-            primaryAction: .init(handler: { [weak self] _ in
-                self?.store.execute(.infoButtonTapped)
-            }),
-            menu: nil
+
+        let infoItem = UIAction(title: L10n.ClipPreview.OptionMenuItemTitle.info, image: UIImage(systemName: "info.circle")) { [weak self] _ in
+            self?.store.execute(.infoButtonTapped)
+        }
+        let playItem = UIAction(title: L10n.ClipPreview.OptionMenuItemTitle.play, image: UIImage(systemName: "play")) { [weak self] _ in
+            self?.store.execute(.playButtonTapped)
+        }
+        let playConfigItem = UIAction(title: L10n.ClipPreview.OptionMenuItemTitle.playConfig, image: UIImage(systemName: "gearshape")) { [weak self] _ in
+            self?.store.execute(.playConfigButtonTapped)
+        }
+        let optionMenu = UIMenu(title: "", children: [infoItem, playItem, playConfigItem])
+        optionItem = UIBarButtonItem(
+            image: UIImage(systemName: "ellipsis"),
+            menu: optionMenu
         )
-        infoItem.accessibilityIdentifier = "\(String(describing: Self.self)).infoItem"
+        optionItem.accessibilityIdentifier = "\(String(describing: Self.self)).ellipsis"
+
         listItem = UIBarButtonItem(
             image: UIImage(systemName: "list.bullet"),
             primaryAction: .init(handler: { [weak self] _ in
@@ -325,6 +338,7 @@ extension ClipPreviewPageBarController {
             menu: nil
         )
         listItem.accessibilityIdentifier = "\(String(describing: Self.self)).listItem"
+
         backItem = UIBarButtonItem(
             image: UIImage(systemName: "chevron.left",
                            withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)),
@@ -403,8 +417,8 @@ extension ClipPreviewPageBarController {
             case .delete:
                 return deleteItem
 
-            case .info:
-                return infoItem
+            case .option:
+                return optionItem
             }
         }()
         buttonItem.isEnabled = item.isEnabled

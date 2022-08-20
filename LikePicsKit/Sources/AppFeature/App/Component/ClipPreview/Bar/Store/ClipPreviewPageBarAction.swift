@@ -25,6 +25,8 @@ enum ClipPreviewPageBarAction: Action {
 
     case backButtonTapped
     case infoButtonTapped
+    case playButtonTapped
+    case playConfigButtonTapped
     case browseButtonTapped
     case addButtonTapped
     case shareButtonTapped

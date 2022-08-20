@@ -251,6 +251,9 @@
 // MARK: Clip Preview
 
 "clip_preview_error_at_load_image" = "Failed to load image";
+"clip_preview.option_menu_item_title.info" = "Info";
+"clip_preview.option_menu_item_title.play" = "Play";
+"clip_preview.option_menu_item_title.play_config" = "Play Configuration";
 
 // MARK: Clip Information
 

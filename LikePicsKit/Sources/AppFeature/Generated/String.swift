@@ -476,6 +476,17 @@ internal enum L10n {
     internal static let urlContextMenuCopy = L10n.tr("Localizable", "url_context_menu_copy")
     /// 開く
     internal static let urlContextMenuOpen = L10n.tr("Localizable", "url_context_menu_open")
+
+    internal enum ClipPreview {
+        internal enum OptionMenuItemTitle {
+            /// 情報
+            internal static let info = L10n.tr("Localizable", "clip_preview.option_menu_item_title.info")
+            /// 再生
+            internal static let play = L10n.tr("Localizable", "clip_preview.option_menu_item_title.play")
+            /// 再生設定
+            internal static let playConfig = L10n.tr("Localizable", "clip_preview.option_menu_item_title.play_config")
+        }
+    }
 }
 
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
