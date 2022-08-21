@@ -41,6 +41,7 @@ let package = Package(
                 "AlbumSelectionModalFeature",
                 "TagSelectionModalFeature",
                 "ClipCreationFeature",
+                "ClipPreviewPlayConfigurationModalFeature",
                 "LikePicsUIKit",
                 "Persistence",
                 "Smoothie"
@@ -105,6 +106,16 @@ let package = Package(
                 "Common",
                 "CompositeKit",
                 .product(name: "Erik", package: "Erik")
+            ]
+        ),
+        .target(
+            name: "ClipPreviewPlayConfigurationModalFeature",
+            dependencies: [
+                "LikePicsUIKit",
+                "Domain",
+                "Environment",
+                "Common",
+                "CompositeKit"
             ]
         ),
 

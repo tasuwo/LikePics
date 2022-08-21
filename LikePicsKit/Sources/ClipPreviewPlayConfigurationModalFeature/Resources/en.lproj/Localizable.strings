@@ -1,0 +1,32 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Tasuku Tozawa on 2022/08/20.
+  
+*/
+
+"root.title" = "Play Setting";
+
+"root.menu_title.interval" = "Interval";
+"root.menu_title.loop" = "Loop";
+"root.menu_title.animation" = "Animation";
+"root.menu_title.order" = "Order";
+"root.menu_title.range" = "Range";
+
+"root.menu_item_interval.edit_button" = "Edit";
+"root.menu_item_interval.seconds" = "%@ seconds";
+
+"root.interval_alert.title" = "Interval";
+"root.interval_alert.message" = "Specifies the number of seconds to switching images in the range of %@ to %@ seconds.";
+
+"any.item_animation_name.forward" = "Slide-in from left";
+"any.item_animation_name.reverse" = "Slide-in from right";
+"any.item_animation_name.off" = "Off";
+
+"any.item_order_name.forward" = "Default";
+"any.item_order_name.reverse" = "Reverse";
+"any.item_order_name.random" = "Random";
+
+"any.item_range_name.overall" = "Overall clips";
+"any.item_range_name.clip" = "Single clip";

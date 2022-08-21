@@ -34,6 +34,11 @@ strings:
       outputs:
         - templateName: structured-swift5
           output: LikePicsKit/Sources/AlbumMultiSelectionModalFeature/Generated/String.swift
+    - inputs:
+        - LikePicsKit/Sources/ClipPreviewPlayConfigurationModalFeature/Resources/ja.lproj
+      outputs:
+        - templateName: structured-swift5
+          output: LikePicsKit/Sources/ClipPreviewPlayConfigurationModalFeature/Generated/String.swift
 xcassets:
     - inputs:
         - LikePicsKit/Sources/LikePicsUIKit/Resources/Assets.xcassets

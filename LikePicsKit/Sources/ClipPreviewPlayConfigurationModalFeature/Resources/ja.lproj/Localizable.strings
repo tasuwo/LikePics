@@ -1,0 +1,32 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Tasuku Tozawa on 2022/08/20.
+  
+*/
+
+"root.title" = "再生設定";
+
+"root.menu_title.interval" = "再生間隔";
+"root.menu_title.loop" = "ループ";
+"root.menu_title.animation" = "アニメーション";
+"root.menu_title.order" = "順序";
+"root.menu_title.range" = "範囲";
+
+"root.menu_item_interval.edit_button" = "編集";
+"root.menu_item_interval.seconds" = "%@秒";
+
+"root.interval_alert.title" = "再生間隔";
+"root.interval_alert.message" = "画像が切り替わる間隔を%@秒から%@秒の範囲で設定します";
+
+"any.item_animation_name.forward" = "左からスライド";
+"any.item_animation_name.reverse" = "右からスライド";
+"any.item_animation_name.off" = "オフ";
+
+"any.item_order_name.forward" = "通常";
+"any.item_order_name.reverse" = "逆順";
+"any.item_order_name.random" = "ランダム";
+
+"any.item_range_name.overall" = "全てのクリップ";
+"any.item_range_name.clip" = "単一のクリップ";
