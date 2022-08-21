@@ -5,15 +5,16 @@
 import Foundation
 
 public struct ClipPreviewPlayConfiguration: Equatable, Codable {
-    public static let `default`: Self = .init(transition: .forward,
+    public static let `default`: Self = .init(animation: .forward,
                                               order: .forward,
                                               range: .overall,
-                                              isLoopOn: false,
+                                              loopEnabled: false,
                                               interval: 5.0)
 
-    public enum Transition: Equatable, Codable {
+    public enum Animation: Equatable, Codable {
         case forward
         case reverse
+        case off
     }
 
     public enum Order: Equatable, Codable {
@@ -27,19 +28,19 @@ public struct ClipPreviewPlayConfiguration: Equatable, Codable {
         case clip
     }
 
-    public let transition: Transition
+    public let animation: Animation
     public let order: Order
     public let range: Range
-    public let isLoopOn: Bool
+    public let loopEnabled: Bool
     public let interval: TimeInterval
 
     // MARK: - Initializers
 
-    public init(transition: Transition, order: Order, range: Range, isLoopOn: Bool, interval: TimeInterval) {
-        self.transition = transition
+    public init(animation: Animation, order: Order, range: Range, loopEnabled: Bool, interval: TimeInterval) {
+        self.animation = animation
         self.order = order
         self.range = range
-        self.isLoopOn = isLoopOn
+        self.loopEnabled = loopEnabled
         self.interval = interval
     }
 }

@@ -72,8 +72,8 @@ struct ClipPreviewPageViewReducer: Reducer {
             guard state.playingAt == id else { return (nextState, .none) }
             guard let nextIndexPath = state.clips.pickNextVisibleItem(from: state.currentIndexPath, by: state.playConfiguration) else { return (nextState, .none) }
             nextState.currentIndexPath = nextIndexPath
-            nextState.isPageAnimated = true
-            nextState.pageChange = state.playConfiguration.transition.pageChange
+            nextState.isPageAnimated = state.playConfiguration.animation != .off
+            nextState.pageChange = state.playConfiguration.animation.pageChange
             let stream = Deferred { [interval = state.playConfiguration.interval] in
                 Just<Action?>(.nextPageRequested(id))
                     .delay(for: .seconds(interval), tolerance: 0, scheduler: RunLoop.main)
@@ -326,10 +326,10 @@ extension ClipPreviewPageViewReducer {
     }
 }
 
-private extension ClipPreviewPlayConfiguration.Transition {
+private extension ClipPreviewPlayConfiguration.Animation {
     var pageChange: ClipPreviewPageViewState.PageChange {
         switch self {
-        case .forward:
+        case .forward, .off:
             return .forward
 
         case .reverse:

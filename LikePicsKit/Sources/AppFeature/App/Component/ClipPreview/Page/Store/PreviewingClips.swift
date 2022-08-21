@@ -123,11 +123,11 @@ struct PreviewingClips: Equatable {
     }
 
     func pickNextVisibleItem(ofItemHaving itemId: ClipItem.Identity) -> ClipItem? {
-        pickNextVisibleItem(ofItemHaving: itemId, range: .overall, isLoopOn: false)
+        pickNextVisibleItem(ofItemHaving: itemId, range: .overall, loopEnabled: false)
     }
 
     func pickPreviousVisibleItem(ofItemHaving itemId: ClipItem.Identity) -> ClipItem? {
-        pickPreviousVisibleItem(ofItemHaving: itemId, range: .overall, isLoopOn: false)
+        pickPreviousVisibleItem(ofItemHaving: itemId, range: .overall, loopEnabled: false)
     }
 
     func pickNextVisibleItem(from indexPath: ClipCollection.IndexPath, by config: ClipPreviewPlayConfiguration) -> ClipCollection.IndexPath? {
@@ -135,11 +135,11 @@ struct PreviewingClips: Equatable {
 
         switch config.order {
         case .forward:
-            guard let nextItem = pickNextVisibleItem(ofItemHaving: currentItem.id, range: config.range, isLoopOn: config.isLoopOn) else { return nil }
+            guard let nextItem = pickNextVisibleItem(ofItemHaving: currentItem.id, range: config.range, loopEnabled: config.loopEnabled) else { return nil }
             return self.indexPath(ofItemHaving: nextItem.id)
 
         case .reverse:
-            guard let nextItem = pickPreviousVisibleItem(ofItemHaving: currentItem.id, range: config.range, isLoopOn: config.isLoopOn) else { return nil }
+            guard let nextItem = pickPreviousVisibleItem(ofItemHaving: currentItem.id, range: config.range, loopEnabled: config.loopEnabled) else { return nil }
             return self.indexPath(ofItemHaving: nextItem.id)
 
         case .random:
@@ -156,7 +156,7 @@ struct PreviewingClips: Equatable {
         }
     }
 
-    private func pickNextVisibleItem(ofItemHaving itemId: ClipItem.Identity, range: ClipPreviewPlayConfiguration.Range, isLoopOn: Bool) -> ClipItem? {
+    private func pickNextVisibleItem(ofItemHaving itemId: ClipItem.Identity, range: ClipPreviewPlayConfiguration.Range, loopEnabled: Bool) -> ClipItem? {
         guard let indexPath = indexPathByClipItemId[itemId] else { return nil }
         guard value.indices.contains(indexPath.clipIndex) else { return nil }
 
@@ -169,7 +169,7 @@ struct PreviewingClips: Equatable {
             // Clip内に次のItemが存在しなかった
             if indexPath.clipIndex + 1 < value.count {
                 // 次のClipが存在した
-                if isLoopOn, range == .clip {
+                if loopEnabled, range == .clip {
                     // Clipの先頭のItemに戻す
                     return currentClip.items.first
                 } else {
@@ -182,7 +182,7 @@ struct PreviewingClips: Equatable {
                 }
             } else {
                 // 最後のClipだった
-                if isLoopOn {
+                if loopEnabled {
                     switch range {
                     case .clip:
                         // Clipの先頭のItemに戻す
@@ -199,7 +199,7 @@ struct PreviewingClips: Equatable {
         }
     }
 
-    private func pickPreviousVisibleItem(ofItemHaving itemId: ClipItem.Identity, range: ClipPreviewPlayConfiguration.Range, isLoopOn: Bool) -> ClipItem? {
+    private func pickPreviousVisibleItem(ofItemHaving itemId: ClipItem.Identity, range: ClipPreviewPlayConfiguration.Range, loopEnabled: Bool) -> ClipItem? {
         guard let indexPath = indexPathByClipItemId[itemId] else { return nil }
         guard value.indices.contains(indexPath.clipIndex) else { return nil }
 
@@ -212,7 +212,7 @@ struct PreviewingClips: Equatable {
             // Clip内に前のItemが存在しなかった
             if indexPath.clipIndex - 1 >= 0 {
                 // 前のClipが存在した
-                if isLoopOn, range == .clip {
+                if loopEnabled, range == .clip {
                     // Clipの末尾のItemに戻す
                     return currentClip.items.last
                 } else {
@@ -225,7 +225,7 @@ struct PreviewingClips: Equatable {
                 }
             } else {
                 // 最初のClipだった
-                if isLoopOn {
+                if loopEnabled {
                     switch range {
                     case .clip:
                         // Clipの末尾のItemに戻す
