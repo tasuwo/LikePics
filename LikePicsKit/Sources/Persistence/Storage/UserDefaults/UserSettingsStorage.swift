@@ -13,7 +13,6 @@ public class UserSettingsStorage {
         case showHiddenItems = "userSettingsShowHiddenItems"
         case enabledICloudSync = "userSettingsEnabledICloudSync"
         case ignoreCloudUnavailableAlert = "userSettingsIgnoreCloudUnavailableAlert"
-        case clipPreviewPlayConfiguration = "userSettingsClipPreviewPlayConfiguration"
     }
 
     private let appBundle: Bundle
@@ -37,9 +36,7 @@ public class UserSettingsStorage {
             Self.Key.userInterfaceStyle.rawValue: UserInterfaceStyle.unspecified.rawValue,
             Self.Key.showHiddenItems.rawValue: false,
             Self.Key.enabledICloudSync.rawValue: true,
-            Self.Key.ignoreCloudUnavailableAlert.rawValue: false,
-            // swiftlint:disable:next force_try
-            Self.Key.clipPreviewPlayConfiguration.rawValue: try! JSONEncoder().encode(ClipPreviewPlayConfiguration.default)
+            Self.Key.ignoreCloudUnavailableAlert.rawValue: false
         ])
     }
 
@@ -65,12 +62,6 @@ public class UserSettingsStorage {
         userDefaults.set(ignoreCloudUnavailableAlert, forKey: Key.ignoreCloudUnavailableAlert.rawValue)
     }
 
-    private func setClipPreviewPlayConfigurationNonAcomically(_ clipPreviewPlayConfiguration: ClipPreviewPlayConfiguration) {
-        guard fetchClipPreviewPlayConfiguration() != clipPreviewPlayConfiguration else { return }
-        // swiftlint:disable:next force_try
-        userDefaults.set(try! JSONEncoder().encode(clipPreviewPlayConfiguration), forKey: Key.clipPreviewPlayConfiguration.rawValue)
-    }
-
     private func fetchUserInterfaceStyleNonAtomically() -> UserInterfaceStyle {
         return UserInterfaceStyle(rawValue: userDefaults.userSettingsUserInterfaceStyle) ?? .unspecified
     }
@@ -85,11 +76,6 @@ public class UserSettingsStorage {
 
     private func fetchIgnoreCloudUnavailableAlert() -> Bool {
         return userDefaults.userSettingsIgnoreCloudUnavailableAlert
-    }
-
-    private func fetchClipPreviewPlayConfiguration() -> ClipPreviewPlayConfiguration {
-        guard let data = userDefaults.clipPreviewPlayConfiguration else { return .default }
-        return (try? JSONDecoder().decode(ClipPreviewPlayConfiguration.self, from: data)) ?? .default
     }
 }
 
@@ -108,10 +94,6 @@ extension UserDefaults {
 
     @objc dynamic var userSettingsIgnoreCloudUnavailableAlert: Bool {
         return bool(forKey: UserSettingsStorage.Key.ignoreCloudUnavailableAlert.rawValue)
-    }
-
-    @objc dynamic var clipPreviewPlayConfiguration: Data? {
-        return object(forKey: UserSettingsStorage.Key.clipPreviewPlayConfiguration.rawValue) as? Data
     }
 }
 
@@ -143,16 +125,6 @@ extension UserSettingsStorage: UserSettingsStorageProtocol {
             .eraseToAnyPublisher()
     }
 
-    public var clipPreviewPlayConfiguration: AnyPublisher<ClipPreviewPlayConfiguration, Never> {
-        return userDefaults
-            .publisher(for: \.clipPreviewPlayConfiguration)
-            .map { data in
-                guard let data = data else { return .default }
-                return (try? JSONDecoder().decode(ClipPreviewPlayConfiguration.self, from: data)) ?? .default
-            }
-            .eraseToAnyPublisher()
-    }
-
     public func readUserInterfaceStyle() -> UserInterfaceStyle {
         return fetchUserInterfaceStyleNonAtomically()
     }
@@ -169,10 +141,6 @@ extension UserSettingsStorage: UserSettingsStorageProtocol {
         return fetchIgnoreCloudUnavailableAlert()
     }
 
-    public func readClipPreviewPlayConfiguration() -> ClipPreviewPlayConfiguration {
-        return fetchClipPreviewPlayConfiguration()
-    }
-
     public func set(userInterfaceStyle: UserInterfaceStyle) {
         queue.sync { setUserInterfaceStyleNonAtomically(userInterfaceStyle) }
     }
@@ -187,9 +155,5 @@ extension UserSettingsStorage: UserSettingsStorageProtocol {
 
     public func set(ignoreCloudUnavailableAlert: Bool) {
         queue.sync { setIgnoreCloudUnavailableAlert(ignoreCloudUnavailableAlert) }
-    }
-
-    public func set(clipPreviewPlayConfiguration: ClipPreviewPlayConfiguration) {
-        queue.sync { setClipPreviewPlayConfigurationNonAcomically(clipPreviewPlayConfiguration) }
     }
 }

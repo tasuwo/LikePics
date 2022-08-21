@@ -97,3 +97,7 @@ extension SceneDependencyContainer: HasAlbumCommandService {
 extension SceneDependencyContainer: HasListingAlbumTitleQueryService {
     public var listingAlbumTitleQueryService: ListingAlbumTitleQueryServiceProtocol { container.listingAlbumTitleQueryService }
 }
+
+extension SceneDependencyContainer: HasClipPreviewPlayConfigurationStorage {
+    public var clipPreviewPlayConfigurationStorage: ClipPreviewPlayConfigurationStorageProtocol { container.clipPreviewPlayConfigurationStorage }
+}

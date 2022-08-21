@@ -15,6 +15,7 @@ typealias ClipPreviewPageViewDependency = HasRouter
     & HasClipItemInformationTransitioningController
     & HasTransitionLock
     & HasUserSettingStorage
+    & HasClipPreviewPlayConfigurationStorage
 
 struct ClipPreviewPageViewReducer: Reducer {
     typealias Dependency = ClipPreviewPageViewDependency
@@ -163,7 +164,7 @@ extension ClipPreviewPageViewReducer {
         let settingsEffect = Effect(settingsStream)
         effects.append(settingsEffect)
 
-        let playConfigStream = dependency.userSettingStorage.clipPreviewPlayConfiguration
+        let playConfigStream = dependency.clipPreviewPlayConfigurationStorage.clipPreviewPlayConfiguration
             .map { Action.playConfigUpdated(config: $0) as Action? }
         let playConfigEffect = Effect(playConfigStream)
         effects.append(playConfigEffect)

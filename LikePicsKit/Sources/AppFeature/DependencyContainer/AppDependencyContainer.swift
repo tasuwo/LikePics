@@ -37,6 +37,7 @@ public typealias AppDependencyContaining = HasPasteboard
     & HasAppBundle
     & HasAlbumCommandService
     & HasListingAlbumTitleQueryService
+    & HasClipPreviewPlayConfigurationStorage
 
 public class AppDependencyContainer {
     // MARK: - Properties
@@ -61,6 +62,7 @@ public class AppDependencyContainer {
     private let imageStorage: ImageStorage
     private let tmpImageStorage: TemporaryImageStorageProtocol
     private let _userSettingStorage: UserSettingsStorageProtocol
+    private let _clipPreviewPlayConfigurationStorage: ClipPreviewPlayConfigurationStorageProtocol
     private let cloudUsageContextStorage: CloudUsageContextStorageProtocol
 
     // MARK: Service
@@ -117,6 +119,7 @@ public class AppDependencyContainer {
         let userSettingsStorage = UserSettingsStorage(appBundle: appBundle)
         let cloudUsageContextStorage = CloudUsageContextStorage()
         self._userSettingStorage = userSettingsStorage
+        self._clipPreviewPlayConfigurationStorage = ClipPreviewPlayConfigurationStorage()
         self.cloudUsageContextStorage = cloudUsageContextStorage
         self._cloudAvailabilityService = CloudAvailabilityService(cloudUsageContextStorage: CloudUsageContextStorage(),
                                                                   cloudAccountService: CloudAccountService())
@@ -388,3 +391,7 @@ extension AppDependencyContainer: HasImageLoaderSettings {
 }
 
 extension AppDependencyContainer: HasAppBundle {}
+
+extension AppDependencyContainer: HasClipPreviewPlayConfigurationStorage {
+    public var clipPreviewPlayConfigurationStorage: ClipPreviewPlayConfigurationStorageProtocol { _clipPreviewPlayConfigurationStorage }
+}

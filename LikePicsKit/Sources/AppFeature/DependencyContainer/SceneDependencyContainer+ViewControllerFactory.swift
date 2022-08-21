@@ -140,6 +140,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
             let imageQueryService: ImageQueryServiceProtocol
             let transitionLock: TransitionLock
             let userSettingStorage: UserSettingsStorageProtocol
+            let clipPreviewPlayConfigurationStorage: ClipPreviewPlayConfigurationStorageProtocol
         }
 
         let previewTransitioningController = ClipPreviewTransitioningController(lock: container.transitionLock)
@@ -154,10 +155,11 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                     clipItemInformationTransitioningController: informationTransitionController,
                                     imageQueryService: container.imageQueryService,
                                     transitionLock: container.transitionLock,
-                                    userSettingStorage: container.userSettingStorage)
+                                    userSettingStorage: container.userSettingStorage,
+                                    clipPreviewPlayConfigurationStorage: container.clipPreviewPlayConfigurationStorage)
 
         let state = ClipPreviewPageViewRootState(clips: clips,
-                                                 playConfiguration: container.userSettingStorage.readClipPreviewPlayConfiguration(),
+                                                 playConfiguration: container.clipPreviewPlayConfigurationStorage.fetchClipPreviewPlayConfiguration(),
                                                  query: query,
                                                  isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems(),
                                                  indexPath: indexPath)
