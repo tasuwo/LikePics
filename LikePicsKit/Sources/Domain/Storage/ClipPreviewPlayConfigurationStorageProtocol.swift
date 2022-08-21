@@ -5,6 +5,8 @@
 import Combine
 import Foundation
 
+public let ClipPreviewPlayConfigurationCustomIntervalMax: Int = 60
+
 /// @mockable
 public protocol ClipPreviewPlayConfigurationStorageProtocol {
     var animation: AnyPublisher<ClipPreviewPlayConfiguration.Animation, Never> { get }
@@ -12,6 +14,7 @@ public protocol ClipPreviewPlayConfigurationStorageProtocol {
     var range: AnyPublisher<ClipPreviewPlayConfiguration.Range, Never> { get }
     var loopEnabled: AnyPublisher<Bool, Never> { get }
     var interval: AnyPublisher<Int, Never> { get }
+    var customIntervals: AnyPublisher<[Int], Never> { get }
 
     var clipPreviewPlayConfiguration: AnyPublisher<ClipPreviewPlayConfiguration, Never> { get }
 
@@ -20,6 +23,7 @@ public protocol ClipPreviewPlayConfigurationStorageProtocol {
     func fetchRange() -> ClipPreviewPlayConfiguration.Range
     func fetchLoopEnabled() -> Bool
     func fetchInterval() -> Int
+    func fetchCustomIntervals() -> [Int]
 
     func fetchClipPreviewPlayConfiguration() -> ClipPreviewPlayConfiguration
 
@@ -28,4 +32,6 @@ public protocol ClipPreviewPlayConfigurationStorageProtocol {
     func set(range: ClipPreviewPlayConfiguration.Range)
     func set(loopEnabled: Bool)
     func set(interval: Int)
+    func appendCustomInterval(_ interval: Int) -> Bool
+    func removeCustomInterval(_ interval: Int) -> Bool
 }
