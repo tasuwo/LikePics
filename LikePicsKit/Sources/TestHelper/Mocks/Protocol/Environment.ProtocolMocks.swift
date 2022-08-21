@@ -167,6 +167,20 @@ public class HasUserSettingStorageMock: HasUserSettingStorage {
     }
 }
 
+public class HasClipPreviewPlayConfigurationStorageMock: HasClipPreviewPlayConfigurationStorage {
+    public init() { }
+    public init(clipPreviewPlayConfigurationStorage: ClipPreviewPlayConfigurationStorageProtocol) {
+        self._clipPreviewPlayConfigurationStorage = clipPreviewPlayConfigurationStorage
+    }
+
+    public private(set) var clipPreviewPlayConfigurationStorageSetCallCount = 0
+    private var _clipPreviewPlayConfigurationStorage: ClipPreviewPlayConfigurationStorageProtocol! { didSet { clipPreviewPlayConfigurationStorageSetCallCount += 1 } }
+    public var clipPreviewPlayConfigurationStorage: ClipPreviewPlayConfigurationStorageProtocol {
+        get { return _clipPreviewPlayConfigurationStorage }
+        set { _clipPreviewPlayConfigurationStorage = newValue }
+    }
+}
+
 public class HasCloudStackLoaderMock: HasCloudStackLoader {
     public init() { }
     public init(cloudStackLoader: CloudStackLoadable) {

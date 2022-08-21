@@ -5,6 +5,7 @@
 import AlbumMultiSelectionModalFeature
 import AlbumSelectionModalFeature
 import ClipCreationFeature
+import ClipPreviewPlayConfigurationModalFeature
 import Common
 import Domain
 import Environment
@@ -388,6 +389,29 @@ extension SceneDependencyContainer: TagSelectionModalRouter {
         let viewController = TagSelectionModalController(state: state,
                                                          tagAdditionAlertState: tagAdditionAlertState,
                                                          dependency: self)
+
+        let navigationViewController = UINavigationController(rootViewController: viewController)
+
+        navigationViewController.modalPresentationStyle = .pageSheet
+        navigationViewController.presentationController?.delegate = viewController
+        navigationViewController.isModalInPresentation = false
+
+        guard let topViewController = topViewController else { return false }
+        topViewController.present(navigationViewController, animated: true, completion: nil)
+
+        return true
+    }
+}
+
+extension SceneDependencyContainer: ClipPreviewPlayConfigurationModalRouter {
+    // MARK: - ClipPreviewPlayConfigurationModalRouter
+
+    public func showClipPreviewPlayConfigurationModal(id: UUID) -> Bool {
+        guard isPresentingModal(having: id) == false else { return true }
+
+        let viewController = ClipPreviewPlayConfigurationModalController(id: id,
+                                                                         modalNotificationCenter: container.modalNotificationCenter,
+                                                                         storage: container.clipPreviewPlayConfigurationStorage)
 
         let navigationViewController = UINavigationController(rootViewController: viewController)
 

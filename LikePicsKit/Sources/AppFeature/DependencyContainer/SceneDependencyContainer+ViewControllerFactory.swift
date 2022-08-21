@@ -3,6 +3,7 @@
 //
 
 import ClipCreationFeature
+import ClipPreviewPlayConfigurationModalFeature
 import Combine
 import Common
 import CompositeKit

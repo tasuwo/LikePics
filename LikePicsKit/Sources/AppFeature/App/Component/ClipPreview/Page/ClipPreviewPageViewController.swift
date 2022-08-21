@@ -18,7 +18,7 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     typealias Store = AnyStoring<ClipPreviewPageViewState, ClipPreviewPageViewAction, ClipPreviewPageViewDependency>
 
-    typealias ModalRouter = TagSelectionModalRouter & AlbumSelectionModalRouter & ClipItemListModalRouter
+    typealias ModalRouter = TagSelectionModalRouter & AlbumSelectionModalRouter & ClipItemListModalRouter & ClipPreviewPlayConfigurationModalRouter
 
     // MARK: - Properties
 
@@ -282,6 +282,9 @@ extension ClipPreviewPageViewController {
         case let .tagSelection(id: id, tagIds: selections):
             presentTagSelectionModal(id: id, selections: selections)
 
+        case let .playConfig(id: id):
+            presentPlayConfigModal(id: id)
+
         case .none:
             break
         }
@@ -355,6 +358,23 @@ extension ClipPreviewPageViewController {
             .store(in: &modalSubscriptions)
 
         if modalRouter.showTagSelectionModal(id: id, selections: selections) == false {
+            modalSubscriptions.removeAll()
+            store.execute(.modalCompleted(false))
+        }
+    }
+
+    private func presentPlayConfigModal(id: UUID) {
+        let succeeded = modalRouter.showClipPreviewPlayConfigurationModal(id: id)
+
+        ModalNotificationCenter.default
+            .publisher(for: id, name: .clipPreviewPlayConfigurationModalDidDismiss)
+            .sink { [weak self] _ in
+                self?.modalSubscriptions.removeAll()
+                self?.store.execute(.modalCompleted(false))
+            }
+            .store(in: &modalSubscriptions)
+
+        if !succeeded {
             modalSubscriptions.removeAll()
             store.execute(.modalCompleted(false))
         }

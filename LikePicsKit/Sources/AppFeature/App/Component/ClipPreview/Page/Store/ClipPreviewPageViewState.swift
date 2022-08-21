@@ -14,6 +14,7 @@ struct ClipPreviewPageViewState: Equatable {
         case clipItemList(id: UUID)
         case albumSelection(id: UUID)
         case tagSelection(id: UUID, tagIds: Set<Tag.Identity>)
+        case playConfig(id: UUID)
     }
 
     enum PageChange: String, Codable {

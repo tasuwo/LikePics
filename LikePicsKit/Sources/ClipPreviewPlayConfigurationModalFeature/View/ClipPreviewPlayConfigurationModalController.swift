@@ -5,6 +5,7 @@
 import Combine
 import CompositeKit
 import Domain
+import Environment
 import LikePicsUIKit
 import UIKit
 
@@ -27,15 +28,22 @@ public class ClipPreviewPlayConfigurationModalController: UIViewController {
 
     // MARK: Service
 
+    private let modalNotificationCenter: ModalNotificationCenter
     private let storage: ClipPreviewPlayConfigurationStorageProtocol
 
     // MARK: Store
 
+    public let id: UUID
     private var subscriptions: Set<AnyCancellable> = .init()
 
     // MARK: - Initializers
 
-    public init(storage: ClipPreviewPlayConfigurationStorageProtocol) {
+    public init(id: UUID,
+                modalNotificationCenter: ModalNotificationCenter,
+                storage: ClipPreviewPlayConfigurationStorageProtocol)
+    {
+        self.id = id
+        self.modalNotificationCenter = modalNotificationCenter
         self.storage = storage
         self.intervalEditAlert = .init(state: .init(title: L10n.Root.IntervalAlert.title,
                                                     message: L10n.Root.IntervalAlert.message(Self.minInterval, Self.maxInterval),
@@ -211,6 +219,16 @@ extension ClipPreviewPlayConfigurationModalController: TextEditAlertDelegate {
         // NOP
     }
 }
+
+extension ClipPreviewPlayConfigurationModalController: UIAdaptivePresentationControllerDelegate {
+    // MARK: - UIAdaptivePresentationControllerDelegate
+
+    public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        modalNotificationCenter.post(id: id, name: .clipPreviewPlayConfigurationModalDidDismiss)
+    }
+}
+
+extension ClipPreviewPlayConfigurationModalController: ModalController {}
 
 private extension Array where Element == UICellAccessory {
     func pickSwitch() -> UISwitch? {

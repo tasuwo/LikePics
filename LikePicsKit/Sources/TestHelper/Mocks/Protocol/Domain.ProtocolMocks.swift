@@ -592,12 +592,11 @@ public class TagQueryMock: TagQuery {
 
 public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
     public init() { }
-    public init(userInterfaceStyle: AnyPublisher<UserInterfaceStyle, Never>, showHiddenItems: AnyPublisher<Bool, Never>, enabledICloudSync: AnyPublisher<Bool, Never>, ignoreCloudUnavailableAlert: AnyPublisher<Bool, Never>, clipPreviewPlayConfiguration: AnyPublisher<ClipPreviewPlayConfiguration, Never>) {
+    public init(userInterfaceStyle: AnyPublisher<UserInterfaceStyle, Never>, showHiddenItems: AnyPublisher<Bool, Never>, enabledICloudSync: AnyPublisher<Bool, Never>, ignoreCloudUnavailableAlert: AnyPublisher<Bool, Never>) {
         self._userInterfaceStyle = userInterfaceStyle
         self._showHiddenItems = showHiddenItems
         self._enabledICloudSync = enabledICloudSync
         self._ignoreCloudUnavailableAlert = ignoreCloudUnavailableAlert
-        self._clipPreviewPlayConfiguration = clipPreviewPlayConfiguration
     }
 
     public private(set) var userInterfaceStyleSetCallCount = 0
@@ -626,13 +625,6 @@ public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
     public var ignoreCloudUnavailableAlert: AnyPublisher<Bool, Never> {
         get { return _ignoreCloudUnavailableAlert }
         set { _ignoreCloudUnavailableAlert = newValue }
-    }
-
-    public private(set) var clipPreviewPlayConfigurationSetCallCount = 0
-    private var _clipPreviewPlayConfiguration: AnyPublisher<ClipPreviewPlayConfiguration, Never>! { didSet { clipPreviewPlayConfigurationSetCallCount += 1 } }
-    public var clipPreviewPlayConfiguration: AnyPublisher<ClipPreviewPlayConfiguration, Never> {
-        get { return _clipPreviewPlayConfiguration }
-        set { _clipPreviewPlayConfiguration = newValue }
     }
 
     public private(set) var readUserInterfaceStyleCallCount = 0
@@ -675,16 +667,6 @@ public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
         return false
     }
 
-    public private(set) var readClipPreviewPlayConfigurationCallCount = 0
-    public var readClipPreviewPlayConfigurationHandler: (() -> (ClipPreviewPlayConfiguration))?
-    public func readClipPreviewPlayConfiguration() -> ClipPreviewPlayConfiguration {
-        readClipPreviewPlayConfigurationCallCount += 1
-        if let readClipPreviewPlayConfigurationHandler = readClipPreviewPlayConfigurationHandler {
-            return readClipPreviewPlayConfigurationHandler()
-        }
-        fatalError("readClipPreviewPlayConfigurationHandler returns can't have a default value thus its handler must be set")
-    }
-
     public private(set) var setCallCount = 0
     public var setHandler: ((UserInterfaceStyle) -> Void)?
     public func set(userInterfaceStyle: UserInterfaceStyle) {
@@ -718,15 +700,6 @@ public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
         setIgnoreCloudUnavailableAlertCallCount += 1
         if let setIgnoreCloudUnavailableAlertHandler = setIgnoreCloudUnavailableAlertHandler {
             setIgnoreCloudUnavailableAlertHandler(ignoreCloudUnavailableAlert)
-        }
-    }
-
-    public private(set) var setClipPreviewPlayConfigurationCallCount = 0
-    public var setClipPreviewPlayConfigurationHandler: ((ClipPreviewPlayConfiguration) -> Void)?
-    public func set(clipPreviewPlayConfiguration: ClipPreviewPlayConfiguration) {
-        setClipPreviewPlayConfigurationCallCount += 1
-        if let setClipPreviewPlayConfigurationHandler = setClipPreviewPlayConfigurationHandler {
-            setClipPreviewPlayConfigurationHandler(clipPreviewPlayConfiguration)
         }
     }
 }
@@ -1843,6 +1816,203 @@ public class TagCommandServiceProtocolMock: TagCommandServiceProtocol {
             return createHandler(name)
         }
         fatalError("createHandler returns can't have a default value thus its handler must be set")
+    }
+}
+
+public class ClipPreviewPlayConfigurationStorageProtocolMock: ClipPreviewPlayConfigurationStorageProtocol {
+    public init() { }
+    public init(animation: AnyPublisher<ClipPreviewPlayConfiguration.Animation, Never>, order: AnyPublisher<ClipPreviewPlayConfiguration.Order, Never>, range: AnyPublisher<ClipPreviewPlayConfiguration.Range, Never>, loopEnabled: AnyPublisher<Bool, Never>, interval: AnyPublisher<Int, Never>, customIntervals: AnyPublisher<[Int], Never>, clipPreviewPlayConfiguration: AnyPublisher<ClipPreviewPlayConfiguration, Never>) {
+        self._animation = animation
+        self._order = order
+        self._range = range
+        self._loopEnabled = loopEnabled
+        self._interval = interval
+        self._customIntervals = customIntervals
+        self._clipPreviewPlayConfiguration = clipPreviewPlayConfiguration
+    }
+
+    public private(set) var animationSetCallCount = 0
+    private var _animation: AnyPublisher<ClipPreviewPlayConfiguration.Animation, Never>! { didSet { animationSetCallCount += 1 } }
+    public var animation: AnyPublisher<ClipPreviewPlayConfiguration.Animation, Never> {
+        get { return _animation }
+        set { _animation = newValue }
+    }
+
+    public private(set) var orderSetCallCount = 0
+    private var _order: AnyPublisher<ClipPreviewPlayConfiguration.Order, Never>! { didSet { orderSetCallCount += 1 } }
+    public var order: AnyPublisher<ClipPreviewPlayConfiguration.Order, Never> {
+        get { return _order }
+        set { _order = newValue }
+    }
+
+    public private(set) var rangeSetCallCount = 0
+    private var _range: AnyPublisher<ClipPreviewPlayConfiguration.Range, Never>! { didSet { rangeSetCallCount += 1 } }
+    public var range: AnyPublisher<ClipPreviewPlayConfiguration.Range, Never> {
+        get { return _range }
+        set { _range = newValue }
+    }
+
+    public private(set) var loopEnabledSetCallCount = 0
+    private var _loopEnabled: AnyPublisher<Bool, Never>! { didSet { loopEnabledSetCallCount += 1 } }
+    public var loopEnabled: AnyPublisher<Bool, Never> {
+        get { return _loopEnabled }
+        set { _loopEnabled = newValue }
+    }
+
+    public private(set) var intervalSetCallCount = 0
+    private var _interval: AnyPublisher<Int, Never>! { didSet { intervalSetCallCount += 1 } }
+    public var interval: AnyPublisher<Int, Never> {
+        get { return _interval }
+        set { _interval = newValue }
+    }
+
+    public private(set) var customIntervalsSetCallCount = 0
+    private var _customIntervals: AnyPublisher<[Int], Never>! { didSet { customIntervalsSetCallCount += 1 } }
+    public var customIntervals: AnyPublisher<[Int], Never> {
+        get { return _customIntervals }
+        set { _customIntervals = newValue }
+    }
+
+    public private(set) var clipPreviewPlayConfigurationSetCallCount = 0
+    private var _clipPreviewPlayConfiguration: AnyPublisher<ClipPreviewPlayConfiguration, Never>! { didSet { clipPreviewPlayConfigurationSetCallCount += 1 } }
+    public var clipPreviewPlayConfiguration: AnyPublisher<ClipPreviewPlayConfiguration, Never> {
+        get { return _clipPreviewPlayConfiguration }
+        set { _clipPreviewPlayConfiguration = newValue }
+    }
+
+    public private(set) var fetchAnimationCallCount = 0
+    public var fetchAnimationHandler: (() -> (ClipPreviewPlayConfiguration.Animation))?
+    public func fetchAnimation() -> ClipPreviewPlayConfiguration.Animation {
+        fetchAnimationCallCount += 1
+        if let fetchAnimationHandler = fetchAnimationHandler {
+            return fetchAnimationHandler()
+        }
+        fatalError("fetchAnimationHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var fetchOrderCallCount = 0
+    public var fetchOrderHandler: (() -> (ClipPreviewPlayConfiguration.Order))?
+    public func fetchOrder() -> ClipPreviewPlayConfiguration.Order {
+        fetchOrderCallCount += 1
+        if let fetchOrderHandler = fetchOrderHandler {
+            return fetchOrderHandler()
+        }
+        fatalError("fetchOrderHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var fetchRangeCallCount = 0
+    public var fetchRangeHandler: (() -> (ClipPreviewPlayConfiguration.Range))?
+    public func fetchRange() -> ClipPreviewPlayConfiguration.Range {
+        fetchRangeCallCount += 1
+        if let fetchRangeHandler = fetchRangeHandler {
+            return fetchRangeHandler()
+        }
+        fatalError("fetchRangeHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var fetchLoopEnabledCallCount = 0
+    public var fetchLoopEnabledHandler: (() -> (Bool))?
+    public func fetchLoopEnabled() -> Bool {
+        fetchLoopEnabledCallCount += 1
+        if let fetchLoopEnabledHandler = fetchLoopEnabledHandler {
+            return fetchLoopEnabledHandler()
+        }
+        return false
+    }
+
+    public private(set) var fetchIntervalCallCount = 0
+    public var fetchIntervalHandler: (() -> (Int))?
+    public func fetchInterval() -> Int {
+        fetchIntervalCallCount += 1
+        if let fetchIntervalHandler = fetchIntervalHandler {
+            return fetchIntervalHandler()
+        }
+        return 0
+    }
+
+    public private(set) var fetchCustomIntervalsCallCount = 0
+    public var fetchCustomIntervalsHandler: (() -> ([Int]))?
+    public func fetchCustomIntervals() -> [Int] {
+        fetchCustomIntervalsCallCount += 1
+        if let fetchCustomIntervalsHandler = fetchCustomIntervalsHandler {
+            return fetchCustomIntervalsHandler()
+        }
+        return [Int]()
+    }
+
+    public private(set) var fetchClipPreviewPlayConfigurationCallCount = 0
+    public var fetchClipPreviewPlayConfigurationHandler: (() -> (ClipPreviewPlayConfiguration))?
+    public func fetchClipPreviewPlayConfiguration() -> ClipPreviewPlayConfiguration {
+        fetchClipPreviewPlayConfigurationCallCount += 1
+        if let fetchClipPreviewPlayConfigurationHandler = fetchClipPreviewPlayConfigurationHandler {
+            return fetchClipPreviewPlayConfigurationHandler()
+        }
+        fatalError("fetchClipPreviewPlayConfigurationHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var setCallCount = 0
+    public var setHandler: ((ClipPreviewPlayConfiguration.Animation) -> Void)?
+    public func set(animation: ClipPreviewPlayConfiguration.Animation) {
+        setCallCount += 1
+        if let setHandler = setHandler {
+            setHandler(animation)
+        }
+    }
+
+    public private(set) var setOrderCallCount = 0
+    public var setOrderHandler: ((ClipPreviewPlayConfiguration.Order) -> Void)?
+    public func set(order: ClipPreviewPlayConfiguration.Order) {
+        setOrderCallCount += 1
+        if let setOrderHandler = setOrderHandler {
+            setOrderHandler(order)
+        }
+    }
+
+    public private(set) var setRangeCallCount = 0
+    public var setRangeHandler: ((ClipPreviewPlayConfiguration.Range) -> Void)?
+    public func set(range: ClipPreviewPlayConfiguration.Range) {
+        setRangeCallCount += 1
+        if let setRangeHandler = setRangeHandler {
+            setRangeHandler(range)
+        }
+    }
+
+    public private(set) var setLoopEnabledCallCount = 0
+    public var setLoopEnabledHandler: ((Bool) -> Void)?
+    public func set(loopEnabled: Bool) {
+        setLoopEnabledCallCount += 1
+        if let setLoopEnabledHandler = setLoopEnabledHandler {
+            setLoopEnabledHandler(loopEnabled)
+        }
+    }
+
+    public private(set) var setIntervalCallCount = 0
+    public var setIntervalHandler: ((Int) -> Void)?
+    public func set(interval: Int) {
+        setIntervalCallCount += 1
+        if let setIntervalHandler = setIntervalHandler {
+            setIntervalHandler(interval)
+        }
+    }
+
+    public private(set) var appendCustomIntervalCallCount = 0
+    public var appendCustomIntervalHandler: ((Int) -> (Bool))?
+    public func appendCustomInterval(_ interval: Int) -> Bool {
+        appendCustomIntervalCallCount += 1
+        if let appendCustomIntervalHandler = appendCustomIntervalHandler {
+            return appendCustomIntervalHandler(interval)
+        }
+        return false
+    }
+
+    public private(set) var removeCustomIntervalCallCount = 0
+    public var removeCustomIntervalHandler: ((Int) -> (Bool))?
+    public func removeCustomInterval(_ interval: Int) -> Bool {
+        removeCustomIntervalCallCount += 1
+        if let removeCustomIntervalHandler = removeCustomIntervalHandler {
+            return removeCustomIntervalHandler(interval)
+        }
+        return false
     }
 }
 

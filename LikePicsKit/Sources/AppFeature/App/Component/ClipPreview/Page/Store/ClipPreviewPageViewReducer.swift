@@ -252,7 +252,7 @@ extension ClipPreviewPageViewReducer {
             return (nextState, [Effect(stream)])
 
         case .playConfigRequested:
-            // TODO:
+            nextState.modal = .playConfig(id: UUID())
             return (nextState, .none)
 
         case .browsed:
