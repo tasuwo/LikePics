@@ -11,7 +11,7 @@ public protocol ClipPreviewPlayConfigurationStorageProtocol {
     var order: AnyPublisher<ClipPreviewPlayConfiguration.Order, Never> { get }
     var range: AnyPublisher<ClipPreviewPlayConfiguration.Range, Never> { get }
     var loopEnabled: AnyPublisher<Bool, Never> { get }
-    var interval: AnyPublisher<TimeInterval, Never> { get }
+    var interval: AnyPublisher<Int, Never> { get }
 
     var clipPreviewPlayConfiguration: AnyPublisher<ClipPreviewPlayConfiguration, Never> { get }
 
@@ -19,7 +19,7 @@ public protocol ClipPreviewPlayConfigurationStorageProtocol {
     func fetchOrder() -> ClipPreviewPlayConfiguration.Order
     func fetchRange() -> ClipPreviewPlayConfiguration.Range
     func fetchLoopEnabled() -> Bool
-    func fetchInterval() -> TimeInterval
+    func fetchInterval() -> Int
 
     func fetchClipPreviewPlayConfiguration() -> ClipPreviewPlayConfiguration
 
@@ -27,5 +27,5 @@ public protocol ClipPreviewPlayConfigurationStorageProtocol {
     func set(order: ClipPreviewPlayConfiguration.Order)
     func set(range: ClipPreviewPlayConfiguration.Range)
     func set(loopEnabled: Bool)
-    func set(interval: TimeInterval)
+    func set(interval: Int)
 }

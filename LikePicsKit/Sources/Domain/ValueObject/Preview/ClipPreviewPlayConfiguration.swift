@@ -9,7 +9,7 @@ public struct ClipPreviewPlayConfiguration: Equatable {
                                               order: .default,
                                               range: .default,
                                               loopEnabled: false,
-                                              interval: 5.0)
+                                              interval: 5)
 
     public enum Animation: String {
         public static let `default`: Self = .forward
@@ -38,11 +38,11 @@ public struct ClipPreviewPlayConfiguration: Equatable {
     public let order: Order
     public let range: Range
     public let loopEnabled: Bool
-    public let interval: TimeInterval
+    public let interval: Int
 
     // MARK: - Initializers
 
-    public init(animation: Animation, order: Order, range: Range, loopEnabled: Bool, interval: TimeInterval) {
+    public init(animation: Animation, order: Order, range: Range, loopEnabled: Bool, interval: Int) {
         self.animation = animation
         self.order = order
         self.range = range

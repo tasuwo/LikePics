@@ -48,8 +48,8 @@ extension UserDefaults {
         return bool(forKey: ClipPreviewPlayConfigurationStorage.Key.loopEnabled.rawValue)
     }
 
-    @objc dynamic var clipPreviewPlayConfigurationInterval: Double {
-        return double(forKey: ClipPreviewPlayConfigurationStorage.Key.interval.rawValue)
+    @objc dynamic var clipPreviewPlayConfigurationInterval: Int {
+        return integer(forKey: ClipPreviewPlayConfigurationStorage.Key.interval.rawValue)
     }
 }
 
@@ -83,7 +83,7 @@ extension ClipPreviewPlayConfigurationStorage: ClipPreviewPlayConfigurationStora
             .eraseToAnyPublisher()
     }
 
-    public var interval: AnyPublisher<TimeInterval, Never> {
+    public var interval: AnyPublisher<Int, Never> {
         return userDefaults
             .publisher(for: \.clipPreviewPlayConfigurationInterval)
             .eraseToAnyPublisher()
@@ -119,7 +119,7 @@ extension ClipPreviewPlayConfigurationStorage: ClipPreviewPlayConfigurationStora
         return userDefaults.clipPreviewPlayConfigurationLoopEnabled
     }
 
-    public func fetchInterval() -> TimeInterval {
+    public func fetchInterval() -> Int {
         return userDefaults.clipPreviewPlayConfigurationInterval
     }
 
@@ -147,7 +147,7 @@ extension ClipPreviewPlayConfigurationStorage: ClipPreviewPlayConfigurationStora
         userDefaults.set(loopEnabled, forKey: Key.loopEnabled.rawValue)
     }
 
-    public func set(interval: TimeInterval) {
+    public func set(interval: Int) {
         userDefaults.set(interval, forKey: Key.interval.rawValue)
     }
 }
