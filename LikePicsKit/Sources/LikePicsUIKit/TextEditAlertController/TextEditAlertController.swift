@@ -96,6 +96,7 @@ public class TextEditAlertController: NSObject {
             textField.placeholder = self.store.stateValue.placeholder
             textField.delegate = self
             textField.text = self.store.stateValue.text
+            textField.keyboardType = self.store.stateValue.keyboardType ?? .default
             textField.addTarget(self, action: #selector(self.textFieldDidChange(sender:)), for: .editingChanged)
         }
 

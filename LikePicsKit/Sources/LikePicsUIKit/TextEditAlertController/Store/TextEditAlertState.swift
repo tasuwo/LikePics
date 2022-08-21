@@ -3,6 +3,7 @@
 //
 
 import Foundation
+import UIKit
 
 public struct TextEditAlertState: Equatable {
     let id: UUID
@@ -11,17 +12,19 @@ public struct TextEditAlertState: Equatable {
     let placeholder: String
     let text: String
     let shouldReturn: Bool
+    let keyboardType: UIKeyboardType?
 
     let isPresenting: Bool
 }
 
 public extension TextEditAlertState {
-    init(title: String?, message: String?, placeholder: String) {
+    init(title: String?, message: String?, placeholder: String, keyboardType: UIKeyboardType? = nil) {
         id = UUID()
 
         self.title = title
         self.message = message
         self.placeholder = placeholder
+        self.keyboardType = keyboardType
 
         text = ""
         shouldReturn = false
@@ -37,6 +40,7 @@ extension TextEditAlertState {
                      placeholder: placeholder,
                      text: text,
                      shouldReturn: shouldReturn,
+                     keyboardType: keyboardType,
                      isPresenting: isPresenting)
     }
 
@@ -47,6 +51,7 @@ extension TextEditAlertState {
                      placeholder: placeholder,
                      text: text,
                      shouldReturn: shouldReturn,
+                     keyboardType: keyboardType,
                      isPresenting: isPresenting)
     }
 
@@ -57,6 +62,7 @@ extension TextEditAlertState {
                      placeholder: placeholder,
                      text: text,
                      shouldReturn: shouldReturn,
+                     keyboardType: keyboardType,
                      isPresenting: isPresenting)
     }
 }
