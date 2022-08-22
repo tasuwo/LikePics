@@ -62,8 +62,7 @@ public class ClipPreviewPlayConfigurationModalController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        title = L10n.Root.title
-
+        configureNavigationBar()
         configureViewHierarchy()
         configureDataSource()
 
@@ -164,6 +163,18 @@ extension ClipPreviewPlayConfigurationModalController {
         collectionView.delegate = self
         view.addSubview(collectionView)
         NSLayoutConstraint.activate(collectionView.constraints(fittingIn: view))
+    }
+
+    private func configureNavigationBar() {
+        navigationItem.title = L10n.Root.title
+
+        let addItem = UIBarButtonItem(systemItem: .done, primaryAction: .init(handler: { [weak self] _ in
+            guard let self = self else { return }
+            self.modalNotificationCenter.post(id: self.id, name: .clipPreviewPlayConfigurationModalDidDismiss, userInfo: nil)
+            self.dismissAll(completion: nil)
+        }), menu: nil)
+
+        navigationItem.rightBarButtonItem = addItem
     }
 
     private func configureDataSource() {
