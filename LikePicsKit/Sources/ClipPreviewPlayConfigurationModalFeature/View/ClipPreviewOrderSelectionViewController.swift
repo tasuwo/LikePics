@@ -61,7 +61,7 @@ extension ClipPreviewOrderSelectionViewController {
 
         var snapshot = Layout.Snapshot()
         snapshot.appendSections([.main])
-        snapshot.appendItems([.forward, .reverse])
+        snapshot.appendItems([.forward, .reverse, .random])
         dataSource.apply(snapshot) { [weak self] in
             guard let self = self else { return }
             guard let indexPath = self.dataSource.indexPath(for: self.storage.fetchOrder()) else { return }
