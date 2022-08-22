@@ -114,6 +114,15 @@ extension ClipPreviewPageBarController {
             .store(in: &subscriptions)
 
         store.state
+            .bind(\.optionMenuItems) { [weak self] items in
+                guard let self = self else { return }
+                let menu = self.resolveOptionMenu(for: items)
+                self.optionItem.menu = menu
+                self.optionItem.isEnabled = !menu.children.isEmpty
+            }
+            .store(in: &subscriptions)
+
+        store.state
             .removeDuplicates(by: \.alert)
             .sink { [weak self] state in self?.presentAlertIfNeeded(for: state) }
             .store(in: &subscriptions)
@@ -314,19 +323,9 @@ extension ClipPreviewPageBarController {
         )
         deleteItem.accessibilityIdentifier = "\(String(describing: Self.self)).deleteItem"
 
-        let infoItem = UIAction(title: L10n.ClipPreview.OptionMenuItemTitle.info, image: UIImage(systemName: "info.circle")) { [weak self] _ in
-            self?.store.execute(.infoButtonTapped)
-        }
-        let playItem = UIAction(title: L10n.ClipPreview.OptionMenuItemTitle.play, image: UIImage(systemName: "play")) { [weak self] _ in
-            self?.store.execute(.playButtonTapped)
-        }
-        let playConfigItem = UIAction(title: L10n.ClipPreview.OptionMenuItemTitle.playConfig, image: UIImage(systemName: "gearshape")) { [weak self] _ in
-            self?.store.execute(.playConfigButtonTapped)
-        }
-        let optionMenu = UIMenu(title: "", children: [infoItem, playItem, playConfigItem])
         optionItem = UIBarButtonItem(
             image: UIImage(systemName: "ellipsis"),
-            menu: optionMenu
+            menu: nil
         )
         optionItem.accessibilityIdentifier = "\(String(describing: Self.self)).ellipsis"
 
@@ -423,5 +422,29 @@ extension ClipPreviewPageBarController {
         }()
         buttonItem.isEnabled = item.isEnabled
         return buttonItem
+    }
+}
+
+extension ClipPreviewPageBarController {
+    private func resolveOptionMenu(for items: [ClipPreviewPageBarState.OptionMenuItem]) -> UIMenu {
+        let children: [UIAction] = items.map { item in
+            switch item {
+            case .info:
+                return UIAction(title: L10n.ClipPreview.OptionMenuItemTitle.info, image: UIImage(systemName: "info.circle")) { [weak self] _ in
+                    self?.store.execute(.infoButtonTapped)
+                }
+
+            case .play:
+                return UIAction(title: L10n.ClipPreview.OptionMenuItemTitle.play, image: UIImage(systemName: "play")) { [weak self] _ in
+                    self?.store.execute(.playButtonTapped)
+                }
+
+            case .playConfig:
+                return UIAction(title: L10n.ClipPreview.OptionMenuItemTitle.playConfig, image: UIImage(systemName: "gearshape")) { [weak self] _ in
+                    self?.store.execute(.playConfigButtonTapped)
+                }
+            }
+        }
+        return UIMenu(title: "", children: children)
     }
 }

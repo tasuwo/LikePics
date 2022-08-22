@@ -160,6 +160,12 @@ private extension ClipPreviewPageBarState {
             nextState.rightBarButtonItems = [.init(kind: .option, isEnabled: true)]
         }
 
+        nextState.optionMenuItems = [
+            .info,
+            .play,
+            .playConfig
+        ]
+
         return nextState
     }
 }

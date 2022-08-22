@@ -28,11 +28,18 @@ struct ClipPreviewPageBarState: Equatable {
         let isEnabled: Bool
     }
 
+    enum OptionMenuItem: Equatable {
+        case info
+        case play
+        case playConfig
+    }
+
     var isVerticalSizeClassCompact: Bool
 
     var leftBarButtonItems: [Item]
     var rightBarButtonItems: [Item]
     var toolBarItems: [Item]
+    var optionMenuItems: [OptionMenuItem]
 
     var isFullscreen: Bool
     var isNavigationBarHidden: Bool
@@ -51,6 +58,7 @@ extension ClipPreviewPageBarState {
         leftBarButtonItems = []
         rightBarButtonItems = []
         toolBarItems = []
+        optionMenuItems = []
         isFullscreen = false
         isNavigationBarHidden = false
         isToolBarHidden = false
