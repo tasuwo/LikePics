@@ -112,12 +112,16 @@ extension ClipPreviewPlayConfigurationModalLayout.Item {
         switch self {
         case .animation:
             return L10n.Root.MenuTitle.animation
+
         case .order:
             return L10n.Root.MenuTitle.order
+
         case .range:
             return L10n.Root.MenuTitle.range
+
         case .loop:
             return L10n.Root.MenuTitle.loop
+
         case .interval:
             return L10n.Root.MenuTitle.interval
         }

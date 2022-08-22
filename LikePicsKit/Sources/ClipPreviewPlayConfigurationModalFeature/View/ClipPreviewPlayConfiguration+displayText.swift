@@ -9,8 +9,10 @@ extension ClipPreviewPlayConfiguration.Animation {
         switch self {
         case .forward:
             return L10n.Any.ItemAnimationName.forward
+
         case .reverse:
             return L10n.Any.ItemAnimationName.reverse
+
         case .off:
             return L10n.Any.ItemAnimationName.off
         }
@@ -22,8 +24,10 @@ extension ClipPreviewPlayConfiguration.Order {
         switch self {
         case .forward:
             return L10n.Any.ItemOrderName.forward
+
         case .reverse:
             return L10n.Any.ItemOrderName.reverse
+
         case .random:
             return L10n.Any.ItemOrderName.random
         }
@@ -35,6 +39,7 @@ extension ClipPreviewPlayConfiguration.Range {
         switch self {
         case .overall:
             return L10n.Any.ItemRangeName.overall
+
         case .clip:
             return L10n.Any.ItemRangeName.clip
         }
