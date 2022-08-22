@@ -45,6 +45,9 @@ private extension ClipPreviewPageBarAction {
         case .playButtonTapped:
             return .played
 
+        case .pauseButtonTapped:
+            return .paused
+
         case .playConfigButtonTapped:
             return .playConfigRequested
 

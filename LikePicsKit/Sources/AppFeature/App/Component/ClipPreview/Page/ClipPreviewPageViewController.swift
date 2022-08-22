@@ -205,6 +205,12 @@ extension ClipPreviewPageViewController {
             .store(in: &subscriptions)
 
         store.state
+            .bind(\.playingAt) { [weak self] playingAt in
+                self?.barController.store.execute(.updatedPlaying(playingAt != nil))
+            }
+            .store(in: &subscriptions)
+
+        store.state
             .bind(\.currentClip) { [weak self] currentClip in
                 self?.previewPrefetcher.clip.send(currentClip)
             }

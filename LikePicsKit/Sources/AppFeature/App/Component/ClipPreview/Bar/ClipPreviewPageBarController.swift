@@ -24,7 +24,8 @@ class ClipPreviewPageBarController {
     // MARK: Item
 
     private var flexibleItem: UIBarButtonItem!
-    private var browseItem: UIBarButtonItem!
+    private var playItem: UIBarButtonItem!
+    private var pauseItem: UIBarButtonItem!
     private var addItem: UIBarButtonItem!
     private var shareItem: UIBarButtonItem!
     private var deleteItem: UIBarButtonItem!
@@ -93,7 +94,7 @@ extension ClipPreviewPageBarController {
             .bind(\.toolBarItems) { [weak self] items in
                 guard let self = self else { return }
                 let toolBarItems = self.resolveBarButtonItems(for: items)
-                self.barHostingViewController?.setToolbarItems(toolBarItems, animated: true)
+                self.barHostingViewController?.setToolbarItems(toolBarItems, animated: false)
             }
             .store(in: &subscriptions)
 
@@ -101,7 +102,7 @@ extension ClipPreviewPageBarController {
             .bind(\.leftBarButtonItems) { [weak self] items in
                 guard let self = self else { return }
                 let leftBarButtonItems = self.resolveBarButtonItems(for: items)
-                self.barHostingViewController?.navigationItem.setLeftBarButtonItems(leftBarButtonItems, animated: true)
+                self.barHostingViewController?.navigationItem.setLeftBarButtonItems(leftBarButtonItems, animated: false)
             }
             .store(in: &subscriptions)
 
@@ -109,7 +110,7 @@ extension ClipPreviewPageBarController {
             .bind(\.rightBarButtonItems) { [weak self] items in
                 guard let self = self else { return }
                 let rightBarButtonItems = self.resolveBarButtonItems(for: items)
-                self.barHostingViewController?.navigationItem.setRightBarButtonItems(rightBarButtonItems, animated: true)
+                self.barHostingViewController?.navigationItem.setRightBarButtonItems(rightBarButtonItems, animated: false)
             }
             .store(in: &subscriptions)
 
@@ -287,14 +288,23 @@ extension ClipPreviewPageBarController {
         )
         flexibleItem.accessibilityIdentifier = "\(String(describing: Self.self)).flexibleItem"
 
-        browseItem = UIBarButtonItem(
-            image: UIImage(systemName: "globe"),
+        playItem = UIBarButtonItem(
+            image: UIImage(systemName: "play.fill"),
             primaryAction: .init(handler: { [weak self] _ in
-                self?.store.execute(.browseButtonTapped)
+                self?.store.execute(.playButtonTapped)
             }),
             menu: nil
         )
-        browseItem.accessibilityIdentifier = "\(String(describing: Self.self)).browseItem"
+        playItem.accessibilityIdentifier = "\(String(describing: Self.self)).playItem"
+
+        pauseItem = UIBarButtonItem(
+            image: UIImage(systemName: "pause.fill"),
+            primaryAction: .init(handler: { [weak self] _ in
+                self?.store.execute(.pauseButtonTapped)
+            }),
+            menu: nil
+        )
+        pauseItem.accessibilityIdentifier = "\(String(describing: Self.self)).pauseItem"
 
         addItem = UIBarButtonItem(
             systemItem: .add,
@@ -404,8 +414,11 @@ extension ClipPreviewPageBarController {
             case .list:
                 return listItem
 
-            case .browse:
-                return browseItem
+            case .play:
+                return playItem
+
+            case .pause:
+                return pauseItem
 
             case .add:
                 return addItem
@@ -434,9 +447,9 @@ extension ClipPreviewPageBarController {
                     self?.store.execute(.infoButtonTapped)
                 }
 
-            case .play:
-                return UIAction(title: L10n.ClipPreview.OptionMenuItemTitle.play, image: UIImage(systemName: "play")) { [weak self] _ in
-                    self?.store.execute(.playButtonTapped)
+            case .browse:
+                return UIAction(title: L10n.ClipPreview.OptionMenuItemTitle.browse, image: UIImage(systemName: "globe")) { [weak self] _ in
+                    self?.store.execute(.browseButtonTapped)
                 }
 
             case .playConfig:

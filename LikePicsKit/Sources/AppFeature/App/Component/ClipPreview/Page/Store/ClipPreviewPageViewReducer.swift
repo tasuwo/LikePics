@@ -258,6 +258,10 @@ extension ClipPreviewPageViewReducer {
             }
             return (nextState, [Effect(stream)])
 
+        case .paused:
+            nextState.playingAt = nil
+            return (nextState, .none)
+
         case .playConfigRequested:
             nextState.modal = .playConfig(id: UUID())
             return (nextState, .none)

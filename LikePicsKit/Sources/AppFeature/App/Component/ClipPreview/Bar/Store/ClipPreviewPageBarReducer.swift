@@ -38,6 +38,11 @@ struct ClipPreviewPageBarReducer: Reducer {
             nextState = nextState.updatingAppearance()
             return (nextState, .none)
 
+        case let .updatedPlaying(isPlaying):
+            nextState.isPlaying = isPlaying
+            nextState = nextState.updatingAppearance()
+            return (nextState, .none)
+
         // MARK: Gesture
 
         case .didTapView:
@@ -57,6 +62,7 @@ struct ClipPreviewPageBarReducer: Reducer {
              .infoButtonTapped,
              .browseButtonTapped,
              .playButtonTapped,
+             .pauseButtonTapped,
              .playConfigButtonTapped:
             // 画面遷移中であった場合、ボタン操作は無視する
             guard dependency.transitionLock.isFree else { return (nextState, .none) }
@@ -140,7 +146,7 @@ private extension ClipPreviewPageBarState {
             ]
             nextState.rightBarButtonItems = [
                 .init(kind: .option, isEnabled: true),
-                .init(kind: .browse, isEnabled: existsUrlAtCurrentItem),
+                nextState.isPlaying ? .init(kind: .pause, isEnabled: true) : .init(kind: .play, isEnabled: true),
                 .init(kind: .add, isEnabled: true),
                 .init(kind: .list, isEnabled: true),
                 .init(kind: .share, isEnabled: true),
@@ -148,7 +154,7 @@ private extension ClipPreviewPageBarState {
             ]
         } else {
             nextState.toolBarItems = [
-                .init(kind: .browse, isEnabled: existsUrlAtCurrentItem),
+                nextState.isPlaying ? .init(kind: .pause, isEnabled: true) : .init(kind: .play, isEnabled: true),
                 .init(kind: .add, isEnabled: true),
                 .init(kind: .list, isEnabled: true),
                 .init(kind: .share, isEnabled: true),
@@ -162,9 +168,9 @@ private extension ClipPreviewPageBarState {
 
         nextState.optionMenuItems = [
             .info,
-            .play,
+            existsUrlAtCurrentItem ? .browse : nil,
             .playConfig
-        ]
+        ].compactMap { $0 }
 
         return nextState
     }

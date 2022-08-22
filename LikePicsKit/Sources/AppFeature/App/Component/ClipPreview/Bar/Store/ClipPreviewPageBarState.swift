@@ -16,8 +16,9 @@ struct ClipPreviewPageBarState: Equatable {
     struct Item: Equatable {
         enum Kind: Equatable {
             case back
+            case play
+            case pause
             case list
-            case browse
             case add
             case share
             case delete
@@ -30,7 +31,7 @@ struct ClipPreviewPageBarState: Equatable {
 
     enum OptionMenuItem: Equatable {
         case info
-        case play
+        case browse
         case playConfig
     }
 
@@ -45,6 +46,7 @@ struct ClipPreviewPageBarState: Equatable {
     var isNavigationBarHidden: Bool
     var isToolBarHidden: Bool
     var isPageCounterHidden: Bool
+    var isPlaying: Bool
 
     var alert: Alert?
 
@@ -63,6 +65,7 @@ extension ClipPreviewPageBarState {
         isNavigationBarHidden = false
         isToolBarHidden = false
         isPageCounterHidden = false
+        isPlaying = false
         alert = nil
         currentIndex = nil
         clipItems = []

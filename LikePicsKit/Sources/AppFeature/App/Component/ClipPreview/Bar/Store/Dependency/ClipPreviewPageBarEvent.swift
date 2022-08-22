@@ -7,6 +7,7 @@ enum ClipPreviewPageBarEvent {
     case listed
     case infoRequested
     case played
+    case paused
     case playConfigRequested
     case browsed
     case addToAlbum

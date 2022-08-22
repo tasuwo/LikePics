@@ -15,6 +15,7 @@ enum ClipPreviewPageBarAction: Action {
 
     case updatedCurrentIndex(Int?)
     case updatedClipItems([ClipItem])
+    case updatedPlaying(Bool)
 
     // MARK: Gesture
 
@@ -26,6 +27,7 @@ enum ClipPreviewPageBarAction: Action {
     case backButtonTapped
     case infoButtonTapped
     case playButtonTapped
+    case pauseButtonTapped
     case playConfigButtonTapped
     case browseButtonTapped
     case addButtonTapped
