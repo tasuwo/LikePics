@@ -224,6 +224,8 @@ extension ClipPreviewPageViewReducer {
     {
         var nextState = state
 
+        nextState.playingAt = nil
+
         // 画面遷移中であった場合、ボタン操作は無視する
         guard dependency.transitionLock.isFree else { return (nextState, .none) }
 
@@ -327,6 +329,10 @@ extension ClipPreviewPageViewReducer {
             case .failure:
                 nextState.alert = .error(L10n.clipCollectionErrorAtRemoveItemFromClip)
             }
+            return (nextState, .none)
+
+        case .alertPresented:
+            // NOP
             return (nextState, .none)
         }
     }

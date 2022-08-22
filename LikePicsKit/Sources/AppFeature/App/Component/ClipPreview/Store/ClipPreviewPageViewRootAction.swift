@@ -66,6 +66,9 @@ private extension ClipPreviewPageBarAction {
         case let .alertShareDismissed(succeeded):
             return .shared(succeeded)
 
+        case .addButtonTapped, .shareButtonTapped, .deleteButtonTapped:
+            return .alertPresented
+
         default:
             return nil
         }

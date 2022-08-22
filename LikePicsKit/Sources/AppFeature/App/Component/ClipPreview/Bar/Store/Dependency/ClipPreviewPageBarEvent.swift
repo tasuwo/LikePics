@@ -14,4 +14,5 @@ enum ClipPreviewPageBarEvent {
     case shared(Bool)
     case deleteClip
     case removeFromClip
+    case alertPresented
 }
