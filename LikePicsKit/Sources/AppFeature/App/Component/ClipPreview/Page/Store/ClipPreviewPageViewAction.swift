@@ -18,6 +18,8 @@ enum ClipPreviewPageViewAction: Action {
     case clipsUpdated([Clip])
     case settingUpdated(isSomeItemsHidden: Bool)
     case playConfigUpdated(config: ClipPreviewPlayConfiguration)
+    case willBeginTransition
+    case willBeginZoom
 
     // MARK: Transition
 

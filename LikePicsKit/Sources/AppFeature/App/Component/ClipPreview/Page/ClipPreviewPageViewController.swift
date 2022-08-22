@@ -405,12 +405,17 @@ extension ClipPreviewPageViewController: ClipPreviewPageViewDelegate {
     // MARK: - ClipPreviewPageViewDelegate
 
     func clipPreviewPageViewWillBeginZoom(_ view: ClipPreviewView) {
+        store.execute(.willBeginZoom)
         barController.store.execute(.willBeginZoom)
     }
 }
 
 extension ClipPreviewPageViewController: UIPageViewControllerDelegate {
     // MARK: - UIPageViewControllerDelegate
+
+    func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
+        store.execute(.willBeginTransition)
+    }
 
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         guard let viewController = currentViewController, let indexPath = currentIndexPath else { return }

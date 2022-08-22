@@ -56,9 +56,14 @@ struct ClipPreviewPageViewReducer: Reducer {
             nextState.playConfiguration = config
             return (nextState, .none)
 
+        case .willBeginTransition, .willBeginZoom:
+            nextState.playingAt = nil
+            return (nextState, .none)
+
         // MARK: Transition
 
         case .clipInformationViewPresented:
+            nextState.playingAt = nil
             if let currentClipId = state.currentClip?.id,
                let currentItemId = state.currentItem?.id,
                let transitioningController = dependency.clipItemInformationTransitioningController
