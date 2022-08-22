@@ -481,9 +481,9 @@ internal enum L10n {
         internal enum OptionMenuItemTitle {
             /// URLを開く
             internal static let browse = L10n.tr("Localizable", "clip_preview.option_menu_item_title.browse")
-            /// 情報
+            /// 詳細情報を見る
             internal static let info = L10n.tr("Localizable", "clip_preview.option_menu_item_title.info")
-            /// 再生設定
+            /// 再生設定を開く
             internal static let playConfig = L10n.tr("Localizable", "clip_preview.option_menu_item_title.play_config")
         }
     }

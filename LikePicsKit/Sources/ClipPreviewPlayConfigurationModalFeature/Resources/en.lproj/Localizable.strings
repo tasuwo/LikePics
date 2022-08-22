@@ -6,7 +6,7 @@
   
 */
 
-"root.title" = "Play Setting";
+"root.title" = "Play Settings";
 
 "root.menu_title.interval" = "Interval";
 "root.menu_title.loop" = "Loop";
