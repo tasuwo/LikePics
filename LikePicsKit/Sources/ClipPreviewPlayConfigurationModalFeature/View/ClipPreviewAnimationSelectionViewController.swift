@@ -66,7 +66,8 @@ extension ClipPreviewAnimationSelectionViewController {
             guard let self = self else { return }
             guard let indexPath = self.dataSource.indexPath(for: self.storage.fetchAnimation()) else { return }
             self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-            self.collectionView(self.collectionView, didSelectItemAt: indexPath)
+            guard let cell = self.collectionView.cellForItem(at: indexPath) as? UICollectionViewListCell else { return }
+            cell.accessories = [.checkmark()]
         }
     }
 }
@@ -80,6 +81,8 @@ extension ClipPreviewAnimationSelectionViewController: UICollectionViewDelegate 
 
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
         storage.set(animation: item)
+
+        navigationController?.popViewController(animated: true)
     }
 
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
