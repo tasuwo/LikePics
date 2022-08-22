@@ -169,16 +169,38 @@ struct PreviewingClips: Equatable {
             // Clip内に次のItemが存在しなかった
             if indexPath.clipIndex + 1 < value.count {
                 // 次のClipが存在した
-                if loopEnabled, range == .clip {
-                    // Clipの先頭のItemに戻す
-                    return currentClip.items.first
-                } else {
-                    for clipIndex in indexPath.clipIndex + 1 ... value.count - 1 {
-                        if filteredClipIds.contains(value[clipIndex].id) {
+                if loopEnabled {
+                    switch range {
+                    case .clip:
+                        // Clipの先頭のItemに戻す
+                        return currentClip.items.first
+
+                    case .overall:
+                        // 次のClipが存在すれば移動する
+                        for clipIndex in indexPath.clipIndex + 1 ... value.count - 1 {
+                            guard filteredClipIds.contains(value[clipIndex].id) else { continue }
                             return value[clipIndex].items.first
                         }
+                        for clipIndex in 0 ... indexPath.clipIndex - 1 {
+                            guard filteredClipIds.contains(value[clipIndex].id) else { continue }
+                            return value[clipIndex].items.first
+                        }
+                        return currentClip.items.first
                     }
-                    return nil
+                } else {
+                    switch range {
+                    case .clip:
+                        return nil
+
+                    case .overall:
+                        // 次のClipが存在すれば移動する
+                        for clipIndex in indexPath.clipIndex + 1 ... value.count - 1 {
+                            if filteredClipIds.contains(value[clipIndex].id) {
+                                return value[clipIndex].items.first
+                            }
+                        }
+                        return nil
+                    }
                 }
             } else {
                 // 最後のClipだった
@@ -211,17 +233,35 @@ struct PreviewingClips: Equatable {
         } else {
             // Clip内に前のItemが存在しなかった
             if indexPath.clipIndex - 1 >= 0 {
+                if loopEnabled {
+                    switch range {
+                    case .clip:
+                        // Clipの末尾のItemに戻す
+                        return currentClip.items.last
+
+                    case .overall:
+                        for clipIndex in (0 ... indexPath.clipIndex - 1).reversed() {
+                            if filteredClipIds.contains(value[clipIndex].id) {
+                                return value[clipIndex].items.last
+                            }
+                        }
+                    }
+                }
+
                 // 前のClipが存在した
                 if loopEnabled, range == .clip {
                     // Clipの末尾のItemに戻す
                     return currentClip.items.last
                 } else {
                     for clipIndex in (0 ... indexPath.clipIndex - 1).reversed() {
-                        if filteredClipIds.contains(value[clipIndex].id) {
-                            return value[clipIndex].items.last
-                        }
+                        guard filteredClipIds.contains(value[clipIndex].id) else { continue }
+                        return value[clipIndex].items.last
                     }
-                    return nil
+                    for clipIndex in (indexPath.clipIndex + 1 ... value.count - 1).reversed() {
+                        guard filteredClipIds.contains(value[clipIndex].id) else { continue }
+                        return value[clipIndex].items.last
+                    }
+                    return currentClip.items.last
                 }
             } else {
                 // 最初のClipだった
