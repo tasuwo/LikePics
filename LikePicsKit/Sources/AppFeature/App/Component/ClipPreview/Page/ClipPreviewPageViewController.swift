@@ -46,6 +46,7 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private let modalRouter: ModalRouter
     private let factory: ViewControllerFactory
+    private let previewPrefetcher: PreviewPrefetchable
 
     // MARK: Store
 
@@ -56,6 +57,8 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private var previewViewSubscriptions: Set<AnyCancellable> = .init()
     private var modalSubscriptions: Set<AnyCancellable> = .init()
+    private var nextPreviewPrefetchCancellable: PreviewPrefetchCancellable?
+    private var prevPreviewPrefetchCancellable: PreviewPrefetchCancellable?
 
     private let itemListTransitionController: ClipItemListTransitioningControllable
 
@@ -68,6 +71,7 @@ class ClipPreviewPageViewController: UIPageViewController {
     init(state: ClipPreviewPageViewRootState,
          dependency: ClipPreviewPageViewRootDependency,
          factory: ViewControllerFactory,
+         previewPrefetcher: PreviewPrefetchable,
          transitionDispatcher: ClipPreviewPageTransitionDispatcherType,
          itemListTransitionController: ClipItemListTransitioningControllable,
          modalRouter: ModalRouter,
@@ -86,6 +90,7 @@ class ClipPreviewPageViewController: UIPageViewController {
 
         self.transitionDispatcher = transitionDispatcher
         self.factory = factory
+        self.previewPrefetcher = previewPrefetcher
 
         self.modalRouter = modalRouter
 
@@ -194,6 +199,18 @@ extension ClipPreviewPageViewController {
             .bind(\.currentClip) { [weak self] currentClip in
                 guard let items = currentClip?.items else { return }
                 self?.barController.store.execute(.updatedClipItems(items))
+            }
+            .store(in: &subscriptions)
+
+        store.state
+            .sink { [weak self] state in
+                guard let self = self, let item = state.currentItem else { return }
+                if let nextItem = state.clips.pickNextVisibleItem(ofItemHaving: item.id) {
+                    self.nextPreviewPrefetchCancellable = self.previewPrefetcher.prefetchPreview(for: nextItem)
+                }
+                if let prevItem = state.clips.pickNextVisibleItem(ofItemHaving: item.id) {
+                    self.prevPreviewPrefetchCancellable = self.previewPrefetcher.prefetchPreview(for: prevItem)
+                }
             }
             .store(in: &subscriptions)
 

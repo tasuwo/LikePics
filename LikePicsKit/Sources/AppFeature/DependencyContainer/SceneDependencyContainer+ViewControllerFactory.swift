@@ -169,6 +169,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
         let viewController = ClipPreviewPageViewController(state: state,
                                                            dependency: dependency,
                                                            factory: self,
+                                                           previewPrefetcher: container.previewPrefetcher,
                                                            transitionDispatcher: transitionDispatcher,
                                                            itemListTransitionController: itemListTransitionController,
                                                            modalRouter: self,
