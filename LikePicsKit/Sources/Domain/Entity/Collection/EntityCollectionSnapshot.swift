@@ -54,6 +54,13 @@ public extension EntityCollectionSnapshot {
                      filteredIds: _filteredIds)
     }
 
+    func selected(ids: Set<Entity.Identity>) -> Self {
+        return .init(order: order,
+                     entities: _entities,
+                     selectedIds: _selectedIds.union(ids).intersection(Set(order)),
+                     filteredIds: _filteredIds)
+    }
+
     func selectedAllFilteredEntities() -> Self {
         return .init(order: order,
                      entities: _entities,

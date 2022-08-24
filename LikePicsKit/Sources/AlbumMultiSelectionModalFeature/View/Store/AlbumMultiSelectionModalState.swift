@@ -13,6 +13,7 @@ public struct AlbumMultiSelectionModalState: Equatable {
     }
 
     let id: UUID
+    let initialSelections: Set<Album.Identity>
 
     var searchQuery: String
     var searchStorage: SearchableStorage<ListingAlbumTitle>
@@ -31,10 +32,11 @@ public struct AlbumMultiSelectionModalState: Equatable {
 public extension AlbumMultiSelectionModalState {
     init(id: UUID, selections: Set<Album.Identity>, isSomeItemsHidden: Bool) {
         self.id = id
+        initialSelections = selections
 
         searchQuery = ""
         searchStorage = .init()
-        albums = .init(selectedIds: selections)
+        albums = .init()
 
         isCollectionViewHidden = true
         isEmptyMessageViewHidden = true

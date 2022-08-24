@@ -117,7 +117,8 @@ extension TagSelectionModalReducer {
         let nextState = performFilter(tags: query.tags.value,
                                       searchQuery: state.searchQuery,
                                       isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
-                                      previousState: state)
+                                      previousState: state,
+                                      isInitial: true)
 
         return (nextState, [tagsEffect, settingsEffect])
     }
@@ -156,7 +157,8 @@ extension TagSelectionModalReducer {
     private static func performFilter(tags: [Tag],
                                       searchQuery: String,
                                       isSomeItemsHidden: Bool,
-                                      previousState: State) -> State
+                                      previousState: State,
+                                      isInitial: Bool = false) -> State
     {
         var nextState = previousState
         var searchStorage = previousState.searchStorage
@@ -164,9 +166,12 @@ extension TagSelectionModalReducer {
         let filteringTags = tags.filter { isSomeItemsHidden ? $0.isHidden == false : true }
         let filteredTagIds = searchStorage.perform(query: searchQuery, to: filteringTags).map { $0.id }
 
-        let newTags = previousState.tags
+        var newTags = previousState.tags
             .updated(entities: tags)
             .updated(filteredIds: Set(filteredTagIds))
+        if isInitial {
+            newTags = newTags.selected(ids: previousState.initialSelections)
+        }
         nextState.tags = newTags
 
         nextState.searchQuery = searchQuery

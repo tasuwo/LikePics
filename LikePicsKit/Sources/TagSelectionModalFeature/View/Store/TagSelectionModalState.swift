@@ -13,6 +13,7 @@ public struct TagSelectionModalState: Equatable {
     }
 
     let id: UUID
+    let initialSelections: Set<Album.Identity>
 
     var searchQuery: String
     var searchStorage: SearchableStorage<Tag>
@@ -31,10 +32,11 @@ public struct TagSelectionModalState: Equatable {
 public extension TagSelectionModalState {
     init(id: UUID, selections: Set<Tag.Identity>, isSomeItemsHidden: Bool) {
         self.id = id
+        initialSelections = selections
 
         searchQuery = ""
         searchStorage = .init()
-        tags = .init(selectedIds: selections)
+        tags = .init()
 
         isCollectionViewHidden = true
         isEmptyMessageViewHidden = true

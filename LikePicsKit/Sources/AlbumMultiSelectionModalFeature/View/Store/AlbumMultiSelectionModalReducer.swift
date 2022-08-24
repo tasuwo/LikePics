@@ -112,7 +112,8 @@ extension AlbumMultiSelectionModalReducer {
         let nextState = performFilter(albums: query.albums.value,
                                       searchQuery: state.searchQuery,
                                       isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
-                                      previousState: state)
+                                      previousState: state,
+                                      isInitial: true)
 
         return (nextState, [albumsEffect, settingsEffect])
     }
@@ -151,16 +152,20 @@ extension AlbumMultiSelectionModalReducer {
     private static func performFilter(albums: [ListingAlbumTitle],
                                       searchQuery: String,
                                       isSomeItemsHidden: Bool,
-                                      previousState: State) -> State
+                                      previousState: State,
+                                      isInitial: Bool = false) -> State
     {
         var nextState = previousState
         var searchStorage = previousState.searchStorage
 
         let filteringAlbums = albums.filter { isSomeItemsHidden ? $0.isHidden == false : true }
         let filteredAlbumIds = searchStorage.perform(query: searchQuery, to: filteringAlbums).map { $0.id }
-        let newAlbums = previousState.albums
+        var newAlbums = previousState.albums
             .updated(entities: albums)
             .updated(filteredIds: Set(filteredAlbumIds))
+        if isInitial {
+            newAlbums = newAlbums.selected(ids: previousState.initialSelections)
+        }
         nextState.albums = newAlbums
 
         nextState.searchQuery = searchQuery
