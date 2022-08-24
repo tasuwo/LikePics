@@ -57,7 +57,7 @@ struct ClipPreviewPageViewReducer: Reducer {
             nextState.playConfiguration = config
             return (nextState, .none)
 
-        case .willBeginTransition, .willBeginZoom:
+        case .willBeginTransition, .willBeginZoom, .didBeginPan:
             nextState.playingAt = nil
             return (nextState, .none)
 

@@ -228,6 +228,10 @@ extension ClipPreviewPageViewController {
         transitionDispatcher.outputs.presentInformation
             .sink { [weak self] in self?.store.execute(.clipInformationViewPresented) }
             .store(in: &subscriptions)
+
+        transitionDispatcher.outputs.didBeginPan
+            .sink { [weak self] in self?.store.execute(.didBeginPan) }
+            .store(in: &subscriptions)
     }
 
     // MARK: Page

@@ -19,6 +19,7 @@ enum ClipPreviewPageViewAction: Action {
     case settingUpdated(isSomeItemsHidden: Bool)
     case playConfigUpdated(config: ClipPreviewPlayConfiguration)
     case willBeginTransition
+    case didBeginPan
     case willBeginZoom
 
     // MARK: Transition

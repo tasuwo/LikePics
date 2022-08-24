@@ -24,6 +24,7 @@ protocol ClipPreviewPageTransitionDispatcherInputs {
 protocol ClipPreviewPageTransitionDispatcherOutputs {
     var isPreviewScrollEnabled: CurrentValueSubject<Bool, Never> { get }
     var presentInformation: PassthroughSubject<Void, Never> { get }
+    var didBeginPan: PassthroughSubject<Void, Never> { get }
 }
 
 class ClipPreviewPageTransitionController: NSObject,
@@ -61,6 +62,7 @@ class ClipPreviewPageTransitionController: NSObject,
 
     let isPreviewScrollEnabled: CurrentValueSubject<Bool, Never> = .init(true)
     let presentInformation: PassthroughSubject<Void, Never> = .init()
+    let didBeginPan: PassthroughSubject<Void, Never> = .init()
 
     // MARK: Privates
 
@@ -122,6 +124,10 @@ class ClipPreviewPageTransitionController: NSObject,
 
     @objc
     func didPan(_ sender: UIPanGestureRecognizer) {
+        if sender.state == .began {
+            self.outputs.didBeginPan.send(())
+        }
+
         switch (sender.state, self.destination) {
         case (.began, .back):
             guard context == nil else { return }
