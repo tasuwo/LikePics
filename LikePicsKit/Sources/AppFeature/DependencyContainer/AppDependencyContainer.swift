@@ -203,7 +203,7 @@ public class AppDependencyContainer {
         previewCacheConfig.memoryCache = memoryCache
         self._previewPipeline = Pipeline(config: previewCacheConfig)
 
-        self._previewPrefetcher = PreviewPrefetcher(pipeline: _clipThumbnailPipeline,
+        self._previewPrefetcher = PreviewPrefetcher(pipeline: _previewPipeline,
                                                     imageQueryService: _imageQueryService)
 
         // MARK: Service
