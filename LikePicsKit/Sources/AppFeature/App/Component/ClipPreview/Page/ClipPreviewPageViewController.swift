@@ -106,6 +106,10 @@ class ClipPreviewPageViewController: UIPageViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        UIApplication.shared.isIdleTimerDisabled = false
+    }
+
     // MARK: - View Life-Cycle Methods
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -216,6 +220,7 @@ extension ClipPreviewPageViewController {
 
         store.state
             .bind(\.playingAt) { [weak self] playingAt in
+                UIApplication.shared.isIdleTimerDisabled = playingAt != nil
                 self?.barController.store.execute(.updatedPlaying(playingAt != nil))
             }
             .store(in: &subscriptions)
