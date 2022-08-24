@@ -71,7 +71,8 @@ public class ClipPreviewViewController: UIViewController {
             let provider = ImageDataProvider(imageId: state.imageId,
                                              cacheKey: "preview-\(itemId.uuidString)",
                                              imageQueryService: imageQueryService)
-            let request = ImageRequest(source: .provider(provider))
+            var request = ImageRequest(source: .provider(provider))
+            request.ignoreDiskCaching = true
             loadImage(request, with: pipeline, on: previewView)
         }
     }
@@ -105,7 +106,7 @@ extension ClipPreviewViewController {
                                              cacheKey: "preview-\(itemId.uuidString)",
                                              imageQueryService: imageQueryService)
             var request = ImageRequest(source: .provider(provider))
-            request.onlyMemoryCaching = true
+            request.ignoreDiskCaching = true
             loadImage(request, with: pipeline, on: previewView)
         }
     }

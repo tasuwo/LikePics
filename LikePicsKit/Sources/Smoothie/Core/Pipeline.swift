@@ -83,7 +83,7 @@ extension Pipeline {
             return
         }
 
-        if task.request.onlyMemoryCaching {
+        if task.request.ignoreDiskCaching {
             enqueueDataLoadingOperation(task)
         } else {
             enqueueCheckDiskCacheOperation(task)

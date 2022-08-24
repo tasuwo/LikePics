@@ -51,7 +51,7 @@ class PreviewPrefetcher {
                                          cacheKey: "preview-\(item.identity.uuidString)",
                                          imageQueryService: imageQueryService)
         var request = ImageRequest(source: .provider(provider))
-        request.onlyMemoryCaching = true
+        request.ignoreDiskCaching = true
 
         let cancellable = pipeline.loadImage(request) { [weak self] in
             self?.cancellables.removeValue(forKey: ImageRequestKey(request))

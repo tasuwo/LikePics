@@ -19,7 +19,7 @@ public struct ImageRequest {
 
     public let source: ImageSource
     public let resize: Resize?
-    public var onlyMemoryCaching = false
+    public var ignoreDiskCaching = false
 
     // MARK: - Initializers
 
