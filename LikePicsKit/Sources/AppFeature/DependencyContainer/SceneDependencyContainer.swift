@@ -101,3 +101,7 @@ extension SceneDependencyContainer: HasListingAlbumTitleQueryService {
 extension SceneDependencyContainer: HasClipPreviewPlayConfigurationStorage {
     public var clipPreviewPlayConfigurationStorage: ClipPreviewPlayConfigurationStorageProtocol { container.clipPreviewPlayConfigurationStorage }
 }
+
+extension SceneDependencyContainer: HasPreviewPrefetcher {
+    public var previewPrefetcher: PreviewPrefetchable { container.previewPrefetcher }
+}

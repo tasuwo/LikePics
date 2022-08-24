@@ -38,6 +38,7 @@ public typealias AppDependencyContaining = HasPasteboard
     & HasAlbumCommandService
     & HasListingAlbumTitleQueryService
     & HasClipPreviewPlayConfigurationStorage
+    & HasPreviewPrefetcher
 
 public class AppDependencyContainer {
     // MARK: - Properties
@@ -395,3 +396,5 @@ extension AppDependencyContainer: HasAppBundle {}
 extension AppDependencyContainer: HasClipPreviewPlayConfigurationStorage {
     public var clipPreviewPlayConfigurationStorage: ClipPreviewPlayConfigurationStorageProtocol { _clipPreviewPlayConfigurationStorage }
 }
+
+extension AppDependencyContainer: HasPreviewPrefetcher {}
