@@ -169,7 +169,6 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                                            factory: self,
                                                            transitionDispatcher: transitionDispatcher,
                                                            itemListTransitionController: itemListTransitionController,
-                                                           previewPrefetcher: container.previewPrefetcher,
                                                            modalRouter: self,
                                                            appBundle: container.appBundle)
 

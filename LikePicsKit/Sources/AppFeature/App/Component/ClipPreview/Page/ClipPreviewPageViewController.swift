@@ -59,10 +59,6 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     private let itemListTransitionController: ClipItemListTransitioningControllable
 
-    // MARK: Image Loader
-
-    private let previewPrefetcher: PreviewPrefetchable
-
     // MARK: State Restoration
 
     private let appBundle: Bundle
@@ -74,7 +70,6 @@ class ClipPreviewPageViewController: UIPageViewController {
          factory: ViewControllerFactory,
          transitionDispatcher: ClipPreviewPageTransitionDispatcherType,
          itemListTransitionController: ClipItemListTransitioningControllable,
-         previewPrefetcher: PreviewPrefetchable,
          modalRouter: ModalRouter,
          appBundle: Bundle)
     {
@@ -95,8 +90,6 @@ class ClipPreviewPageViewController: UIPageViewController {
         self.modalRouter = modalRouter
 
         self.itemListTransitionController = itemListTransitionController
-
-        self.previewPrefetcher = previewPrefetcher
 
         self.appBundle = appBundle
 
@@ -207,12 +200,6 @@ extension ClipPreviewPageViewController {
         store.state
             .bind(\.playingAt) { [weak self] playingAt in
                 self?.barController.store.execute(.updatedPlaying(playingAt != nil))
-            }
-            .store(in: &subscriptions)
-
-        store.state
-            .bind(\.currentClip) { [weak self] currentClip in
-                self?.previewPrefetcher.clip.send(currentClip)
             }
             .store(in: &subscriptions)
 

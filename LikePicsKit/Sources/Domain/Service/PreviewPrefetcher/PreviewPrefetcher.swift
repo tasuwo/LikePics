@@ -4,7 +4,11 @@
 
 import Combine
 
+public protocol PreviewPrefetchCancellable {
+    func cancel()
+}
+
 /// @mockable
 public protocol PreviewPrefetchable {
-    var clip: CurrentValueSubject<Clip?, Never> { get }
+    func prefetchPreview(for item: ClipItem) -> PreviewPrefetchCancellable
 }
