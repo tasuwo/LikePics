@@ -104,7 +104,8 @@ extension ClipPreviewViewController {
             let provider = ImageDataProvider(imageId: state.imageId,
                                              cacheKey: "preview-\(itemId.uuidString)",
                                              imageQueryService: imageQueryService)
-            let request = ImageRequest(source: .provider(provider))
+            var request = ImageRequest(source: .provider(provider))
+            request.onlyMemoryCaching = true
             loadImage(request, with: pipeline, on: previewView)
         }
     }

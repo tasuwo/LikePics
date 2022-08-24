@@ -47,9 +47,9 @@ extension PreviewPrefetcher: PreviewPrefetchable {
         let provider = ImageDataProvider(imageId: item.imageId,
                                          cacheKey: "preview-\(item.identity.uuidString)",
                                          imageQueryService: imageQueryService)
-        let request = ImageRequest(source: .provider(provider))
-        // TODO: メモリ上にのみロードする
-        let cancellable = pipeline.preload(request, completion: {})
+        var request = ImageRequest(source: .provider(provider))
+        request.onlyMemoryCaching = true
+        let cancellable = pipeline.loadImage(request)
         return Cancellable(cancellable)
     }
 }

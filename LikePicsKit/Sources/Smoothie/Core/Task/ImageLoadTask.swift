@@ -13,7 +13,6 @@ class ImageLoadTask {
     // MARK: - Properties
 
     let request: ImageRequest
-    let isPreload: Bool
     private weak var pipeline: Pipeline?
 
     private var subscriptions: [UUID: Subscription] = [:]
@@ -26,9 +25,8 @@ class ImageLoadTask {
 
     // MARK: - Initializers
 
-    init(request: ImageRequest, isPreload: Bool, pipeline: Pipeline) {
+    init(request: ImageRequest, pipeline: Pipeline) {
         self.request = request
-        self.isPreload = isPreload
         self.pipeline = pipeline
     }
 
