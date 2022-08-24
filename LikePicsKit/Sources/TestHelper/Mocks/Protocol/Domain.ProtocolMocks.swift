@@ -1431,20 +1431,6 @@ public class ImageStorageProtocolMock: ImageStorageProtocol {
     }
 }
 
-public class PreviewPrefetchableMock: PreviewPrefetchable {
-    public init() { }
-    public init(clip: CurrentValueSubject<Clip?, Never>) {
-        self._clip = clip
-    }
-
-    public private(set) var clipSetCallCount = 0
-    private var _clip: CurrentValueSubject<Clip?, Never>! { didSet { clipSetCallCount += 1 } }
-    public var clip: CurrentValueSubject<Clip?, Never> {
-        get { return _clip }
-        set { _clip = newValue }
-    }
-}
-
 public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
     public init() { }
     public init(isInTransaction: Bool = false) {
@@ -1801,6 +1787,29 @@ public class CloudStackLoaderObserverMock: CloudStackLoaderObserver {
         didDisabledICloudSyncByUnavailableAccountCallCount += 1
         if let didDisabledICloudSyncByUnavailableAccountHandler = didDisabledICloudSyncByUnavailableAccountHandler {
             didDisabledICloudSyncByUnavailableAccountHandler(loader)
+        }
+    }
+}
+
+public class PreviewPrefetchableMock: PreviewPrefetchable {
+    public init() { }
+
+    public private(set) var prefetchPreviewCallCount = 0
+    public var prefetchPreviewHandler: ((ClipItem) -> (PreviewPrefetchCancellable))?
+    public func prefetchPreview(for item: ClipItem) -> PreviewPrefetchCancellable {
+        prefetchPreviewCallCount += 1
+        if let prefetchPreviewHandler = prefetchPreviewHandler {
+            return prefetchPreviewHandler(item)
+        }
+        fatalError("prefetchPreviewHandler returns can't have a default value thus its handler must be set")
+    }
+
+    public private(set) var detachedPrefetchPreviewCallCount = 0
+    public var detachedPrefetchPreviewHandler: ((ClipItem) -> Void)?
+    public func detachedPrefetchPreview(for item: ClipItem) {
+        detachedPrefetchPreviewCallCount += 1
+        if let detachedPrefetchPreviewHandler = detachedPrefetchPreviewHandler {
+            detachedPrefetchPreviewHandler(item)
         }
     }
 }
