@@ -24,7 +24,7 @@ enum ClipPreviewPageViewAction: Action {
     // MARK: Transition
 
     case clipInformationViewPresented
-    case nextPageRequested(UUID)
+    case nextPageRequested(UUID, at: ClipCollection.IndexPath)
 
     // MARK: Bar
 

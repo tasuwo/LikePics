@@ -16,6 +16,7 @@ typealias ClipPreviewPageViewDependency = HasRouter
     & HasTransitionLock
     & HasUserSettingStorage
     & HasClipPreviewPlayConfigurationStorage
+    & HasPreviewPrefetcher
 
 struct ClipPreviewPageViewReducer: Reducer {
     typealias Dependency = ClipPreviewPageViewDependency
@@ -74,16 +75,26 @@ struct ClipPreviewPageViewReducer: Reducer {
             }
             return (nextState, .none)
 
-        case let .nextPageRequested(id):
+        case let .nextPageRequested(id, indexPath):
             guard state.playingAt == id else { return (nextState, .none) }
-            guard let nextIndexPath = state.clips.pickNextVisibleItem(from: state.currentIndexPath, by: state.playConfiguration) else { return (nextState, .none) }
-            nextState.currentIndexPath = nextIndexPath
+            nextState.currentIndexPath = indexPath
             nextState.isPageAnimated = state.playConfiguration.animation != .off
             nextState.pageChange = state.playConfiguration.animation.pageChange
+
+            guard let nextIndexPath = state.clips.pickNextVisibleItem(from: indexPath, by: state.playConfiguration),
+                  let item = state.clips.clipItem(atIndexPath: nextIndexPath)
+            else {
+                nextState.playingAt = nil
+                return (nextState, .none)
+            }
+
             let stream = Deferred { [interval = state.playConfiguration.interval] in
-                Just<Action?>(.nextPageRequested(id))
+                Just<Action?>(.nextPageRequested(id, at: nextIndexPath))
                     .delay(for: .seconds(interval), tolerance: 0, scheduler: RunLoop.main)
             }
+
+            dependency.previewPrefetcher.detachedPrefetchPreview(for: item)
+
             return (nextState, [Effect(stream)])
 
         // MARK: Bar
@@ -250,12 +261,21 @@ extension ClipPreviewPageViewReducer {
             return (nextState, .none)
 
         case .played:
+            guard let nextIndexPath = state.clips.pickNextVisibleItem(from: state.currentIndexPath, by: state.playConfiguration),
+                  let item = state.clips.clipItem(atIndexPath: nextIndexPath)
+            else {
+                return (nextState, .none)
+            }
+
             let id = UUID()
             nextState.playingAt = id
             let stream = Deferred { [interval = state.playConfiguration.interval] in
-                Just<Action?>(.nextPageRequested(id))
+                Just<Action?>(.nextPageRequested(id, at: nextIndexPath))
                     .delay(for: .seconds(interval), tolerance: 0, scheduler: RunLoop.main)
             }
+
+            dependency.previewPrefetcher.detachedPrefetchPreview(for: item)
+
             return (nextState, [Effect(stream)])
 
         case .paused:

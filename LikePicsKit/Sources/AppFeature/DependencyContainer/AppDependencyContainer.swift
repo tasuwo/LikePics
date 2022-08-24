@@ -204,8 +204,7 @@ public class AppDependencyContainer {
         self._previewPipeline = Pipeline(config: previewCacheConfig)
 
         self._previewPrefetcher = PreviewPrefetcher(pipeline: _clipThumbnailPipeline,
-                                                    imageQueryService: _imageQueryService,
-                                                    scale: UIScreen.main.scale)
+                                                    imageQueryService: _imageQueryService)
 
         // MARK: Service
 

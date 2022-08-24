@@ -11,4 +11,5 @@ public protocol PreviewPrefetchCancellable {
 /// @mockable
 public protocol PreviewPrefetchable {
     func prefetchPreview(for item: ClipItem) -> PreviewPrefetchCancellable
+    func detachedPrefetchPreview(for item: ClipItem)
 }

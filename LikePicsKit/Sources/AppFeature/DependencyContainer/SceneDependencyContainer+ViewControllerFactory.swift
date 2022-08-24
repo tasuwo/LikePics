@@ -142,6 +142,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
             let transitionLock: TransitionLock
             let userSettingStorage: UserSettingsStorageProtocol
             let clipPreviewPlayConfigurationStorage: ClipPreviewPlayConfigurationStorageProtocol
+            let previewPrefetcher: PreviewPrefetchable
         }
 
         let previewTransitioningController = ClipPreviewTransitioningController(lock: container.transitionLock)
@@ -157,7 +158,8 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                     imageQueryService: container.imageQueryService,
                                     transitionLock: container.transitionLock,
                                     userSettingStorage: container.userSettingStorage,
-                                    clipPreviewPlayConfigurationStorage: container.clipPreviewPlayConfigurationStorage)
+                                    clipPreviewPlayConfigurationStorage: container.clipPreviewPlayConfigurationStorage,
+                                    previewPrefetcher: container.previewPrefetcher)
 
         let state = ClipPreviewPageViewRootState(clips: clips,
                                                  playConfiguration: container.clipPreviewPlayConfigurationStorage.fetchClipPreviewPlayConfiguration(),
