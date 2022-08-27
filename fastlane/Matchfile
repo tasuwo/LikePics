@@ -2,6 +2,7 @@
 
 git_url("git@github.com:tasuwo/certificates.git")
 storage_mode("git")
+readonly(true)
 
 type("development")
 app_identifier([
@@ -10,6 +11,20 @@ app_identifier([
     "net.tasuwo.TBox.ShareExtension",
     "net.tasuwo.TBox.dev.ShareExtension"
 ])
+
+for_lane :update_development_pp do
+  readonly(false)
+  force(true)
+
+  type("development")
+end
+
+for_lane :update_appstore_pp do
+  readonly(false)
+  force(true)
+
+  type("appstore")
+end
 
 for_lane :release do
   type("appstore")

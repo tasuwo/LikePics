@@ -13,6 +13,14 @@ platform :ios do
     snapshot
   end
 
+  lane :update_development_pp do
+    match
+  end
+
+  lane :update_appstore_pp do
+    match
+  end
+
   lane :release do
     app_store_connect_api_key
     match
