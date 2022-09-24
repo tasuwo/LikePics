@@ -5,7 +5,7 @@ let package = Package(
     name: "LikePicsKit",
     defaultLocalization: "ja",
     platforms: [
-        .iOS(.v14), .macOS(.v11)
+        .iOS(.v15), .macOS(.v12)
     ],
     products: [
         .library(name: "AppFeature", targets: ["AppFeature"]),
