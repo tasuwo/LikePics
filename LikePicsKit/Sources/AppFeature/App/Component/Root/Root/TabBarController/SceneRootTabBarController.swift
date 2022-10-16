@@ -69,36 +69,6 @@ extension SceneRootTabBarController {
     }
 }
 
-extension SceneRootTabBarController: CloudStackLoaderObserver {
-    // MARK: - CloudStackLoaderObserver
-
-    public func didAccountChanged(_ loader: CloudStackLoadable) {
-        DispatchQueue.main.async {
-            let alertController = UIAlertController(title: L10n.errorIcloudAccountChangedTitle,
-                                                    message: L10n.errorIcloudAccountChangedMessage,
-                                                    preferredStyle: .alert)
-            let okAction = UIAlertAction(title: L10n.confirmAlertOk,
-                                         style: .default,
-                                         handler: nil)
-            alertController.addAction(okAction)
-            self.present(alertController, animated: true, completion: nil)
-        }
-    }
-
-    public func didDisabledICloudSyncByUnavailableAccount(_ loader: CloudStackLoadable) {
-        DispatchQueue.main.async {
-            let alertController = UIAlertController(title: L10n.errorIcloudUnavailableTitle,
-                                                    message: L10n.errorIcloudUnavailableMessage,
-                                                    preferredStyle: .alert)
-            let okAction = UIAlertAction(title: L10n.confirmAlertOk,
-                                         style: .default,
-                                         handler: nil)
-            alertController.addAction(okAction)
-            self.present(alertController, animated: true, completion: nil)
-        }
-    }
-}
-
 extension SceneRootTabBarController: LoadingViewPresentable {
     // MARK: - LoadingViewPresentable
 

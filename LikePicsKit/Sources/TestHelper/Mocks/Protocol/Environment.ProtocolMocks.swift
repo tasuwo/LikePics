@@ -181,20 +181,6 @@ public class HasClipPreviewPlayConfigurationStorageMock: HasClipPreviewPlayConfi
     }
 }
 
-public class HasCloudStackLoaderMock: HasCloudStackLoader {
-    public init() { }
-    public init(cloudStackLoader: CloudStackLoadable) {
-        self._cloudStackLoader = cloudStackLoader
-    }
-
-    public private(set) var cloudStackLoaderSetCallCount = 0
-    private var _cloudStackLoader: CloudStackLoadable! { didSet { cloudStackLoaderSetCallCount += 1 } }
-    public var cloudStackLoader: CloudStackLoadable {
-        get { return _cloudStackLoader }
-        set { _cloudStackLoader = newValue }
-    }
-}
-
 public class HasTagCommandServiceMock: HasTagCommandService {
     public init() { }
     public init(tagCommandService: TagCommandServiceProtocol) {

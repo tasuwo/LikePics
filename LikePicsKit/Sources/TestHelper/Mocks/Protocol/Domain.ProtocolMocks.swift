@@ -3,7 +3,6 @@
 ///
 
 import Combine
-import Common
 @testable import Domain
 import Foundation
 import UIKit
@@ -494,24 +493,15 @@ public class ClipSearchSettingServiceMock: ClipSearchSettingService {
 
 public class CloudAvailabilityServiceProtocolMock: CloudAvailabilityServiceProtocol {
     public init() { }
-    public init(availability: AnyPublisher<CloudAvailability?, Error>) {
+    public init(availability: AnyPublisher<CloudAvailability?, Never>) {
         self._availability = availability
     }
 
     public private(set) var availabilitySetCallCount = 0
-    private var _availability: AnyPublisher<CloudAvailability?, Error>! { didSet { availabilitySetCallCount += 1 } }
-    public var availability: AnyPublisher<CloudAvailability?, Error> {
+    private var _availability: AnyPublisher<CloudAvailability?, Never>! { didSet { availabilitySetCallCount += 1 } }
+    public var availability: AnyPublisher<CloudAvailability?, Never> {
         get { return _availability }
         set { _availability = newValue }
-    }
-
-    public private(set) var currentAvailabilityCallCount = 0
-    public var currentAvailabilityHandler: ((@escaping (Result<CloudAvailability, Error>) -> Void) -> Void)?
-    public func currentAvailability(_ completion: @escaping (Result<CloudAvailability, Error>) -> Void) {
-        currentAvailabilityCallCount += 1
-        if let currentAvailabilityHandler = currentAvailabilityHandler {
-            currentAvailabilityHandler(completion)
-        }
     }
 }
 
@@ -1769,28 +1759,6 @@ public class ClipSearchHistoryServiceMock: ClipSearchHistoryService {
     }
 }
 
-public class CloudStackLoaderObserverMock: CloudStackLoaderObserver {
-    public init() { }
-
-    public private(set) var didAccountChangedCallCount = 0
-    public var didAccountChangedHandler: ((CloudStackLoadable) -> Void)?
-    public func didAccountChanged(_ loader: CloudStackLoadable) {
-        didAccountChangedCallCount += 1
-        if let didAccountChangedHandler = didAccountChangedHandler {
-            didAccountChangedHandler(loader)
-        }
-    }
-
-    public private(set) var didDisabledICloudSyncByUnavailableAccountCallCount = 0
-    public var didDisabledICloudSyncByUnavailableAccountHandler: ((CloudStackLoadable) -> Void)?
-    public func didDisabledICloudSyncByUnavailableAccount(_ loader: CloudStackLoadable) {
-        didDisabledICloudSyncByUnavailableAccountCallCount += 1
-        if let didDisabledICloudSyncByUnavailableAccountHandler = didDisabledICloudSyncByUnavailableAccountHandler {
-            didDisabledICloudSyncByUnavailableAccountHandler(loader)
-        }
-    }
-}
-
 public class PreviewPrefetchableMock: PreviewPrefetchable {
     public init() { }
 
@@ -2059,27 +2027,5 @@ public class AlbumCommandServiceProtocolMock: AlbumCommandServiceProtocol {
             return createHandler(title)
         }
         fatalError("createHandler returns can't have a default value thus its handler must be set")
-    }
-}
-
-public class CloudStackLoadableMock: CloudStackLoadable {
-    public init() { }
-
-    public private(set) var startObserveCloudAvailabilityCallCount = 0
-    public var startObserveCloudAvailabilityHandler: (() -> Void)?
-    public func startObserveCloudAvailability() {
-        startObserveCloudAvailabilityCallCount += 1
-        if let startObserveCloudAvailabilityHandler = startObserveCloudAvailabilityHandler {
-            startObserveCloudAvailabilityHandler()
-        }
-    }
-
-    public private(set) var setCallCount = 0
-    public var setHandler: ((CloudStackLoaderObserver) -> Void)?
-    public func set(observer: CloudStackLoaderObserver) {
-        setCallCount += 1
-        if let setHandler = setHandler {
-            setHandler(observer)
-        }
     }
 }

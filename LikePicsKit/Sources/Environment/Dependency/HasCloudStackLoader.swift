@@ -3,8 +3,3 @@
 //
 
 import Domain
-
-/// @mockable
-public protocol HasCloudStackLoader {
-    var cloudStackLoader: CloudStackLoadable { get }
-}

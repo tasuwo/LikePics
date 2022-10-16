@@ -4,7 +4,7 @@
 
 public protocol ObjectID {}
 
-public protocol CloudStackObserver: AnyObject {
+public protocol RemoteChangeMergeHandlerDelegate: AnyObject {
     func didRemoteChangedTags(inserted: [ObjectID], updated: [ObjectID], deleted: [ObjectID])
     func didRemoteChangedAlbums(inserted: [ObjectID], updated: [ObjectID], deleted: [ObjectID])
     func didRemoteChangedAlbumItems(inserted: [ObjectID], updated: [ObjectID], deleted: [ObjectID])

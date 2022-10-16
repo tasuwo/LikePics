@@ -21,10 +21,15 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // swiftlint:disable:next force_cast
         let delegate = UIApplication.shared.delegate as! HasAppDependencyContainer
-        let presenter = SceneRootSetupPresenter(userSettingsStorage: delegate.appDependencyContainer.userSettingStorage,
-                                                cloudAvailabilityService: delegate.appDependencyContainer.cloudAvailabilityService,
-                                                intent: session.stateRestorationActivity?.intent(appBundle: delegate.appDependencyContainer.appBundle))
-        let rootViewController = SceneRootSetupViewController(presenter: presenter, launcher: self)
+        self.sceneDependencyContainer = SceneDependencyContainer(sceneResolver: self, container: delegate.appDependencyContainer)
+
+        let intent = session.stateRestorationActivity?.intent(appBundle: delegate.appDependencyContainer.appBundle)
+        let rootViewController: SceneRootViewController
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            rootViewController = SceneRootSplitViewController(factory: self.sceneDependencyContainer, intent: intent)
+        } else {
+            rootViewController = SceneRootTabBarController(factory: self.sceneDependencyContainer, intent: intent)
+        }
 
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = rootViewController
@@ -56,28 +61,5 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     public func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
         return scene.userActivity
-    }
-}
-
-extension SceneDelegate: MainAppLauncher {
-    // MARK: - MainAppLauncher
-
-    func launch(_ intent: Intent?) {
-        // swiftlint:disable:next force_cast
-        let delegate = UIApplication.shared.delegate as! HasAppDependencyContainer
-        self.sceneDependencyContainer = SceneDependencyContainer(sceneResolver: self, container: delegate.appDependencyContainer)
-
-        let rootViewController: SceneRootViewController
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            rootViewController = SceneRootSplitViewController(factory: self.sceneDependencyContainer, intent: intent)
-        } else {
-            rootViewController = SceneRootTabBarController(factory: self.sceneDependencyContainer, intent: intent)
-        }
-
-        self.window?.rootViewController?.dismiss(animated: true) {
-            self.window?.rootViewController = rootViewController
-        }
-
-        delegate.appDependencyContainer.cloudStackLoader.set(observer: rootViewController)
     }
 }

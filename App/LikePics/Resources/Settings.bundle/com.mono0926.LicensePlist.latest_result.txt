@@ -34,9 +34,13 @@ name: FileKit, nameSpecified: FileKit, owner: nvzqz, version: 6.0.0, source: htt
 
 name: Kanna, nameSpecified: Kanna, owner: tid-kijyun, version: 5.2.7, source: https://github.com/tid-kijyun/Kanna
 
-name: realm-cocoa, nameSpecified: Realm, owner: realm, version: 10.28.5, source: https://github.com/realm/realm-cocoa
+name: PersistentStack, nameSpecified: PersistentStack, owner: tasuwo, version: 0.1.0, source: https://github.com/tasuwo/PersistentStack
 
-name: realm-core, nameSpecified: RealmDatabase, owner: realm, version: 12.5.0, source: https://github.com/realm/realm-core
+name: realm-cocoa, nameSpecified: Realm, owner: realm, version: 10.28.7, source: https://github.com/realm/realm-cocoa
+
+name: realm-core, nameSpecified: RealmDatabase, owner: realm, version: 12.5.1, source: https://github.com/realm/realm-core
+
+name: swift, nameSpecified: swift, owner: tasuwo, version: 0.3.0, source: https://github.com/tasuwo/swift
 
 name: swift-argument-parser, nameSpecified: swift-argument-parser, owner: apple, version: 1.1.4, source: https://github.com/apple/swift-argument-parser
 

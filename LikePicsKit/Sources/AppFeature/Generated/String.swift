@@ -311,11 +311,6 @@ internal enum L10n {
     internal static let errorAtDeleteClipItem = L10n.tr("Localizable", "error_at_delete_clip_item")
     /// 更新に失敗しました
     internal static let errorAtUpdateSiteUrlClipItem = L10n.tr("Localizable", "error_at_update_site_url_clip_item")
-    /// 以前利用していたiCloudアカウントと異なるアカウントでログインされています。
-    /// この端末上に保存されているデータは、現在ログイン中のiCloudアカウントに保存されているデータと統合されます
-    internal static let errorIcloudAccountChangedMessage = L10n.tr("Localizable", "error_icloud_account_changed_message")
-    /// iCloudアカウントが異なります
-    internal static let errorIcloudAccountChangedTitle = L10n.tr("Localizable", "error_icloud_account_changed_title")
     /// しばらく時間を置いてから再度お試しください
     internal static let errorIcloudDefaultMessage = L10n.tr("Localizable", "error_icloud_default_message")
     /// iCloudが利用できません

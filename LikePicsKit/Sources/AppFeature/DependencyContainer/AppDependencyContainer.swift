@@ -3,6 +3,7 @@
 //
 
 import ClipCreationFeature
+import Combine
 import Common
 import CompositeKit
 import CoreData
@@ -10,10 +11,12 @@ import Domain
 import Environment
 import LikePicsUIKit
 import Persistence
+import PersistentStack
 import Smoothie
 import UIKit
 
 // swiftlint:disable identifier_name
+// swiftlint:disable function_body_length
 
 public typealias AppDependencyContaining = HasPasteboard
     & HasClipCommandService
@@ -27,7 +30,6 @@ public typealias AppDependencyContaining = HasPasteboard
     & HasModalNotificationCenter
     & HasTemporariesPersistService
     & HasIntegrityValidationService
-    & HasCloudStackLoader
     & HasTagCommandService
     & HasTagQueryService
     & HasNop
@@ -64,7 +66,6 @@ public class AppDependencyContainer {
     private let tmpImageStorage: TemporaryImageStorageProtocol
     private let _userSettingStorage: UserSettingsStorageProtocol
     private let _clipPreviewPlayConfigurationStorage: ClipPreviewPlayConfigurationStorageProtocol
-    private let cloudUsageContextStorage: CloudUsageContextStorageProtocol
 
     // MARK: Service
 
@@ -78,13 +79,16 @@ public class AppDependencyContainer {
 
     // MARK: Core Data
 
-    private let coreDataStack: CoreDataStack
+    private let persistentStack: PersistentStack
+    private let persistentStackLoader: PersistentStackLoader
+    private var persistentStackLoading: Task<Void, Never>?
+    private var persistentStackReloading: AnyCancellable?
+    private var persistentStackEventsObserving: Set<AnyCancellable> = .init()
     private let _cloudAvailabilityService: CloudAvailabilityService
     private var imageQueryContext: NSManagedObjectContext
     private var commandContext: NSManagedObjectContext
 
     private let monitor: ICloudSyncMonitor
-    private let _cloudStackLoader: CloudStackLoader
 
     // MARK: Queue
 
@@ -118,25 +122,28 @@ public class AppDependencyContainer {
         self.monitor = ICloudSyncMonitor()
 
         let userSettingsStorage = UserSettingsStorage(appBundle: appBundle)
-        let cloudUsageContextStorage = CloudUsageContextStorage()
         self._userSettingStorage = userSettingsStorage
         self._clipPreviewPlayConfigurationStorage = ClipPreviewPlayConfigurationStorage()
-        self.cloudUsageContextStorage = cloudUsageContextStorage
-        self._cloudAvailabilityService = CloudAvailabilityService(cloudUsageContextStorage: CloudUsageContextStorage(),
-                                                                  cloudAccountService: CloudAccountService())
 
-        self.coreDataStack = CoreDataStack(isICloudSyncEnabled: self._userSettingStorage.readEnabledICloudSync())
-        self._cloudStackLoader = CloudStackLoader(userSettingsStorage: self._userSettingStorage,
-                                                  cloudAvailabilityService: self._cloudAvailabilityService,
-                                                  cloudStack: self.coreDataStack)
+        var persistentStackConf = PersistentStack.Configuration(author: "app",
+                                                                persistentContainerName: "Model",
+                                                                managedObjectModelUrl: ManagedObjectModelUrl)
+        persistentStackConf.persistentHistoryTokenSaveDirectory = NSPersistentContainer
+            .defaultDirectoryURL()
+            .appendingPathComponent("TBox", isDirectory: true)
+        persistentStackConf.persistentHistoryTokenFileName = "token.data"
+        self.persistentStack = PersistentStack(configuration: persistentStackConf, isCloudKitEnabled: self._userSettingStorage.readEnabledICloudSync())
+        self.persistentStackLoader = PersistentStackLoader(persistentStack: persistentStack,
+                                                           syncSettingStorage: userSettingsStorage)
+        self._cloudAvailabilityService = CloudAvailabilityService()
 
-        self.imageQueryContext = self.coreDataStack.newBackgroundContext(on: self.imageQueryQueue)
-        self.commandContext = self.coreDataStack.newBackgroundContext(on: self.clipCommandQueue)
+        self.imageQueryContext = self.persistentStack.newBackgroundContext(on: self.imageQueryQueue)
+        self.commandContext = self.persistentStack.newBackgroundContext(on: self.clipCommandQueue)
         // Note: clipStorage, imageStorage は、同一トランザクションとして書き込みを行うことが多いため、
         //       同一Contextとする
         self.clipStorage = ClipStorage(context: self.commandContext)
         self.imageStorage = ImageStorage(context: self.commandContext)
-        self._clipQueryService = ClipQueryCacheService(ClipQueryService(context: self.coreDataStack.viewContext))
+        self._clipQueryService = ClipQueryCacheService(ClipQueryService(context: self.persistentStack.viewContext))
         self._imageQueryService = ImageQueryService(context: self.imageQueryContext)
 
         self._clipSearchHistoryService = Persistence.ClipSearchHistoryService()
@@ -229,12 +236,32 @@ public class AppDependencyContainer {
                                                                     commandQueue: clipStorage,
                                                                     lock: commandLock)
 
-        self.coreDataStack.coreDataStackObserver = self
-        self.coreDataStack.cloudStackObserver = _integrityValidationService
-        self.cloudStackLoader.startObserveCloudAvailability()
-    }
+        persistentStackReloading = persistentStack
+            .reloaded
+            .sink { [weak self] in
+                guard let self else { return }
+                let newImageQueryContext = self.persistentStack.newBackgroundContext(on: self.imageQueryQueue)
+                let newCommandContext = self.persistentStack.newBackgroundContext(on: self.clipCommandQueue)
 
-    // MARK: - Methods
+                self.imageQueryContext = newImageQueryContext
+                self.commandContext = newCommandContext
+
+                self.clipCommandQueue.sync {
+                    self.clipStorage.context = newCommandContext
+                    self.imageStorage.context = newCommandContext
+                }
+
+                self._clipQueryService.internalService.context = self.persistentStack.viewContext
+                self._imageQueryService.context = newImageQueryContext
+            }
+
+        persistentStack.registerRemoteChangeMergeHandler { [weak self] persistentStack, transactions in
+            guard let self else { return }
+            RemoteChangeMergeHandler(persistentStack, transactions, self._integrityValidationService)
+        }
+
+        persistentStackLoading = self.persistentStackLoader.run()
+    }
 
     private static func sweepLegacyThumbnailCachesIfExists(appBundle: Bundle) {
         guard let bundleIdentifier = appBundle.bundleIdentifier else {
@@ -274,26 +301,6 @@ public class AppDependencyContainer {
         }()
 
         return targetUrl
-    }
-}
-
-extension AppDependencyContainer: CoreDataStackObserver {
-    // MARK: - CoreDataStackObserver
-
-    public func coreDataStack(_ coreDataStack: CoreDataStack, reloaded container: NSPersistentCloudKitContainer) {
-        let newImageQueryContext = coreDataStack.newBackgroundContext(on: self.imageQueryQueue)
-        let newCommandContext = coreDataStack.newBackgroundContext(on: self.clipCommandQueue)
-
-        self.imageQueryContext = newImageQueryContext
-        self.commandContext = newCommandContext
-
-        self.clipCommandQueue.sync {
-            self.clipStorage.context = newCommandContext
-            self.imageStorage.context = newCommandContext
-        }
-
-        self._clipQueryService.internalService.context = self.coreDataStack.viewContext
-        self._imageQueryService.context = newImageQueryContext
     }
 }
 
@@ -349,10 +356,6 @@ extension AppDependencyContainer: HasIntegrityValidationService {
     public var integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol { _integrityValidationService }
 }
 
-extension AppDependencyContainer: HasCloudStackLoader {
-    public var cloudStackLoader: CloudStackLoadable { _cloudStackLoader }
-}
-
 extension AppDependencyContainer: HasTagCommandService {
     public var tagCommandService: TagCommandServiceProtocol { _clipCommandService }
 }
@@ -397,3 +400,20 @@ extension AppDependencyContainer: HasClipPreviewPlayConfigurationStorage {
 }
 
 extension AppDependencyContainer: HasPreviewPrefetcher {}
+
+extension UserSettingsStorage: CloudKitSyncSettingStorable {
+    public var isCloudKitSyncEnabled: AsyncStream<Bool> {
+        AsyncStream { continuation in
+            let cancellables = self.enabledICloudSync
+                .sink { continuation.yield($0) }
+
+            continuation.onTermination = { @Sendable _ in
+                cancellables.cancel()
+            }
+        }
+    }
+
+    public func set(isCloudKitSyncEnabled: Bool) {
+        set(enabledICloudSync: isCloudKitSyncEnabled)
+    }
+}

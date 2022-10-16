@@ -201,8 +201,8 @@ extension ClipReferencesIntegrityValidationService: ClipReferencesIntegrityValid
     }
 }
 
-extension ClipReferencesIntegrityValidationService: CloudStackObserver {
-    // MARK: - CloudStackObserver
+extension ClipReferencesIntegrityValidationService: RemoteChangeMergeHandlerDelegate {
+    // MARK: - RemoteChangeMergeHandlerDelegate
 
     public func didRemoteChangedTags(inserted: [ObjectID], updated: [ObjectID], deleted: [ObjectID]) {
         lock.lock()

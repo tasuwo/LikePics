@@ -52,6 +52,14 @@
 		</dict>
 		<dict>
 			<key>File</key>
+			<string>com.mono0926.LicensePlist/PersistentStack</string>
+			<key>Title</key>
+			<string>PersistentStack</string>
+			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+		</dict>
+		<dict>
+			<key>File</key>
 			<string>com.mono0926.LicensePlist/realm-cocoa</string>
 			<key>Title</key>
 			<string>Realm</string>
@@ -71,6 +79,14 @@
 			<string>com.mono0926.LicensePlist/Sourcery</string>
 			<key>Title</key>
 			<string>Sourcery</string>
+			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+		</dict>
+		<dict>
+			<key>File</key>
+			<string>com.mono0926.LicensePlist/swift</string>
+			<key>Title</key>
+			<string>swift</string>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 		</dict>

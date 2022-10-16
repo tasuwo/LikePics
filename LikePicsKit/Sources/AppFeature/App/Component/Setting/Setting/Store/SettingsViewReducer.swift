@@ -122,7 +122,6 @@ extension SettingsViewReducer {
         let settingEffect = Effect(settingStream)
 
         let availabilityStream = dependency.cloudAvailabilityService.availability
-            .catch { _ in Just(.unavailable) }
             .map { Action.cloudAvailabilityUpdated(availability: $0) as Action? }
         let availabilityEffect = Effect(availabilityStream)
 
