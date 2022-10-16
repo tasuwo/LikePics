@@ -6,26 +6,8 @@
         "repositoryURL": "https://github.com/Thomvis/BrightFutures.git",
         "state": {
           "branch": null,
-          "revision": "939858b811026f85e87847a808f0bea2f187e5c4",
-          "version": "8.1.0"
-        }
-      },
-      {
-        "package": "CwlCatchException",
-        "repositoryURL": "https://github.com/mattgallagher/CwlCatchException.git",
-        "state": {
-          "branch": null,
-          "revision": "35f9e770f54ce62dd8526470f14c6e137cef3eea",
-          "version": "2.1.1"
-        }
-      },
-      {
-        "package": "CwlPreconditionTesting",
-        "repositoryURL": "https://github.com/mattgallagher/CwlPreconditionTesting.git",
-        "state": {
-          "branch": null,
-          "revision": "fb7a26374e8570ff5c68142e5c83406d6abae0d8",
-          "version": "2.0.2"
+          "revision": "fa66fa183dce7196d431244d0215748cd14c5758",
+          "version": "8.2.0"
         }
       },
       {
@@ -56,21 +38,12 @@
         }
       },
       {
-        "package": "Nimble",
-        "repositoryURL": "https://github.com/Quick/Nimble",
+        "package": "PersistentStack",
+        "repositoryURL": "https://github.com/tasuwo/PersistentStack",
         "state": {
           "branch": null,
-          "revision": "c93f16c25af5770f0d3e6af27c9634640946b068",
-          "version": "9.2.1"
-        }
-      },
-      {
-        "package": "Quick",
-        "repositoryURL": "https://github.com/Quick/Quick",
-        "state": {
-          "branch": null,
-          "revision": "bd86ca0141e3cfb333546de5a11ede63f0c4a0e6",
-          "version": "4.0.0"
+          "revision": "544d9254833e06affc6cf4b48ec016e3b0761219",
+          "version": "0.1.0"
         }
       },
       {
@@ -78,8 +51,8 @@
         "repositoryURL": "https://github.com/realm/realm-cocoa",
         "state": {
           "branch": null,
-          "revision": "4cbe20f31b1bcc20190c724632143b4f9b8ac3e3",
-          "version": "10.15.1"
+          "revision": "ae0ceea258fd8f58392881cc4b2228bff62f74f5",
+          "version": "10.28.7"
         }
       },
       {
@@ -87,8 +60,35 @@
         "repositoryURL": "https://github.com/realm/realm-core",
         "state": {
           "branch": null,
-          "revision": "23f60515a00f076a9e3f2dc672fe1ae07601ee90",
-          "version": "11.4.1"
+          "revision": "6f6a0f415bd33cf2ced4467e36a47f7c84f0a1d7",
+          "version": "12.5.1"
+        }
+      },
+      {
+        "package": "swift",
+        "repositoryURL": "https://github.com/tasuwo/swift",
+        "state": {
+          "branch": null,
+          "revision": "2aebca0c6a4988c416d5348805ed45f3dfc0d66e",
+          "version": "0.3.0"
+        }
+      },
+      {
+        "package": "swift-argument-parser",
+        "repositoryURL": "https://github.com/apple/swift-argument-parser",
+        "state": {
+          "branch": null,
+          "revision": "9f39744e025c7d377987f30b03770805dcb0bcd1",
+          "version": "1.1.4"
+        }
+      },
+      {
+        "package": "AsyncAlgorithms",
+        "repositoryURL": "https://github.com/apple/swift-async-algorithms",
+        "state": {
+          "branch": null,
+          "revision": "cca423ff03ab657062f3781847e65a867b51bb01",
+          "version": "0.0.3"
         }
       }
     ]

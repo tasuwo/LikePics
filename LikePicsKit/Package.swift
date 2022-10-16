@@ -25,7 +25,8 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "Realm", url: "https://github.com/realm/realm-cocoa", .upToNextMinor(from: "10.28.0")),
-        .package(name: "Erik", url: "https://github.com/phimage/Erik", .exact("5.1.0"))
+        .package(name: "Erik", url: "https://github.com/phimage/Erik", .exact("5.1.0")),
+        .package(name: "PersistentStack", url: "https://github.com/tasuwo/PersistentStack", .exact("0.1.0"))
     ],
     targets: [
         // MARK: - App
@@ -44,7 +45,8 @@ let package = Package(
                 "ClipPreviewPlayConfigurationModalFeature",
                 "LikePicsUIKit",
                 "Persistence",
-                "Smoothie"
+                "Smoothie",
+                .product(name: "PersistentStack", package: "PersistentStack")
             ]
         ),
         .target(
