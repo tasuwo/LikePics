@@ -81,14 +81,13 @@ public class AppDependencyContainer {
 
     private let persistentStack: PersistentStack
     private let persistentStackLoader: PersistentStackLoader
+    private let persistentStackMonitor: PersistentStackMonitor
     private var persistentStackLoading: Task<Void, Never>?
     private var persistentStackReloading: AnyCancellable?
     private var persistentStackEventsObserving: Set<AnyCancellable> = .init()
     private let _cloudAvailabilityService: CloudAvailabilityService
     private var imageQueryContext: NSManagedObjectContext
     private var commandContext: NSManagedObjectContext
-
-    private let monitor: ICloudSyncMonitor
 
     // MARK: Queue
 
@@ -119,8 +118,6 @@ public class AppDependencyContainer {
 
         // MARK: CoreData
 
-        self.monitor = ICloudSyncMonitor()
-
         let userSettingsStorage = UserSettingsStorage(appBundle: appBundle)
         self._userSettingStorage = userSettingsStorage
         self._clipPreviewPlayConfigurationStorage = ClipPreviewPlayConfigurationStorage()
@@ -135,6 +132,7 @@ public class AppDependencyContainer {
         self.persistentStack = PersistentStack(configuration: persistentStackConf, isCloudKitEnabled: self._userSettingStorage.readEnabledICloudSync())
         self.persistentStackLoader = PersistentStackLoader(persistentStack: persistentStack,
                                                            syncSettingStorage: userSettingsStorage)
+        self.persistentStackMonitor = PersistentStackMonitor()
         self._cloudAvailabilityService = CloudAvailabilityService()
 
         self.imageQueryContext = self.persistentStack.newBackgroundContext(on: self.imageQueryQueue)
@@ -259,6 +257,8 @@ public class AppDependencyContainer {
             guard let self else { return }
             RemoteChangeMergeHandler(persistentStack, transactions, self._integrityValidationService)
         }
+
+        persistentStackMonitor.startMonitoring()
 
         persistentStackLoading = self.persistentStackLoader.run()
     }
