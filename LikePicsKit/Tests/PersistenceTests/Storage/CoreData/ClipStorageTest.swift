@@ -23,7 +23,8 @@ class ClipStorageTest: XCTestCase {
     }
 
     func setUp_CoreDataStack() -> NSPersistentContainer {
-        let container = PersistentContainerLoader.load()
+        let model = NSManagedObjectModel(contentsOf: ManagedObjectModelUrl)!
+        let container = NSPersistentContainer(name: "Model", managedObjectModel: model)
 
         let persistentStoreDescription = NSPersistentStoreDescription()
         persistentStoreDescription.url = URL(fileURLWithPath: "/dev/null")
