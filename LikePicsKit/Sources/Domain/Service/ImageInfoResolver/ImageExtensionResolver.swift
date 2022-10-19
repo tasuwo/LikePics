@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import MobileCoreServices
+import UniformTypeIdentifiers
 
 public enum ImageExtensionResolver {
     public enum Extension: String {
@@ -13,22 +13,22 @@ public enum ImageExtensionResolver {
         case png
         case tiff
 
-        var utType: CFString? {
+        var utType: UTType {
             switch self {
             case .bmp:
-                return kUTTypeBMP
+                return .bmp
 
             case .gif:
-                return kUTTypeGIF
+                return .gif
 
             case .jpeg:
-                return kUTTypeJPEG
+                return .jpeg
 
             case .png:
-                return kUTTypePNG
+                return .png
 
             case .tiff:
-                return kUTTypeTIFF
+                return .tiff
             }
         }
     }
@@ -45,7 +45,7 @@ public enum ImageExtensionResolver {
         return self.table[mimeType]?.rawValue
     }
 
-    public static func resolveUTType(of url: URL) -> CFString {
-        return Extension(rawValue: url.pathExtension)?.utType ?? kUTTypeJPEG
+    public static func resolveUTType(of url: URL) -> UTType {
+        return Extension(rawValue: url.pathExtension)?.utType ?? .jpeg
     }
 }

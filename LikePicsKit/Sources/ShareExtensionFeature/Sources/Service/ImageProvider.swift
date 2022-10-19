@@ -3,8 +3,8 @@
 //
 
 import ClipCreationFeature
-import MobileCoreServices
 import UIKit
+import UniformTypeIdentifiers
 
 class ImageProvider {
     private let underlyingProvider: NSItemProvider
@@ -21,7 +21,7 @@ extension ImageProvider: ImageLazyLoadable {
         if let name = underlyingProvider.suggestedName {
             completion(name)
         }
-        underlyingProvider.loadItem(forTypeIdentifier: kUTTypeImage as String, options: nil) { data, _ in
+        underlyingProvider.loadItem(forTypeIdentifier: UTType.image.identifier, options: nil) { data, _ in
             guard let url = data as? URL else {
                 completion(nil)
                 return
@@ -31,7 +31,7 @@ extension ImageProvider: ImageLazyLoadable {
     }
 
     func load(_ completion: @escaping (Data?) -> Void) {
-        underlyingProvider.loadItem(forTypeIdentifier: kUTTypeImage as String, options: nil) { data, _ in
+        underlyingProvider.loadItem(forTypeIdentifier: UTType.image.identifier, options: nil) { data, _ in
             if let data = data as? Data {
                 completion(data)
             } else if let image = data as? UIImage {

@@ -3,8 +3,8 @@
 //
 
 import Combine
-import MobileCoreServices
 import UIKit
+import UniformTypeIdentifiers
 
 extension NSItemProvider {
     func resolveImageSource() -> Future<ImageSource?, Never> {
@@ -17,8 +17,8 @@ extension NSItemProvider {
     }
 
     private func resolveImageSource(_ completion: @escaping (ImageSource?) -> Void) {
-        if hasItemConformingToTypeIdentifier(kUTTypeFileURL as String) {
-            loadItem(forTypeIdentifier: kUTTypeFileURL as String, options: nil) { item, _ in
+        if hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
+            loadItem(forTypeIdentifier: UTType.fileURL.identifier, options: nil) { item, _ in
                 guard let url = item as? URL else {
                     completion(nil)
                     return
@@ -28,8 +28,8 @@ extension NSItemProvider {
             return
         }
 
-        if hasItemConformingToTypeIdentifier(kUTTypeURL as String) {
-            loadItem(forTypeIdentifier: kUTTypeURL as String, options: nil) { item, _ in
+        if hasItemConformingToTypeIdentifier(UTType.url.identifier) {
+            loadItem(forTypeIdentifier: UTType.url.identifier, options: nil) { item, _ in
                 guard let url = item as? URL else {
                     completion(nil)
                     return
@@ -39,7 +39,7 @@ extension NSItemProvider {
             return
         }
 
-        if hasItemConformingToTypeIdentifier(kUTTypeImage as String) {
+        if hasItemConformingToTypeIdentifier(UTType.image.identifier) {
             completion(.data(.init(self)))
             return
         }
