@@ -3,6 +3,7 @@
 //
 
 // swiftlint:disable force_unwrapping
+// swiftlint:disable file_length
 
 import Common
 import CoreData
