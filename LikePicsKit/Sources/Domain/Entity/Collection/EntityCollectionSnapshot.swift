@@ -46,8 +46,8 @@ public extension EntityCollectionSnapshot {
                      filteredIds: _filteredIds)
     }
 
-    func selected(_ id: Entity.Identity, allowsMultipleSelection: Bool = true) -> Self {
-        guard _entities.keys.contains(id) else { return self }
+    func selected(_ id: Entity.Identity, allowsMultipleSelection: Bool = true, forced: Bool = false) -> Self {
+        guard forced || _entities.keys.contains(id) else { return self }
         return .init(order: order,
                      entities: _entities,
                      selectedIds: allowsMultipleSelection ? _selectedIds.union([id]) : Set([id]),

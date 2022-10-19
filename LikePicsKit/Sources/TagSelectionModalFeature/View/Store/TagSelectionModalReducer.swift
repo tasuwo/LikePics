@@ -68,7 +68,7 @@ public struct TagSelectionModalReducer: Reducer {
         case let .alertSaveButtonTapped(text: name):
             switch dependency.tagCommandService.create(tagWithName: name) {
             case let .success(tagId):
-                nextState.tags = state.tags.selected(tagId)
+                nextState.tags = state.tags.selected(tagId, forced: true)
                 nextState.alert = nil
 
             case .failure(.duplicated):
