@@ -328,16 +328,14 @@ extension ClipItemInformationLayout {
                 view.setRightItems([
                     .init(title: L10n.clipInformationViewLabelTagAddition,
                           action: UIAction(handler: { _ in tagAdditionHandler() }),
-                          font: Self.font,
-                          insets: .zero)
+                          font: Self.font)
                 ])
 
             case .albums:
                 view.setRightItems([
                     .init(title: L10n.clipInformationViewLabelAlbumAddition,
                           action: UIAction(handler: { _ in albumAdditionHandler() }),
-                          font: Self.font,
-                          insets: .zero)
+                          font: Self.font)
                 ])
 
             default:

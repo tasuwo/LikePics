@@ -221,8 +221,7 @@ extension ClipCreationViewLayout {
                 view.setRightItems([
                     .init(title: L10n.AlbumSection.Header.addButton,
                           action: UIAction(handler: { _ in albumEditHandler() }),
-                          font: nil,
-                          insets: .zero)
+                          font: nil)
                 ])
 
             default:

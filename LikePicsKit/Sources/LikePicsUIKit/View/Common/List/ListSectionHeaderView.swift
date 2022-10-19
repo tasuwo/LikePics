@@ -8,13 +8,11 @@ public struct ListSectionHeaderRightItem {
     let title: String
     let action: UIAction
     let font: UIFont?
-    let insets: UIEdgeInsets
 
-    public init(title: String, action: UIAction, font: UIFont?, insets: UIEdgeInsets) {
+    public init(title: String, action: UIAction, font: UIFont?) {
         self.title = title
         self.action = action
         self.font = font
-        self.insets = insets
     }
 }
 
@@ -59,7 +57,6 @@ public extension ListSectionHeaderView {
         let buttons: [UIButton] = items.map {
             let button = UIButton(type: .system, primaryAction: $0.action)
             button.setTitle($0.title, for: .normal)
-            button.contentEdgeInsets = $0.insets
 
             button.titleLabel?.adjustsFontForContentSizeCategory = true
             button.titleLabel?.font = $0.font
