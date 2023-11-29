@@ -131,7 +131,7 @@ public class AppDependencyContainer {
         persistentStackConf.persistentHistoryTokenFileName = "token.data"
         self.persistentStack = PersistentStack(configuration: persistentStackConf, isCloudKitEnabled: self._userSettingStorage.readEnabledICloudSync())
         self.persistentStackLoader = PersistentStackLoader(persistentStack: persistentStack,
-                                                           syncSettingStorage: userSettingsStorage)
+                                                           availabilityProvider: userSettingsStorage)
         self.persistentStackMonitor = PersistentStackMonitor()
         self._cloudAvailabilityService = CloudAvailabilityService()
 
@@ -233,6 +233,8 @@ public class AppDependencyContainer {
                                                                     // Note: ImageStorage, ClipStorage は同一 Context である前提
                                                                     commandQueue: clipStorage,
                                                                     lock: commandLock)
+
+        persistentStack.reconfigureIfNeeded(isCloudKitEnabled: _userSettingStorage.readEnabledICloudSync())
 
         persistentStackReloading = persistentStack
             .reloaded
@@ -401,8 +403,8 @@ extension AppDependencyContainer: HasClipPreviewPlayConfigurationStorage {
 
 extension AppDependencyContainer: HasPreviewPrefetcher {}
 
-extension UserSettingsStorage: CloudKitSyncSettingStorable {
-    public var isCloudKitSyncEnabled: AsyncStream<Bool> {
+extension UserSettingsStorage: CloudKitSyncAvailabilityProviding {
+    public var isCloudKitSyncAvailable: AsyncStream<Bool> {
         AsyncStream { continuation in
             let cancellables = self.enabledICloudSync
                 .sink { continuation.yield($0) }

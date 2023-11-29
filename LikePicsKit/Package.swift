@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.9
 import PackageDescription
 
 let package = Package(
@@ -24,9 +24,9 @@ let package = Package(
         .library(name: "TestHelper", targets: ["TestHelper"])
     ],
     dependencies: [
-        .package(name: "Realm", url: "https://github.com/realm/realm-cocoa", .upToNextMinor(from: "10.28.0")),
-        .package(name: "Erik", url: "https://github.com/phimage/Erik", .exact("5.1.0")),
-        .package(name: "PersistentStack", url: "https://github.com/tasuwo/PersistentStack", .exact("0.2.0"))
+        .package(url: "https://github.com/realm/realm-cocoa", .upToNextMinor(from: "10.44.0")),
+        .package(url: "https://github.com/phimage/Erik", .upToNextMajor(from: "5.1.0")),
+        .package(url: "https://github.com/tasuwo/PersistentStack", .upToNextMinor(from: "0.6.0"))
     ],
     targets: [
         // MARK: - App
@@ -153,8 +153,8 @@ let package = Package(
             dependencies: [
                 "Common",
                 "Domain",
-                .product(name: "Realm", package: "Realm"),
-                .product(name: "RealmSwift", package: "Realm")
+                .product(name: "Realm", package: "realm-cocoa"),
+                .product(name: "RealmSwift", package: "realm-cocoa")
             ]
         ),
         .testTarget(
