@@ -4,6 +4,7 @@
 
 import Foundation
 import MobileCoreServices
+import UniformTypeIdentifiers
 import XCTest
 
 @testable import Domain
@@ -23,12 +24,12 @@ class ImageExtensionResolverTest: XCTestCase {
     }
 
     func test_resolveUTTypeOf_期待した拡張子になる() {
-        let testCases: [(line: UInt, url: URL, ext: CFString)] = [
-            (#line, URL(string: "hoge://fuga/piyo/ooo.bmp")!, kUTTypeBMP),
-            (#line, URL(string: "user://file/name/dyo.gif")!, kUTTypeGIF),
-            (#line, URL(string: "howa://piyo/fuga/ooooo123.png")!, kUTTypePNG),
-            (#line, URL(string: "ooo://pipi/pupu.tiff?hoge=fuga&piyo=poro")!, kUTTypeTIFF),
-            (#line, URL(string: "/Users/tasuwo/hogehoge/fuga.jpeg")!, kUTTypeJPEG),
+        let testCases: [(line: UInt, url: URL, ext: UTType)] = [
+            (#line, URL(string: "hoge://fuga/piyo/ooo.bmp")!, .bmp),
+            (#line, URL(string: "user://file/name/dyo.gif")!, .gif),
+            (#line, URL(string: "howa://piyo/fuga/ooooo123.png")!, .png),
+            (#line, URL(string: "ooo://pipi/pupu.tiff?hoge=fuga&piyo=poro")!, .tiff),
+            (#line, URL(string: "/Users/tasuwo/hogehoge/fuga.jpeg")!, .jpeg),
         ]
         testCases.forEach { testCase in
             XCTAssertEqual(ImageExtensionResolver.resolveUTType(of: testCase.url), testCase.ext, line: testCase.line)
