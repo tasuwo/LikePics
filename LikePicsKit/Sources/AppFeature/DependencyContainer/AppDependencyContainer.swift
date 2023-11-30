@@ -129,6 +129,7 @@ public class AppDependencyContainer {
             .defaultDirectoryURL()
             .appendingPathComponent("TBox", isDirectory: true)
         persistentStackConf.persistentHistoryTokenFileName = "token.data"
+        persistentStackConf.shouldLoadPersistentContainerAtInitialized = true
         self.persistentStack = PersistentStack(configuration: persistentStackConf, isCloudKitEnabled: self._userSettingStorage.readEnabledICloudSync())
         self.persistentStackLoader = PersistentStackLoader(persistentStack: persistentStack,
                                                            availabilityProvider: userSettingsStorage)
@@ -233,8 +234,6 @@ public class AppDependencyContainer {
                                                                     // Note: ImageStorage, ClipStorage は同一 Context である前提
                                                                     commandQueue: clipStorage,
                                                                     lock: commandLock)
-
-        persistentStack.reconfigureIfNeeded(isCloudKitEnabled: _userSettingStorage.readEnabledICloudSync())
 
         persistentStackReloading = persistentStack
             .reloaded

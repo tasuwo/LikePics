@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tasuwo/PersistentStack",
       "state" : {
-        "revision" : "3bd8d9ba4bdca4d21ae775e5ce915b4ae3dc1251",
-        "version" : "0.6.1"
+        "revision" : "3e94191ff76ecd80591fd12c1daa3f31b5e2696c",
+        "version" : "0.7.0"
       }
     },
     {
