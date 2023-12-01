@@ -48,9 +48,9 @@ extension TemporaryClipCommandService: TemporaryClipCommandServiceProtocol {
                 }
 
                 try? self.imageStorage.deleteAll(inClipHaving: createdClip.id)
-                containers.forEach { container in
+                try containers.forEach { container in
                     guard let item = clip.items.first(where: { $0.imageId == container.id }) else { return }
-                    try? self.imageStorage.save(container.data, asName: item.imageFileName, inClipHaving: createdClip.id)
+                    try self.imageStorage.save(container.data, asName: item.imageFileName, inClipHaving: createdClip.id)
                 }
 
                 try self.clipStorage.commitTransaction()
