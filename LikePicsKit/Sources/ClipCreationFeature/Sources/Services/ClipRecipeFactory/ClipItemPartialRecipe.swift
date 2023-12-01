@@ -19,8 +19,12 @@ public struct ClipItemPartialRecipe {
     private let _fileName: String?
 
     var fileName: String {
-        // Note: タイトル無しの場合は空文字にする
-        _fileName ?? ""
+        if let _fileName, !_fileName.isEmpty {
+            _fileName
+        } else {
+            // 空文字だと画像の保存に失敗するので、適当なファイル名を付与する
+            "IMG_\(Int(Date().timeIntervalSince1970))_\(index + 1)"
+        }
     }
 
     // MARK: - Lifecycle
