@@ -254,14 +254,22 @@ extension TemporariesPersistService {
                 autoreleasepool {
                     guard let data = try? temporaryImageStorage.readImage(named: item.imageFileName, inClipHaving: clip.id) else {
                         // 画像が見つからなかった場合、どうしようもないためスキップに留める
-                        logger.debug("移行対象の画像が見つかりませんでした。スキップします")
+                        logger.error("移行対象の画像が見つかりませんでした。スキップします")
                         return
                     }
 
                     // メタデータが正常に移行できていれば画像は復旧可能な可能性が高い点、移動に失敗してもどうしようもない点から、
                     // 画像の移動に失敗した場合でも異常終了とはしない
-                    try? commandQueue.sync { [weak self] in try self?.imageStorage.create(data, id: item.imageId) }
-                    try? temporaryImageStorage.delete(fileName: item.imageFileName, inClipHaving: clip.id)
+                    do {
+                        try commandQueue.sync { [weak self] in try self?.imageStorage.create(data, id: item.imageId) }
+                    } catch {
+                        logger.error("一時保存画像の永続化に失敗: \(error.localizedDescription, privacy: .public)")
+                    }
+                    do {
+                        try temporaryImageStorage.delete(fileName: item.imageFileName, inClipHaving: clip.id)
+                    } catch {
+                        logger.error("一時保存画像の削除に失敗: \(error.localizedDescription, privacy: .public)")
+                    }
                 }
             }
 
