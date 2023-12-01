@@ -21,9 +21,21 @@ extension ImageProvider: ImageLazyLoadable {
         if let name = underlyingProvider.suggestedName {
             completion(name)
         }
-        underlyingProvider.loadItem(forTypeIdentifier: UTType.image.identifier, options: nil) { data, _ in
+        underlyingProvider.loadItem(forTypeIdentifier: UTType.fileURL.identifier, options: nil) { [underlyingProvider] data, _ in
             guard let url = data as? URL else {
-                completion(nil)
+                underlyingProvider.loadItem(forTypeIdentifier: UTType.url.identifier, options: nil) { data, _ in
+                    guard let url = data as? URL else {
+                        underlyingProvider.loadItem(forTypeIdentifier: UTType.text.identifier, options: nil) { data, _ in
+                            guard let text = data as? String else {
+                                completion(nil)
+                                return
+                            }
+                            completion(text)
+                        }
+                        return
+                    }
+                    completion(url.lastPathComponent)
+                }
                 return
             }
             completion(url.lastPathComponent)
