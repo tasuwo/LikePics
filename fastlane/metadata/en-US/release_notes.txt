@@ -1,1 +1,1 @@
-- You can create a slideshow
+- Fix a bug where saving an image without a file name was failing.
