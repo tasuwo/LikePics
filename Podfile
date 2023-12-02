@@ -6,6 +6,5 @@ target 'LikePics' do
   pod 'SwiftGen', '~> 6.5'
   pod 'Sourcery/CLI-Only', '~> 1.8'
   pod 'SwiftFormat/CLI', '~> 0.49'
-  pod 'SwiftLint', '~> 0.47'
 end
 

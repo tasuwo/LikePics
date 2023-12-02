@@ -45,13 +45,6 @@ mockolo_generate: ## mockoloによるモック自動生成を行う
 		--destination ../LikePicsKit/Sources/TestHelper/Mocks/Protocol/ClipCreationFeature.ProtocolMocks.swift \
 		--testable-imports ClipCreationFeature;
 
-.PHONY: lint
-lint: swiftlint_lint ## 各種Linterを実行する
-
-.PHONY: swiftlint_lint
-swiftlint_lint: ## SwiftLintによるリントを実行する
-	Pods/SwiftLint/swiftlint
-
 .PHONY: format
 format: swiftformat_format ## 各種フォーマッターを実行する
 

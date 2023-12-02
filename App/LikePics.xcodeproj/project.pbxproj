@@ -166,7 +166,6 @@
 			buildPhases = (
 				2C157FDA2B1BF2D100B96EBB /* Set Licenses to Settings.bundle */,
 				2C157FD92B1BF20900B96EBB /* Set App Version to Settings.bundle */,
-				14A8BCF9E9EC39CE3B44054B /* SwiftLint */,
 				9F090216CCFF843CD05BFDE2 /* Sources */,
 				6EC454ECE841C07367D5F6FD /* Resources */,
 				A8B069AC82C692753522BF10 /* Frameworks */,
@@ -175,6 +174,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				2C157FDD2B1BF59F00B96EBB /* PBXTargetDependency */,
 				EC1B0E7A11722DAAE7A51ED0 /* PBXTargetDependency */,
 			);
 			name = LikePics;
@@ -235,6 +235,9 @@
 				ja,
 			);
 			mainGroup = 6482BC1857E1777CE6D884FA;
+			packageReferences = (
+				2C157FDB2B1BF52C00B96EBB /* XCRemoteSwiftPackageReference "swift" */,
+			);
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -267,25 +270,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		14A8BCF9E9EC39CE3B44054B /* SwiftLint */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = SwiftLint;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\ncd ${PROJECT_DIR}/..\nif [[ -f \"Pods/SwiftLint/swiftlint\" ]]; then\n  \"Pods/SwiftLint/swiftlint\"\nelse\n  echo \"warning: SwiftLint is not installed. Run 'bundle exec pod install --repo-update' to install it.\"\nfi\n";
-		};
 		2C157FD92B1BF20900B96EBB /* Set App Version to Settings.bundle */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -346,6 +330,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		2C157FDD2B1BF59F00B96EBB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 2C157FDC2B1BF59F00B96EBB /* LintSwift */;
+		};
 		EC1B0E7A11722DAAE7A51ED0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 921B2540D9F4435911E35DBB /* ShareExtension */;
@@ -881,7 +869,23 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		2C157FDB2B1BF52C00B96EBB /* XCRemoteSwiftPackageReference "swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tasuwo/swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		2C157FDC2B1BF59F00B96EBB /* LintSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2C157FDB2B1BF52C00B96EBB /* XCRemoteSwiftPackageReference "swift" */;
+			productName = "plugin:LintSwift";
+		};
 		2C16355627E877EC006C2C24 /* AppFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AppFeature;

@@ -26,7 +26,8 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/realm/realm-cocoa", .upToNextMinor(from: "10.44.0")),
         .package(url: "https://github.com/phimage/Erik", .upToNextMajor(from: "5.1.0")),
-        .package(url: "https://github.com/tasuwo/PersistentStack", .upToNextMinor(from: "0.7.0"))
+        .package(url: "https://github.com/tasuwo/PersistentStack", .upToNextMinor(from: "0.7.0")),
+        .package(url: "https://github.com/tasuwo/swift", .upToNextMajor(from: "0.6.1"))
     ],
     targets: [
         // MARK: - App
@@ -47,6 +48,9 @@ let package = Package(
                 "Persistence",
                 "Smoothie",
                 .product(name: "PersistentStack", package: "PersistentStack")
+            ],
+            plugins: [
+                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
         .target(
@@ -60,6 +64,9 @@ let package = Package(
                 "LikePicsUIKit",
                 "Persistence",
                 "Smoothie"
+            ],
+            plugins: [
+                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
 
@@ -74,6 +81,9 @@ let package = Package(
                 "Environment",
                 "Common",
                 "CompositeKit"
+            ],
+            plugins: [
+                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
         .target(
@@ -85,6 +95,9 @@ let package = Package(
                 "Environment",
                 "Common",
                 "CompositeKit"
+            ],
+            plugins: [
+                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
         .target(
@@ -96,6 +109,9 @@ let package = Package(
                 "Environment",
                 "Common",
                 "CompositeKit"
+            ],
+            plugins: [
+                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
         .target(
@@ -108,6 +124,9 @@ let package = Package(
                 "Common",
                 "CompositeKit",
                 .product(name: "Erik", package: "Erik")
+            ],
+            plugins: [
+                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
         .target(
@@ -118,6 +137,9 @@ let package = Package(
                 "Environment",
                 "Common",
                 "CompositeKit"
+            ],
+            plugins: [
+                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
 
@@ -128,6 +150,9 @@ let package = Package(
             dependencies: [
                 "Common",
                 "Smoothie"
+            ],
+            plugins: [
+                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
         .testTarget(
@@ -143,6 +168,9 @@ let package = Package(
                 "Common",
                 "Domain",
                 "Smoothie"
+            ],
+            plugins: [
+                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
 
@@ -155,6 +183,9 @@ let package = Package(
                 "Domain",
                 .product(name: "Realm", package: "realm-cocoa"),
                 .product(name: "RealmSwift", package: "realm-cocoa")
+            ],
+            plugins: [
+                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
         .testTarget(
@@ -177,14 +208,32 @@ let package = Package(
                 "Domain",
                 "Common",
                 "CompositeKit"
+            ],
+            plugins: [
+                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
 
         // MARK: - Helper
 
-        .target(name: "CompositeKit"),
-        .target(name: "Smoothie"),
-        .target(name: "Common"),
+        .target(
+            name: "CompositeKit",
+            plugins: [
+                .plugin(name: "LintSwift", package: "swift")
+            ]
+        ),
+        .target(
+            name: "Smoothie",
+            plugins: [
+                .plugin(name: "LintSwift", package: "swift")
+            ]
+        ),
+        .target(
+            name: "Common",
+            plugins: [
+                .plugin(name: "LintSwift", package: "swift")
+            ]
+        ),
         .target(
             name: "TestHelper",
             dependencies: [
