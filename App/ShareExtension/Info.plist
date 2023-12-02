@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(APP_VERSION)</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(BUILD_NUMBER)</string>
 	<key>NSExtension</key>
@@ -28,12 +28,12 @@
 			<dict>
 				<key>NSExtensionActivationSupportsAttachmentsWithMaxCount</key>
 				<integer>20</integer>
-				<key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
+				<key>NSExtensionActivationSupportsImageWithMaxCount</key>
 				<integer>20</integer>
 				<key>NSExtensionActivationSupportsWebPageWithMaxCount</key>
 				<integer>20</integer>
-                <key>NSExtensionActivationSupportsImageWithMaxCount</key>
-                <integer>20</integer>
+				<key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
+				<integer>20</integer>
 			</dict>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>

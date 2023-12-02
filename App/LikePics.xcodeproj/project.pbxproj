@@ -164,6 +164,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C7602933657943B8D8E54DDF /* Build configuration list for PBXNativeTarget "LikePics" */;
 			buildPhases = (
+				2C157FD92B1BF20900B96EBB /* Set App Version to Settings.bundle */,
 				14A8BCF9E9EC39CE3B44054B /* SwiftLint */,
 				9F090216CCFF843CD05BFDE2 /* Sources */,
 				6EC454ECE841C07367D5F6FD /* Resources */,
@@ -284,6 +285,25 @@
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/sh\n\ncd ${PROJECT_DIR}/..\nif [[ -f \"Pods/SwiftLint/swiftlint\" ]]; then\n  \"Pods/SwiftLint/swiftlint\"\nelse\n  echo \"warning: SwiftLint is not installed. Run 'bundle exec pod install --repo-update' to install it.\"\nfi\n";
 		};
+		2C157FD92B1BF20900B96EBB /* Set App Version to Settings.bundle */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Set App Version to Settings.bundle";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/libexec/PlistBuddy -c \"Set :PreferenceSpecifiers:1:DefaultValue ${MARKETING_VERSION}\" \"${SRCROOT}/LikePics/Resources/Settings.bundle/Root.plist\"\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -390,7 +410,6 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APP_GROUP = group.net.tasuwo.TBox;
 				APP_NAME = LikePics;
-				APP_VERSION = 2.18;
 				BUILD_NUMBER = 1;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -443,6 +462,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				I_CLOUD_CONTAINER = iCloud.net.tasuwo.TBox;
+				MARKETING_VERSION = 2.18;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -514,7 +534,6 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APP_GROUP = group.net.tasuwo.TBox.dev;
 				APP_NAME = LikePicsDev;
-				APP_VERSION = 2.18;
 				BUILD_NUMBER = 1;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -567,6 +586,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				I_CLOUD_CONTAINER = iCloud.net.tasuwo.TBox.dev;
+				MARKETING_VERSION = 2.18;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -588,7 +608,6 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APP_GROUP = group.net.tasuwo.TBox.dev;
 				APP_NAME = LikePicsDev;
-				APP_VERSION = 2.18;
 				BUILD_NUMBER = 1;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -638,6 +657,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				I_CLOUD_CONTAINER = iCloud.net.tasuwo.TBox.dev;
+				MARKETING_VERSION = 2.18;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = NO;
@@ -678,7 +698,6 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APP_GROUP = group.net.tasuwo.TBox;
 				APP_NAME = LikePics;
-				APP_VERSION = 2.18;
 				BUILD_NUMBER = 1;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -728,6 +747,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				I_CLOUD_CONTAINER = iCloud.net.tasuwo.TBox;
+				MARKETING_VERSION = 2.18;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = NO;
