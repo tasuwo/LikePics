@@ -1,9 +1,10 @@
 # vim: syntax=ruby
 
+force(true)
 submit_for_review(false)
 automatic_release(false)
 
-skip_binary_upload(false)
+skip_binary_upload(true)
 skip_metadata(false)
 skip_screenshots(false)
 skip_app_version_update(false)
