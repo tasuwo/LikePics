@@ -1,3 +1,3 @@
 exclude:
-    - Quick
-    - Nimble
+  - name: swift
+  - name: swift-argument-parser

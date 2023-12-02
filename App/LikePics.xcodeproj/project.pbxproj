@@ -164,6 +164,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C7602933657943B8D8E54DDF /* Build configuration list for PBXNativeTarget "LikePics" */;
 			buildPhases = (
+				2C157FDA2B1BF2D100B96EBB /* Set Licenses to Settings.bundle */,
 				2C157FD92B1BF20900B96EBB /* Set App Version to Settings.bundle */,
 				14A8BCF9E9EC39CE3B44054B /* SwiftLint */,
 				9F090216CCFF843CD05BFDE2 /* Sources */,
@@ -303,6 +304,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/usr/libexec/PlistBuddy -c \"Set :PreferenceSpecifiers:1:DefaultValue ${MARKETING_VERSION}\" \"${SRCROOT}/LikePics/Resources/Settings.bundle/Root.plist\"\n";
+		};
+		2C157FDA2B1BF2D100B96EBB /* Set Licenses to Settings.bundle */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Set Licenses to Settings.bundle";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [[ -f \"/opt/homebrew/bin/license-plist\" ]]; then\n    /opt/homebrew/bin/license-plist \\\n        --output-path ${SRCROOT}/LikePics/Resources/Settings.bundle \\\n        --xcworkspace-path ${SRCROOT}/../LikePics.xcworkspace \\\n        --config-path ${SRCROOT}/../license_plist.yml\nelse\n  echo \"warning: LicensePlist is not installed. Run 'brew install license-plist' to install it.\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

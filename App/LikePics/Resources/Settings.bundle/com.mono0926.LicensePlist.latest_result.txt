@@ -1,31 +1,3 @@
-name: LicensePlist, nameSpecified: 
-body: MIT License
-
-Copyrig…
-version: 3.22.0
-
-name: Sourcery, nameSpecified: 
-body: MIT License
-
-Copyrig…
-version: 1.8.1
-
-name: SwiftFormat, nameSpecified: 
-body: MIT License
-
-Copyrig…
-version: 0.49.13
-
-name: SwiftGen, nameSpecified: 
-body: MIT Licence
-
-Copyrig…
-version: 6.5.1
-
-name: SwiftLint, nameSpecified: 
-body: The MIT License (MIT…
-version: 0.47.1
-
 name: BrightFutures, nameSpecified: BrightFutures, owner: Thomvis, version: 8.2.0, source: https://github.com/Thomvis/BrightFutures
 
 name: Erik, nameSpecified: Erik, owner: phimage, version: 5.1.0, source: https://github.com/phimage/Erik
@@ -34,18 +6,16 @@ name: FileKit, nameSpecified: FileKit, owner: nvzqz, version: 6.0.0, source: htt
 
 name: Kanna, nameSpecified: Kanna, owner: tid-kijyun, version: 5.2.7, source: https://github.com/tid-kijyun/Kanna
 
-name: PersistentStack, nameSpecified: PersistentStack, owner: tasuwo, version: 0.1.0, source: https://github.com/tasuwo/PersistentStack
+name: PersistentStack, nameSpecified: PersistentStack, owner: tasuwo, version: 0.7.0, source: https://github.com/tasuwo/PersistentStack
 
-name: realm-cocoa, nameSpecified: Realm, owner: realm, version: 10.28.7, source: https://github.com/realm/realm-cocoa
+name: realm-cocoa, nameSpecified: realm-cocoa, owner: realm, version: 10.44.0, source: https://github.com/realm/realm-cocoa
 
-name: realm-core, nameSpecified: RealmDatabase, owner: realm, version: 12.5.1, source: https://github.com/realm/realm-core
+name: realm-core, nameSpecified: realm-core, owner: realm, version: 13.23.1, source: https://github.com/realm/realm-core
 
-name: swift, nameSpecified: swift, owner: tasuwo, version: 0.3.0, source: https://github.com/tasuwo/swift
+name: swift-async-algorithms, nameSpecified: swift-async-algorithms, owner: apple, version: 1.0.0-beta.1, source: https://github.com/apple/swift-async-algorithms
 
-name: swift-argument-parser, nameSpecified: swift-argument-parser, owner: apple, version: 1.1.4, source: https://github.com/apple/swift-argument-parser
-
-name: swift-async-algorithms, nameSpecified: AsyncAlgorithms, owner: apple, version: 0.0.3, source: https://github.com/apple/swift-async-algorithms
+name: swift-collections, nameSpecified: swift-collections, owner: apple, version: 1.0.5, source: https://github.com/apple/swift-collections
 
 add-version-numbers: false
 
-LicensePlist Version: 3.22.0
+LicensePlist Version: 3.25.1

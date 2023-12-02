@@ -3,13 +3,7 @@ install: ## ライブラリ群をインストールする
 	bundle exec pod install
 
 .PHONY: generate
-generate: license_generate swiftgen_generate sourcery_generate mockolo_generate format ## 各種コード自動生成を実行する
-
-.PHONY: license_generate
-license_generate: ## ライセンスを自動生成する
-	 ./Pods/LicensePlist/license-plist \
-		 --output-path ./App/LikePics/Resources/Settings.bundle \
-		 --config-path ./license_plist.yml
+generate: swiftgen_generate sourcery_generate mockolo_generate format ## 各種コード自動生成を実行する
 
 .PHONY: swiftgen_generate
 swiftgen_generate: ## SwiftGenによるコード自動生成を実行する
