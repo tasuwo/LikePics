@@ -13,7 +13,7 @@ import UIKit
 class ClipItemInformationViewController: UIViewController {
     typealias Store = CompositeKit.Store<ClipItemInformationViewState, ClipItemInformationViewAction, ClipItemInformationViewDependency>
     typealias Layout = ClipItemInformationLayout
-    typealias ModalRouter = TagSelectionModalRouter & AlbumSelectionModalRouter
+    typealias ModalRouter = AlbumSelectionModalRouter & TagSelectionModalRouter
 
     // MARK: - Properties
 

@@ -8,11 +8,11 @@ import Domain
 import Environment
 import Foundation
 
-typealias ClipCollectionDependency = HasRouter
-    & HasUserSettingStorage
-    & HasClipCommandService
+typealias ClipCollectionDependency = HasClipCommandService
     & HasClipQueryService
     & HasImageQueryService
+    & HasRouter
+    & HasUserSettingStorage
 
 struct ClipCollectionReducer: Reducer {
     typealias Dependency = ClipCollectionDependency

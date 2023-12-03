@@ -84,7 +84,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
     // MARK: Setup Appearance
 
     static func setupAppearance(imageView: UIImageView) {
-        imageView.layer.cornerRadius = Self.cornerRadius
+        imageView.layer.cornerRadius = cornerRadius
         imageView.layer.cornerCurve = .continuous
         imageView.layer.masksToBounds = true
         imageView.contentMode = .scaleAspectFit

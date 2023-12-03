@@ -140,8 +140,7 @@ extension DependencyContainer: ViewControllerFactory {
                                           modalRouter: self)
     }
 
-    public func makeClipTargetCollectionViewController(id: UUID, loaders: [ImageLazyLoadable], fileUrls: [URL]) -> UIViewController
-    {
+    public func makeClipTargetCollectionViewController(id: UUID, loaders: [ImageLazyLoadable], fileUrls: [URL]) -> UIViewController {
         struct Dependency: ClipCreationViewDependency {
             var clipRecipeFactory: ClipRecipeFactoryProtocol
             var clipStore: ClipStorable

@@ -8,8 +8,8 @@ import Domain
 import Environment
 import Foundation
 
-public typealias ClipsIntegrityValidatorDependency = HasTemporariesPersistService
-    & HasIntegrityValidationService
+public typealias ClipsIntegrityValidatorDependency = HasIntegrityValidationService
+    & HasTemporariesPersistService
 
 struct ClipsIntegrityValidatorReducer: Reducer {
     typealias Dependency = ClipsIntegrityValidatorDependency

@@ -8,10 +8,10 @@ import Domain
 import Environment
 import Foundation
 
-typealias AlbumListViewDependency = HasUserSettingStorage
-    & HasClipCommandService
+typealias AlbumListViewDependency = HasClipCommandService
     & HasClipQueryService
     & HasRouter
+    & HasUserSettingStorage
 
 struct AlbumListViewReducer: Reducer {
     typealias Dependency = AlbumListViewDependency

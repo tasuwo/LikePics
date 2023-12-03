@@ -26,8 +26,8 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/realm/realm-cocoa", .upToNextMinor(from: "10.44.0")),
         .package(url: "https://github.com/phimage/Erik", .upToNextMajor(from: "5.1.0")),
-        .package(url: "https://github.com/tasuwo/PersistentStack", .upToNextMinor(from: "0.7.0")),
-        .package(url: "https://github.com/tasuwo/swift", .upToNextMajor(from: "0.6.1"))
+        .package(url: "https://github.com/tasuwo/PersistentStack", .upToNextMajor(from: "0.7.1")),
+        .package(url: "https://github.com/tasuwo/swift", .upToNextMajor(from: "0.7.0"))
     ],
     targets: [
         // MARK: - App

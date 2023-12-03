@@ -11,9 +11,9 @@ class Logger {
 
     init() {
         #if DEBUG
-            self.log = OSLog(subsystem: "net.tasuwo.TBox.Smoothie", category: "Thumbnail Loading")
+        self.log = OSLog(subsystem: "net.tasuwo.TBox.Smoothie", category: "Thumbnail Loading")
         #else
-            self.log = .disabled
+        self.log = .disabled
         #endif
     }
 }

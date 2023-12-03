@@ -8,10 +8,10 @@ import Domain
 import Environment
 import Foundation
 
-typealias ClipMergeViewDependency = HasRouter
+typealias ClipMergeViewDependency = HasClipCommandService
     & HasClipQueryService
-    & HasClipCommandService
     & HasModalNotificationCenter
+    & HasRouter
 
 struct ClipMergeViewReducer: Reducer {
     typealias Dependency = ClipMergeViewDependency

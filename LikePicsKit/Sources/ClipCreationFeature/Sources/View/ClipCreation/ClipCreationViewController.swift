@@ -16,7 +16,7 @@ public class ClipCreationViewController: UIViewController {
 
     typealias Layout = ClipCreationViewLayout
     typealias Store = CompositeKit.Store<ClipCreationViewState, ClipCreationViewAction, ClipCreationViewDependency>
-    public typealias ModalRouter = TagSelectionModalRouter & AlbumMultiSelectionModalRouter
+    public typealias ModalRouter = AlbumMultiSelectionModalRouter & TagSelectionModalRouter
 
     // MARK: - Properties
 

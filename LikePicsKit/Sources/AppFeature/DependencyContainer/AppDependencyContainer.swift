@@ -18,29 +18,29 @@ import UIKit
 // swiftlint:disable identifier_name
 // swiftlint:disable function_body_length
 
-public typealias AppDependencyContaining = HasPasteboard
+public typealias AppDependencyContaining = HasAlbumCommandService
+    & HasAppBundle
     & HasClipCommandService
+    & HasClipPreviewPlayConfigurationStorage
     & HasClipQueryService
-    & HasClipSearchSettingService
     & HasClipSearchHistoryService
-    & HasUserSettingStorage
-    & HasImageQueryService
-    & HasTransitionLock
-    & HasCloudAvailabilityService
-    & HasModalNotificationCenter
-    & HasTemporariesPersistService
-    & HasIntegrityValidationService
-    & HasTagCommandService
-    & HasTagQueryService
-    & HasNop
+    & HasClipSearchSettingService
     & HasClipStore
+    & HasCloudAvailabilityService
     & HasDiskCaches
     & HasImageLoaderSettings
-    & HasAppBundle
-    & HasAlbumCommandService
+    & HasImageQueryService
+    & HasIntegrityValidationService
     & HasListingAlbumTitleQueryService
-    & HasClipPreviewPlayConfigurationStorage
+    & HasModalNotificationCenter
+    & HasNop
+    & HasPasteboard
     & HasPreviewPrefetcher
+    & HasTagCommandService
+    & HasTagQueryService
+    & HasTemporariesPersistService
+    & HasTransitionLock
+    & HasUserSettingStorage
 
 public class AppDependencyContainer {
     // MARK: - Properties

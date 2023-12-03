@@ -4,7 +4,7 @@
 
 import UIKit
 
-public typealias RestorableViewController = UIViewController & Restorable
+public typealias RestorableViewController = Restorable & UIViewController
 
 public protocol Restorable {
     func restore() -> RestorableViewController

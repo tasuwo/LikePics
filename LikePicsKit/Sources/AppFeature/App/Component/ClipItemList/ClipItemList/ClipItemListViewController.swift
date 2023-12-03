@@ -411,21 +411,24 @@ extension ClipItemListViewController {
         case .delete:
             return UIAction(title: L10n.clipInformationContextMenuDelete,
                             image: UIImage(systemName: "trash.fill"),
-                            attributes: .destructive) { [weak self] _ in
+                            attributes: .destructive)
+            { [weak self] _ in
                 self?.store.execute(.deleteMenuTapped(clipItem.id))
             }
 
         case .copyImageUrl:
             return UIAction(title: L10n.clipInformationContextMenuCopyImageUrl,
                             image: UIImage(systemName: "doc.on.doc"),
-                            attributes: []) { [weak self] _ in
+                            attributes: [])
+            { [weak self] _ in
                 self?.store.execute(.copyImageUrlMenuTapped(clipItem.id))
             }
 
         case .openImageUrl:
             return UIAction(title: L10n.clipInformationContextMenuOpenImageUrl,
                             image: UIImage(systemName: "globe"),
-                            attributes: []) { [weak self] _ in
+                            attributes: [])
+            { [weak self] _ in
                 self?.store.execute(.openImageUrlMenuTapped(clipItem.id))
             }
         }

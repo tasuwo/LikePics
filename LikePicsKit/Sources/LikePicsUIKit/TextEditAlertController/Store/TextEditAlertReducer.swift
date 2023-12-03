@@ -5,8 +5,8 @@
 import Combine
 import CompositeKit
 
-public typealias TextEditAlertDependency = HasTextValidator
-    & HasTextEditAlertDelegate
+public typealias TextEditAlertDependency = HasTextEditAlertDelegate
+    & HasTextValidator
 
 struct TextEditAlertReducer: Reducer {
     typealias Dependency = TextEditAlertDependency

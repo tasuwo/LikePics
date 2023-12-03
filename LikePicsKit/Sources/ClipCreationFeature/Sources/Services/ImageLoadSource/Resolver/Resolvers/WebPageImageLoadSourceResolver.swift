@@ -82,7 +82,7 @@ private extension WKWebView {
                 }
 
                 do {
-                    completion(.success(try Kanna.HTML(html: html, encoding: .utf8)))
+                    try completion(.success(Kanna.HTML(html: html, encoding: .utf8)))
                 } catch {
                     completion(.failure(.failedToParse(error)))
                 }

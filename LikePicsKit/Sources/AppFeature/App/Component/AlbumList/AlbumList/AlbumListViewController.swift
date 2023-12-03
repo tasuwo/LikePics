@@ -379,26 +379,30 @@ extension AlbumListViewController {
         switch item {
         case .hide:
             return UIAction(title: L10n.albumListViewContextMenuActionHide,
-                            image: UIImage(systemName: "eye.slash.fill")) { [weak self] _ in
+                            image: UIImage(systemName: "eye.slash.fill"))
+            { [weak self] _ in
                 self?.store.execute(.hideMenuTapped(album.id))
             }
 
         case .reveal:
             return UIAction(title: L10n.albumListViewContextMenuActionReveal,
-                            image: UIImage(systemName: "eye.fill")) { [weak self] _ in
+                            image: UIImage(systemName: "eye.fill"))
+            { [weak self] _ in
                 self?.store.execute(.revealMenuTapped(album.id))
             }
 
         case .rename:
             return UIAction(title: L10n.albumListViewContextMenuActionUpdate,
-                            image: UIImage(systemName: "text.cursor")) { [weak self] _ in
+                            image: UIImage(systemName: "text.cursor"))
+            { [weak self] _ in
                 self?.store.execute(.renameMenuTapped(album.id))
             }
 
         case .delete:
             return UIAction(title: L10n.albumListViewContextMenuActionDelete,
                             image: UIImage(systemName: "trash.fill"),
-                            attributes: .destructive) { [weak self] _ in
+                            attributes: .destructive)
+            { [weak self] _ in
                 self?.store.execute(.deleteMenuTapped(album.id))
             }
         }

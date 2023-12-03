@@ -9,14 +9,14 @@ import Environment
 import Foundation
 import LikePicsUIKit
 
-typealias ClipPreviewPageViewDependency = HasRouter
-    & HasClipCommandService
-    & HasClipQueryService
+typealias ClipPreviewPageViewDependency = HasClipCommandService
     & HasClipItemInformationTransitioningController
+    & HasClipPreviewPlayConfigurationStorage
+    & HasClipQueryService
+    & HasPreviewPrefetcher
+    & HasRouter
     & HasTransitionLock
     & HasUserSettingStorage
-    & HasClipPreviewPlayConfigurationStorage
-    & HasPreviewPrefetcher
 
 struct ClipPreviewPageViewReducer: Reducer {
     typealias Dependency = ClipPreviewPageViewDependency

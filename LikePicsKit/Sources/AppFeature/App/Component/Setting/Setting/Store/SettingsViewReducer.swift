@@ -8,10 +8,10 @@ import Domain
 import Environment
 import Foundation
 
-typealias SettingsViewDependency = HasCloudAvailabilityService
-    & HasUserSettingStorage
+typealias SettingsViewDependency = HasAppBundle
+    & HasCloudAvailabilityService
     & HasDiskCaches
-    & HasAppBundle
+    & HasUserSettingStorage
 
 struct SettingsViewReducer: Reducer {
     typealias Dependency = SettingsViewDependency

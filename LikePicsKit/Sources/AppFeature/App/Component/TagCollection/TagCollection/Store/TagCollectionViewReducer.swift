@@ -9,9 +9,9 @@ import Environment
 import Foundation
 
 typealias TagCollectionViewDependency = HasClipCommandService
-    & HasRouter
-    & HasPasteboard
     & HasClipQueryService
+    & HasPasteboard
+    & HasRouter
     & HasUserSettingStorage
 
 struct TagCollectionViewReducer: Reducer {

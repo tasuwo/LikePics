@@ -3,7 +3,7 @@ install: ## ライブラリ群をインストールする
 	bundle exec pod install
 
 .PHONY: generate
-generate: swiftgen_generate sourcery_generate mockolo_generate format ## 各種コード自動生成を実行する
+generate: swiftgen_generate sourcery_generate mockolo_generate ## 各種コード自動生成を実行する
 
 .PHONY: swiftgen_generate
 swiftgen_generate: ## SwiftGenによるコード自動生成を実行する
@@ -44,13 +44,6 @@ mockolo_generate: ## mockoloによるモック自動生成を行う
 		--sourcedirs ../LikePicsKit/Sources/ClipCreationFeature \
 		--destination ../LikePicsKit/Sources/TestHelper/Mocks/Protocol/ClipCreationFeature.ProtocolMocks.swift \
 		--testable-imports ClipCreationFeature;
-
-.PHONY: format
-format: swiftformat_format ## 各種フォーマッターを実行する
-
-.PHONY: swiftformat_format
-swiftformat_format: ## SwiftFormatによるフォーマットを実行する
-	Pods/SwiftFormat/CommandLineTool/swiftformat --config ./.swiftformat ./
 
 .PHONY: help
 help: ## ヘルプを表示する

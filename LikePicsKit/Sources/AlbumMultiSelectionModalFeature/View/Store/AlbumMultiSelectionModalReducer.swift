@@ -7,10 +7,10 @@ import CompositeKit
 import Domain
 import Environment
 
-public typealias AlbumMultiSelectionModalDependency = HasUserSettingStorage
-    & HasAlbumCommandService
+public typealias AlbumMultiSelectionModalDependency = HasAlbumCommandService
     & HasListingAlbumTitleQueryService
     & HasModalNotificationCenter
+    & HasUserSettingStorage
 
 public struct AlbumMultiSelectionModalReducer: Reducer {
     public typealias Dependency = AlbumMultiSelectionModalDependency

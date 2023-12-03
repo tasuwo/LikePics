@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tasuwo/PersistentStack",
       "state" : {
-        "revision" : "3e94191ff76ecd80591fd12c1daa3f31b5e2696c",
-        "version" : "0.7.0"
+        "revision" : "7f0cb13994ba323dd5ec5c8de7437debe0c33bf0",
+        "version" : "0.7.1"
       }
     },
     {
@@ -68,8 +68,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tasuwo/swift",
       "state" : {
-        "revision" : "47f1ff0515f77b2280ca50c82c4e759565632004",
-        "version" : "0.6.1"
+        "revision" : "75d78ead68e6423804e3b3479c261e7fe7cf8e11",
+        "version" : "0.7.0"
       }
     },
     {

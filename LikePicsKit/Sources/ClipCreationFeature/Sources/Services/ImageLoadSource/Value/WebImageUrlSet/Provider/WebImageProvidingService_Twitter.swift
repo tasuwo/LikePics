@@ -50,7 +50,7 @@ public extension WebImageProvidingService {
             }
 
             static func transition(_ browser: Erik, from state: State, withContext context: Context?) -> AnyPublisher<Void, WebImageUrlSetFinderError> {
-                return Self.currentContext(browser, withState: state, previousContext: context)
+                return currentContext(browser, withState: state, previousContext: context)
                     .flatMap { context -> AnyPublisher<(State, Context), WebImageUrlSetFinderError> in
                         guard let nextState = self.nextState(from: state, withContext: context) else {
                             return Fail(error: WebImageUrlSetFinderError.internalError)

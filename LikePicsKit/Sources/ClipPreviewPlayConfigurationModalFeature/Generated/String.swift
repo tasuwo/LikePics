@@ -9,67 +9,67 @@ import Foundation
 
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
-internal enum L10n {
-    internal enum `Any` {
-        internal enum ItemAnimationName {
+enum L10n {
+    enum `Any` {
+        enum ItemAnimationName {
             /// 左からスライド
-            internal static let forward = L10n.tr("Localizable", "any.item_animation_name.forward")
+            static let forward = L10n.tr("Localizable", "any.item_animation_name.forward")
             /// オフ
-            internal static let off = L10n.tr("Localizable", "any.item_animation_name.off")
+            static let off = L10n.tr("Localizable", "any.item_animation_name.off")
             /// 右からスライド
-            internal static let reverse = L10n.tr("Localizable", "any.item_animation_name.reverse")
+            static let reverse = L10n.tr("Localizable", "any.item_animation_name.reverse")
         }
 
-        internal enum ItemOrderName {
+        enum ItemOrderName {
             /// 通常
-            internal static let forward = L10n.tr("Localizable", "any.item_order_name.forward")
+            static let forward = L10n.tr("Localizable", "any.item_order_name.forward")
             /// ランダム
-            internal static let random = L10n.tr("Localizable", "any.item_order_name.random")
+            static let random = L10n.tr("Localizable", "any.item_order_name.random")
             /// 逆順
-            internal static let reverse = L10n.tr("Localizable", "any.item_order_name.reverse")
+            static let reverse = L10n.tr("Localizable", "any.item_order_name.reverse")
         }
 
-        internal enum ItemRangeName {
+        enum ItemRangeName {
             /// 単一のクリップ
-            internal static let clip = L10n.tr("Localizable", "any.item_range_name.clip")
+            static let clip = L10n.tr("Localizable", "any.item_range_name.clip")
             /// 全てのクリップ
-            internal static let overall = L10n.tr("Localizable", "any.item_range_name.overall")
+            static let overall = L10n.tr("Localizable", "any.item_range_name.overall")
         }
     }
 
-    internal enum Root {
+    enum Root {
         /// 再生設定
-        internal static let title = L10n.tr("Localizable", "root.title")
-        internal enum IntervalAlert {
+        static let title = L10n.tr("Localizable", "root.title")
+        enum IntervalAlert {
             /// 画像が切り替わる間隔を%@秒から%@秒の範囲で設定します
-            internal static func message(_ p1: Any, _ p2: Any) -> String {
+            static func message(_ p1: Any, _ p2: Any) -> String {
                 return L10n.tr("Localizable", "root.interval_alert.message", String(describing: p1), String(describing: p2))
             }
 
             /// 再生間隔
-            internal static let title = L10n.tr("Localizable", "root.interval_alert.title")
+            static let title = L10n.tr("Localizable", "root.interval_alert.title")
         }
 
-        internal enum MenuItemInterval {
+        enum MenuItemInterval {
             /// 編集
-            internal static let editButton = L10n.tr("Localizable", "root.menu_item_interval.edit_button")
+            static let editButton = L10n.tr("Localizable", "root.menu_item_interval.edit_button")
             /// %@秒
-            internal static func seconds(_ p1: Any) -> String {
+            static func seconds(_ p1: Any) -> String {
                 return L10n.tr("Localizable", "root.menu_item_interval.seconds", String(describing: p1))
             }
         }
 
-        internal enum MenuTitle {
+        enum MenuTitle {
             /// アニメーション
-            internal static let animation = L10n.tr("Localizable", "root.menu_title.animation")
+            static let animation = L10n.tr("Localizable", "root.menu_title.animation")
             /// 再生間隔
-            internal static let interval = L10n.tr("Localizable", "root.menu_title.interval")
+            static let interval = L10n.tr("Localizable", "root.menu_title.interval")
             /// ループ
-            internal static let loop = L10n.tr("Localizable", "root.menu_title.loop")
+            static let loop = L10n.tr("Localizable", "root.menu_title.loop")
             /// 順序
-            internal static let order = L10n.tr("Localizable", "root.menu_title.order")
+            static let order = L10n.tr("Localizable", "root.menu_title.order")
             /// 範囲
-            internal static let range = L10n.tr("Localizable", "root.menu_title.range")
+            static let range = L10n.tr("Localizable", "root.menu_title.range")
         }
     }
 }
@@ -90,9 +90,9 @@ extension L10n {
 private final class BundleToken {
     static let bundle: Bundle = {
         #if SWIFT_PACKAGE
-            return Bundle.module
+        return Bundle.module
         #else
-            return Bundle(for: BundleToken.self)
+        return Bundle(for: BundleToken.self)
         #endif
     }()
 }

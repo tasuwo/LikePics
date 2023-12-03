@@ -362,32 +362,37 @@ extension TagCollectionViewController {
         switch item {
         case .copy:
             return UIAction(title: L10n.tagListViewContextMenuActionCopy,
-                            image: UIImage(systemName: "square.on.square.fill")) { [weak self] _ in
+                            image: UIImage(systemName: "square.on.square.fill"))
+            { [weak self] _ in
                 self?.store.execute(.copyMenuSelected(tag))
             }
 
         case .hide:
             return UIAction(title: L10n.tagListViewContextMenuActionHide,
-                            image: UIImage(systemName: "eye.slash.fill")) { [weak self] _ in
+                            image: UIImage(systemName: "eye.slash.fill"))
+            { [weak self] _ in
                 self?.store.execute(.hideMenuSelected(tag))
             }
 
         case .reveal:
             return UIAction(title: L10n.tagListViewContextMenuActionReveal,
-                            image: UIImage(systemName: "eye.fill")) { [weak self] _ in
+                            image: UIImage(systemName: "eye.fill"))
+            { [weak self] _ in
                 self?.store.execute(.revealMenuSelected(tag))
             }
 
         case .delete:
             return UIAction(title: L10n.tagListViewContextMenuActionDelete,
                             image: UIImage(systemName: "trash.fill"),
-                            attributes: .destructive) { [weak self] _ in
+                            attributes: .destructive)
+            { [weak self] _ in
                 self?.store.execute(.deleteMenuSelected(tag))
             }
 
         case .rename:
             return UIAction(title: L10n.tagListViewContextMenuActionUpdate,
-                            image: UIImage(systemName: "text.cursor")) { [weak self] _ in
+                            image: UIImage(systemName: "text.cursor"))
+            { [weak self] _ in
                 self?.store.execute(.renameMenuSelected(tag))
             }
         }

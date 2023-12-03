@@ -2,11 +2,11 @@
 // Generated using SwiftGen — https://github.com/SwiftGen/SwiftGen
 
 #if os(macOS)
-    import AppKit
+import AppKit
 #elseif os(iOS)
-    import UIKit
+import UIKit
 #elseif os(tvOS) || os(watchOS)
-    import UIKit
+import UIKit
 #endif
 
 // Deprecated typealiases
@@ -36,9 +36,9 @@ public final class ColorAsset {
     public fileprivate(set) var name: String
 
     #if os(macOS)
-        public typealias Color = NSColor
+    public typealias Color = NSColor
     #elseif os(iOS) || os(tvOS) || os(watchOS)
-        public typealias Color = UIColor
+    public typealias Color = UIColor
     #endif
 
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, macOS 10.13, *)
@@ -50,14 +50,14 @@ public final class ColorAsset {
     }()
 
     #if os(iOS) || os(tvOS)
-        @available(iOS 11.0, tvOS 11.0, *)
-        public func color(compatibleWith traitCollection: UITraitCollection) -> Color {
-            let bundle = BundleToken.bundle
-            guard let color = Color(named: name, in: bundle, compatibleWith: traitCollection) else {
-                fatalError("Unable to load color asset named \(name).")
-            }
-            return color
+    @available(iOS 11.0, tvOS 11.0, *)
+    public func color(compatibleWith traitCollection: UITraitCollection) -> Color {
+        let bundle = BundleToken.bundle
+        guard let color = Color(named: name, in: bundle, compatibleWith: traitCollection) else {
+            fatalError("Unable to load color asset named \(name).")
         }
+        return color
+    }
     #endif
 
     fileprivate init(name: String) {
@@ -70,11 +70,11 @@ public extension ColorAsset.Color {
     convenience init?(asset: ColorAsset) {
         let bundle = BundleToken.bundle
         #if os(iOS) || os(tvOS)
-            self.init(named: asset.name, in: bundle, compatibleWith: nil)
+        self.init(named: asset.name, in: bundle, compatibleWith: nil)
         #elseif os(macOS)
-            self.init(named: NSColor.Name(asset.name), bundle: bundle)
+        self.init(named: NSColor.Name(asset.name), bundle: bundle)
         #elseif os(watchOS)
-            self.init(named: asset.name)
+        self.init(named: asset.name)
         #endif
     }
 }
@@ -83,9 +83,9 @@ public extension ColorAsset.Color {
 private final class BundleToken {
     static let bundle: Bundle = {
         #if SWIFT_PACKAGE
-            return Bundle.module
+        return Bundle.module
         #else
-            return Bundle(for: BundleToken.self)
+        return Bundle(for: BundleToken.self)
         #endif
     }()
 }

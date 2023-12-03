@@ -8,11 +8,11 @@ import Domain
 import Environment
 import Foundation
 
-typealias ClipItemInformationViewDependency = HasRouter
+typealias ClipItemInformationViewDependency = HasClipCommandService
     & HasClipQueryService
-    & HasClipCommandService
-    & HasUserSettingStorage
     & HasPasteboard
+    & HasRouter
+    & HasUserSettingStorage
 
 struct ClipItemInformationViewReducer: Reducer {
     typealias Dependency = ClipItemInformationViewDependency

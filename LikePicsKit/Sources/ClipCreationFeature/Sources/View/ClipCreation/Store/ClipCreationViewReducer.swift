@@ -28,12 +28,12 @@ public protocol HasUserSettingsStorage {
     var userSettingsStorage: UserSettingsStorageProtocol { get }
 }
 
-public typealias ClipCreationViewDependency = HasClipStore
-    & HasClipRecipeFactory
-    & HasImageSourceProvider
+public typealias ClipCreationViewDependency = HasClipRecipeFactory
+    & HasClipStore
     & HasImageLoader
-    & HasUserSettingsStorage
+    & HasImageSourceProvider
     & HasModalNotificationCenter
+    & HasUserSettingsStorage
 
 struct ClipCreationViewReducer: Reducer {
     typealias Dependency = ClipCreationViewDependency

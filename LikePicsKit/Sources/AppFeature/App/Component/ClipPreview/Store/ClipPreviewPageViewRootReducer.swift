@@ -4,8 +4,8 @@
 
 import CompositeKit
 
-typealias ClipPreviewPageViewRootDependency = ClipPreviewPageViewDependency
-    & ClipPreviewPageBarDependency
+typealias ClipPreviewPageViewRootDependency = ClipPreviewPageBarDependency
+    & ClipPreviewPageViewDependency
 
 private typealias RootState = ClipPreviewPageViewRootState
 private typealias RootAction = ClipPreviewPageViewRootAction

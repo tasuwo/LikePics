@@ -9,10 +9,10 @@ import Environment
 import Foundation
 
 typealias SearchResultViewDependency = HasClipQueryService
+    & HasClipSearchHistoryService
+    & HasClipSearchSettingService
     & HasRouter
     & HasUserSettingStorage
-    & HasClipSearchSettingService
-    & HasClipSearchHistoryService
 
 struct SearchResultViewReducer: Reducer {
     typealias Dependency = SearchResultViewDependency

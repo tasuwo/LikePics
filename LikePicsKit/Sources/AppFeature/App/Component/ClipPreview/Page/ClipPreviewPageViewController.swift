@@ -18,7 +18,7 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     typealias Store = AnyStoring<ClipPreviewPageViewState, ClipPreviewPageViewAction, ClipPreviewPageViewDependency>
 
-    typealias ModalRouter = TagSelectionModalRouter & AlbumSelectionModalRouter & ClipItemListModalRouter & ClipPreviewPlayConfigurationModalRouter
+    typealias ModalRouter = AlbumSelectionModalRouter & ClipItemListModalRouter & ClipPreviewPlayConfigurationModalRouter & TagSelectionModalRouter
 
     // MARK: - Properties
 

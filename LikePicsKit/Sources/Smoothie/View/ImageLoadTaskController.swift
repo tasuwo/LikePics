@@ -10,7 +10,7 @@ public protocol ImageDisplayable {
     func smt_display(_ image: UIImage?)
 }
 
-public typealias ImageDisplayableView = UIView & ImageDisplayable
+public typealias ImageDisplayableView = ImageDisplayable & UIView
 
 final class ImageLoadTaskController {
     // MARK: - Properties

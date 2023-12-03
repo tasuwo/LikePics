@@ -19,7 +19,7 @@ class ClipCollectionViewController: UIViewController {
     typealias Layout = ClipCollectionViewLayout
     typealias Store = AnyStoring<ClipCollectionState, ClipCollectionAction, ClipCollectionDependency>
 
-    typealias ModalRouter = TagSelectionModalRouter & AlbumSelectionModalRouter & ClipMergeModalRouter
+    typealias ModalRouter = AlbumSelectionModalRouter & ClipMergeModalRouter & TagSelectionModalRouter
 
     // MARK: - Properties
 
@@ -685,52 +685,60 @@ extension ClipCollectionViewController {
         switch item {
         case .addTag:
             return UIAction(title: L10n.clipsListContextMenuAddTag,
-                            image: UIImage(systemName: "tag.fill")) { [weak self] _ in
+                            image: UIImage(systemName: "tag.fill"))
+            { [weak self] _ in
                 self?.store.execute(.tagAdditionMenuTapped(clip.id))
             }
 
         case .addToAlbum:
             return UIAction(title: L10n.clipsListContextMenuAddToAlbum,
-                            image: UIImage(systemName: "rectangle.stack.fill.badge.plus")) { [weak self] _ in
+                            image: UIImage(systemName: "rectangle.stack.fill.badge.plus"))
+            { [weak self] _ in
                 self?.store.execute(.albumAdditionMenuTapped(clip.id))
             }
 
         case .reveal:
             return UIAction(title: L10n.clipsListContextMenuReveal,
-                            image: UIImage(systemName: "eye.fill")) { [weak self] _ in
+                            image: UIImage(systemName: "eye.fill"))
+            { [weak self] _ in
                 self?.store.execute(.revealMenuTapped(clip.id))
             }
 
         case .hide:
             return UIAction(title: L10n.clipsListContextMenuHide,
-                            image: UIImage(systemName: "eye.slash.fill")) { [weak self] _ in
+                            image: UIImage(systemName: "eye.slash.fill"))
+            { [weak self] _ in
                 self?.store.execute(.hideMenuTapped(clip.id))
             }
 
         case .removeFromAlbum:
             return UIAction(title: L10n.clipsListContextMenuRemoveFromAlbum,
                             image: UIImage(systemName: "trash.fill"),
-                            attributes: .destructive) { [weak self] _ in
+                            attributes: .destructive)
+            { [weak self] _ in
                 self?.store.execute(.removeFromAlbumMenuTapped(clip.id))
             }
 
         case .delete:
             return UIAction(title: L10n.clipsListContextMenuDelete,
                             image: UIImage(systemName: "trash.fill"),
-                            attributes: .destructive) { [weak self] _ in
+                            attributes: .destructive)
+            { [weak self] _ in
                 self?.store.execute(.deleteMenuTapped(clip.id))
             }
 
         case .share:
             return UIAction(title: L10n.clipsListContextMenuShare,
-                            image: UIImage(systemName: "square.and.arrow.up.fill")) { [weak self] _ in
+                            image: UIImage(systemName: "square.and.arrow.up.fill"))
+            { [weak self] _ in
                 self?.store.execute(.shareMenuTapped(clip.id))
             }
 
         case .purge:
             return UIAction(title: L10n.clipsListContextMenuPurge,
                             image: UIImage(systemName: "scissors"),
-                            attributes: .destructive) { [weak self] _ in
+                            attributes: .destructive)
+            { [weak self] _ in
                 self?.store.execute(.purgeMenuTapped(clip.id))
             }
         }

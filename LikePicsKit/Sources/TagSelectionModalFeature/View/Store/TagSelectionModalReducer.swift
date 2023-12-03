@@ -7,10 +7,10 @@ import CompositeKit
 import Domain
 import Environment
 
-public typealias TagSelectionModalDependency = HasUserSettingStorage
-    & HasTagQueryService
+public typealias TagSelectionModalDependency = HasModalNotificationCenter
     & HasTagCommandService
-    & HasModalNotificationCenter
+    & HasTagQueryService
+    & HasUserSettingStorage
 
 public struct TagSelectionModalReducer: Reducer {
     public typealias Dependency = TagSelectionModalDependency

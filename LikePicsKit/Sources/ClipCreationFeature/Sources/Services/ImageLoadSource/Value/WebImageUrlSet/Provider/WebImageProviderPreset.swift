@@ -19,7 +19,7 @@ public enum WebImageProviderPreset: CaseIterable {
     }
 
     public static func resolveProvider(by url: URL) -> WebImageProvider.Type? {
-        return Self.allCases
+        return allCases
             .map { $0.provider }
             .first(where: { $0.isProviding(url: url) })
     }

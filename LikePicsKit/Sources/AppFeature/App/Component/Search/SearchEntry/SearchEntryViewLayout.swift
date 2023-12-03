@@ -116,8 +116,7 @@ extension SearchEntryViewLayout {
         }
     }
 
-    private static func configureHistoryHeader(removeAllHistoriesHandler: @escaping () -> Void) -> UICollectionView.CellRegistration<ClipSearchHistoryHeaderCell, Bool>
-    {
+    private static func configureHistoryHeader(removeAllHistoriesHandler: @escaping () -> Void) -> UICollectionView.CellRegistration<ClipSearchHistoryHeaderCell, Bool> {
         return .init { cell, _, isEnabled in
             cell.removeAllHistoriesHandler = removeAllHistoriesHandler
             cell.isRemoveAllButtonEnabled = isEnabled

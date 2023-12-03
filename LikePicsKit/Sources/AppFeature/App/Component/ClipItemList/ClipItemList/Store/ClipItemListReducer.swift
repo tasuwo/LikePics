@@ -8,12 +8,12 @@ import Domain
 import Environment
 import Foundation
 
-typealias ClipItemListDependency = HasClipQueryService
-    & HasClipCommandService
-    & HasUserSettingStorage
-    & HasRouter
-    & HasPasteboard
+typealias ClipItemListDependency = HasClipCommandService
+    & HasClipQueryService
     & HasModalNotificationCenter
+    & HasPasteboard
+    & HasRouter
+    & HasUserSettingStorage
 
 struct ClipItemListReducer: Reducer {
     typealias Dependency = ClipItemListDependency
