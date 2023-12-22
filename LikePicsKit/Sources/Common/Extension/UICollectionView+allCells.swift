@@ -2,6 +2,8 @@
 //  Copyright © 2022 Tasuku Tozawa. All rights reserved.
 //
 
+#if canImport(UIKit)
+
 import Foundation
 import UIKit
 
@@ -25,3 +27,5 @@ public extension UICollectionView {
         return cells
     }
 }
+
+#endif

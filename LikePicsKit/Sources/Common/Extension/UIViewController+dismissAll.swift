@@ -2,6 +2,8 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+#if canImport(UIKit)
+
 import UIKit
 
 public extension UIViewController {
@@ -47,3 +49,5 @@ public extension UIViewController {
         })
     }
 }
+
+#endif
