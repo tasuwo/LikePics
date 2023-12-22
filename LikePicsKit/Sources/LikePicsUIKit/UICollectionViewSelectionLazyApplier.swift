@@ -5,13 +5,13 @@
 import Domain
 import UIKit
 
-public class UICollectionViewSelectionLazyApplier<Section: Hashable, Item: Hashable, Entity: Identifiable & Hashable & Codable> {
+public class UICollectionViewSelectionLazyApplier<Section: Hashable, Item: Hashable, Entity: Identifiable & Hashable & Codable> where Entity.ID: Codable {
     private let collectionView: UICollectionView
     private let dataSource: UICollectionViewDiffableDataSource<Section, Item>
     private let itemBuilder: (Entity) -> Item
 
-    private var previousSelections: Set<Entity.Identity> = .init()
-    private var suspendedSelections: Set<Entity.Identity> = .init()
+    private var previousSelections: Set<Entity.ID> = .init()
+    private var suspendedSelections: Set<Entity.ID> = .init()
     private let queue = DispatchQueue(label: "net.tasuwo.TBox.UICollectionViewSelectionLazyApplier")
 
     // MARK: - Initializers
@@ -31,7 +31,7 @@ public extension UICollectionViewSelectionLazyApplier {
         queue.async {
             let selections = self.suspendedSelections
             self.suspendedSelections = .init()
-            var nextSuspendedSelections = Set<Entity.Identity>()
+            var nextSuspendedSelections = Set<Entity.ID>()
 
             // 選択中のEntityが消えていたら、後ほど再度選択させるためにsuspendedSelectionsに積む
             self.previousSelections.subtracting(self.suspendedSelections).forEach { id in
@@ -62,12 +62,12 @@ public extension UICollectionViewSelectionLazyApplier {
                 self.previousSelections = snapshot.selectedIds
             }
 
-            let deselections: Set<Entity.Identity> = {
+            let deselections: Set<Entity.ID> = {
                 guard self.previousSelections.isEmpty == false else { return .init() }
                 return self.previousSelections.subtracting(snapshot.selectedIds)
             }()
 
-            let selections: Set<Entity.Identity> = {
+            let selections: Set<Entity.ID> = {
                 guard self.previousSelections.isEmpty == false else {
                     return snapshot.selectedIds.union(self.suspendedSelections.subtracting(deselections))
                 }
@@ -77,7 +77,7 @@ public extension UICollectionViewSelectionLazyApplier {
 
             self.suspendedSelections = .init()
 
-            var nextSuspendedSelections = Set<Entity.Identity>()
+            var nextSuspendedSelections = Set<Entity.ID>()
 
             DispatchQueue.main.sync {
                 selections.forEach { id in
