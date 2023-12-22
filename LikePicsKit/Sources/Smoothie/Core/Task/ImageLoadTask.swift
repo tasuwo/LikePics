@@ -2,7 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 class ImageLoadTask {
     private struct Subscription {

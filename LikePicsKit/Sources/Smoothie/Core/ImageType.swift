@@ -3,7 +3,9 @@
 //
 
 import Foundation
+#if canImport(MobileCoreServices)
 import MobileCoreServices
+#endif
 
 public enum ImageType: CaseIterable {
     case gif

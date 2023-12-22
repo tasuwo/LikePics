@@ -2,6 +2,8 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+#if canImport(UIKit)
+
 import UIKit
 
 @objc
@@ -62,3 +64,5 @@ final class ImageLoadTaskController {
         view?.smt_display(nil)
     }
 }
+
+#endif

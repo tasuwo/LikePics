@@ -2,9 +2,18 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 public struct ImageResponse {
+    #if canImport(UIKit)
     public let image: UIImage
+    #elseif canImport(AppKit)
+    public let image: NSImage
+    #endif
     public let diskCacheImageSize: CGSize?
 }

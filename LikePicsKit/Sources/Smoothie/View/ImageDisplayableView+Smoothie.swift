@@ -2,6 +2,8 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+#if canImport(UIKit)
+
 import UIKit
 
 public func loadImage(_ request: ImageRequest, with pipeline: Pipeline, on view: ImageDisplayableView, completion: ((ImageResponse?) -> Void)? = nil) {
@@ -29,3 +31,5 @@ extension UIImageView: ImageDisplayable {
 }
 
 extension UIImageView: SmoothieCompatible {}
+
+#endif

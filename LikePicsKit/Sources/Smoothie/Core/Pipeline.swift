@@ -2,7 +2,13 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import Foundation
+import ImageIO
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 public final class Pipeline {
     typealias Key = ImageRequestKey
@@ -160,7 +166,11 @@ extension Pipeline {
                 }
                 if task.request.resize == nil {
                     // リサイズが不要なら、エンコードは行わない
+                    #if canImport(UIKit)
                     let image = UIImage(cgImage: thumbnail)
+                    #elseif canImport(AppKit)
+                    let image = NSImage(cgImage: thumbnail, size: .init(width: thumbnail.width, height: thumbnail.height))
+                    #endif
                     self.config.memoryCache.insert(image, forKey: task.request.source.cacheKey)
                     task.didLoad(.init(image: image, diskCacheImageSize: nil))
                 } else {
@@ -214,10 +224,17 @@ extension Pipeline {
 
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Decompress Data")
+            #if canImport(UIKit)
             let image: UIImage? = {
                 guard let image = data.downsample() else { return nil }
                 return UIImage(cgImage: image)
             }()
+            #elseif canImport(AppKit)
+            let image: NSImage? = {
+                guard let image = data.downsample() else { return nil }
+                return NSImage(cgImage: image, size: .init(width: image.width, height: image.height))
+            }()
+            #endif
             log.log(.end, name: "Decompress Data")
 
             self.queue.async {
@@ -248,7 +265,11 @@ extension Pipeline {
                     task.didLoad(nil)
                     return
                 }
+                #if canImport(UIKit)
                 let image = UIImage(cgImage: thumbnail)
+                #elseif canImport(AppKit)
+                let image = NSImage(cgImage: thumbnail, size: .init(width: thumbnail.width, height: thumbnail.height))
+                #endif
                 self.config.memoryCache.insert(image, forKey: task.request.source.cacheKey)
                 task.didLoad(ImageResponse(image: image, diskCacheImageSize: diskCacheImageSize))
             }
