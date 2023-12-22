@@ -3,7 +3,7 @@
 //
 
 import Common
-import Domain
+import MobileTransition
 import os.log
 import UIKit
 

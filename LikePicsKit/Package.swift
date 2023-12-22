@@ -14,6 +14,7 @@ let package = Package(
         .library(name: "TagSelectionModalFeature", targets: ["TagSelectionModalFeature"]),
         .library(name: "ShareExtensionFeature", targets: ["ShareExtensionFeature"]),
         .library(name: "Domain", targets: ["Domain"]),
+        .library(name: "MobileTransition", targets: ["MobileTransition"]),
         .library(name: "Persistence", targets: ["Persistence"]),
         .library(name: "ClipCreationFeature", targets: ["ClipCreationFeature"]),
         .library(name: "LikePicsUIKit", targets: ["LikePicsUIKit"]),
@@ -47,6 +48,7 @@ let package = Package(
                 "LikePicsUIKit",
                 "Persistence",
                 "Smoothie",
+                "MobileTransition",
                 .product(name: "PersistentStack", package: "PersistentStack")
             ],
             plugins: [
@@ -167,8 +169,16 @@ let package = Package(
             dependencies: [
                 "Common",
                 "Domain",
-                "Smoothie"
+                "Smoothie",
+                "MobileTransition"
             ],
+            plugins: [
+                .plugin(name: "LintSwift", package: "swift")
+            ]
+        ),
+        .target(
+            name: "MobileTransition",
+            dependencies: [],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
             ]
@@ -207,7 +217,8 @@ let package = Package(
                 "Smoothie",
                 "Domain",
                 "Common",
-                "CompositeKit"
+                "CompositeKit",
+                "MobileTransition"
             ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")

@@ -4,6 +4,7 @@
 
 import Domain
 import Foundation
+import MobileTransition
 
 public protocol ClipItemListModalRouter {
     @discardableResult

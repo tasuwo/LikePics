@@ -5,6 +5,7 @@
 import Combine
 import Domain
 import LikePicsUIKit
+import MobileTransition
 import UIKit
 
 protocol ClipPreviewPageTransitionDispatcherType {
