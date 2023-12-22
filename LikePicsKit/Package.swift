@@ -151,7 +151,6 @@ let package = Package(
             name: "Domain",
             dependencies: [
                 "Common",
-                "Smoothie"
             ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
