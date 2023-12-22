@@ -2,6 +2,8 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+#if os(iOS)
+
 import UIKit
 
 public enum UserInterfaceStyle: String {
@@ -24,3 +26,5 @@ public extension UserInterfaceStyle {
         }
     }
 }
+
+#endif

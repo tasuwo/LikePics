@@ -2,6 +2,8 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+#if os(iOS)
+
 import Combine
 
 /// @mockable
@@ -21,3 +23,5 @@ public protocol UserSettingsStorageProtocol {
     func set(enabledICloudSync: Bool)
     func set(ignoreCloudUnavailableAlert: Bool)
 }
+
+#endif
