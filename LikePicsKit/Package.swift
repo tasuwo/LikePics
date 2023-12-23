@@ -29,7 +29,7 @@ let package = Package(
         .package(url: "https://github.com/realm/realm-cocoa", .upToNextMinor(from: "10.44.0")),
         .package(url: "https://github.com/phimage/Erik", .upToNextMajor(from: "5.1.0")),
         .package(url: "https://github.com/tasuwo/PersistentStack", .upToNextMajor(from: "0.7.1")),
-        .package(url: "https://github.com/tasuwo/swift", .upToNextMajor(from: "0.7.0")),
+        .package(url: "https://github.com/tasuwo/swift", .upToNextMajor(from: "0.8.1")),
         .package(url: "https://github.com/tasuwo/MasonryGrid", .upToNextMajor(from: "0.0.1-alpha.1"))
     ],
     targets: [

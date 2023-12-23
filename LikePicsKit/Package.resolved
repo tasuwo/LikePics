@@ -37,6 +37,15 @@
       }
     },
     {
+      "identity" : "masonrygrid",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tasuwo/MasonryGrid",
+      "state" : {
+        "revision" : "a0225d6a039fe5fe5809167d86289bcaeed99957",
+        "version" : "0.0.1-alpha.1"
+      }
+    },
+    {
       "identity" : "persistentstack",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tasuwo/PersistentStack",
@@ -68,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tasuwo/swift",
       "state" : {
-        "revision" : "75d78ead68e6423804e3b3479c261e7fe7cf8e11",
-        "version" : "0.7.0"
+        "revision" : "4cd4072ffb9aa6e9da5c1b5d205152b9fdaf36d7",
+        "version" : "0.8.1"
       }
     },
     {
