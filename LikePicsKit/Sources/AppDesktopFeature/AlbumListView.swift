@@ -46,10 +46,14 @@ struct AlbumListView: View {
                             }
                             .onDrag {
                                 albumsStore.draggingAlbumId = album.id
-                                return NSItemProvider(object: album.id.uuidString as NSString)
+                                let provider = NSItemProvider()
+                                provider.registerDataRepresentation(for: .text, visibility: .ownProcess) { completion in
+                                    completion(Data(), nil)
+                                    return nil
+                                }
+                                return provider
                             }
                             .onDrop(of: [.text], delegate: AlbumListDropDelegate(at: album.id, store: albumsStore))
-                            .opacity(albumsStore.draggingAlbumId == album.id ? 0 : 1)
                     }
                 }
                 .frame(minWidth: MultiColumnLayout.column4.minRowWidth, maxWidth: layout.maxRowWidth)
@@ -72,19 +76,19 @@ struct AlbumListDropDelegate: DropDelegate {
     }
 
     func performDrop(info: DropInfo) -> Bool {
+        let fromIndex = store.albums.firstIndex(where: { $0.id == store.draggingAlbumId }) ?? 0
+        let toIndex = store.albums.firstIndex(where: { $0.id == id }) ?? 0
+        guard fromIndex != toIndex else { return true }
         withAnimation {
             store.draggingAlbumId = nil
+            let removed = store.albums.remove(at: fromIndex)
+            store.albums.insert(removed, at: toIndex)
         }
         return true
     }
 
     func dropEntered(info: DropInfo) {
-        let fromIndex = store.albums.firstIndex(where: { $0.id == store.draggingAlbumId }) ?? 0
-        let toIndex = store.albums.firstIndex(where: { $0.id == id }) ?? 0
-        guard fromIndex != toIndex else { return }
-        withAnimation {
-            store.albums.move(fromOffsets: IndexSet(integer: fromIndex), toOffset: toIndex > fromIndex ? toIndex + 1 : toIndex)
-        }
+        // NOP
     }
 
     func dropUpdated(info: DropInfo) -> DropProposal? {
