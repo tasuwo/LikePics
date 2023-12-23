@@ -6,7 +6,7 @@ name: FileKit, nameSpecified: FileKit, owner: nvzqz, version: 6.0.0, source: htt
 
 name: Kanna, nameSpecified: Kanna, owner: tid-kijyun, version: 5.2.7, source: https://github.com/tid-kijyun/Kanna
 
-name: PersistentStack, nameSpecified: PersistentStack, owner: tasuwo, version: 0.7.0, source: https://github.com/tasuwo/PersistentStack
+name: PersistentStack, nameSpecified: PersistentStack, owner: tasuwo, version: 0.7.1, source: https://github.com/tasuwo/PersistentStack
 
 name: realm-cocoa, nameSpecified: realm-cocoa, owner: realm, version: 10.44.0, source: https://github.com/realm/realm-cocoa
 

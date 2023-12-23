@@ -5,10 +5,11 @@ let package = Package(
     name: "LikePicsKit",
     defaultLocalization: "ja",
     platforms: [
-        .iOS(.v15), .macOS(.v12)
+        .iOS(.v15), .macOS(.v14)
     ],
     products: [
         .library(name: "AppFeature", targets: ["AppFeature"]),
+        .library(name: "AppDesktopFeature", targets: ["AppDesktopFeature"]),
         .library(name: "AlbumMultiSelectionModalFeature", targets: ["TagSelectionModalFeature"]),
         .library(name: "AlbumSelectionModalFeature", targets: ["TagSelectionModalFeature"]),
         .library(name: "TagSelectionModalFeature", targets: ["TagSelectionModalFeature"]),
@@ -28,7 +29,8 @@ let package = Package(
         .package(url: "https://github.com/realm/realm-cocoa", .upToNextMinor(from: "10.44.0")),
         .package(url: "https://github.com/phimage/Erik", .upToNextMajor(from: "5.1.0")),
         .package(url: "https://github.com/tasuwo/PersistentStack", .upToNextMajor(from: "0.7.1")),
-        .package(url: "https://github.com/tasuwo/swift", .upToNextMajor(from: "0.7.0"))
+        .package(url: "https://github.com/tasuwo/swift", .upToNextMajor(from: "0.7.0")),
+        .package(url: "https://github.com/tasuwo/MasonryGrid", .upToNextMajor(from: "0.0.1-alpha.1"))
     ],
     targets: [
         // MARK: - App
@@ -50,6 +52,16 @@ let package = Package(
                 "Smoothie",
                 "MobileTransition",
                 .product(name: "PersistentStack", package: "PersistentStack")
+            ],
+            plugins: [
+                .plugin(name: "LintSwift", package: "swift")
+            ]
+        ),
+        .target(
+            name: "AppDesktopFeature",
+            dependencies: [
+                "Domain",
+                .product(name: "MasonryGrid", package: "MasonryGrid")
             ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
@@ -151,6 +163,7 @@ let package = Package(
             name: "Domain",
             dependencies: [
                 "Common",
+                "Smoothie"
             ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
