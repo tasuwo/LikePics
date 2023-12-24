@@ -10,7 +10,7 @@ final class DragAndDropInteractionController<Store: ReorderableItemStore>: Obser
     typealias Item = Store.Item
 
     @Published private(set) var displayItems: [Item]
-    @Published private(set) var isDragging: Bool = false
+    @Published private(set) var isDraggingOnItem: Bool = false
 
     private var draggingItemId: Item.ID?
     private let underlyingStore: Store
@@ -28,7 +28,7 @@ final class DragAndDropInteractionController<Store: ReorderableItemStore>: Obser
 
         cancellable = underlyingStore.reorderableItemsPublisher
             .sink { [weak self] items in
-                guard let self, !self.isDragging else { return }
+                guard let self, !self.isDraggingOnItem else { return }
                 self.displayItems = items
             }
     }
@@ -38,7 +38,7 @@ final class DragAndDropInteractionController<Store: ReorderableItemStore>: Obser
     }
 
     func onPerformDrop(forItemHaving id: Item.ID) -> Bool {
-        isDragging = false
+        isDraggingOnItem = false
         underlyingStore.apply(reorderedItems: displayItems)
         draggingItemId = nil
         return true
@@ -56,7 +56,7 @@ final class DragAndDropInteractionController<Store: ReorderableItemStore>: Obser
             return
         }
 
-        isDragging = true
+        isDraggingOnItem = true
         withAnimation {
             let removed = displayItems.remove(at: fromIndex)
             displayItems.insert(removed, at: toIndex)
@@ -78,7 +78,7 @@ final class DragAndDropInteractionController<Store: ReorderableItemStore>: Obser
     }
 
     private func clearArranging() {
-        isDragging = false
+        isDraggingOnItem = false
         displayItems = underlyingStore.reorderableItems
     }
 }

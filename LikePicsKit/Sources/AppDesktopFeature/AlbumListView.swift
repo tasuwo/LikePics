@@ -24,7 +24,7 @@ extension AlbumsStore: ReorderableItemStore {
 }
 
 struct AlbumListView: View {
-    @StateObject var coordinator: DragAndDropInteractionController<AlbumsStore>
+    @StateObject var controller: DragAndDropInteractionController<AlbumsStore>
     @State var layout: MultiColumnLayout = .default
 
     var body: some View {
@@ -34,7 +34,7 @@ struct AlbumListView: View {
                     .frame(maxWidth: .infinity)
 
                 LazyVGrid(columns: layout.columns, spacing: MultiColumnLayout.spacing) {
-                    ForEach(coordinator.displayItems) { album in
+                    ForEach(controller.displayItems) { album in
                         AlbumView(album: album)
                             .contextMenu {
                                 Button {
@@ -54,7 +54,7 @@ struct AlbumListView: View {
                                 }
                             }
                             .onDrag {
-                                coordinator.onDragStart(forItemHaving: album.id)
+                                controller.onDragStart(forItemHaving: album.id)
                                 let provider = NSItemProvider()
                                 provider.registerDataRepresentation(for: .text, visibility: .ownProcess) { completion in
                                     completion(Data(), nil)
@@ -62,7 +62,7 @@ struct AlbumListView: View {
                                 }
                                 return provider
                             }
-                            .onDrop(of: [.text], delegate: AlbumListDropDelegate(id: album.id, store: coordinator))
+                            .onDrop(of: [.text], delegate: AlbumListDropDelegate(id: album.id, store: controller))
                     }
                 }
                 .frame(minWidth: MultiColumnLayout.column4.minRowWidth, maxWidth: layout.maxRowWidth)
@@ -108,5 +108,5 @@ struct AlbumListDropDelegate: DropDelegate {
         return String((0 ..< Int.random(in: 8 ... 15)).map { _ in letters.randomElement()! })
     }
 
-    return AlbumListView(coordinator: DragAndDropInteractionController(underlying: AlbumsStore(albums: albums)))
+    return AlbumListView(controller: DragAndDropInteractionController(underlying: AlbumsStore(albums: albums)))
 }
