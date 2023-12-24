@@ -16,6 +16,10 @@ public struct ImageSize: Codable, Equatable, Hashable {
                       height: self.height)
     }
 
+    public var aspectRatio: CGFloat {
+        return self.width / self.height
+    }
+
     // MARK: - Lifecycle
 
     // sourcery: AutoDefaultValueUseThisInitializer
