@@ -44,7 +44,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		179E31659F21FC20FCCA1405 /* LikePics.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LikePics.entitlements; sourceTree = "<group>"; };
+		179E31659F21FC20FCCA1405 /* iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOS.entitlements; sourceTree = "<group>"; };
 		2C16355527E87752006C2C24 /* LikePicsKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = LikePicsKit; path = ../LikePicsKit; sourceTree = "<group>"; };
 		2C2CB21A27E9401400243281 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2C5E39FA27E76166008CE0FF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -100,7 +100,7 @@
 		6482BC1857E1777CE6D884FA = {
 			isa = PBXGroup;
 			children = (
-				A4EA02D9C2DAB493DA922AAF /* LikePics */,
+				A4EA02D9C2DAB493DA922AAF /* iOS */,
 				822206BA7D39F4811EA840F5 /* ShareExtension */,
 				91F9CB56E3FC3F330821A977 /* Packages */,
 				5E7B059DCE3EC305FA4E0FB6 /* Products */,
@@ -138,14 +138,14 @@
 			name = Packages;
 			sourceTree = SOURCE_ROOT;
 		};
-		A4EA02D9C2DAB493DA922AAF /* LikePics */ = {
+		A4EA02D9C2DAB493DA922AAF /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				179E31659F21FC20FCCA1405 /* LikePics.entitlements */,
+				179E31659F21FC20FCCA1405 /* iOS.entitlements */,
 				90D9667538C1D6CD10CCB89E /* Resources */,
 				EDE6B8CA23A1308019C9B96A /* Sources */,
 			);
-			path = LikePics;
+			path = iOS;
 			sourceTree = "<group>";
 		};
 		EDE6B8CA23A1308019C9B96A /* Sources */ = {
@@ -160,9 +160,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8084EEB0A690B12BDD5EF1B5 /* LikePics */ = {
+		8084EEB0A690B12BDD5EF1B5 /* LikePics (iOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C7602933657943B8D8E54DDF /* Build configuration list for PBXNativeTarget "LikePics" */;
+			buildConfigurationList = C7602933657943B8D8E54DDF /* Build configuration list for PBXNativeTarget "LikePics (iOS)" */;
 			buildPhases = (
 				2C157FDA2B1BF2D100B96EBB /* Set Licenses to Settings.bundle */,
 				2C157FD92B1BF20900B96EBB /* Set App Version to Settings.bundle */,
@@ -177,7 +177,7 @@
 				2C157FDD2B1BF59F00B96EBB /* PBXTargetDependency */,
 				EC1B0E7A11722DAAE7A51ED0 /* PBXTargetDependency */,
 			);
-			name = LikePics;
+			name = "LikePics (iOS)";
 			packageProductDependencies = (
 				2C16355627E877EC006C2C24 /* AppFeature */,
 			);
@@ -242,7 +242,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8084EEB0A690B12BDD5EF1B5 /* LikePics */,
+				8084EEB0A690B12BDD5EF1B5 /* LikePics (iOS) */,
 				921B2540D9F4435911E35DBB /* ShareExtension */,
 			);
 		};
@@ -288,7 +288,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/libexec/PlistBuddy -c \"Set :PreferenceSpecifiers:1:DefaultValue ${MARKETING_VERSION}\" \"${SRCROOT}/LikePics/Resources/Settings.bundle/Root.plist\"\n";
+			shellScript = "/usr/libexec/PlistBuddy -c \"Set :PreferenceSpecifiers:1:DefaultValue ${MARKETING_VERSION}\" \"${SRCROOT}/iOS/Resources/Settings.bundle/Root.plist\"\n";
 		};
 		2C157FDA2B1BF2D100B96EBB /* Set Licenses to Settings.bundle */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -307,7 +307,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ -f \"/opt/homebrew/bin/license-plist\" ]]; then\n    /opt/homebrew/bin/license-plist \\\n        --output-path ${SRCROOT}/LikePics/Resources/Settings.bundle \\\n        --xcworkspace-path ${SRCROOT}/../LikePics.xcworkspace \\\n        --config-path ${SRCROOT}/../license_plist.yml\nelse\n  echo \"warning: LicensePlist is not installed. Run 'brew install license-plist' to install it.\"\nfi\n";
+			shellScript = "if [[ -f \"/opt/homebrew/bin/license-plist\" ]]; then\n    /opt/homebrew/bin/license-plist \\\n        --output-path ${SRCROOT}/iOS/Resources/Settings.bundle \\\n        --xcworkspace-path ${SRCROOT}/../LikePics.xcworkspace \\\n        --config-path ${SRCROOT}/../license_plist.yml\nelse\n  echo \"warning: LicensePlist is not installed. Run 'brew install license-plist' to install it.\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -373,10 +373,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = LikePics/LikePics.entitlements;
+				CODE_SIGN_ENTITLEMENTS = iOS/iOS.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				DEVELOPMENT_TEAM = RY2377PP7S;
-				INFOPLIST_FILE = LikePics/Resources/Info.plist;
+				INFOPLIST_FILE = iOS/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -398,10 +398,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = LikePics/LikePics.entitlements;
+				CODE_SIGN_ENTITLEMENTS = iOS/iOS.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				DEVELOPMENT_TEAM = RY2377PP7S;
-				INFOPLIST_FILE = LikePics/Resources/Info.plist;
+				INFOPLIST_FILE = iOS/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -497,10 +497,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconDev;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = LikePics/LikePics.entitlements;
+				CODE_SIGN_ENTITLEMENTS = iOS/iOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = RY2377PP7S;
-				INFOPLIST_FILE = LikePics/Resources/Info.plist;
+				INFOPLIST_FILE = iOS/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -522,10 +522,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconDev;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = LikePics/LikePics.entitlements;
+				CODE_SIGN_ENTITLEMENTS = iOS/iOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				DEVELOPMENT_TEAM = RY2377PP7S;
-				INFOPLIST_FILE = LikePics/Resources/Info.plist;
+				INFOPLIST_FILE = iOS/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -861,7 +861,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C7602933657943B8D8E54DDF /* Build configuration list for PBXNativeTarget "LikePics" */ = {
+		C7602933657943B8D8E54DDF /* Build configuration list for PBXNativeTarget "LikePics (iOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0AD5FF743D91C1B8935B2777 /* Debug */,
