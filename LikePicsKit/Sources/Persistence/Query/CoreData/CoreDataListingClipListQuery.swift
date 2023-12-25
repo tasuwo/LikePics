@@ -5,7 +5,12 @@
 import Combine
 import CoreData
 import Domain
+#if canImport(UIKit)
 import UIKit
+#endif
+#if canImport(AppKit)
+import AppKit
+#endif
 
 class CoreDataListingClipListQuery: NSObject {
     typealias RequestFactory = () -> NSFetchRequest<Clip>

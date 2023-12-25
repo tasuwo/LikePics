@@ -5,7 +5,12 @@
 import Combine
 import CoreData
 import Domain
+#if canImport(UIKit)
 import UIKit
+#endif
+#if canImport(AppKit)
+import AppKit
+#endif
 
 class CoreDataListingAlbumTitleListQuery: NSObject {
     typealias RequestFactory = () -> NSFetchRequest<Album>

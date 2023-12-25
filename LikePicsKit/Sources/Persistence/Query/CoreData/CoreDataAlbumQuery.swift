@@ -5,7 +5,6 @@
 import Combine
 import CoreData
 import Domain
-import UIKit
 
 class CoreDataAlbumQuery: NSObject {
     private let objectId: NSManagedObjectID
