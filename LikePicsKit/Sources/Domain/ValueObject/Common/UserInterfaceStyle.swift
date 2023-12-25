@@ -2,15 +2,15 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-#if os(iOS)
-
-import UIKit
-
 public enum UserInterfaceStyle: String {
     case light
     case dark
     case unspecified
 }
+
+#if os(iOS)
+
+import UIKit
 
 public extension UserInterfaceStyle {
     var uiUserInterfaceStyle: UIUserInterfaceStyle {
