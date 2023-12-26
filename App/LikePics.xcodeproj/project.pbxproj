@@ -51,7 +51,7 @@
 		2C16355527E87752006C2C24 /* LikePicsKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = LikePicsKit; path = ../LikePicsKit; sourceTree = "<group>"; };
 		2C2CB21A27E9401400243281 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2C5E39FA27E76166008CE0FF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		2CAAF8DE2B39C5C900479411 /* LikePics (macOS).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LikePics (macOS).app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2CAAF8DE2B39C5C900479411 /* LikePics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LikePics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CAAF8E02B39C5C900479411 /* LikePicsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikePicsApp.swift; sourceTree = "<group>"; };
 		2CAAF8E42B39C5CB00479411 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2CAAF8E92B39C5CB00479411 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
@@ -118,7 +118,7 @@
 			children = (
 				7B507EAEA05D7AA1CB822352 /* LikePics.app */,
 				3244CDEF6543830E6F56EDB0 /* ShareExtension.appex */,
-				2CAAF8DE2B39C5C900479411 /* LikePics (macOS).app */,
+				2CAAF8DE2B39C5C900479411 /* LikePics.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -204,7 +204,7 @@
 				2C59E97A2B39C81500012349 /* AppDesktopFeature */,
 			);
 			productName = TBox;
-			productReference = 2CAAF8DE2B39C5C900479411 /* LikePics (macOS).app */;
+			productReference = 2CAAF8DE2B39C5C900479411 /* LikePics.app */;
 			productType = "com.apple.product-type.application";
 		};
 		8084EEB0A690B12BDD5EF1B5 /* LikePics (iOS) */ = {
@@ -513,7 +513,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = LikePics;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "match Development net.tasuwo.TBox macos";
 				SDKROOT = macosx;
@@ -526,7 +526,7 @@
 		2CAAF8EC2B39C5CB00479411 /* DebugDev */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconDev;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -551,7 +551,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.dev;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = LikePics;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "match Development net.tasuwo.TBox.dev macos";
 				SDKROOT = macosx;
@@ -589,7 +589,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = LikePics;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "match AppStore net.tasuwo.TBox macos";
 				SDKROOT = macosx;
@@ -601,7 +601,7 @@
 		2CAAF8EE2B39C5CB00479411 /* ReleaseDev */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconDev;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -626,7 +626,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.dev;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = LikePics;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "match AppStore net.tasuwo.TBox.dev macos";
 				SDKROOT = macosx;

@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2CAAF8DD2B39C5C900479411"
-               BuildableName = "LikePics (macOS).app"
+               BuildableName = "LikePics.app"
                BlueprintName = "LikePics (macOS)"
                ReferencedContainer = "container:LikePics.xcodeproj">
             </BuildableReference>
@@ -44,7 +44,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2CAAF8DD2B39C5C900479411"
-            BuildableName = "LikePics (macOS).app"
+            BuildableName = "LikePics.app"
             BlueprintName = "LikePics (macOS)"
             ReferencedContainer = "container:LikePics.xcodeproj">
          </BuildableReference>
@@ -71,7 +71,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2CAAF8DD2B39C5C900479411"
-            BuildableName = "LikePics (macOS).app"
+            BuildableName = "LikePics.app"
             BlueprintName = "LikePics (macOS)"
             ReferencedContainer = "container:LikePics.xcodeproj">
          </BuildableReference>
