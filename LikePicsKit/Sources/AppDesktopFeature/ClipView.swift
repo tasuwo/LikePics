@@ -3,16 +3,38 @@
 //
 
 import Domain
+import Smoothie
 import SwiftUI
 
 struct ClipView: View {
     let clip: Clip
     @State var primaryThumbnailSize: CGSize?
+    // TODO: Previewを表示できるようにする
+    @EnvironmentObject var container: AppContainer
 
     var body: some View {
-        ZStack {
+        if let primaryItem = clip.primaryItem {
+            LazyImage(request: .init(source: .provider(ImageDataProvider(imageId: primaryItem.imageId,
+                                                                         cacheKey: "item-\(primaryItem.imageId.uuidString)",
+                                                                         imageQueryService: container.imageQueryService))),
+            pipeline: container.clipThumbnailPipeline) { image in
+                if let image {
+                    image
+                        .resizable()
+                } else {
+                    Color.gray
+                }
+            } placeholder: {
+                Color.gray
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .aspectRatio(primaryItem.imageSize.aspectRatio, contentMode: .fit)
+            .onChangeFrame { size in
+                primaryThumbnailSize = size
+            }
+        } else {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .aspectRatio(clip.primaryItem?.imageSize.aspectRatio ?? 1, contentMode: .fit)
+                .aspectRatio(1, contentMode: .fit)
                 .onChangeFrame { size in
                     primaryThumbnailSize = size
                 }

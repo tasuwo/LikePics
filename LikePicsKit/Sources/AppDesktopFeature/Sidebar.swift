@@ -8,8 +8,9 @@ import SwiftUI
 
 struct Sidebar: View {
     @Binding var selectedItem: SidebarItem?
-    @Binding var tags: [Tag]
-    @Binding var albums: [Album]
+
+    let tags: [Tag]
+    let albums: [Album]
 
     @State private var selectedTags: Set<Tag.ID> = .init()
     @State private var isAlbumHovered = false
@@ -153,7 +154,7 @@ struct Sidebar: View {
 
         var body: some View {
             NavigationSplitView {
-                Sidebar(selectedItem: $selectedItem, tags: $tags, albums: $albums)
+                Sidebar(selectedItem: $selectedItem, tags: tags, albums: albums)
             } detail: {
                 Color.clear
             }

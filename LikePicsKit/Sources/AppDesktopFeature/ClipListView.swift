@@ -26,7 +26,7 @@ struct ClipListView: View {
                 ClipView(clip: clip)
                     .matchedGeometryEffect(id: clip.id, in: animation)
             }
-            .frame(minWidth: ClipListLayout.column4.minRowWidth)
+            .frame(minWidth: ClipListLayout.column2.minRowWidth)
             .padding(.all, 41)
         }
         .onChangeFrame { size in

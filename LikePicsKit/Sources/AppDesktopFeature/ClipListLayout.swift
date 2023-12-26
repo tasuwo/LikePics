@@ -12,6 +12,8 @@ enum ClipListLayout {
     case column6
     case column5
     case column4
+    case column3
+    case column2
 
     var numberOfColumns: Int {
         switch self {
@@ -19,6 +21,8 @@ enum ClipListLayout {
         case .column6: 6
         case .column5: 5
         case .column4: 4
+        case .column3: 3
+        case .column2: 2
         }
     }
 
@@ -28,6 +32,8 @@ enum ClipListLayout {
         case .column6: 250
         case .column5: 232
         case .column4: 215
+        case .column3: 199
+        case .column2: 184
         }
     }
 
@@ -37,6 +43,8 @@ enum ClipListLayout {
         case .column6: 190
         case .column5: 168
         case .column4: 156
+        case .column3: 150
+        case .column2: 147
         }
     }
 
@@ -46,6 +54,8 @@ enum ClipListLayout {
         case .column6: 18
         case .column5: 16
         case .column4: 14
+        case .column3: 12
+        case .column2: 10
         }
     }
 
@@ -58,14 +68,18 @@ enum ClipListLayout {
     }
 
     static func layout(forWidth width: CGFloat) -> Self {
-        if width > MultiColumnLayout.column6.maxRowWidth {
+        if width > ClipListLayout.column6.maxRowWidth {
             .column7
-        } else if width > MultiColumnLayout.column5.maxRowWidth {
+        } else if width > ClipListLayout.column5.maxRowWidth {
             .column6
-        } else if width > MultiColumnLayout.column4.maxRowWidth {
+        } else if width > ClipListLayout.column4.maxRowWidth {
             .column5
-        } else {
+        } else if width > ClipListLayout.column3.maxRowWidth {
             .column4
+        } else if width > ClipListLayout.column2.maxRowWidth {
+            .column3
+        } else {
+            .column2
         }
     }
 }
