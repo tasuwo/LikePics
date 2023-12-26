@@ -46,3 +46,26 @@ for_platform :ios do
     ])
   end
 end
+
+for_platform :mac do
+  platform("macos")
+
+  app_identifier([
+      "net.tasuwo.TBox",
+      "net.tasuwo.TBox.dev",
+  ])
+
+  for_lane :update_development_pp do
+    readonly(false)
+    force(true)
+
+    type("development")
+  end
+
+  for_lane :update_appstore_pp do
+    readonly(false)
+    force(true)
+
+    type("appstore")
+  end
+end
