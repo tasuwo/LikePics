@@ -17,10 +17,9 @@ struct AlbumView: View {
             if let imageId = album.clips.first?.primaryItem?.imageId {
                 Color.clear
                     .overlay {
-                        LazyImage(request: .init(source: .provider(ImageDataProvider(imageId: imageId,
-                                                                                     cacheKey: "album-\(imageId.uuidString)",
-                                                                                     imageQueryService: container.imageQueryService))),
-                        processingQueue: container.albumThumbnailProcessingQueue) { image in
+                        LazyImage(processingQueue: container.albumThumbnailProcessingQueue, cacheKey: "album-\(imageId.uuidString)") { [container] in
+                            try? container.imageQueryService.read(having: imageId)
+                        } content: { image in
                             if let image {
                                 image
                                     .resizable()

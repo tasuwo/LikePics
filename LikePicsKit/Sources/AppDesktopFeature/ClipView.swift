@@ -14,10 +14,9 @@ struct ClipView: View {
 
     var body: some View {
         if let primaryItem = clip.primaryItem {
-            LazyImage(request: .init(source: .provider(ImageDataProvider(imageId: primaryItem.imageId,
-                                                                         cacheKey: "item-\(primaryItem.imageId.uuidString)",
-                                                                         imageQueryService: container.imageQueryService))),
-            processingQueue: container.clipThumbnailProcessingQueue) { image in
+            LazyImage(processingQueue: container.clipThumbnailProcessingQueue, cacheKey: "item-\(primaryItem.imageId.uuidString)") { [container] in
+                try? container.imageQueryService.read(having: primaryItem.imageId)
+            } content: { image in
                 if let image {
                     image
                         .resizable()
