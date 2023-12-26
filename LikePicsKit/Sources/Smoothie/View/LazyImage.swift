@@ -21,15 +21,17 @@ final class LazyImageModel: ObservableObject {
     func load(_ request: ImageRequest, with processingQueue: ImageProcessingQueue) {
         // TODO: サイズによってはキャッシュを破棄する
         cancellable = processingQueue.loadImage(request) { [weak self] response in
-            if let response {
-                #if canImport(UIKit)
-                self?.result = .image(Image(uiImage: response.image))
-                #endif
-                #if canImport(AppKit)
-                self?.result = .image(Image(nsImage: response.image))
-                #endif
-            } else {
-                // TODO: エラーハンドリング
+            DispatchQueue.main.async {
+                if let response {
+                    #if canImport(UIKit)
+                    self?.result = .image(Image(uiImage: response.image))
+                    #endif
+                    #if canImport(AppKit)
+                    self?.result = .image(Image(nsImage: response.image))
+                    #endif
+                } else {
+                    // TODO: エラーハンドリング
+                }
             }
         }
     }
