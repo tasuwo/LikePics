@@ -6,25 +6,8 @@ import Combine
 import Domain
 import SwiftUI
 
-class AlbumsStore: ObservableObject {
-    @Published var albums: [Album]
-
-    init(albums: [Album]) {
-        self.albums = albums
-    }
-}
-
-extension AlbumsStore: ReorderableItemStore {
-    var reorderableItems: [Album] { albums }
-    var reorderableItemsPublisher: AnyPublisher<[Album], Never> { $albums.eraseToAnyPublisher() }
-
-    func apply(reorderedItems: [Album]) {
-        self.albums = reorderedItems
-    }
-}
-
 struct AlbumListView: View {
-    @StateObject var controller: DragAndDropInteractionController<AlbumsStore>
+    @StateObject var controller: DragAndDropInteractionController<AlbumStore>
     @State var layout: MultiColumnLayout = .default
 
     var body: some View {
@@ -77,7 +60,7 @@ struct AlbumListView: View {
 
 struct AlbumListDropDelegate: DropDelegate {
     let id: Album.ID
-    let store: DragAndDropInteractionController<AlbumsStore>
+    let store: DragAndDropInteractionController<AlbumStore>
 
     func performDrop(info: DropInfo) -> Bool {
         return store.onPerformDrop(forItemHaving: id)
@@ -108,5 +91,7 @@ struct AlbumListDropDelegate: DropDelegate {
         return String((0 ..< Int.random(in: 8 ... 15)).map { _ in letters.randomElement()! })
     }
 
-    return AlbumListView(controller: DragAndDropInteractionController(underlying: AlbumsStore(albums: albums)))
+    // TODO:
+    // return AlbumListView(controller: DragAndDropInteractionController(underlying: AlbumStore(albums: albums)))
+    return EmptyView()
 }

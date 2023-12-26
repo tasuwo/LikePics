@@ -36,3 +36,12 @@ final class AlbumStore: ObservableObject {
         }
     }
 }
+
+extension AlbumStore: ReorderableItemStore {
+    var reorderableItems: [Domain.Album] { albums }
+    var reorderableItemsPublisher: AnyPublisher<[Domain.Album], Never> { $albums.eraseToAnyPublisher() }
+
+    func apply(reorderedItems: [Domain.Album]) {
+        // TODO: 実装する
+    }
+}

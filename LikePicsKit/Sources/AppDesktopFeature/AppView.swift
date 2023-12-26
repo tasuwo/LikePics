@@ -27,7 +27,7 @@ struct AppView: View {
                 ClipListView(clips: clipStore.clips)
 
             case .albums:
-                AlbumListView(controller: .init(underlying: .init(albums: albumStore.albums)))
+                AlbumListView(controller: .init(underlying: albumStore))
 
             case let .album(id):
                 ClipListView(clips: [])
