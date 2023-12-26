@@ -17,6 +17,26 @@ class ImageProvider {
 extension ImageProvider: ImageLazyLoadable {
     // MARK: - ImageProvider
 
+    func resolveFilename() async -> String? {
+        if let name = underlyingProvider.suggestedName {
+            return name
+        }
+
+        if let url = try? await underlyingProvider.loadItem(forTypeIdentifier: UTType.fileURL.identifier) as? URL {
+            return url.lastPathComponent
+        }
+
+        if let url = try? await underlyingProvider.loadItem(forTypeIdentifier: UTType.url.identifier) as? URL {
+            return url.lastPathComponent
+        }
+
+        if let text = try? await underlyingProvider.loadItem(forTypeIdentifier: UTType.text.identifier) as? String {
+            return text
+        }
+
+        return nil
+    }
+
     func resolveFilename(_ completion: @escaping (String?) -> Void) {
         if let name = underlyingProvider.suggestedName {
             completion(name)
@@ -39,6 +59,19 @@ extension ImageProvider: ImageLazyLoadable {
                 return
             }
             completion(url.lastPathComponent)
+        }
+    }
+
+    func load() async -> Data? {
+        guard let data = try? await underlyingProvider.loadItem(forTypeIdentifier: UTType.image.identifier) else { return nil }
+        if let data = data as? Data {
+            return data
+        } else if let image = data as? UIImage {
+            return image.pngData()
+        } else if let url = data as? URL, let imageData = try? Data(contentsOf: url) {
+            return imageData
+        } else {
+            return nil
         }
     }
 

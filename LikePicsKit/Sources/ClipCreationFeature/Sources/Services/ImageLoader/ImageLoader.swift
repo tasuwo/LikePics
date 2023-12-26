@@ -55,6 +55,19 @@ public class ImageLoader {
 extension ImageLoader: ImageLoadable {
     // MARK: - ImageLoadable
 
+    public func data(for source: ImageLoadSource) async -> Data? {
+        switch source.value {
+        case let .lazyLoader(loader):
+            return await loader.load()
+
+        case let .fileUrl(url):
+            return try? Data(contentsOf: url)
+
+        case let .urlSet(urlSet):
+            return (try? await URLSession.shared.data(from: urlSet.url))?.0
+        }
+    }
+
     public func loadData(for source: ImageLoadSource, completion: @escaping (Data?) -> Void) {
         switch source.value {
         case let .lazyLoader(loader):

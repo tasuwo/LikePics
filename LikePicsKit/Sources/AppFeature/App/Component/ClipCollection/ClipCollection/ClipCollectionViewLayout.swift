@@ -183,11 +183,9 @@ extension ClipCollectionViewLayout {
         let scale = thumbnailView.traitCollection.displayScale
         let size = thumbnailView.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
         // - SeeAlso: PreviewLoader
-        let provider = ImageDataProvider(imageId: item.imageId,
-                                         cacheKey: "clip-collection-\(item.identity.uuidString)",
-                                         imageQueryService: imageQueryService)
-        let request = ImageRequest(source: .provider(provider),
-                                   resize: .init(size: size, scale: scale))
+        let request = ImageRequest(resize: .init(size: size, scale: scale), cacheKey: "clip-collection-\(item.identity.uuidString)") { [imageQueryService, item] in
+            try? imageQueryService.read(having: item.imageId)
+        }
 
         loadImage(request, with: processingQueue, on: thumbnailView) { [weak processingQueue] response in
             guard let response = response, let diskCacheSize = response.diskCacheImageSize else { return }
@@ -196,8 +194,8 @@ extension ClipCollectionViewLayout {
                                                                                  diskCacheSizeInPixel: diskCacheSize,
                                                                                  displayScale: scale)
             guard shouldInvalidate else { return }
-            processingQueue?.config.diskCache?.remove(forKey: request.source.cacheKey)
-            processingQueue?.config.memoryCache.remove(forKey: request.source.cacheKey)
+            processingQueue?.config.diskCache?.remove(forKey: request.cacheKey)
+            processingQueue?.config.memoryCache.remove(forKey: request.cacheKey)
         }
         thumbnailView.processingQueue = processingQueue
     }
@@ -206,11 +204,9 @@ extension ClipCollectionViewLayout {
         let scale = view.traitCollection.displayScale
         let size = view.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
         // - SeeAlso: PreviewLoader
-        let provider = ImageDataProvider(imageId: item.imageId,
-                                         cacheKey: "clip-collection-\(item.identity.uuidString)",
-                                         imageQueryService: imageQueryService)
-        return ImageRequest(source: .provider(provider),
-                            resize: .init(size: size, scale: scale))
+        return ImageRequest(resize: .init(size: size, scale: scale), cacheKey: "clip-collection-\(item.identity.uuidString)") { [imageQueryService, item] in
+            try? imageQueryService.read(having: item.imageId)
+        }
     }
 }
 

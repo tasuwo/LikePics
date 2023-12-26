@@ -3,6 +3,7 @@
 //
 
 import CoreGraphics
+import Foundation
 
 public struct ImageRequest {
     public struct Resize {
@@ -17,16 +18,16 @@ public struct ImageRequest {
 
     // MARK: - Properties
 
-    public let source: ImageSource
+    public let data: () async -> Data?
     public let resize: Resize?
+    public let cacheKey: String
     public var ignoreDiskCaching = false
 
     // MARK: - Initializers
 
-    public init(source: ImageSource,
-                resize: Resize? = nil)
-    {
-        self.source = source
+    public init(resize: Resize? = nil, cacheKey: String, _ data: @escaping () async -> Data?) {
+        self.data = data
         self.resize = resize
+        self.cacheKey = cacheKey
     }
 }

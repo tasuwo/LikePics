@@ -47,10 +47,9 @@ class PreviewPrefetcher {
 
     @discardableResult
     private func prefetch(for item: ClipItem, needsRetainCancellable: Bool) -> PreviewPrefetchCancellable {
-        let provider = ImageDataProvider(imageId: item.imageId,
-                                         cacheKey: "preview-\(item.identity.uuidString)",
-                                         imageQueryService: imageQueryService)
-        var request = ImageRequest(source: .provider(provider))
+        var request = ImageRequest(cacheKey: "preview-\(item.identity.uuidString)") { [imageQueryService, item] in
+            try? imageQueryService.read(having: item.imageId)
+        }
         request.ignoreDiskCaching = true
 
         let cancellable = processingQueue.loadImage(request) { [weak self] in

@@ -45,15 +45,15 @@ public struct LazyImage<Content>: View where Content: View {
     @ViewBuilder private let content: (LazyImageLoadResult?) -> Content
     @Environment(\.displayScale) var displayScale
 
-    private let request: ImageRequest
+    private let data: () async -> Data?
     private let processingQueue: ImageProcessingQueue
 
-    public init<C, P>(request: ImageRequest,
+    public init<C, P>(data: @escaping () async -> Data?,
                       processingQueue: ImageProcessingQueue,
                       @ViewBuilder content: @escaping (Image?) -> C,
                       @ViewBuilder placeholder: @escaping () -> P) where C: View, P: View, Content == _ConditionalContent<C, P>
     {
-        self.request = request
+        self.data = data
         self.processingQueue = processingQueue
         self.content = { result in
             switch result {
@@ -70,7 +70,7 @@ public struct LazyImage<Content>: View where Content: View {
         GeometryReader { geometry in
             content(model.result)
                 .onAppear {
-                    model.load(.init(source: request.source, resize: .init(size: geometry.frame(in: .global).size, scale: displayScale)), with: processingQueue)
+                    model.load(.init(resize: .init(size: geometry.frame(in: .global).size, scale: displayScale), cacheKey: "", self.data), with: processingQueue)
                 }
                 .onDisappear {
                     model.cancel()

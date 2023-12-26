@@ -71,11 +71,9 @@ extension AlbumSelectionModalLayout {
 
             let scale = cell.traitCollection.displayScale
             let size = cell.calcThumbnailPointSize(originalPixelSize: thumbnailTarget.imageSize.cgSize)
-            let provider = ImageDataProvider(imageId: thumbnailTarget.imageId,
-                                             cacheKey: "album-selection-list-\(thumbnailTarget.identity.uuidString)",
-                                             imageQueryService: imageQueryService)
-            let request = ImageRequest(source: .provider(provider),
-                                       resize: .init(size: size, scale: scale))
+            let request = ImageRequest(resize: .init(size: size, scale: scale), cacheKey: "album-selection-list-\(thumbnailTarget.identity.uuidString)") { [imageQueryService, thumbnailTarget] in
+                return try? imageQueryService.read(having: thumbnailTarget.imageId)
+            }
             cell.thumbnailImageView.smt.loadImage(request, with: processingQueue)
         }
     }

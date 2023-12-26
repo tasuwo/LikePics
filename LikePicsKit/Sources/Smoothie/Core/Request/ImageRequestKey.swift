@@ -7,14 +7,14 @@ import CoreGraphics
 public struct ImageRequestKey: Equatable {
     // MARK: - Properties
 
-    public let cacheKey: String
+    public let cacheKey: String?
     public let size: CGSize?
     public let scale: CGFloat?
 
     // MARK: - Initializers
 
     public init(_ request: ImageRequest) {
-        self.cacheKey = request.source.cacheKey
+        self.cacheKey = request.cacheKey
         self.size = request.resize?.size
         self.scale = request.resize?.scale
     }

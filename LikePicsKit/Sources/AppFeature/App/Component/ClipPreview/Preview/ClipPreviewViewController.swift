@@ -68,10 +68,9 @@ public class ClipPreviewViewController: UIViewController {
         // 遷移アニメーションががくつかないよう、このタイミングでPreviewを読み込む
         if !alreadyPreviewLoaded {
             alreadyPreviewLoaded = true
-            let provider = ImageDataProvider(imageId: state.imageId,
-                                             cacheKey: "preview-\(itemId.uuidString)",
-                                             imageQueryService: imageQueryService)
-            var request = ImageRequest(source: .provider(provider))
+            var request = ImageRequest(cacheKey: "preview-\(itemId.uuidString)") { [imageQueryService, state] in
+                try? imageQueryService.read(having: state.imageId)
+            }
             request.ignoreDiskCaching = true
             loadImage(request, with: processingQueue, on: previewView)
         }
@@ -102,10 +101,9 @@ extension ClipPreviewViewController {
             alreadyPreviewLoaded = true
 
             // サムネイルが存在しない場合は、アニメーションのがくつきよりもPreviewを早く表示することを優先する
-            let provider = ImageDataProvider(imageId: state.imageId,
-                                             cacheKey: "preview-\(itemId.uuidString)",
-                                             imageQueryService: imageQueryService)
-            var request = ImageRequest(source: .provider(provider))
+            var request = ImageRequest(cacheKey: "preview-\(itemId.uuidString)") { [imageQueryService, state] in
+                try? imageQueryService.read(having: state.imageId)
+            }
             request.ignoreDiskCaching = true
             loadImage(request, with: processingQueue, on: previewView)
         }

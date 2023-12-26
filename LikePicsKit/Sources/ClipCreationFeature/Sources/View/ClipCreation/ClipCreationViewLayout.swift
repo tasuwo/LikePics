@@ -326,11 +326,9 @@ extension ClipCreationViewLayout {
             // Note: サイズ取得をこのタイミングで行うと重いため、行わない
             let scale = cell.traitCollection.displayScale
             let size = cell.calcThumbnailPointSize(originalPixelSize: nil)
-            let provider = ImageDataProvider(source: imageSource,
-                                             cacheKey: "clip-creation-\(imageSourceId.uuidString)",
-                                             loader: imageLoader)
-            let request = ImageRequest(source: .provider(provider),
-                                       resize: .init(size: size, scale: scale))
+            let request = ImageRequest(resize: .init(size: size, scale: scale), cacheKey: "clip-creation-\(imageSourceId.uuidString)") { [imageLoader, imageSource] in
+                return await imageLoader.data(for: imageSource)
+            }
             loadImage(request, with: processingQueue, on: cell)
         }
     }

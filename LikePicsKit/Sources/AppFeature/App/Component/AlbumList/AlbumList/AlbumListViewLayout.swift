@@ -118,11 +118,9 @@ extension AlbumListViewLayout {
             if let item = item.album.clips.first?.primaryItem {
                 let scale = cell.traitCollection.displayScale
                 let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
-                let provider = ImageDataProvider(imageId: item.imageId,
-                                                 cacheKey: "album-list-\(item.identity.uuidString)",
-                                                 imageQueryService: imageQueryService)
-                let request = ImageRequest(source: .provider(provider),
-                                           resize: .init(size: size, scale: scale))
+                let request = ImageRequest(resize: .init(size: size, scale: scale), cacheKey: "album-list-\(item.identity.uuidString)") { [imageQueryService, item] in
+                    try? imageQueryService.read(having: item.imageId)
+                }
                 loadImage(request, with: processingQueue, on: cell) { [weak processingQueue] response in
                     guard let response = response, let diskCacheSize = response.diskCacheImageSize else { return }
                     let shouldInvalidate = ThumbnailInvalidationChecker.shouldInvalidate(originalImageSizeInPoint: item.imageSize.cgSize,
@@ -130,8 +128,8 @@ extension AlbumListViewLayout {
                                                                                          diskCacheSizeInPixel: diskCacheSize,
                                                                                          displayScale: scale)
                     guard shouldInvalidate else { return }
-                    processingQueue?.config.diskCache?.remove(forKey: request.source.cacheKey)
-                    processingQueue?.config.memoryCache.remove(forKey: request.source.cacheKey)
+                    processingQueue?.config.diskCache?.remove(forKey: request.cacheKey)
+                    processingQueue?.config.memoryCache.remove(forKey: request.cacheKey)
                 }
             } else {
                 cancelLoadImage(on: cell)

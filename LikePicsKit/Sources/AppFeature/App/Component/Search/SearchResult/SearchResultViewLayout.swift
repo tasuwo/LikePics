@@ -185,11 +185,9 @@ extension SearchResultViewLayout {
 
             let scale = cell.traitCollection.displayScale
             let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
-            let provider = ImageDataProvider(imageId: item.imageId,
-                                             cacheKey: "search-result-\(item.identity.uuidString)",
-                                             imageQueryService: imageQueryService)
-            let request = ImageRequest(source: .provider(provider),
-                                       resize: .init(size: size, scale: scale))
+            let request = ImageRequest(resize: .init(size: size, scale: scale), cacheKey: "search-result-\(item.identity.uuidString)") { [imageQueryService, item] in
+                try? imageQueryService.read(having: item.imageId)
+            }
             loadImage(request, with: processingQueue, on: cell)
         }
     }

@@ -176,11 +176,9 @@ extension ClipMergeViewLayout {
 
             let scale = cell.traitCollection.displayScale
             let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
-            let provider = ImageDataProvider(imageId: item.imageId,
-                                             cacheKey: "clip-merge-\(item.identity.uuidString)",
-                                             imageQueryService: imageQueryService)
-            let request = ImageRequest(source: .provider(provider),
-                                       resize: .init(size: size, scale: scale))
+            let request = ImageRequest(resize: .init(size: size, scale: scale), cacheKey: "clip-merge-\(item.identity.uuidString)") {
+                try? imageQueryService.read(having: item.imageId)
+            }
             loadImage(request, with: processingQueue, on: cell)
         }
     }

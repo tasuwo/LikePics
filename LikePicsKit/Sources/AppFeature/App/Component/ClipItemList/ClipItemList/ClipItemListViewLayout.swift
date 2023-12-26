@@ -135,11 +135,9 @@ extension ClipItemListViewLayout {
 
             let scale = cell.traitCollection.displayScale
             let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize)
-            let provider = ImageDataProvider(imageId: item.imageId,
-                                             cacheKey: "clip-info-\(item.itemId.uuidString)",
-                                             imageQueryService: imageQueryService)
-            let request = ImageRequest(source: .provider(provider),
-                                       resize: .init(size: size, scale: scale))
+            let request = ImageRequest(resize: .init(size: size, scale: scale), cacheKey: "clip-info-\(item.itemId.uuidString)") { [imageQueryService, item] in
+                try? imageQueryService.read(having: item.imageId)
+            }
             loadImage(request, with: processingQueue, on: cell) { [weak processingQueue] response in
                 guard let response = response, let diskCacheSize = response.diskCacheImageSize else { return }
                 let shouldInvalidate = ThumbnailInvalidationChecker.shouldInvalidate(originalImageSizeInPoint: item.imageSize,
@@ -147,8 +145,8 @@ extension ClipItemListViewLayout {
                                                                                      diskCacheSizeInPixel: diskCacheSize,
                                                                                      displayScale: scale)
                 guard shouldInvalidate else { return }
-                processingQueue?.config.diskCache?.remove(forKey: request.source.cacheKey)
-                processingQueue?.config.memoryCache.remove(forKey: request.source.cacheKey)
+                processingQueue?.config.diskCache?.remove(forKey: request.cacheKey)
+                processingQueue?.config.memoryCache.remove(forKey: request.cacheKey)
             }
         }
     }
