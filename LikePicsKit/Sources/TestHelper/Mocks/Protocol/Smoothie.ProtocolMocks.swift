@@ -5,50 +5,12 @@
 import Foundation
 @testable import Smoothie
 import UIKit
-
-public class MemoryCachingMock: MemoryCaching {
-    public init() { }
-
-    public private(set) var insertCallCount = 0
-    public var insertHandler: ((UIImage?, String) -> Void)?
-    public func insert(_ data: UIImage?, forKey key: String) {
-        insertCallCount += 1
-        if let insertHandler = insertHandler {
-            insertHandler(data, key)
-        }
-    }
-
-    public private(set) var removeCallCount = 0
-    public var removeHandler: ((String) -> Void)?
-    public func remove(forKey key: String) {
-        removeCallCount += 1
-        if let removeHandler = removeHandler {
-            removeHandler(key)
-        }
-    }
-
-    public private(set) var removeAllCallCount = 0
-    public var removeAllHandler: (() -> Void)?
-    public func removeAll() {
-        removeAllCallCount += 1
-        if let removeAllHandler = removeAllHandler {
-            removeAllHandler()
-        }
-    }
-
-    public private(set) var subscriptCallCount = 0
-    public var subscriptHandler: ((String) -> (UIImage?))?
-    public subscript(_ key: String) -> UIImage? {
-        get {
-            subscriptCallCount += 1
-            if let subscriptHandler = subscriptHandler {
-                return subscriptHandler(key)
-            }
-            return nil
-        }
-        set { }
-    }
-}
+#if canImport(AppKit)
+import AppKit
+#endif
+#if canImport(UIKit)
+import UIKit
+#endif
 
 public class DiskCachingMock: DiskCaching {
     public init() { }
@@ -102,4 +64,75 @@ public class DiskCachingMock: DiskCaching {
         }
         set { }
     }
+}
+
+public class MemoryCachingMock: MemoryCaching {
+    public init() { }
+
+    public private(set) var removeCallCount = 0
+    public var removeHandler: ((String) -> Void)?
+    public func remove(forKey key: String) {
+        removeCallCount += 1
+        if let removeHandler = removeHandler {
+            removeHandler(key)
+        }
+    }
+
+    public private(set) var removeAllCallCount = 0
+    public var removeAllHandler: (() -> Void)?
+    public func removeAll() {
+        removeAllCallCount += 1
+        if let removeAllHandler = removeAllHandler {
+            removeAllHandler()
+        }
+    }
+
+    #if canImport(UIKit)
+
+    public private(set) var insertCallCount = 0
+    public var insertHandler: ((UIImage?, String) -> Void)?
+    public func insert(_ data: UIImage?, forKey key: String) {
+        insertCallCount += 1
+        if let insertHandler = insertHandler {
+            insertHandler(data, key)
+        }
+    }
+
+    public private(set) var subscriptCallCount = 0
+    public var subscriptHandler: ((String) -> (UIImage?))?
+    public subscript(_ key: String) -> UIImage? {
+        get {
+            subscriptCallCount += 1
+            if let subscriptHandler = subscriptHandler {
+                return subscriptHandler(key)
+            }
+            return nil
+        }
+        set { }
+    }
+    #endif
+    #if canImport(AppKit)
+
+    public private(set) var insertCallCount = 0
+    public var insertHandler: ((NSImage?, String) -> Void)?
+    public func insert(_ data: NSImage?, forKey key: String) {
+        insertCallCount += 1
+        if let insertHandler = insertHandler {
+            insertHandler(data, key)
+        }
+    }
+
+    public private(set) var subscriptCallCount = 0
+    public var subscriptHandler: ((String) -> (NSImage?))?
+    public subscript(_ key: String) -> NSImage? {
+        get {
+            subscriptCallCount += 1
+            if let subscriptHandler = subscriptHandler {
+                return subscriptHandler(key)
+            }
+            return nil
+        }
+        set { }
+    }
+    #endif
 }

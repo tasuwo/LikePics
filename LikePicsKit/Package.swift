@@ -18,6 +18,7 @@ let package = Package(
         .library(name: "MobileTransition", targets: ["MobileTransition"]),
         .library(name: "Persistence", targets: ["Persistence"]),
         .library(name: "ClipCreationFeature", targets: ["ClipCreationFeature"]),
+        .library(name: "ClipPreviewPlayConfigurationModalFeature", targets: ["ClipPreviewPlayConfigurationModalFeature"]),
         .library(name: "LikePicsUIKit", targets: ["LikePicsUIKit"]),
         .library(name: "CompositeKit", targets: ["CompositeKit"]),
         .library(name: "Smoothie", targets: ["Smoothie"]),

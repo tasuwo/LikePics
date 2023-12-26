@@ -4,22 +4,21 @@
 
 #if canImport(UIKit)
 import UIKit
-#elseif canImport(AppKit)
+#endif
+#if canImport(AppKit)
 import AppKit
 #endif
 
 /// @mockable
 public protocol MemoryCaching: AnyObject {
-    #if canImport(UIKit)
-    func insert(_ data: UIImage?, forKey key: String)
-    #elseif canImport(AppKit)
-    func insert(_ data: NSImage?, forKey key: String)
-    #endif
     func remove(forKey key: String)
     func removeAll()
     #if canImport(UIKit)
+    func insert(_ data: UIImage?, forKey key: String)
     subscript(_ key: String) -> UIImage? { get set }
-    #elseif canImport(AppKit)
+    #endif
+    #if canImport(AppKit)
+    func insert(_ data: NSImage?, forKey key: String)
     subscript(_ key: String) -> NSImage? { get set }
     #endif
 }
@@ -53,8 +52,9 @@ public final class MemoryCache {
         cache.evictsObjectsWithDiscardedContent = false
         return cache
     }()
+    #endif
 
-    #elseif canImport(AppKit)
+    #if canImport(AppKit)
     private lazy var cache: NSCache<NSString, NSImage> = {
         let cache = NSCache<NSString, NSImage>()
         cache.totalCostLimit = config.costLimit
@@ -81,8 +81,9 @@ extension MemoryCache: MemoryCaching {
         guard let image = image else { return remove(forKey: key) }
         cache.setObject(image, forKey: key as NSString)
     }
+    #endif
 
-    #elseif canImport(AppKit)
+    #if canImport(AppKit)
     public func insert(_ image: NSImage?, forKey key: String) {
         guard let image = image else { return remove(forKey: key) }
         cache.setObject(image, forKey: key as NSString)
@@ -106,8 +107,9 @@ extension MemoryCache: MemoryCaching {
             return insert(newValue, forKey: key)
         }
     }
+    #endif
 
-    #elseif canImport(AppKit)
+    #if canImport(AppKit)
     public subscript(key: String) -> NSImage? {
         get {
             return cache.object(forKey: key as NSString)

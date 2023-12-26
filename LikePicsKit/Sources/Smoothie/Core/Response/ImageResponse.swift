@@ -5,14 +5,16 @@
 import Foundation
 #if canImport(UIKit)
 import UIKit
-#elseif canImport(AppKit)
+#endif
+#if canImport(AppKit)
 import AppKit
 #endif
 
 public struct ImageResponse {
     #if canImport(UIKit)
     public let image: UIImage
-    #elseif canImport(AppKit)
+    #endif
+    #if canImport(AppKit)
     public let image: NSImage
     #endif
     public let diskCacheImageSize: CGSize?

@@ -5,6 +5,7 @@
 import Domain
 @testable import Environment
 import Foundation
+import MobileTransition
 import Smoothie
 import UIKit
 import WebKit

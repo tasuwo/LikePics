@@ -5,7 +5,6 @@
 import Combine
 @testable import Domain
 import Foundation
-import UIKit
 
 public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
     public init() { }
@@ -512,7 +511,7 @@ public class CloudUsageContextStorageProtocolMock: CloudUsageContextStorageProto
     }
 
     public private(set) var lastLoggedInCloudAccountIdSetCallCount = 0
-    public var lastLoggedInCloudAccountId: String? { didSet { lastLoggedInCloudAccountIdSetCallCount += 1 } }
+    public var lastLoggedInCloudAccountId: String? = nil { didSet { lastLoggedInCloudAccountIdSetCallCount += 1 } }
 
     public private(set) var setCallCount = 0
     public var setHandler: ((String?) -> Void)?

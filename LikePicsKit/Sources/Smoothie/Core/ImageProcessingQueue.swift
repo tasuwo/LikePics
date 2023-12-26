@@ -6,7 +6,8 @@ import Foundation
 import ImageIO
 #if canImport(UIKit)
 import UIKit
-#elseif canImport(AppKit)
+#endif
+#if canImport(AppKit)
 import AppKit
 #endif
 
@@ -165,7 +166,8 @@ extension ImageProcessingQueue {
                     // リサイズが不要なら、エンコードは行わない
                     #if canImport(UIKit)
                     let image = UIImage(cgImage: thumbnail)
-                    #elseif canImport(AppKit)
+                    #endif
+                    #if canImport(AppKit)
                     let image = NSImage(cgImage: thumbnail, size: .init(width: thumbnail.width, height: thumbnail.height))
                     #endif
                     self.config.memoryCache.insert(image, forKey: task.request.cacheKey)
@@ -226,7 +228,8 @@ extension ImageProcessingQueue {
                 guard let image = data.downsample() else { return nil }
                 return UIImage(cgImage: image)
             }()
-            #elseif canImport(AppKit)
+            #endif
+            #if canImport(AppKit)
             let image: NSImage? = {
                 guard let image = data.downsample() else { return nil }
                 return NSImage(cgImage: image, size: .init(width: image.width, height: image.height))
@@ -264,7 +267,8 @@ extension ImageProcessingQueue {
                 }
                 #if canImport(UIKit)
                 let image = UIImage(cgImage: thumbnail)
-                #elseif canImport(AppKit)
+                #endif
+                #if canImport(AppKit)
                 let image = NSImage(cgImage: thumbnail, size: .init(width: thumbnail.width, height: thumbnail.height))
                 #endif
                 self.config.memoryCache.insert(image, forKey: task.request.cacheKey)
