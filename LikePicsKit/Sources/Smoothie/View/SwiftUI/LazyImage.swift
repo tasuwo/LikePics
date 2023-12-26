@@ -46,18 +46,16 @@ public struct LazyImage<Content>: View where Content: View {
     @StateObject private var model = LazyImageModel()
     @ViewBuilder private let content: (LazyImageLoadResult?) -> Content
     @Environment(\.displayScale) var displayScale
+    @Environment(\.imageProcessingQueue) var imageProcessingQueue
 
     private let cacheKey: String
-    private let processingQueue: ImageProcessingQueue
     private let data: () async -> Data?
 
-    public init<C, P>(processingQueue: ImageProcessingQueue,
-                      cacheKey: String,
+    public init<C, P>(cacheKey: String,
                       data: @escaping () async -> Data?,
                       @ViewBuilder content: @escaping (Image?) -> C,
                       @ViewBuilder placeholder: @escaping () -> P) where C: View, P: View, Content == _ConditionalContent<C, P>
     {
-        self.processingQueue = processingQueue
         self.cacheKey = cacheKey
         self.data = data
         self.content = { result in
@@ -75,7 +73,7 @@ public struct LazyImage<Content>: View where Content: View {
         GeometryReader { geometry in
             content(model.result)
                 .onAppear {
-                    model.load(.init(resize: .init(size: geometry.frame(in: .global).size, scale: displayScale), cacheKey: cacheKey, data), with: processingQueue)
+                    model.load(.init(resize: .init(size: geometry.frame(in: .global).size, scale: displayScale), cacheKey: cacheKey, data), with: imageProcessingQueue)
                 }
                 .onDisappear {
                     model.cancel()

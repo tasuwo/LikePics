@@ -14,7 +14,7 @@ struct ClipView: View {
 
     var body: some View {
         if let primaryItem = clip.primaryItem {
-            LazyImage(processingQueue: container.clipThumbnailProcessingQueue, cacheKey: "item-\(primaryItem.imageId.uuidString)") { [container] in
+            LazyImage(cacheKey: "item-\(primaryItem.imageId.uuidString)") { [container] in
                 try? container.imageQueryService.read(having: primaryItem.imageId)
             } content: { image in
                 if let image {
@@ -31,6 +31,7 @@ struct ClipView: View {
             .onChangeFrame { size in
                 primaryThumbnailSize = size
             }
+            .environment(\.imageProcessingQueue, container.albumThumbnailProcessingQueue)
         } else {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .aspectRatio(1, contentMode: .fit)

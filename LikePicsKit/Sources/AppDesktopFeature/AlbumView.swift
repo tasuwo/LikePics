@@ -17,7 +17,7 @@ struct AlbumView: View {
             if let imageId = album.clips.first?.primaryItem?.imageId {
                 Color.clear
                     .overlay {
-                        LazyImage(processingQueue: container.albumThumbnailProcessingQueue, cacheKey: "album-\(imageId.uuidString)") { [container] in
+                        LazyImage(cacheKey: "album-\(imageId.uuidString)") { [container] in
                             try? container.imageQueryService.read(having: imageId)
                         } content: { image in
                             if let image {
@@ -34,6 +34,7 @@ struct AlbumView: View {
                     .aspectRatio(1, contentMode: .fit)
                     .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                     .clipped()
+                    .environment(\.imageProcessingQueue, container.albumThumbnailProcessingQueue)
             } else {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
                     .aspectRatio(1, contentMode: .fit)
