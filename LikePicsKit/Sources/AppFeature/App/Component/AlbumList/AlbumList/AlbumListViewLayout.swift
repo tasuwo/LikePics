@@ -97,11 +97,11 @@ extension AlbumListViewLayout {
         }
     }
 
-    static func configureAlbumCell(thumbnailPipeline: Pipeline,
+    static func configureAlbumCell(thumbnailProcessingQueue: ImageProcessingQueue,
                                    queryService: ImageQueryServiceProtocol,
                                    delegate: AlbumListCollectionViewCellDelegate) -> UICollectionView.CellRegistration<AlbumListCollectionViewCell, Item>
     {
-        return .init(cellNib: AlbumListCollectionViewCell.nib) { [weak thumbnailPipeline, weak queryService, weak delegate] cell, _, item in
+        return .init(cellNib: AlbumListCollectionViewCell.nib) { [weak thumbnailProcessingQueue, weak queryService, weak delegate] cell, _, item in
             cell.albumId = item.album.id
             cell.title = item.album.title
             cell.clipCount = item.album.clips.count
@@ -112,7 +112,7 @@ extension AlbumListViewLayout {
             cell.setHiddenIconVisibility(true, animated: false)
             cell.setAlbumHiding(item.album.isHidden, animated: false)
 
-            guard let pipeline = thumbnailPipeline,
+            guard let processingQueue = thumbnailProcessingQueue,
                   let imageQueryService = queryService else { return }
 
             if let item = item.album.clips.first?.primaryItem {
@@ -123,15 +123,15 @@ extension AlbumListViewLayout {
                                                  imageQueryService: imageQueryService)
                 let request = ImageRequest(source: .provider(provider),
                                            resize: .init(size: size, scale: scale))
-                loadImage(request, with: pipeline, on: cell) { [weak pipeline] response in
+                loadImage(request, with: processingQueue, on: cell) { [weak processingQueue] response in
                     guard let response = response, let diskCacheSize = response.diskCacheImageSize else { return }
                     let shouldInvalidate = ThumbnailInvalidationChecker.shouldInvalidate(originalImageSizeInPoint: item.imageSize.cgSize,
                                                                                          thumbnailSizeInPoint: size,
                                                                                          diskCacheSizeInPixel: diskCacheSize,
                                                                                          displayScale: scale)
                     guard shouldInvalidate else { return }
-                    pipeline?.config.diskCache?.remove(forKey: request.source.cacheKey)
-                    pipeline?.config.memoryCache.remove(forKey: request.source.cacheKey)
+                    processingQueue?.config.diskCache?.remove(forKey: request.source.cacheKey)
+                    processingQueue?.config.memoryCache.remove(forKey: request.source.cacheKey)
                 }
             } else {
                 cancelLoadImage(on: cell)
@@ -140,11 +140,11 @@ extension AlbumListViewLayout {
     }
 
     static func configureDataSource(collectionView: UICollectionView,
-                                    thumbnailPipeline: Pipeline,
+                                    thumbnailProcessingQueue: ImageProcessingQueue,
                                     queryService: ImageQueryServiceProtocol,
                                     delegate: AlbumListCollectionViewCellDelegate) -> DataSource
     {
-        let albumCellRegistration = self.configureAlbumCell(thumbnailPipeline: thumbnailPipeline,
+        let albumCellRegistration = self.configureAlbumCell(thumbnailProcessingQueue: thumbnailProcessingQueue,
                                                             queryService: queryService,
                                                             delegate: delegate)
 

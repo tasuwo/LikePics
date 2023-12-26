@@ -49,7 +49,7 @@ public class ClipCreationViewController: UIViewController {
     // MARK: Services
 
     private let modalRouter: ModalRouter
-    private let thumbnailPipeline: Pipeline
+    private let thumbnailProcessingQueue: ImageProcessingQueue
     private let imageLoader: ImageLoadable
 
     // MARK: Store/Subscription
@@ -63,12 +63,12 @@ public class ClipCreationViewController: UIViewController {
 
     public init(state: ClipCreationViewState,
                 dependency: ClipCreationViewDependency,
-                thumbnailPipeline: Pipeline,
+                thumbnailProcessingQueue: ImageProcessingQueue,
                 imageLoader: ImageLoadable,
                 modalRouter: ModalRouter)
     {
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipCreationViewReducer())
-        self.thumbnailPipeline = thumbnailPipeline
+        self.thumbnailProcessingQueue = thumbnailProcessingQueue
         self.imageLoader = imageLoader
         self.modalRouter = modalRouter
         super.init(nibName: nil, bundle: nil)
@@ -368,7 +368,7 @@ extension ClipCreationViewController {
     private func configureDataSource() {
         let (proxy, dataSource) = Layout.configureDataSource(collectionView: collectionView,
                                                              cellDataSource: self,
-                                                             thumbnailPipeline: thumbnailPipeline,
+                                                             thumbnailProcessingQueue: thumbnailProcessingQueue,
                                                              imageLoader: imageLoader,
                                                              albumEditHandler: { [weak self] in self?.store.execute(.tapAlbumAdditionButton) })
         self.dataSource = dataSource

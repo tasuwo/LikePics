@@ -20,7 +20,7 @@ struct AlbumView: View {
                         LazyImage(request: .init(source: .provider(ImageDataProvider(imageId: imageId,
                                                                                      cacheKey: "album-\(imageId.uuidString)",
                                                                                      imageQueryService: container.imageQueryService))),
-                        pipeline: container.albumThumbnailPipeline) { image in
+                        processingQueue: container.albumThumbnailProcessingQueue) { image in
                             if let image {
                                 image
                                     .resizable()

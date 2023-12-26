@@ -50,11 +50,11 @@ public class AppDependencyContainer {
     private let _clipDiskCache: DiskCache
     private let _albumDiskCache: DiskCache
     private let _clipItemDiskCache: DiskCache
-    private let _clipThumbnailPipeline: Pipeline
-    private let _albumThumbnailPipeline: Pipeline
-    private let _clipItemThumbnailPipeline: Pipeline
-    private let _temporaryThumbnailPipeline: Pipeline
-    private let _previewPipeline: Pipeline
+    private let _clipThumbnailProcessingQueue: ImageProcessingQueue
+    private let _albumThumbnailProcessingQueue: ImageProcessingQueue
+    private let _clipItemThumbnailProcessingQueue: ImageProcessingQueue
+    private let _temporaryThumbnailProcessingQueue: ImageProcessingQueue
+    private let _previewProcessingQueue: ImageProcessingQueue
     private let _previewPrefetcher: PreviewPrefetcher
 
     // MARK: Storage
@@ -156,7 +156,7 @@ public class AppDependencyContainer {
 
         // Clip
 
-        var clipCacheConfig = Pipeline.Configuration()
+        var clipCacheConfig = ImageProcessingQueue.Configuration()
         let clipCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-thumbnails", appBundle: appBundle)
         self._clipDiskCache = try DiskCache(path: clipCacheDirectory,
                                             config: .init(sizeLimit: 1024 * 1024 * 1024,
@@ -165,11 +165,11 @@ public class AppDependencyContainer {
         clipCacheConfig.diskCache = self._clipDiskCache
         clipCacheConfig.compressionRatio = 0.5
         clipCacheConfig.memoryCache = memoryCache
-        self._clipThumbnailPipeline = .init(config: clipCacheConfig)
+        self._clipThumbnailProcessingQueue = .init(config: clipCacheConfig)
 
         // Album
 
-        var albumCacheConfig = Pipeline.Configuration()
+        var albumCacheConfig = ImageProcessingQueue.Configuration()
         albumCacheConfig.compressionRatio = 0.5
         let albumCacheDirectory = Self.resolveCacheDirectoryUrl(name: "album-thumbnails", appBundle: appBundle)
         _albumDiskCache = try DiskCache(path: albumCacheDirectory,
@@ -178,11 +178,11 @@ public class AppDependencyContainer {
                                                       dateLimit: 30))
         albumCacheConfig.diskCache = _albumDiskCache
         albumCacheConfig.memoryCache = memoryCache
-        self._albumThumbnailPipeline = Pipeline(config: albumCacheConfig)
+        self._albumThumbnailProcessingQueue = ImageProcessingQueue(config: albumCacheConfig)
 
         // Clip Item
 
-        var clipItemCacheConfig = Pipeline.Configuration()
+        var clipItemCacheConfig = ImageProcessingQueue.Configuration()
         let clipItemCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-item-thumbnails", appBundle: appBundle)
         _clipItemDiskCache = try DiskCache(path: clipItemCacheDirectory,
                                            config: .init(sizeLimit: 1024 * 1024 * 512,
@@ -190,26 +190,26 @@ public class AppDependencyContainer {
                                                          dateLimit: 30))
         clipItemCacheConfig.diskCache = _clipItemDiskCache
         clipItemCacheConfig.memoryCache = memoryCache
-        self._clipItemThumbnailPipeline = Pipeline(config: clipItemCacheConfig)
+        self._clipItemThumbnailProcessingQueue = ImageProcessingQueue(config: clipItemCacheConfig)
 
         // Temporary
 
-        var temporaryCacheConfig = Pipeline.Configuration()
+        var temporaryCacheConfig = ImageProcessingQueue.Configuration()
         temporaryCacheConfig.diskCache = nil
         temporaryCacheConfig.memoryCache = memoryCache
-        self._temporaryThumbnailPipeline = Pipeline(config: temporaryCacheConfig)
+        self._temporaryThumbnailProcessingQueue = ImageProcessingQueue(config: temporaryCacheConfig)
 
         // Preview
 
-        var previewCacheConfig = Pipeline.Configuration()
+        var previewCacheConfig = ImageProcessingQueue.Configuration()
         previewCacheConfig.dataCachingQueue.maxConcurrentOperationCount = 1
         previewCacheConfig.downsamplingQueue.maxConcurrentOperationCount = 1
         previewCacheConfig.imageDecompressingQueue.maxConcurrentOperationCount = 1
         previewCacheConfig.diskCache = nil
         previewCacheConfig.memoryCache = memoryCache
-        self._previewPipeline = Pipeline(config: previewCacheConfig)
+        self._previewProcessingQueue = ImageProcessingQueue(config: previewCacheConfig)
 
-        self._previewPrefetcher = PreviewPrefetcher(pipeline: _previewPipeline,
+        self._previewPrefetcher = PreviewPrefetcher(processingQueue: _previewProcessingQueue,
                                                     imageQueryService: _imageQueryService)
 
         // MARK: Service
@@ -386,11 +386,11 @@ extension AppDependencyContainer: HasDiskCaches {
 }
 
 extension AppDependencyContainer: HasImageLoaderSettings {
-    public var clipThumbnailPipeline: Pipeline { _clipThumbnailPipeline }
-    public var albumThumbnailPipeline: Pipeline { _albumThumbnailPipeline }
-    public var clipItemThumbnailPipeline: Pipeline { _clipItemThumbnailPipeline }
-    public var temporaryThumbnailPipeline: Pipeline { _temporaryThumbnailPipeline }
-    public var previewPipeline: Pipeline { _previewPipeline }
+    public var clipThumbnailProcessingQueue: ImageProcessingQueue { _clipThumbnailProcessingQueue }
+    public var albumThumbnailProcessingQueue: ImageProcessingQueue { _albumThumbnailProcessingQueue }
+    public var clipItemThumbnailProcessingQueue: ImageProcessingQueue { _clipItemThumbnailProcessingQueue }
+    public var temporaryThumbnailProcessingQueue: ImageProcessingQueue { _temporaryThumbnailProcessingQueue }
+    public var previewProcessingQueue: ImageProcessingQueue { _previewProcessingQueue }
     public var previewPrefetcher: PreviewPrefetchable { _previewPrefetcher }
 }
 

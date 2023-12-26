@@ -13,7 +13,7 @@ class ImageLoadTask {
     // MARK: - Properties
 
     let request: ImageRequest
-    private weak var pipeline: Pipeline?
+    private weak var processingQueue: ImageProcessingQueue?
 
     private var subscriptions: [UUID: Subscription] = [:]
 
@@ -25,9 +25,9 @@ class ImageLoadTask {
 
     // MARK: - Initializers
 
-    init(request: ImageRequest, pipeline: Pipeline) {
+    init(request: ImageRequest, processingQueue: ImageProcessingQueue) {
         self.request = request
-        self.pipeline = pipeline
+        self.processingQueue = processingQueue
     }
 
     // MARK: - Methods
@@ -60,12 +60,12 @@ class ImageLoadTask {
         guard !isStarted else { return }
         isStarted = true
 
-        guard let pipeline = pipeline else {
+        guard let processingQueue = processingQueue else {
             terminate(isCancelled: false)
             return
         }
 
-        pipeline.startLoading(self)
+        processingQueue.startLoading(self)
     }
 
     // MARK: Event

@@ -258,7 +258,7 @@ extension SceneDependencyContainer: AlbumSelectionModalRouter {
         let viewController = AlbumSelectionModalController(state: state,
                                                            albumAdditionAlertState: albumAdditionAlertState,
                                                            dependency: self,
-                                                           thumbnailPipeline: container.temporaryThumbnailPipeline,
+                                                           thumbnailProcessingQueue: container.temporaryThumbnailProcessingQueue,
                                                            imageQueryService: container.imageQueryService)
 
         let navigationViewController = UINavigationController(rootViewController: viewController)
@@ -302,7 +302,7 @@ extension SceneDependencyContainer: ClipCreationModalRouter {
                                                                      url: currentUrl,
                                                                      isSomeItemsHidden: container.userSettingStorage.readShowHiddenItems()),
                                                         dependency: dependency,
-                                                        thumbnailPipeline: container.temporaryThumbnailPipeline,
+                                                        thumbnailProcessingQueue: container.temporaryThumbnailProcessingQueue,
                                                         imageLoader: imageLoader,
                                                         modalRouter: self)
 
@@ -338,7 +338,7 @@ extension SceneDependencyContainer: ClipItemListModalRouter {
                                                                                      message: L10n.alertForEditClipItemsSiteUrlMessage,
                                                                                      placeholder: L10n.placeholderUrl),
                                                         dependency: self,
-                                                        thumbnailPipeline: container.clipItemThumbnailPipeline)
+                                                        thumbnailProcessingQueue: container.clipItemThumbnailProcessingQueue)
         viewController.transitioningDelegate = transitioningController
         viewController.modalPresentationStyle = .fullScreen
 
@@ -358,7 +358,7 @@ extension SceneDependencyContainer: ClipMergeModalRouter {
         let state = ClipMergeViewState(id: id, clips: clips)
         let viewController = ClipMergeViewController(state: state,
                                                      dependency: self,
-                                                     thumbnailPipeline: container.temporaryThumbnailPipeline,
+                                                     thumbnailProcessingQueue: container.temporaryThumbnailProcessingQueue,
                                                      imageQueryService: container.imageQueryService,
                                                      modalRouter: self)
 

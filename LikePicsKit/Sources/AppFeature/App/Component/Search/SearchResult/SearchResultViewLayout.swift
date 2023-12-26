@@ -106,12 +106,12 @@ extension SearchResultViewLayout {
 
 extension SearchResultViewLayout {
     static func createDataSource(_ collectionView: UICollectionView,
-                                 _ thumbnailPipeline: Pipeline,
+                                 _ thumbnailProcessingQueue: ImageProcessingQueue,
                                  _ imageQueryService: ImageQueryServiceProtocol,
                                  seeAllButtonHandler: @escaping () -> Void) -> DataSource
     {
         let candidateCellRegistration = self.configureCandidateCell()
-        let resultCellRegistration = self.configureResultCell(thumbnailPipeline: thumbnailPipeline,
+        let resultCellRegistration = self.configureResultCell(thumbnailProcessingQueue: thumbnailProcessingQueue,
                                                               imageQueryService: imageQueryService)
 
         let dataSource: DataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
@@ -171,11 +171,11 @@ extension SearchResultViewLayout {
         }
     }
 
-    private static func configureResultCell(thumbnailPipeline: Pipeline,
+    private static func configureResultCell(thumbnailProcessingQueue: ImageProcessingQueue,
                                             imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<SearchResultClipCell, Clip>
     {
-        return .init(cellNib: SearchResultClipCell.nib) { [weak thumbnailPipeline, weak imageQueryService] cell, _, clip in
-            guard let pipeline = thumbnailPipeline,
+        return .init(cellNib: SearchResultClipCell.nib) { [weak thumbnailProcessingQueue, weak imageQueryService] cell, _, clip in
+            guard let processingQueue = thumbnailProcessingQueue,
                   let imageQueryService = imageQueryService,
                   let item = clip.primaryItem
             else {
@@ -190,7 +190,7 @@ extension SearchResultViewLayout {
                                              imageQueryService: imageQueryService)
             let request = ImageRequest(source: .provider(provider),
                                        resize: .init(size: size, scale: scale))
-            loadImage(request, with: pipeline, on: cell)
+            loadImage(request, with: processingQueue, on: cell)
         }
     }
 }

@@ -10,7 +10,7 @@ import UIKit
 import AppKit
 #endif
 
-public final class Pipeline {
+public final class ImageProcessingQueue {
     typealias Key = ImageRequestKey
 
     public struct Configuration {
@@ -38,7 +38,7 @@ public final class Pipeline {
     public let config: Configuration
 
     private let logger = Logger()
-    private let queue = DispatchQueue(label: "net.tasuwo.TBox.Smoothie.Pipeline", target: .global(qos: .userInitiated))
+    private let queue = DispatchQueue(label: "net.tasuwo.TBox.Smoothie.ImageProcessingQueue", target: .global(qos: .userInitiated))
     private let pool = ImageLoadTaskPool()
 
     // MARK: - Initializers
@@ -50,12 +50,12 @@ public final class Pipeline {
 
 // MARK: Preload
 
-public extension Pipeline {
+public extension ImageProcessingQueue {
     func loadImage(_ request: ImageRequest, completion: (() -> Void)? = nil) -> ImageLoadTaskCancellable {
         return queue.sync {
             pool
                 .task(for: ImageRequestKey(request)) {
-                    ImageLoadTask(request: request, pipeline: self)
+                    ImageLoadTask(request: request, processingQueue: self)
                 }
                 .subscribe { _ in
                     completion?()
@@ -66,12 +66,12 @@ public extension Pipeline {
 
 // MARK: Load
 
-extension Pipeline {
+extension ImageProcessingQueue {
     func loadImage(_ request: ImageRequest, completion: @escaping (ImageResponse?) -> Void) -> ImageLoadTaskCancellable {
         return queue.sync {
             pool
                 .task(for: ImageRequestKey(request)) {
-                    ImageLoadTask(request: request, pipeline: self)
+                    ImageLoadTask(request: request, processingQueue: self)
                 }
                 .subscribe(completion: completion)
         }
@@ -80,7 +80,7 @@ extension Pipeline {
 
 // MARK: Operations
 
-extension Pipeline {
+extension ImageProcessingQueue {
     func startLoading(_ task: ImageLoadTask) {
         dispatchPrecondition(condition: .onQueue(queue))
 

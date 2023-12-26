@@ -98,11 +98,11 @@ extension ClipItemListViewLayout {
 
 extension ClipItemListViewLayout {
     static func configureDataSource(_ collectionView: UICollectionView,
-                                    _ thumbnailPipeline: Pipeline,
+                                    _ thumbnailProcessingQueue: ImageProcessingQueue,
                                     _ imageQueryService: ImageQueryServiceProtocol) -> DataSource
     {
         let cellRegistration = configureCell(collectionView: collectionView,
-                                             thumbnailPipeline: thumbnailPipeline,
+                                             thumbnailProcessingQueue: thumbnailProcessingQueue,
                                              imageQueryService: imageQueryService)
 
         return .init(collectionView: collectionView) { collectionView, indexPath, item in
@@ -111,10 +111,10 @@ extension ClipItemListViewLayout {
     }
 
     private static func configureCell(collectionView: UICollectionView,
-                                      thumbnailPipeline: Pipeline,
+                                      thumbnailProcessingQueue: ImageProcessingQueue,
                                       imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<ClipItemCell, Item>
     {
-        return UICollectionView.CellRegistration<ClipItemCell, Item> { [weak thumbnailPipeline, weak imageQueryService] cell, _, item in
+        return UICollectionView.CellRegistration<ClipItemCell, Item> { [weak thumbnailProcessingQueue, weak imageQueryService] cell, _, item in
             var configuration = ClipItemContentConfiguration()
             configuration.fileName = (item.imageFileName as NSString).deletingPathExtension
             configuration.imageSize = item.imageSize
@@ -127,7 +127,7 @@ extension ClipItemListViewLayout {
             backgroundConfiguration.backgroundColor = .clear
             cell.backgroundConfiguration = backgroundConfiguration
 
-            guard let pipeline = thumbnailPipeline,
+            guard let processingQueue = thumbnailProcessingQueue,
                   let imageQueryService = imageQueryService
             else {
                 return
@@ -140,15 +140,15 @@ extension ClipItemListViewLayout {
                                              imageQueryService: imageQueryService)
             let request = ImageRequest(source: .provider(provider),
                                        resize: .init(size: size, scale: scale))
-            loadImage(request, with: pipeline, on: cell) { [weak pipeline] response in
+            loadImage(request, with: processingQueue, on: cell) { [weak processingQueue] response in
                 guard let response = response, let diskCacheSize = response.diskCacheImageSize else { return }
                 let shouldInvalidate = ThumbnailInvalidationChecker.shouldInvalidate(originalImageSizeInPoint: item.imageSize,
                                                                                      thumbnailSizeInPoint: size,
                                                                                      diskCacheSizeInPixel: diskCacheSize,
                                                                                      displayScale: scale)
                 guard shouldInvalidate else { return }
-                pipeline?.config.diskCache?.remove(forKey: request.source.cacheKey)
-                pipeline?.config.memoryCache.remove(forKey: request.source.cacheKey)
+                processingQueue?.config.diskCache?.remove(forKey: request.source.cacheKey)
+                processingQueue?.config.memoryCache.remove(forKey: request.source.cacheKey)
             }
         }
     }

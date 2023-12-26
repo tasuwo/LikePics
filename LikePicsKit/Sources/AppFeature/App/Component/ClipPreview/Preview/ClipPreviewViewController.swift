@@ -21,7 +21,7 @@ public class ClipPreviewViewController: UIViewController {
     private let imageQueryService: ImageQueryServiceProtocol
     private let thumbnailMemoryCache: MemoryCaching
     private let thumbnailDiskCache: DiskCaching
-    private let pipeline: Pipeline
+    private let processingQueue: ImageProcessingQueue
 
     // MARK: Store
 
@@ -35,12 +35,12 @@ public class ClipPreviewViewController: UIViewController {
                 imageQueryService: ImageQueryServiceProtocol,
                 thumbnailMemoryCache: MemoryCaching,
                 thumbnailDiskCache: DiskCaching,
-                pipeline: Pipeline)
+                processingQueue: ImageProcessingQueue)
     {
         self.imageQueryService = imageQueryService
         self.thumbnailMemoryCache = thumbnailMemoryCache
         self.thumbnailDiskCache = thumbnailDiskCache
-        self.pipeline = pipeline
+        self.processingQueue = processingQueue
 
         self.state = state
 
@@ -73,7 +73,7 @@ public class ClipPreviewViewController: UIViewController {
                                              imageQueryService: imageQueryService)
             var request = ImageRequest(source: .provider(provider))
             request.ignoreDiskCaching = true
-            loadImage(request, with: pipeline, on: previewView)
+            loadImage(request, with: processingQueue, on: previewView)
         }
     }
 }
@@ -107,7 +107,7 @@ extension ClipPreviewViewController {
                                              imageQueryService: imageQueryService)
             var request = ImageRequest(source: .provider(provider))
             request.ignoreDiskCaching = true
-            loadImage(request, with: pipeline, on: previewView)
+            loadImage(request, with: processingQueue, on: previewView)
         }
     }
 

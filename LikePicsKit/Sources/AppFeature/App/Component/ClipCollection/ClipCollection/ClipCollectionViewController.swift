@@ -38,7 +38,7 @@ class ClipCollectionViewController: UIViewController {
     // MARK: Service
 
     private let modalRouter: ModalRouter
-    private let thumbnailPipeline: Pipeline
+    private let thumbnailProcessingQueue: ImageProcessingQueue
     private let menuBuilder: ClipCollectionMenuBuildable
     private let imageQueryService: ImageQueryServiceProtocol
 
@@ -64,12 +64,12 @@ class ClipCollectionViewController: UIViewController {
 
     init(state: ClipCollectionViewRootState,
          dependency: ClipCollectionViewRootDependency,
-         thumbnailPipeline: Pipeline,
+         thumbnailProcessingQueue: ImageProcessingQueue,
          menuBuilder: ClipCollectionMenuBuildable,
          modalRouter: ModalRouter,
          appBundle: Bundle)
     {
-        self.thumbnailPipeline = thumbnailPipeline
+        self.thumbnailProcessingQueue = thumbnailProcessingQueue
         self.menuBuilder = menuBuilder
         self.imageQueryService = dependency.imageQueryService
         self.rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipCollectionViewRootReducer)
@@ -558,7 +558,7 @@ extension ClipCollectionViewController {
         collectionView.delegate = self
         dataSource = Layout.configureDataSource(store: store,
                                                 collectionView: collectionView,
-                                                thumbnailPipeline: thumbnailPipeline,
+                                                thumbnailProcessingQueue: thumbnailProcessingQueue,
                                                 imageQueryService: imageQueryService)
         selectionApplier = UICollectionViewSelectionLazyApplier(collectionView: collectionView,
                                                                 dataSource: dataSource,
@@ -867,7 +867,7 @@ extension ClipCollectionViewController: Restorable {
 
         return ClipCollectionViewController(state: nextState,
                                             dependency: rootStore.dependency,
-                                            thumbnailPipeline: thumbnailPipeline,
+                                            thumbnailProcessingQueue: thumbnailProcessingQueue,
                                             menuBuilder: menuBuilder,
                                             modalRouter: modalRouter,
                                             appBundle: appBundle)

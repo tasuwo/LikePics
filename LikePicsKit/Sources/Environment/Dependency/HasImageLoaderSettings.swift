@@ -8,10 +8,10 @@ import Smoothie
 /// @mockable
 public protocol HasImageLoaderSettings {
     var clipDiskCache: DiskCaching { get }
-    var clipThumbnailPipeline: Pipeline { get }
-    var albumThumbnailPipeline: Pipeline { get }
-    var clipItemThumbnailPipeline: Pipeline { get }
-    var temporaryThumbnailPipeline: Pipeline { get }
-    var previewPipeline: Pipeline { get }
+    var clipThumbnailProcessingQueue: ImageProcessingQueue { get }
+    var albumThumbnailProcessingQueue: ImageProcessingQueue { get }
+    var clipItemThumbnailProcessingQueue: ImageProcessingQueue { get }
+    var temporaryThumbnailProcessingQueue: ImageProcessingQueue { get }
+    var previewProcessingQueue: ImageProcessingQueue { get }
     var previewPrefetcher: PreviewPrefetchable { get }
 }

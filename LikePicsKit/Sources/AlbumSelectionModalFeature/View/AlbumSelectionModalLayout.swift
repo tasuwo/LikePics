@@ -41,10 +41,10 @@ extension AlbumSelectionModalLayout {
 
 extension AlbumSelectionModalLayout {
     static func createDataSource(_ collectionView: UICollectionView,
-                                 _ thumbnailPipeline: Pipeline,
+                                 _ thumbnailProcessingQueue: ImageProcessingQueue,
                                  _ imageQueryService: ImageQueryServiceProtocol) -> DataSource
     {
-        let cellRegistration = self.configureCell(thumbnailPipeline: thumbnailPipeline,
+        let cellRegistration = self.configureCell(thumbnailProcessingQueue: thumbnailProcessingQueue,
                                                   imageQueryService: imageQueryService)
 
         let dataSource: DataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
@@ -54,14 +54,14 @@ extension AlbumSelectionModalLayout {
         return dataSource
     }
 
-    private static func configureCell(thumbnailPipeline: Pipeline,
+    private static func configureCell(thumbnailProcessingQueue: ImageProcessingQueue,
                                       imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<AlbumSelectionCell, Album>
     {
-        return .init(cellNib: AlbumSelectionCell.nib) { [weak thumbnailPipeline, weak imageQueryService] cell, _, album in
+        return .init(cellNib: AlbumSelectionCell.nib) { [weak thumbnailProcessingQueue, weak imageQueryService] cell, _, album in
             cell.title = album.title
             cell.clipCount = album.clips.count
 
-            guard let pipeline = thumbnailPipeline,
+            guard let processingQueue = thumbnailProcessingQueue,
                   let imageQueryService = imageQueryService,
                   let thumbnailTarget = album.clips.first?.items.first
             else {
@@ -76,7 +76,7 @@ extension AlbumSelectionModalLayout {
                                              imageQueryService: imageQueryService)
             let request = ImageRequest(source: .provider(provider),
                                        resize: .init(size: size, scale: scale))
-            cell.thumbnailImageView.smt.loadImage(request, with: pipeline)
+            cell.thumbnailImageView.smt.loadImage(request, with: processingQueue)
         }
     }
 }

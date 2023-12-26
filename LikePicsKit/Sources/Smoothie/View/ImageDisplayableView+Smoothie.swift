@@ -6,8 +6,8 @@
 
 import UIKit
 
-public func loadImage(_ request: ImageRequest, with pipeline: Pipeline, on view: ImageDisplayableView, completion: ((ImageResponse?) -> Void)? = nil) {
-    ImageLoadTaskController.associateInstance(to: view).loadImage(request, with: pipeline, completion: completion)
+public func loadImage(_ request: ImageRequest, with processingQueue: ImageProcessingQueue, on view: ImageDisplayableView, completion: ((ImageResponse?) -> Void)? = nil) {
+    ImageLoadTaskController.associateInstance(to: view).loadImage(request, with: processingQueue, completion: completion)
 }
 
 public func cancelLoadImage(on view: ImageDisplayableView) {
@@ -15,8 +15,8 @@ public func cancelLoadImage(on view: ImageDisplayableView) {
 }
 
 public extension Smoothie where Base: UIImageView {
-    func loadImage(_ request: ImageRequest, with pipeline: Pipeline, completion: ((ImageResponse?) -> Void)? = nil) {
-        ImageLoadTaskController.associateInstance(to: base).loadImage(request, with: pipeline, completion: completion)
+    func loadImage(_ request: ImageRequest, with processingQueue: ImageProcessingQueue, completion: ((ImageResponse?) -> Void)? = nil) {
+        ImageLoadTaskController.associateInstance(to: base).loadImage(request, with: processingQueue, completion: completion)
     }
 
     func cancelLoadImage() {

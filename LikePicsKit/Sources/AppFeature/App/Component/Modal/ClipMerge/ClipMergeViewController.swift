@@ -33,7 +33,7 @@ class ClipMergeViewController: UIViewController {
     // MARK: Service
 
     private let modalRouter: ModalRouter
-    private let thumbnailPipeline: Pipeline
+    private let thumbnailProcessingQueue: ImageProcessingQueue
     private let imageQueryService: ImageQueryServiceProtocol
 
     // MARK: Store
@@ -47,13 +47,13 @@ class ClipMergeViewController: UIViewController {
 
     init(state: ClipMergeViewState,
          dependency: ClipMergeViewDependency,
-         thumbnailPipeline: Pipeline,
+         thumbnailProcessingQueue: ImageProcessingQueue,
          imageQueryService: ImageQueryServiceProtocol,
          modalRouter: ModalRouter)
     {
         self.store = .init(initialState: state, dependency: dependency, reducer: ClipMergeViewReducer())
         self.modalRouter = modalRouter
-        self.thumbnailPipeline = thumbnailPipeline
+        self.thumbnailProcessingQueue = thumbnailProcessingQueue
         self.imageQueryService = imageQueryService
 
         super.init(nibName: nil, bundle: nil)
@@ -177,7 +177,7 @@ extension ClipMergeViewController {
     }
 
     private func configureDataSource() {
-        let (dataSource, proxy) = Layout.createDataSource(collectionView, thumbnailPipeline, imageQueryService)
+        let (dataSource, proxy) = Layout.createDataSource(collectionView, thumbnailProcessingQueue, imageQueryService)
         self.dataSource = dataSource
         self.proxy = proxy
         self.proxy.delegate = self

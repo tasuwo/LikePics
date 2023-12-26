@@ -53,7 +53,7 @@ public class ClipCollectionThumbnailView: UIImageView {
 
     private let overlayLayer = CALayer()
 
-    public weak var pipeline: Pipeline?
+    public weak var processingQueue: ImageProcessingQueue?
 
     // MARK: - Initializers
 

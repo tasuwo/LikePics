@@ -125,10 +125,10 @@ extension ClipCollection.Layout {
 extension ClipCollectionViewLayout {
     static func configureDataSource(store: ClipCollectionViewController.Store,
                                     collectionView: UICollectionView,
-                                    thumbnailPipeline: Pipeline,
+                                    thumbnailProcessingQueue: ImageProcessingQueue,
                                     imageQueryService: ImageQueryServiceProtocol) -> DataSource
     {
-        let cellRegistration = configureCell(store: store, thumbnailPipeline: thumbnailPipeline, imageQueryService: imageQueryService)
+        let cellRegistration = configureCell(store: store, thumbnailProcessingQueue: thumbnailProcessingQueue, imageQueryService: imageQueryService)
 
         return .init(collectionView: collectionView) { collectionView, indexPath, item in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
@@ -136,10 +136,10 @@ extension ClipCollectionViewLayout {
     }
 
     private static func configureCell(store: ClipCollectionViewController.Store,
-                                      thumbnailPipeline: Pipeline,
+                                      thumbnailProcessingQueue: ImageProcessingQueue,
                                       imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<ClipCollectionViewCell, Item>
     {
-        return .init(cellNib: ClipCollectionViewCell.nib) { [weak store, weak thumbnailPipeline, weak imageQueryService] cell, _, clip in
+        return .init(cellNib: ClipCollectionViewCell.nib) { [weak store, weak thumbnailProcessingQueue, weak imageQueryService] cell, _, clip in
             cell.sizeDescription = .make(by: clip.clip)
             cell.isEditing = store?.stateValue.isEditing ?? false
             cell.setThumbnailType(toSingle: store?.stateValue.layout.isSingleThumbnail ?? false)
@@ -147,14 +147,14 @@ extension ClipCollectionViewLayout {
             cell.setHiddenIconVisibility(true, animated: false)
             cell.setClipHiding(clip.isHidden, animated: false)
 
-            guard let pipeline = thumbnailPipeline,
+            guard let processingQueue = thumbnailProcessingQueue,
                   let imageQueryService = imageQueryService else { return }
 
             if let item = clip.primaryItem {
-                loadThumbnail(item: item, pipeline: pipeline, thumbnailView: cell.primaryThumbnailView, imageQueryService: imageQueryService)
+                loadThumbnail(item: item, processingQueue: processingQueue, thumbnailView: cell.primaryThumbnailView, imageQueryService: imageQueryService)
 
                 let request = makeRequest(item: item, view: cell.primaryThumbnailView, imageQueryService: imageQueryService)
-                cell.singleThumbnailView.smt.loadImage(request, with: pipeline)
+                cell.singleThumbnailView.smt.loadImage(request, with: processingQueue)
             } else {
                 cancelLoadImage(on: cell.primaryThumbnailView)
 
@@ -162,13 +162,13 @@ extension ClipCollectionViewLayout {
             }
 
             if let item = clip.secondaryItem {
-                loadThumbnail(item: item, pipeline: pipeline, thumbnailView: cell.secondaryThumbnailView, imageQueryService: imageQueryService)
+                loadThumbnail(item: item, processingQueue: processingQueue, thumbnailView: cell.secondaryThumbnailView, imageQueryService: imageQueryService)
             } else {
                 cancelLoadImage(on: cell.secondaryThumbnailView)
             }
 
             if let item = clip.tertiaryItem {
-                loadThumbnail(item: item, pipeline: pipeline, thumbnailView: cell.tertiaryThumbnailView, imageQueryService: imageQueryService)
+                loadThumbnail(item: item, processingQueue: processingQueue, thumbnailView: cell.tertiaryThumbnailView, imageQueryService: imageQueryService)
             } else {
                 cancelLoadImage(on: cell.tertiaryThumbnailView)
             }
@@ -176,7 +176,7 @@ extension ClipCollectionViewLayout {
     }
 
     private static func loadThumbnail(item: ClipItem,
-                                      pipeline: Pipeline,
+                                      processingQueue: ImageProcessingQueue,
                                       thumbnailView: ClipCollectionThumbnailView,
                                       imageQueryService: ImageQueryServiceProtocol)
     {
@@ -189,17 +189,17 @@ extension ClipCollectionViewLayout {
         let request = ImageRequest(source: .provider(provider),
                                    resize: .init(size: size, scale: scale))
 
-        loadImage(request, with: pipeline, on: thumbnailView) { [weak pipeline] response in
+        loadImage(request, with: processingQueue, on: thumbnailView) { [weak processingQueue] response in
             guard let response = response, let diskCacheSize = response.diskCacheImageSize else { return }
             let shouldInvalidate = ThumbnailInvalidationChecker.shouldInvalidate(originalImageSizeInPoint: item.imageSize.cgSize,
                                                                                  thumbnailSizeInPoint: size,
                                                                                  diskCacheSizeInPixel: diskCacheSize,
                                                                                  displayScale: scale)
             guard shouldInvalidate else { return }
-            pipeline?.config.diskCache?.remove(forKey: request.source.cacheKey)
-            pipeline?.config.memoryCache.remove(forKey: request.source.cacheKey)
+            processingQueue?.config.diskCache?.remove(forKey: request.source.cacheKey)
+            processingQueue?.config.memoryCache.remove(forKey: request.source.cacheKey)
         }
-        thumbnailView.pipeline = pipeline
+        thumbnailView.processingQueue = processingQueue
     }
 
     private static func makeRequest(item: ClipItem, view: ClipCollectionThumbnailView, imageQueryService: ImageQueryServiceProtocol) -> ImageRequest {

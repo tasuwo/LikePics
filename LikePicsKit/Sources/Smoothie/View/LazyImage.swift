@@ -18,9 +18,9 @@ final class LazyImageModel: ObservableObject {
         self.cancellable?.cancel()
     }
 
-    func load(_ request: ImageRequest, with pipeline: Pipeline) {
+    func load(_ request: ImageRequest, with processingQueue: ImageProcessingQueue) {
         // TODO: サイズによってはキャッシュを破棄する
-        cancellable = pipeline.loadImage(request) { [weak self] response in
+        cancellable = processingQueue.loadImage(request) { [weak self] response in
             if let response {
                 #if canImport(UIKit)
                 self?.result = .image(Image(uiImage: response.image))
@@ -46,15 +46,15 @@ public struct LazyImage<Content>: View where Content: View {
     @Environment(\.displayScale) var displayScale
 
     private let request: ImageRequest
-    private let pipeline: Pipeline
+    private let processingQueue: ImageProcessingQueue
 
     public init<C, P>(request: ImageRequest,
-                      pipeline: Pipeline,
+                      processingQueue: ImageProcessingQueue,
                       @ViewBuilder content: @escaping (Image?) -> C,
                       @ViewBuilder placeholder: @escaping () -> P) where C: View, P: View, Content == _ConditionalContent<C, P>
     {
         self.request = request
-        self.pipeline = pipeline
+        self.processingQueue = processingQueue
         self.content = { result in
             switch result {
             case let .image(image):
@@ -70,7 +70,7 @@ public struct LazyImage<Content>: View where Content: View {
         GeometryReader { geometry in
             content(model.result)
                 .onAppear {
-                    model.load(.init(source: request.source, resize: .init(size: geometry.frame(in: .global).size, scale: displayScale)), with: pipeline)
+                    model.load(.init(source: request.source, resize: .init(size: geometry.frame(in: .global).size, scale: displayScale)), with: processingQueue)
                 }
                 .onDisappear {
                     model.cancel()

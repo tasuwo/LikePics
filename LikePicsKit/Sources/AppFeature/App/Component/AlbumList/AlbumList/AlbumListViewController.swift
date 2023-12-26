@@ -30,7 +30,7 @@ class AlbumListViewController: UIViewController {
 
     // MARK: Service
 
-    private let thumbnailPipeline: Pipeline
+    private let thumbnailProcessingQueue: ImageProcessingQueue
     private let imageQueryService: ImageQueryServiceProtocol
     private let menuBuilder: AlbumListMenuBuildable.Type
 
@@ -52,7 +52,7 @@ class AlbumListViewController: UIViewController {
          albumAdditionAlertState: TextEditAlertState,
          albumEditAlertState: TextEditAlertState,
          dependency: AlbumListViewDependency,
-         thumbnailPipeline: Pipeline,
+         thumbnailProcessingQueue: ImageProcessingQueue,
          imageQueryService: ImageQueryServiceProtocol,
          menuBuilder: AlbumListMenuBuildable.Type,
          appBundle: Bundle)
@@ -61,7 +61,7 @@ class AlbumListViewController: UIViewController {
         self.albumAdditionAlert = .init(state: albumAdditionAlertState)
         self.albumEditAlert = .init(state: albumEditAlertState)
 
-        self.thumbnailPipeline = thumbnailPipeline
+        self.thumbnailProcessingQueue = thumbnailProcessingQueue
         self.imageQueryService = imageQueryService
         self.menuBuilder = menuBuilder
         self.appBundle = appBundle
@@ -272,7 +272,7 @@ extension AlbumListViewController {
     private func configureDataSource() {
         collectionView.delegate = self
         dataSource = Layout.configureDataSource(collectionView: collectionView,
-                                                thumbnailPipeline: thumbnailPipeline,
+                                                thumbnailProcessingQueue: thumbnailProcessingQueue,
                                                 queryService: imageQueryService,
                                                 delegate: self)
     }
@@ -567,7 +567,7 @@ extension AlbumListViewController: Restorable {
                                        albumAdditionAlertState: albumAdditionAlert.store.stateValue,
                                        albumEditAlertState: albumEditAlert.store.stateValue,
                                        dependency: store.dependency,
-                                       thumbnailPipeline: thumbnailPipeline,
+                                       thumbnailProcessingQueue: thumbnailProcessingQueue,
                                        imageQueryService: imageQueryService,
                                        menuBuilder: menuBuilder,
                                        appBundle: appBundle)

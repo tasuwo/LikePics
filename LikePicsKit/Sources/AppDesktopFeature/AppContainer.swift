@@ -16,8 +16,8 @@ public final class AppContainer: ObservableObject {
 
     // MARK: Image Loader
 
-    let clipThumbnailPipeline: Pipeline
-    let albumThumbnailPipeline: Pipeline
+    let clipThumbnailProcessingQueue: ImageProcessingQueue
+    let albumThumbnailProcessingQueue: ImageProcessingQueue
     private let clipDiskCache: DiskCache
     private let albumDiskCache: DiskCache
 
@@ -74,7 +74,7 @@ public final class AppContainer: ObservableObject {
 
         // Clip
 
-        var clipCacheConfig = Pipeline.Configuration()
+        var clipCacheConfig = ImageProcessingQueue.Configuration()
         let clipCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-thumbnails", appBundle: appBundle)
         self.clipDiskCache = try DiskCache(path: clipCacheDirectory,
                                            config: .init(sizeLimit: 1024 * 1024 * 1024,
@@ -83,11 +83,11 @@ public final class AppContainer: ObservableObject {
         clipCacheConfig.diskCache = self.clipDiskCache
         clipCacheConfig.compressionRatio = 0.5
         clipCacheConfig.memoryCache = memoryCache
-        self.clipThumbnailPipeline = .init(config: clipCacheConfig)
+        self.clipThumbnailProcessingQueue = .init(config: clipCacheConfig)
 
         // Album
 
-        var albumCacheConfig = Pipeline.Configuration()
+        var albumCacheConfig = ImageProcessingQueue.Configuration()
         albumCacheConfig.compressionRatio = 0.5
         let albumCacheDirectory = Self.resolveCacheDirectoryUrl(name: "album-thumbnails", appBundle: appBundle)
         albumDiskCache = try DiskCache(path: albumCacheDirectory,
@@ -96,7 +96,7 @@ public final class AppContainer: ObservableObject {
                                                      dateLimit: 30))
         albumCacheConfig.diskCache = albumDiskCache
         albumCacheConfig.memoryCache = memoryCache
-        self.albumThumbnailPipeline = Pipeline(config: albumCacheConfig)
+        self.albumThumbnailProcessingQueue = ImageProcessingQueue(config: albumCacheConfig)
 
         // MARK: Service
 

@@ -22,7 +22,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                                 isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
         return ClipCollectionViewController(state: state,
                                             dependency: self,
-                                            thumbnailPipeline: container.clipThumbnailPipeline,
+                                            thumbnailProcessingQueue: container.clipThumbnailProcessingQueue,
                                             menuBuilder: ClipCollectionMenuBuilder(storage: container.userSettingStorage),
                                             modalRouter: self,
                                             appBundle: container.appBundle)
@@ -31,7 +31,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
     public func makeClipCollectionViewController(_ state: ClipCollectionViewRootState) -> RestorableViewController & ViewLazyPresentable {
         return ClipCollectionViewController(state: state,
                                             dependency: self,
-                                            thumbnailPipeline: container.clipThumbnailPipeline,
+                                            thumbnailProcessingQueue: container.clipThumbnailProcessingQueue,
                                             menuBuilder: ClipCollectionMenuBuilder(storage: container.userSettingStorage),
                                             modalRouter: self,
                                             appBundle: container.appBundle)
@@ -81,7 +81,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
                                                      albumAdditionAlertState: addAlbumAlertState,
                                                      albumEditAlertState: editAlbumAlertState,
                                                      dependency: self,
-                                                     thumbnailPipeline: container.albumThumbnailPipeline,
+                                                     thumbnailProcessingQueue: container.albumThumbnailProcessingQueue,
                                                      imageQueryService: container.imageQueryService,
                                                      menuBuilder: AlbumListMenuBuilder.self,
                                                      appBundle: container.appBundle)
@@ -99,7 +99,7 @@ extension SceneDependencyContainer: ViewControllerFactory {
         }()
         let viewController = SearchEntryViewController(state: state,
                                                        dependency: self,
-                                                       thumbnailPipeline: container.temporaryThumbnailPipeline,
+                                                       thumbnailProcessingQueue: container.temporaryThumbnailProcessingQueue,
                                                        imageQueryService: container.imageQueryService,
                                                        appBundle: container.appBundle)
 
@@ -188,9 +188,9 @@ extension SceneDependencyContainer: ViewControllerFactory {
     public func makeClipPreviewViewController(for item: ClipItem) -> ClipPreviewViewController? {
         let viewController = ClipPreviewViewController(state: .init(item: item),
                                                        imageQueryService: container.imageQueryService,
-                                                       thumbnailMemoryCache: container.clipThumbnailPipeline.config.memoryCache,
+                                                       thumbnailMemoryCache: container.clipThumbnailProcessingQueue.config.memoryCache,
                                                        thumbnailDiskCache: container.clipDiskCache,
-                                                       pipeline: container.previewPipeline)
+                                                       processingQueue: container.previewProcessingQueue)
         return viewController
     }
 }

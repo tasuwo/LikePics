@@ -29,7 +29,7 @@ public class DependencyContainer {
     private let currentDateResolver = { Date() }
     private let commandService: CommandService
     private let userSettingsStorage: UserSettingsStorage
-    private let thumbnailPipeline: Pipeline
+    private let thumbnailProcessingQueue: ImageProcessingQueue
 
     public init(rootViewController: UIViewController) throws {
         let mainBundleUrl = Bundle.main.bundleURL
@@ -54,7 +54,7 @@ public class DependencyContainer {
 
         self.userSettingsStorage = UserSettingsStorage(appBundle: mainBundle)
 
-        var config = Pipeline.Configuration()
+        var config = ImageProcessingQueue.Configuration()
         config.diskCache = nil
         config.memoryCache = MemoryCache(config: .default)
 
@@ -67,7 +67,7 @@ public class DependencyContainer {
         config.imageEncodingQueue = singleQueue
         config.imageDecompressingQueue = singleQueue
 
-        self.thumbnailPipeline = Pipeline(config: config)
+        self.thumbnailProcessingQueue = ImageProcessingQueue(config: config)
     }
 }
 
@@ -135,7 +135,7 @@ extension DependencyContainer: ViewControllerFactory {
                                                        url: webUrl,
                                                        isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems()),
                                           dependency: dependency,
-                                          thumbnailPipeline: thumbnailPipeline,
+                                          thumbnailProcessingQueue: thumbnailProcessingQueue,
                                           imageLoader: imageLoader,
                                           modalRouter: self)
     }
@@ -161,7 +161,7 @@ extension DependencyContainer: ViewControllerFactory {
                                                        url: nil,
                                                        isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems()),
                                           dependency: dependency,
-                                          thumbnailPipeline: thumbnailPipeline,
+                                          thumbnailProcessingQueue: thumbnailProcessingQueue,
                                           imageLoader: imageLoader,
                                           modalRouter: self)
     }

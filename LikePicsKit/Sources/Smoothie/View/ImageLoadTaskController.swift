@@ -47,10 +47,10 @@ final class ImageLoadTaskController {
         return objc_getAssociatedObject(view, &associatedKey) as? ImageLoadTaskController
     }
 
-    func loadImage(_ request: ImageRequest, with pipeline: Pipeline, completion: ((ImageResponse?) -> Void)?) {
+    func loadImage(_ request: ImageRequest, with processingQueue: ImageProcessingQueue, completion: ((ImageResponse?) -> Void)?) {
         cancelLoadImage()
 
-        cancellable = pipeline.loadImage(request) { [weak self] response in
+        cancellable = processingQueue.loadImage(request) { [weak self] response in
             DispatchQueue.main.async {
                 self?.view?.smt_display(response?.image)
                 completion?(response)

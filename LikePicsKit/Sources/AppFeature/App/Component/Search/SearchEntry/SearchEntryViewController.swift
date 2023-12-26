@@ -43,7 +43,7 @@ class SearchEntryViewController: UIViewController {
 
     init(state: SearchViewRootState,
          dependency: SearchViewRootDependency,
-         thumbnailPipeline: Pipeline,
+         thumbnailProcessingQueue: ImageProcessingQueue,
          imageQueryService: ImageQueryServiceProtocol,
          appBundle: Bundle)
     {
@@ -55,7 +55,7 @@ class SearchEntryViewController: UIViewController {
             .proxy(SearchViewRootState.resultMapping, SearchViewRootAction.resultMapping)
             .eraseToAnyStoring()
         resultsController = SearchResultViewController(store: resultStore,
-                                                       thumbnailPipeline: thumbnailPipeline,
+                                                       thumbnailProcessingQueue: thumbnailProcessingQueue,
                                                        imageQueryService: imageQueryService)
         self.appBundle = appBundle
 
@@ -265,7 +265,7 @@ extension SearchEntryViewController: Restorable {
         presentingAlert?.dismiss(animated: false, completion: nil)
         return SearchEntryViewController(state: rootStore.stateValue,
                                          dependency: rootStore.dependency,
-                                         thumbnailPipeline: resultsController.thumbnailPipeline,
+                                         thumbnailProcessingQueue: resultsController.thumbnailProcessingQueue,
                                          imageQueryService: resultsController.imageQueryService,
                                          appBundle: appBundle)
     }

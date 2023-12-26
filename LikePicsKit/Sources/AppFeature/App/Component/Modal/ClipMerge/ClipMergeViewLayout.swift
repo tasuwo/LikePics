@@ -105,7 +105,7 @@ extension ClipMergeViewLayout {
     }
 
     static func createDataSource(_ collectionView: UICollectionView,
-                                 _ thumbnailPipeline: Pipeline,
+                                 _ thumbnailProcessingQueue: ImageProcessingQueue,
                                  _ imageQueryService: ImageQueryServiceProtocol) -> (DataSource, Proxy)
     {
         let proxy = Proxy()
@@ -113,7 +113,7 @@ extension ClipMergeViewLayout {
         let tagAdditionCellRegistration = self.configureTagAdditionCell(delegate: proxy)
         let tagCellRegistration = self.configureTagCell(delegate: proxy)
         let itemCellRegistration = self.configureItemCell(proxy: proxy,
-                                                          thumbnailPipeline: thumbnailPipeline,
+                                                          thumbnailProcessingQueue: thumbnailProcessingQueue,
                                                           imageQueryService: imageQueryService)
 
         let dataSource = DataSource(collectionView: collectionView) { collectionView, indexPath, item in
@@ -151,10 +151,10 @@ extension ClipMergeViewLayout {
     }
 
     private static func configureItemCell(proxy: Proxy,
-                                          thumbnailPipeline: Pipeline,
+                                          thumbnailProcessingQueue: ImageProcessingQueue,
                                           imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem>
     {
-        return UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem> { [weak proxy, weak thumbnailPipeline, weak imageQueryService] cell, _, item in
+        return UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem> { [weak proxy, weak thumbnailProcessingQueue, weak imageQueryService] cell, _, item in
             var contentConfiguration = ClipItemEditContentConfiguration()
             contentConfiguration.siteUrl = item.url
             contentConfiguration.isSiteUrlEditable = false
@@ -171,7 +171,7 @@ extension ClipMergeViewLayout {
 
             cell.accessories = [.reorder(displayed: .always)]
 
-            guard let pipeline = thumbnailPipeline,
+            guard let processingQueue = thumbnailProcessingQueue,
                   let imageQueryService = imageQueryService else { return }
 
             let scale = cell.traitCollection.displayScale
@@ -181,7 +181,7 @@ extension ClipMergeViewLayout {
                                              imageQueryService: imageQueryService)
             let request = ImageRequest(source: .provider(provider),
                                        resize: .init(size: size, scale: scale))
-            loadImage(request, with: pipeline, on: cell)
+            loadImage(request, with: processingQueue, on: cell)
         }
     }
 }

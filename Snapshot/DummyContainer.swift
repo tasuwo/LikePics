@@ -25,11 +25,11 @@ class DummyContainer: AppDependencyContaining {
     var clipDiskCache: DiskCaching
     var albumDiskCache: DiskCaching
     var clipItemDiskCache: DiskCaching
-    var clipThumbnailPipeline: Pipeline
-    var albumThumbnailPipeline: Pipeline
-    var clipItemThumbnailPipeline: Pipeline
-    var temporaryThumbnailPipeline: Pipeline
-    var previewPipeline: Pipeline
+    var clipThumbnailPipeline: ImageProcessingQueue
+    var albumThumbnailPipeline: ImageProcessingQueue
+    var clipItemThumbnailPipeline: ImageProcessingQueue
+    var temporaryThumbnailPipeline: ImageProcessingQueue
+    var previewPipeline: ImageProcessingQueue
     var previewPrefetcher: PreviewPrefetchable
     var imageQueryService: ImageQueryServiceProtocol
     var integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol
@@ -104,7 +104,7 @@ class DummyContainer: AppDependencyContaining {
         albumDiskCache = diskCache
         clipItemDiskCache = diskCache
 
-        let pipeline = Pipeline()
+        let pipeline = ImageProcessingQueue()
         clipThumbnailPipeline = pipeline
         albumThumbnailPipeline = pipeline
         clipItemThumbnailPipeline = pipeline

@@ -227,13 +227,13 @@ public class HasDiskCachesMock: HasDiskCaches {
 
 public class HasImageLoaderSettingsMock: HasImageLoaderSettings {
     public init() { }
-    public init(clipDiskCache: DiskCaching, clipThumbnailPipeline: Pipeline, albumThumbnailPipeline: Pipeline, clipItemThumbnailPipeline: Pipeline, temporaryThumbnailPipeline: Pipeline, previewPipeline: Pipeline, previewPrefetcher: PreviewPrefetchable) {
+    public init(clipDiskCache: DiskCaching, clipThumbnailProcessingQueue: ImageProcessingQueue, albumThumbnailProcessingQueue: ImageProcessingQueue, clipItemThumbnailProcessingQueue: ImageProcessingQueue, temporaryThumbnailProcessingQueue: ImageProcessingQueue, previewProcessingQueue: ImageProcessingQueue, previewPrefetcher: PreviewPrefetchable) {
         self._clipDiskCache = clipDiskCache
-        self._clipThumbnailPipeline = clipThumbnailPipeline
-        self._albumThumbnailPipeline = albumThumbnailPipeline
-        self._clipItemThumbnailPipeline = clipItemThumbnailPipeline
-        self._temporaryThumbnailPipeline = temporaryThumbnailPipeline
-        self._previewPipeline = previewPipeline
+        self._clipThumbnailProcessingQueue = clipThumbnailProcessingQueue
+        self._albumThumbnailProcessingQueue = albumThumbnailProcessingQueue
+        self._clipItemThumbnailProcessingQueue = clipItemThumbnailProcessingQueue
+        self._temporaryThumbnailProcessingQueue = temporaryThumbnailProcessingQueue
+        self._previewProcessingQueue = previewProcessingQueue
         self._previewPrefetcher = previewPrefetcher
     }
 
@@ -244,39 +244,39 @@ public class HasImageLoaderSettingsMock: HasImageLoaderSettings {
         set { _clipDiskCache = newValue }
     }
 
-    public private(set) var clipThumbnailPipelineSetCallCount = 0
-    private var _clipThumbnailPipeline: Pipeline! { didSet { clipThumbnailPipelineSetCallCount += 1 } }
-    public var clipThumbnailPipeline: Pipeline {
-        get { return _clipThumbnailPipeline }
-        set { _clipThumbnailPipeline = newValue }
+    public private(set) var clipThumbnailProcessingQueueSetCallCount = 0
+    private var _clipThumbnailProcessingQueue: ImageProcessingQueue! { didSet { clipThumbnailProcessingQueueSetCallCount += 1 } }
+    public var clipThumbnailProcessingQueue: ImageProcessingQueue {
+        get { return _clipThumbnailProcessingQueue }
+        set { _clipThumbnailProcessingQueue = newValue }
     }
 
-    public private(set) var albumThumbnailPipelineSetCallCount = 0
-    private var _albumThumbnailPipeline: Pipeline! { didSet { albumThumbnailPipelineSetCallCount += 1 } }
-    public var albumThumbnailPipeline: Pipeline {
-        get { return _albumThumbnailPipeline }
-        set { _albumThumbnailPipeline = newValue }
+    public private(set) var albumThumbnailProcessingQueueSetCallCount = 0
+    private var _albumThumbnailProcessingQueue: ImageProcessingQueue! { didSet { albumThumbnailProcessingQueueSetCallCount += 1 } }
+    public var albumThumbnailProcessingQueue: ImageProcessingQueue {
+        get { return _albumThumbnailProcessingQueue }
+        set { _albumThumbnailProcessingQueue = newValue }
     }
 
-    public private(set) var clipItemThumbnailPipelineSetCallCount = 0
-    private var _clipItemThumbnailPipeline: Pipeline! { didSet { clipItemThumbnailPipelineSetCallCount += 1 } }
-    public var clipItemThumbnailPipeline: Pipeline {
-        get { return _clipItemThumbnailPipeline }
-        set { _clipItemThumbnailPipeline = newValue }
+    public private(set) var clipItemThumbnailProcessingQueueSetCallCount = 0
+    private var _clipItemThumbnailProcessingQueue: ImageProcessingQueue! { didSet { clipItemThumbnailProcessingQueueSetCallCount += 1 } }
+    public var clipItemThumbnailProcessingQueue: ImageProcessingQueue {
+        get { return _clipItemThumbnailProcessingQueue }
+        set { _clipItemThumbnailProcessingQueue = newValue }
     }
 
-    public private(set) var temporaryThumbnailPipelineSetCallCount = 0
-    private var _temporaryThumbnailPipeline: Pipeline! { didSet { temporaryThumbnailPipelineSetCallCount += 1 } }
-    public var temporaryThumbnailPipeline: Pipeline {
-        get { return _temporaryThumbnailPipeline }
-        set { _temporaryThumbnailPipeline = newValue }
+    public private(set) var temporaryThumbnailProcessingQueueSetCallCount = 0
+    private var _temporaryThumbnailProcessingQueue: ImageProcessingQueue! { didSet { temporaryThumbnailProcessingQueueSetCallCount += 1 } }
+    public var temporaryThumbnailProcessingQueue: ImageProcessingQueue {
+        get { return _temporaryThumbnailProcessingQueue }
+        set { _temporaryThumbnailProcessingQueue = newValue }
     }
 
-    public private(set) var previewPipelineSetCallCount = 0
-    private var _previewPipeline: Pipeline! { didSet { previewPipelineSetCallCount += 1 } }
-    public var previewPipeline: Pipeline {
-        get { return _previewPipeline }
-        set { _previewPipeline = newValue }
+    public private(set) var previewProcessingQueueSetCallCount = 0
+    private var _previewProcessingQueue: ImageProcessingQueue! { didSet { previewProcessingQueueSetCallCount += 1 } }
+    public var previewProcessingQueue: ImageProcessingQueue {
+        get { return _previewProcessingQueue }
+        set { _previewProcessingQueue = newValue }
     }
 
     public private(set) var previewPrefetcherSetCallCount = 0

@@ -17,7 +17,7 @@ struct ClipView: View {
             LazyImage(request: .init(source: .provider(ImageDataProvider(imageId: primaryItem.imageId,
                                                                          cacheKey: "item-\(primaryItem.imageId.uuidString)",
                                                                          imageQueryService: container.imageQueryService))),
-            pipeline: container.clipThumbnailPipeline) { image in
+            processingQueue: container.clipThumbnailProcessingQueue) { image in
                 if let image {
                     image
                         .resizable()

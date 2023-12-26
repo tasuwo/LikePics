@@ -28,14 +28,14 @@ class PreviewPrefetcher {
 
     // MARK: - Properties
 
-    private let pipeline: Pipeline
+    private let processingQueue: ImageProcessingQueue
     private let imageQueryService: ImageQueryServiceProtocol
     private var cancellables: [ImageRequestKey: PreviewPrefetchCancellable] = [:]
 
     // MARK: - Initializers
 
-    init(pipeline: Pipeline, imageQueryService: ImageQueryServiceProtocol) {
-        self.pipeline = pipeline
+    init(processingQueue: ImageProcessingQueue, imageQueryService: ImageQueryServiceProtocol) {
+        self.processingQueue = processingQueue
         self.imageQueryService = imageQueryService
     }
 
@@ -53,7 +53,7 @@ class PreviewPrefetcher {
         var request = ImageRequest(source: .provider(provider))
         request.ignoreDiskCaching = true
 
-        let cancellable = pipeline.loadImage(request) { [weak self] in
+        let cancellable = processingQueue.loadImage(request) { [weak self] in
             self?.cancellables.removeValue(forKey: ImageRequestKey(request))
         }
         let previewCancellable = Cancellable(cancellable)

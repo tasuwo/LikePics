@@ -48,7 +48,7 @@ class ClipItemListViewController: UIViewController {
 
     // MARK: Service
 
-    private let thumbnailPipeline: Pipeline
+    private let thumbnailProcessingQueue: ImageProcessingQueue
     private let imageQueryService: ImageQueryServiceProtocol
 
     // MARK: Store
@@ -64,14 +64,14 @@ class ClipItemListViewController: UIViewController {
     init(state: ClipItemListRootState,
          siteUrlEditAlertState: TextEditAlertState,
          dependency: ClipItemListRootDependency,
-         thumbnailPipeline: Pipeline)
+         thumbnailProcessingQueue: ImageProcessingQueue)
     {
         self.imageQueryService = dependency.imageQueryService
         self.rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipItemListRootReducer)
         self.store = rootStore
             .proxy(RootState.mappingToList, RootAction.mappingToList)
             .eraseToAnyStoring()
-        self.thumbnailPipeline = thumbnailPipeline
+        self.thumbnailProcessingQueue = thumbnailProcessingQueue
         super.init(nibName: nil, bundle: nil)
 
         configureComponents(siteUrlEditAlertState)
@@ -311,7 +311,7 @@ extension ClipItemListViewController {
 
     private func configureDataSource() {
         collectionView.delegate = self
-        dataSource = Layout.configureDataSource(collectionView, thumbnailPipeline, imageQueryService)
+        dataSource = Layout.configureDataSource(collectionView, thumbnailProcessingQueue, imageQueryService)
         selectionApplier = UICollectionViewSelectionLazyApplier(collectionView: collectionView,
                                                                 dataSource: dataSource,
                                                                 itemBuilder: { .init($0, at: 0, of: 0) })
