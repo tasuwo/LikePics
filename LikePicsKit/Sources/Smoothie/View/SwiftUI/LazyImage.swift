@@ -49,14 +49,26 @@ final class LazyImageLoader: ObservableObject {
         cancel()
 
         let request = ImageRequest(resize: .init(size: thumbnailSize, scale: displayScale), cacheKey: cacheKey, diskCacheInvalidate: { [originalSize, thumbnailSize, displayScale] pixelSize in
-            return ThumbnailInvalidationChecker.shouldInvalidate(originalImageSizeInPoint: originalSize,
-                                                                 thumbnailSizeInPoint: thumbnailSize,
-                                                                 diskCacheSizeInPixel: pixelSize,
-                                                                 displayScale: displayScale)
+            return ThumbnailInvalidationChecker.shouldInvalidateDiskCache(originalImageSizeInPoint: originalSize,
+                                                                          thumbnailSizeInPoint: thumbnailSize,
+                                                                          diskCacheSizeInPixel: pixelSize,
+                                                                          displayScale: displayScale)
         }, data)
-        cancellable = imageProcessingQueue.loadImage(request) { [weak self] response in
+        cancellable = imageProcessingQueue.loadImage(request) { [cacheKey, originalSize, thumbnailSize, displayScale, weak self] response in
             DispatchQueue.main.async {
                 if let response {
+                    if response.source == .memoryCache {
+                        if ThumbnailInvalidationChecker.shouldInvalidateMemoryCache(originalImageSizeInPoint: originalSize,
+                                                                                    thumbnailSizeInPoint: thumbnailSize,
+                                                                                    memoryCacheSizeInPixel: .init(width: response.image.size.width,
+                                                                                                                  height: response.image.size.height),
+                                                                                    displayScale: displayScale)
+                        {
+                            self?.imageProcessingQueue.config.memoryCache.remove(forKey: cacheKey)
+                            self?.load(with: thumbnailSize)
+                        }
+                    }
+
                     #if canImport(UIKit)
                     self?.result = .image(Image(uiImage: response.image))
                     #endif
@@ -123,10 +135,10 @@ public struct LazyImage<Content>: View where Content: View {
 }
 
 private enum ThumbnailInvalidationChecker {
-    fileprivate static func shouldInvalidate(originalImageSizeInPoint: CGSize,
-                                             thumbnailSizeInPoint: CGSize,
-                                             diskCacheSizeInPixel: CGSize,
-                                             displayScale: CGFloat) -> Bool
+    fileprivate static func shouldInvalidateDiskCache(originalImageSizeInPoint: CGSize,
+                                                      thumbnailSizeInPoint: CGSize,
+                                                      diskCacheSizeInPixel: CGSize,
+                                                      displayScale: CGFloat) -> Bool
     {
         if originalImageSizeInPoint.width <= thumbnailSizeInPoint.width,
            originalImageSizeInPoint.height <= thumbnailSizeInPoint.height
@@ -137,6 +149,26 @@ private enum ThumbnailInvalidationChecker {
         let thresholdInPoint: CGFloat = 10
         let widthDiff = thumbnailSizeInPoint.width - diskCacheSizeInPixel.width / displayScale
         let heightDiff = thumbnailSizeInPoint.height - diskCacheSizeInPixel.height / displayScale
+
+        let result = widthDiff > thresholdInPoint || heightDiff > thresholdInPoint
+
+        return result
+    }
+
+    fileprivate static func shouldInvalidateMemoryCache(originalImageSizeInPoint: CGSize,
+                                                        thumbnailSizeInPoint: CGSize,
+                                                        memoryCacheSizeInPixel: CGSize,
+                                                        displayScale: CGFloat) -> Bool
+    {
+        if originalImageSizeInPoint.width <= thumbnailSizeInPoint.width,
+           originalImageSizeInPoint.height <= thumbnailSizeInPoint.height
+        {
+            return false
+        }
+
+        let thresholdInPoint: CGFloat = 30
+        let widthDiff = abs(thumbnailSizeInPoint.width - memoryCacheSizeInPixel.width / displayScale)
+        let heightDiff = abs(thumbnailSizeInPoint.height - memoryCacheSizeInPixel.height / displayScale)
 
         let result = widthDiff > thresholdInPoint || heightDiff > thresholdInPoint
 
