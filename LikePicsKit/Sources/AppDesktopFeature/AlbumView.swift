@@ -24,10 +24,10 @@ struct AlbumView: View {
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
                             } else {
-                                Color.gray
+                                Color(NSColor.secondarySystemFill)
                             }
                         } placeholder: {
-                            Color.gray
+                            Color(NSColor.secondarySystemFill)
                         }
                     }
                     .aspectRatio(1, contentMode: .fit)

@@ -21,10 +21,10 @@ struct ClipView: View {
                     image
                         .resizable()
                 } else {
-                    Color.gray
+                    Color(NSColor.secondarySystemFill)
                 }
             } placeholder: {
-                Color.gray
+                Color(NSColor.secondarySystemFill)
             }
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             .aspectRatio(primaryItem.imageSize.aspectRatio, contentMode: .fit)
