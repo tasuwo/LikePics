@@ -9,6 +9,7 @@ import SwiftUI
 struct AlbumListView: View {
     @StateObject var controller: DragAndDropInteractionController<AlbumStore>
     @State var layout: MultiColumnLayout = .default
+    @Environment(\.router) var router
 
     var body: some View {
         ScrollView {
@@ -46,6 +47,9 @@ struct AlbumListView: View {
                                 return provider
                             }
                             .onDrop(of: [.text], delegate: AlbumListDropDelegate(id: album.id, store: controller))
+                            .onTapGesture {
+                                router.path.append(Route.ClipList(clips: album.clips))
+                            }
                     }
                 }
                 .frame(minWidth: MultiColumnLayout.column4.minRowWidth, maxWidth: layout.maxRowWidth)

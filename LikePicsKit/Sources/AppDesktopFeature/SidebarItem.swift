@@ -8,6 +8,6 @@ import SwiftUI
 enum SidebarItem: Hashable {
     case all
     case albums
-    case album(Album.ID)
+    case album(Album)
     case browse
 }

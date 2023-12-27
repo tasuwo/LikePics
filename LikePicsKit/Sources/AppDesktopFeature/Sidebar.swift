@@ -54,7 +54,7 @@ struct Sidebar: View {
                                 Text("削除")
                             }
                         }
-                        .tag(SidebarItem.album(album.id))
+                        .tag(SidebarItem.album(album))
                     }
                 } label: {
                     HStack {
