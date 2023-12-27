@@ -9,37 +9,54 @@ enum LazyImageLoadResult {
     case image(Image?)
 }
 
-final class LazyImageModel: ObservableObject {
+final class LazyImageLoader: ObservableObject {
     static var associatedKey = "ImageLoadTaskController.AssociatedKey"
 
     @Published var result: LazyImageLoadResult?
+    @Published var frameSize: CGSize = .zero
+    @Published var thumbnailSize: CGSize = .zero
+
+    private let originalSize: CGSize
+    private let cacheKey: String
+    private let data: () async -> Data?
     private var cancellable: ImageLoadTaskCancellable?
 
-    deinit {
-        self.cancellable?.cancel()
+    var displayScale: CGFloat = 1
+    var imageProcessingQueue: ImageProcessingQueue = .init()
+
+    private var frameSizeObservation: AnyCancellable?
+
+    init(originalSize: CGSize, cacheKey: String, data: @escaping () async -> Data?) {
+        self.originalSize = originalSize
+        self.cacheKey = cacheKey
+        self.data = data
+
+        frameSizeObservation = $frameSize
+            .debounce(for: 1.5, scheduler: RunLoop.main)
+            .sink { [weak self] size in
+                self?.thumbnailSize = size
+                self?.load()
+            }
     }
 
-    func update(originalSize: CGSize,
-                cacheKey: String,
-                thumbnailSize: CGSize,
-                displayScale: CGFloat,
-                processingQueue: ImageProcessingQueue,
-                data: @escaping () async -> Data?)
-    {
+    deinit {
+        cancellable?.cancel()
+    }
+
+    func load() {
         guard thumbnailSize != .zero else {
             return
         }
 
-        cancellable?.cancel()
-        cancellable = nil
+        cancel()
 
-        let request = ImageRequest(resize: .init(size: thumbnailSize, scale: displayScale), cacheKey: cacheKey, cacheInvalidate: { pixelSize in
+        let request = ImageRequest(resize: .init(size: thumbnailSize, scale: displayScale), cacheKey: cacheKey, cacheInvalidate: { [originalSize, thumbnailSize, displayScale] pixelSize in
             return ThumbnailInvalidationChecker.shouldInvalidate(originalImageSizeInPoint: originalSize,
                                                                  thumbnailSizeInPoint: thumbnailSize,
                                                                  diskCacheSizeInPixel: pixelSize,
                                                                  displayScale: displayScale)
         }, data)
-        cancellable = processingQueue.loadImage(request) { [weak self] response in
+        cancellable = imageProcessingQueue.loadImage(request) { [weak self] response in
             DispatchQueue.main.async {
                 if let response {
                     #if canImport(UIKit)
@@ -62,14 +79,10 @@ final class LazyImageModel: ObservableObject {
 }
 
 public struct LazyImage<Content>: View where Content: View {
-    @StateObject private var model = LazyImageModel()
+    @StateObject private var loader: LazyImageLoader
     @ViewBuilder private let content: (LazyImageLoadResult?) -> Content
     @Environment(\.displayScale) var displayScale
     @Environment(\.imageProcessingQueue) var imageProcessingQueue
-
-    private let originalSize: CGSize
-    private let cacheKey: String
-    private let data: () async -> Data?
 
     public init<C, P>(originalSize: CGSize,
                       cacheKey: String,
@@ -77,9 +90,7 @@ public struct LazyImage<Content>: View where Content: View {
                       @ViewBuilder content: @escaping (Image?) -> C,
                       @ViewBuilder placeholder: @escaping () -> P) where C: View, P: View, Content == _ConditionalContent<C, P>
     {
-        self.originalSize = originalSize
-        self.cacheKey = cacheKey
-        self.data = data
+        self._loader = .init(wrappedValue: .init(originalSize: originalSize, cacheKey: cacheKey, data: data))
         self.content = { result in
             switch result {
             case let .image(image):
@@ -92,22 +103,34 @@ public struct LazyImage<Content>: View where Content: View {
     }
 
     public var body: some View {
-        GeometryReader { geometry in
-            content(model.result)
-                .onAppear {
-                    model.update(originalSize: originalSize,
-                                 cacheKey: cacheKey,
-                                 thumbnailSize: geometry.frame(in: .local).size,
-                                 displayScale: displayScale,
-                                 processingQueue: imageProcessingQueue,
-                                 data: data)
+        content(loader.result)
+            .onAppear {
+                loader.displayScale = displayScale
+                loader.imageProcessingQueue = imageProcessingQueue
+                loader.load()
+            }
+            .onDisappear {
+                loader.cancel()
+            }
+            .background {
+                GeometryReader {
+                    Color.clear
+                        .preference(key: _SizePreferenceKey.self, value: $0.size)
                 }
-                .onDisappear {
-                    model.cancel()
+            }
+            .onPreferenceChange(_SizePreferenceKey.self) { size in
+                if loader.thumbnailSize == .zero {
+                    loader.thumbnailSize = size
+                } else {
+                    loader.frameSize = size
                 }
-                .position(.init(x: geometry.frame(in: .local).midX, y: geometry.frame(in: .local).midY))
-        }
+            }
     }
+}
+
+private struct _SizePreferenceKey: PreferenceKey {
+    static var defaultValue: CGSize = .zero
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
 }
 
 private enum ThumbnailInvalidationChecker {
