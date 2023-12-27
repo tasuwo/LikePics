@@ -127,6 +127,7 @@ public struct LazyImage<Content>: View where Content: View {
                 .onDisappear {
                     loader.cancel()
                 }
+                .position(x: geometry.frame(in: .local).midX, y: geometry.frame(in: .local).midY)
                 .onChange(of: geometry.size) { oldValue, newValue in
                     loader.onChangeFrame(newValue)
                 }
