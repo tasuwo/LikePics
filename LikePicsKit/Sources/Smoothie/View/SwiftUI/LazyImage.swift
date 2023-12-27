@@ -13,8 +13,6 @@ final class LazyImageLoader: ObservableObject {
     static var associatedKey = "ImageLoadTaskController.AssociatedKey"
 
     @Published var result: LazyImageLoadResult?
-    @Published var frameSize: CGSize = .zero
-    @Published var thumbnailSize: CGSize = .zero
 
     private let originalSize: CGSize
     private let cacheKey: String
@@ -24,6 +22,7 @@ final class LazyImageLoader: ObservableObject {
     var displayScale: CGFloat = 1
     var imageProcessingQueue: ImageProcessingQueue = .init()
 
+    private let frameSize: CurrentValueSubject<CGSize, Never> = .init(.zero)
     private var frameSizeObservation: AnyCancellable?
 
     init(originalSize: CGSize, cacheKey: String, data: @escaping () async -> Data?) {
@@ -31,11 +30,10 @@ final class LazyImageLoader: ObservableObject {
         self.cacheKey = cacheKey
         self.data = data
 
-        frameSizeObservation = $frameSize
-            .debounce(for: 1.5, scheduler: RunLoop.main)
+        frameSizeObservation = frameSize
+            .debounce(for: 1, scheduler: RunLoop.main)
             .sink { [weak self] size in
-                self?.thumbnailSize = size
-                self?.load()
+                self?.load(with: size)
             }
     }
 
@@ -43,7 +41,7 @@ final class LazyImageLoader: ObservableObject {
         cancellable?.cancel()
     }
 
-    func load() {
+    func load(with thumbnailSize: CGSize) {
         guard thumbnailSize != .zero else {
             return
         }
@@ -76,6 +74,10 @@ final class LazyImageLoader: ObservableObject {
         cancellable?.cancel()
         cancellable = nil
     }
+
+    func onChangeFrame(_ frame: CGSize) {
+        frameSize.send(frame)
+    }
 }
 
 public struct LazyImage<Content>: View where Content: View {
@@ -103,34 +105,21 @@ public struct LazyImage<Content>: View where Content: View {
     }
 
     public var body: some View {
-        content(loader.result)
-            .onAppear {
-                loader.displayScale = displayScale
-                loader.imageProcessingQueue = imageProcessingQueue
-                loader.load()
-            }
-            .onDisappear {
-                loader.cancel()
-            }
-            .background {
-                GeometryReader {
-                    Color.clear
-                        .preference(key: _SizePreferenceKey.self, value: $0.size)
+        GeometryReader { geometry in
+            content(loader.result)
+                .onAppear {
+                    loader.displayScale = displayScale
+                    loader.imageProcessingQueue = imageProcessingQueue
+                    loader.load(with: geometry.size)
                 }
-            }
-            .onPreferenceChange(_SizePreferenceKey.self) { size in
-                if loader.thumbnailSize == .zero {
-                    loader.thumbnailSize = size
-                } else {
-                    loader.frameSize = size
+                .onDisappear {
+                    loader.cancel()
                 }
-            }
+                .onChange(of: geometry.size) { oldValue, newValue in
+                    loader.onChangeFrame(newValue)
+                }
+        }
     }
-}
-
-private struct _SizePreferenceKey: PreferenceKey {
-    static var defaultValue: CGSize = .zero
-    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
 }
 
 private enum ThumbnailInvalidationChecker {
