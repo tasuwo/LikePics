@@ -9,13 +9,13 @@ import SwiftUI
 struct ClipView: View {
     let clip: Clip
     @State var primaryThumbnailSize: CGSize?
-    // TODO: Previewを表示できるようにする
-    @EnvironmentObject var container: AppContainer
+    @Environment(\.imageQueryService) var imageQueryService
+    @Environment(\.clipThumbnailProcessingQueue) var processingQueue
 
     var body: some View {
         if let primaryItem = clip.primaryItem {
-            LazyImage(cacheKey: "item-\(primaryItem.imageId.uuidString)") { [container] in
-                try? container.imageQueryService.read(having: primaryItem.imageId)
+            LazyImage(cacheKey: "item-\(primaryItem.imageId.uuidString)") {
+                try? imageQueryService.read(having: primaryItem.imageId)
             } content: { image in
                 if let image {
                     image
@@ -31,7 +31,7 @@ struct ClipView: View {
             .onChangeFrame { size in
                 primaryThumbnailSize = size
             }
-            .environment(\.imageProcessingQueue, container.albumThumbnailProcessingQueue)
+            .environment(\.imageProcessingQueue, processingQueue)
         } else {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .aspectRatio(1, contentMode: .fit)
@@ -43,34 +43,39 @@ struct ClipView: View {
 }
 
 #Preview {
-    ClipView(clip: .init(id: UUID(),
-                         description: "",
-                         items: [
-                             .init(id: UUID(),
-                                   url: nil,
-                                   clipId: UUID(),
-                                   clipIndex: 0,
-                                   imageId: UUID(),
-                                   imageFileName: "",
-                                   imageUrl: nil,
-                                   imageSize: .init(height: 150, width: 100),
-                                   imageDataSize: 0,
-                                   registeredDate: Date(),
-                                   updatedDate: Date()),
-                             .init(id: UUID(),
-                                   url: nil,
-                                   clipId: UUID(),
-                                   clipIndex: 0,
-                                   imageId: UUID(),
-                                   imageFileName: "",
-                                   imageUrl: nil,
-                                   imageSize: .init(height: 150, width: 100),
-                                   imageDataSize: 0,
-                                   registeredDate: Date(),
-                                   updatedDate: Date())
-                         ],
-                         isHidden: false,
-                         dataSize: 0,
-                         registeredDate: Date(),
-                         updatedDate: Date()))
+    class _ImageQueryService: ImageQueryServiceProtocol {
+        func read(having id: Domain.ImageContainer.Identity) throws -> Data? { nil }
+    }
+
+    return ClipView(clip: .init(id: UUID(),
+                                description: "",
+                                items: [
+                                    .init(id: UUID(),
+                                          url: nil,
+                                          clipId: UUID(),
+                                          clipIndex: 0,
+                                          imageId: UUID(),
+                                          imageFileName: "",
+                                          imageUrl: nil,
+                                          imageSize: .init(height: 150, width: 100),
+                                          imageDataSize: 0,
+                                          registeredDate: Date(),
+                                          updatedDate: Date()),
+                                    .init(id: UUID(),
+                                          url: nil,
+                                          clipId: UUID(),
+                                          clipIndex: 0,
+                                          imageId: UUID(),
+                                          imageFileName: "",
+                                          imageUrl: nil,
+                                          imageSize: .init(height: 150, width: 100),
+                                          imageDataSize: 0,
+                                          registeredDate: Date(),
+                                          updatedDate: Date())
+                                ],
+                                isHidden: false,
+                                dataSize: 0,
+                                registeredDate: Date(),
+                                updatedDate: Date()))
+        .environment(\.imageQueryService, _ImageQueryService())
 }

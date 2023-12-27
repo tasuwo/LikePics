@@ -8,17 +8,16 @@ import SwiftUI
 
 struct AlbumView: View {
     let album: Album
-
-    // TODO: Previewを表示できるようにする
-    @EnvironmentObject var container: AppContainer
+    @Environment(\.imageQueryService) var imageQueryService
+    @Environment(\.albumThumbnailProcessingQueue) var processingQueue
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let imageId = album.clips.first?.primaryItem?.imageId {
                 Color.clear
                     .overlay {
-                        LazyImage(cacheKey: "album-\(imageId.uuidString)") { [container] in
-                            try? container.imageQueryService.read(having: imageId)
+                        LazyImage(cacheKey: "album-\(imageId.uuidString)") {
+                            try? imageQueryService.read(having: imageId)
                         } content: { image in
                             if let image {
                                 image
@@ -34,7 +33,7 @@ struct AlbumView: View {
                     .aspectRatio(1, contentMode: .fit)
                     .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                     .clipped()
-                    .environment(\.imageProcessingQueue, container.albumThumbnailProcessingQueue)
+                    .environment(\.imageProcessingQueue, processingQueue)
             } else {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
                     .aspectRatio(1, contentMode: .fit)
@@ -52,11 +51,16 @@ struct AlbumView: View {
 }
 
 #Preview {
-    AlbumView(album: Album(id: UUID(),
-                           title: "Test Album",
-                           clips: [],
-                           isHidden: false,
-                           registeredDate: Date(),
-                           updatedDate: Date()))
+    class _ImageQueryService: ImageQueryServiceProtocol {
+        func read(having id: Domain.ImageContainer.Identity) throws -> Data? { nil }
+    }
+
+    return AlbumView(album: Album(id: UUID(),
+                                  title: "Test Album",
+                                  clips: [],
+                                  isHidden: false,
+                                  registeredDate: Date(),
+                                  updatedDate: Date()))
         .padding()
+        .environment(\.imageQueryService, _ImageQueryService())
 }

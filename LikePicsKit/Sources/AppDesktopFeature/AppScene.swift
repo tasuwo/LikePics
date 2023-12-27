@@ -17,6 +17,9 @@ public struct AppScene: Scene {
                     albumStore: .init(clipQueryService: container.clipQueryService),
                     tagStore: .init(clipQueryService: container.clipQueryService))
                 .environmentObject(container)
+                .environment(\.albumThumbnailProcessingQueue, container.albumThumbnailProcessingQueue)
+                .environment(\.clipThumbnailProcessingQueue, container.clipThumbnailProcessingQueue)
+                .environment(\.imageQueryService, container.imageQueryService)
         }
     }
 }

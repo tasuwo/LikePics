@@ -36,6 +36,10 @@ struct ClipListView: View {
 }
 
 #Preview {
+    class _ImageQueryService: ImageQueryServiceProtocol {
+        func read(having id: Domain.ImageContainer.Identity) throws -> Data? { nil }
+    }
+
     func makeClip(size: ImageSize) -> Clip {
         return .init(id: UUID(),
                      description: "",
@@ -61,4 +65,5 @@ struct ClipListView: View {
     return ClipListView(clips: (0 ... 100).map { _ in
         makeClip(size: .init(height: CGFloat((100 ... 150).randomElement()!), width: 100))
     })
+    .environment(\.imageQueryService, _ImageQueryService())
 }
