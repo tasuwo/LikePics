@@ -81,14 +81,12 @@ public final class AppContainer: ObservableObject {
                                                          countLimit: Int.max,
                                                          dateLimit: 30))
         clipCacheConfig.diskCache = self.clipDiskCache
-        clipCacheConfig.compressionRatio = 0.5
         clipCacheConfig.memoryCache = memoryCache
         self.clipThumbnailProcessingQueue = .init(config: clipCacheConfig)
 
         // Album
 
         var albumCacheConfig = ImageProcessingQueue.Configuration()
-        albumCacheConfig.compressionRatio = 0.5
         let albumCacheDirectory = Self.resolveCacheDirectoryUrl(name: "album-thumbnails", appBundle: appBundle)
         albumDiskCache = try DiskCache(path: albumCacheDirectory,
                                        config: .init(sizeLimit: 1024 * 1024 * 512,
