@@ -40,10 +40,6 @@ struct AppView: View {
             case let .album(album):
                 ClipListView(clips: album.clips)
 
-            case .browse:
-                // TODO: 実装する
-                EmptyView()
-
             case nil:
                 // TODO: 実装する
                 EmptyView()

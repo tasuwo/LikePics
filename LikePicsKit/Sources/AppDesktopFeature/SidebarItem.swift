@@ -9,5 +9,4 @@ enum SidebarItem: Hashable {
     case all
     case albums
     case album(Album)
-    case browse
 }

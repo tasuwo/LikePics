@@ -91,15 +91,6 @@ struct Sidebar: View {
                 )
             }
 
-            Section("探す") {
-                Label {
-                    Text("ブラウズ")
-                } icon: {
-                    Image(systemName: "globe")
-                }
-                .tag(SidebarItem.browse)
-            }
-
             Section("タグ") {
                 HMasonryGrid(tags) { tag in
                     TagButton.preferredWidth(for: tag.name)
