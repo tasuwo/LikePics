@@ -21,15 +21,15 @@ public struct ImageRequest {
     let data: () async -> Data?
     let resize: Resize?
     let cacheKey: String
-    let cacheInvalidate: ((CGSize) -> Bool)?
+    let diskCacheInvalidate: ((CGSize) -> Bool)?
     public var ignoreDiskCaching = false
 
     // MARK: - Initializers
 
-    public init(resize: Resize? = nil, cacheKey: String, cacheInvalidate: ((_ pixelSize: CGSize) -> Bool)? = nil, _ data: @escaping () async -> Data?) {
+    public init(resize: Resize? = nil, cacheKey: String, diskCacheInvalidate: ((_ pixelSize: CGSize) -> Bool)? = nil, _ data: @escaping () async -> Data?) {
         self.resize = resize
         self.cacheKey = cacheKey
-        self.cacheInvalidate = cacheInvalidate
+        self.diskCacheInvalidate = diskCacheInvalidate
         self.data = data
     }
 }

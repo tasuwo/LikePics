@@ -48,7 +48,7 @@ final class LazyImageLoader: ObservableObject {
 
         cancel()
 
-        let request = ImageRequest(resize: .init(size: thumbnailSize, scale: displayScale), cacheKey: cacheKey, cacheInvalidate: { [originalSize, thumbnailSize, displayScale] pixelSize in
+        let request = ImageRequest(resize: .init(size: thumbnailSize, scale: displayScale), cacheKey: cacheKey, diskCacheInvalidate: { [originalSize, thumbnailSize, displayScale] pixelSize in
             return ThumbnailInvalidationChecker.shouldInvalidate(originalImageSizeInPoint: originalSize,
                                                                  thumbnailSizeInPoint: thumbnailSize,
                                                                  diskCacheSizeInPixel: pixelSize,

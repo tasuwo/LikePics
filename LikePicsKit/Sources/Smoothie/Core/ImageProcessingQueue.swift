@@ -86,20 +86,6 @@ extension ImageProcessingQueue {
         dispatchPrecondition(condition: .onQueue(queue))
 
         if let image = config.memoryCache[task.request.cacheKey] {
-            if let cacheInvalidate = task.request.cacheInvalidate,
-               cacheInvalidate(.init(width: image.size.width * (task.request.resize?.scale ?? 1),
-                                     height: image.size.height * (task.request.resize?.scale ?? 1)))
-            {
-                config.memoryCache.remove(forKey: task.request.cacheKey)
-
-                if task.request.ignoreDiskCaching {
-                    enqueueDataLoadingOperation(task)
-                } else {
-                    enqueueCheckDiskCacheOperation(task)
-                }
-                return
-            }
-
             task.didLoad(.init(image: image, diskCacheImageSize: nil, source: .memoryCache))
             return
         }
@@ -126,7 +112,7 @@ extension ImageProcessingQueue {
                 let imageSize = data.pixelSize()
                 log.log(.end, name: "Fetch pixel size of DiskCache data")
 
-                if let imageSize, let cacheInvalidate = task.request.cacheInvalidate, cacheInvalidate(imageSize) {
+                if let imageSize, let cacheInvalidate = task.request.diskCacheInvalidate, cacheInvalidate(imageSize) {
                     self.config.diskCache?.remove(forKey: task.request.cacheKey)
                     self.enqueueDataLoadingOperation(task)
                     return
