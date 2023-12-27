@@ -31,7 +31,8 @@ let package = Package(
         .package(url: "https://github.com/phimage/Erik", .upToNextMajor(from: "5.1.0")),
         .package(url: "https://github.com/tasuwo/PersistentStack", .upToNextMajor(from: "0.7.2")),
         .package(url: "https://github.com/tasuwo/swift", .upToNextMajor(from: "0.8.1")),
-        .package(url: "https://github.com/tasuwo/MasonryGrid", .upToNextMajor(from: "0.0.1-alpha.1"))
+        .package(url: "https://github.com/tasuwo/MasonryGrid", .upToNextMajor(from: "0.0.1-alpha.1")),
+        .package(url: "https://github.com/apple/swift-async-algorithms.git", .upToNextMajor(from: "1.0.0"))
     ],
     targets: [
         // MARK: - App
@@ -250,6 +251,9 @@ let package = Package(
         ),
         .target(
             name: "Smoothie",
+            dependencies: [
+                .product(name: "AsyncAlgorithms", package: "swift-async-algorithms")
+            ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
             ]

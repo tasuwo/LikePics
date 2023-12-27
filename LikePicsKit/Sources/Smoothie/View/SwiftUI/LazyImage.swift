@@ -2,6 +2,7 @@
 //  Copyright ©︎ 2023 Tasuku Tozawa. All rights reserved.
 //
 
+import AsyncAlgorithms
 import Combine
 import SwiftUI
 
@@ -22,25 +23,30 @@ final class LazyImageLoader: ObservableObject {
     var displayScale: CGFloat = 1
     var imageProcessingQueue: ImageProcessingQueue = .init()
 
-    private let frameSize: CurrentValueSubject<CGSize, Never> = .init(.zero)
-    private var frameSizeObservation: AnyCancellable?
+    private let frameSizes: AsyncStream<CGSize>
+    private let frameSizeContinuation: AsyncStream<CGSize>.Continuation
+    private var frameSizeObservation: Task<Void, Never>?
 
     init(originalSize: CGSize, cacheKey: String, data: @escaping () async -> Data?) {
         self.originalSize = originalSize
         self.cacheKey = cacheKey
         self.data = data
+        let (stream, continuation) = AsyncStream.makeStream(of: CGSize.self)
+        self.frameSizes = stream
+        self.frameSizeContinuation = continuation
 
-        frameSizeObservation = frameSize
-            .debounce(for: 1, scheduler: RunLoop.main)
-            .sink { [weak self] size in
-                self?.load(with: size)
+        frameSizeObservation = Task { [weak self, stream] in
+            for await frameSize in stream.debounce(for: .seconds(1)) {
+                await self?.load(with: frameSize)
             }
+        }
     }
 
     deinit {
         cancellable?.cancel()
     }
 
+    @MainActor
     func load(with thumbnailSize: CGSize) {
         guard thumbnailSize != .zero else {
             return
@@ -55,29 +61,27 @@ final class LazyImageLoader: ObservableObject {
                                                                           displayScale: displayScale)
         }, data)
         cancellable = imageProcessingQueue.loadImage(request) { [cacheKey, originalSize, thumbnailSize, displayScale, weak self] response in
-            DispatchQueue.main.async {
-                if let response {
-                    if response.source == .memoryCache {
-                        if ThumbnailInvalidationChecker.shouldInvalidateMemoryCache(originalImageSizeInPoint: originalSize,
-                                                                                    thumbnailSizeInPoint: thumbnailSize,
-                                                                                    memoryCacheSizeInPixel: .init(width: response.image.size.width,
-                                                                                                                  height: response.image.size.height),
-                                                                                    displayScale: displayScale)
-                        {
-                            self?.imageProcessingQueue.config.memoryCache.remove(forKey: cacheKey)
-                            self?.load(with: thumbnailSize)
-                        }
+            if let response {
+                if response.source == .memoryCache {
+                    if ThumbnailInvalidationChecker.shouldInvalidateMemoryCache(originalImageSizeInPoint: originalSize,
+                                                                                thumbnailSizeInPoint: thumbnailSize,
+                                                                                memoryCacheSizeInPixel: .init(width: response.image.size.width,
+                                                                                                              height: response.image.size.height),
+                                                                                displayScale: displayScale)
+                    {
+                        self?.imageProcessingQueue.config.memoryCache.remove(forKey: cacheKey)
+                        self?.load(with: thumbnailSize)
                     }
-
-                    #if canImport(UIKit)
-                    self?.result = .image(Image(uiImage: response.image))
-                    #endif
-                    #if canImport(AppKit)
-                    self?.result = .image(Image(nsImage: response.image))
-                    #endif
-                } else {
-                    self?.result = nil
                 }
+
+                #if canImport(UIKit)
+                self?.result = .image(Image(uiImage: response.image))
+                #endif
+                #if canImport(AppKit)
+                self?.result = .image(Image(nsImage: response.image))
+                #endif
+            } else {
+                self?.result = nil
             }
         }
     }
@@ -88,7 +92,7 @@ final class LazyImageLoader: ObservableObject {
     }
 
     func onChangeFrame(_ frame: CGSize) {
-        frameSize.send(frame)
+        frameSizeContinuation.yield(frame)
     }
 }
 
