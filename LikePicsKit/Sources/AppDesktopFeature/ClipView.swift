@@ -14,7 +14,7 @@ struct ClipView: View {
 
     var body: some View {
         if let primaryItem = clip.primaryItem {
-            LazyImage(cacheKey: "item-\(primaryItem.imageId.uuidString)") {
+            LazyImage(originalSize: primaryItem.imageSize.cgSize, cacheKey: "item-\(primaryItem.imageId.uuidString)") {
                 try? imageQueryService.read(having: primaryItem.imageId)
             } content: { image in
                 if let image {

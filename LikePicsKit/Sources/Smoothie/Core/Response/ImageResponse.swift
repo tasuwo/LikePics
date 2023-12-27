@@ -10,6 +10,12 @@ import UIKit
 import AppKit
 #endif
 
+public enum ImageSource {
+    case memoryCache
+    case diskCache
+    case processed
+}
+
 public struct ImageResponse {
     #if canImport(UIKit)
     public let image: UIImage
@@ -18,4 +24,5 @@ public struct ImageResponse {
     public let image: NSImage
     #endif
     public let diskCacheImageSize: CGSize?
+    public let source: ImageSource
 }

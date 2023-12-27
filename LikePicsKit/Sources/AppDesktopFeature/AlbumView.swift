@@ -13,11 +13,11 @@ struct AlbumView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            if let imageId = album.clips.first?.primaryItem?.imageId {
+            if let primaryItem = album.clips.first?.primaryItem {
                 Color.clear
                     .overlay {
-                        LazyImage(cacheKey: "album-\(imageId.uuidString)") {
-                            try? imageQueryService.read(having: imageId)
+                        LazyImage(originalSize: primaryItem.imageSize.cgSize, cacheKey: "album-\(primaryItem.imageId.uuidString)") {
+                            try? imageQueryService.read(having: primaryItem.imageId)
                         } content: { image in
                             if let image {
                                 image

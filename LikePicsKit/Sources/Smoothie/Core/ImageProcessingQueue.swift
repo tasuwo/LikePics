@@ -86,7 +86,21 @@ extension ImageProcessingQueue {
         dispatchPrecondition(condition: .onQueue(queue))
 
         if let image = config.memoryCache[task.request.cacheKey] {
-            task.didLoad(.init(image: image, diskCacheImageSize: nil))
+            if let cacheInvalidate = task.request.cacheInvalidate,
+               cacheInvalidate(.init(width: image.size.width * (task.request.resize?.scale ?? 1),
+                                     height: image.size.height * (task.request.resize?.scale ?? 1)))
+            {
+                config.memoryCache.remove(forKey: task.request.cacheKey)
+
+                if task.request.ignoreDiskCaching {
+                    enqueueDataLoadingOperation(task)
+                } else {
+                    enqueueCheckDiskCacheOperation(task)
+                }
+                return
+            }
+
+            task.didLoad(.init(image: image, diskCacheImageSize: nil, source: .memoryCache))
             return
         }
 
@@ -111,6 +125,12 @@ extension ImageProcessingQueue {
                 log.log(.begin, name: "Fetch pixel size of DiskCache data")
                 let imageSize = data.pixelSize()
                 log.log(.end, name: "Fetch pixel size of DiskCache data")
+
+                if let imageSize, let cacheInvalidate = task.request.cacheInvalidate, cacheInvalidate(imageSize) {
+                    self.config.diskCache?.remove(forKey: task.request.cacheKey)
+                    self.enqueueDataLoadingOperation(task)
+                    return
+                }
 
                 self.queue.async {
                     self.enqueueDownsamplingDiskCacheOperation(task, data: data, diskCacheImageSize: imageSize)
@@ -171,7 +191,7 @@ extension ImageProcessingQueue {
                     let image = NSImage(cgImage: thumbnail, size: .init(width: thumbnail.width, height: thumbnail.height))
                     #endif
                     self.config.memoryCache.insert(image, forKey: task.request.cacheKey)
-                    task.didLoad(.init(image: image, diskCacheImageSize: nil))
+                    task.didLoad(.init(image: image, diskCacheImageSize: nil, source: .processed))
                 } else {
                     self.enqueueEncodingOperation(task, thumbnail: thumbnail)
                 }
@@ -241,7 +261,7 @@ extension ImageProcessingQueue {
                 self.config.memoryCache.insert(image, forKey: task.request.cacheKey)
 
                 if let image = image {
-                    task.didLoad(.init(image: image, diskCacheImageSize: nil))
+                    task.didLoad(.init(image: image, diskCacheImageSize: nil, source: .processed))
                 } else {
                     task.didLoad(nil)
                 }
@@ -272,7 +292,7 @@ extension ImageProcessingQueue {
                 let image = NSImage(cgImage: thumbnail, size: .init(width: thumbnail.width, height: thumbnail.height))
                 #endif
                 self.config.memoryCache.insert(image, forKey: task.request.cacheKey)
-                task.didLoad(ImageResponse(image: image, diskCacheImageSize: diskCacheImageSize))
+                task.didLoad(ImageResponse(image: image, diskCacheImageSize: diskCacheImageSize, source: .diskCache))
             }
         }
         config.imageDecompressingQueue.addOperation(operation)
