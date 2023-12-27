@@ -153,6 +153,7 @@ extension ClipCreationViewLayout {
         weak var delegate: ClipCreationViewDelegate?
     }
 
+    @MainActor
     static func configureDataSource(collectionView: UICollectionView,
                                     cellDataSource: ClipSelectionCollectionViewCellDataSource,
                                     thumbnailProcessingQueue: ImageProcessingQueue,
@@ -299,6 +300,7 @@ extension ClipCreationViewLayout {
         }
     }
 
+    @MainActor
     private static func configureImageCell(dataSource: ClipSelectionCollectionViewCellDataSource,
                                            thumbnailProcessingQueue: ImageProcessingQueue,
                                            imageLoader: ImageLoadable) -> UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, UUID>

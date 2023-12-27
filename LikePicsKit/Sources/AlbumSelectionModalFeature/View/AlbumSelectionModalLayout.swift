@@ -40,6 +40,7 @@ extension AlbumSelectionModalLayout {
 // MARK: - DataSource
 
 extension AlbumSelectionModalLayout {
+    @MainActor
     static func createDataSource(_ collectionView: UICollectionView,
                                  _ thumbnailProcessingQueue: ImageProcessingQueue,
                                  _ imageQueryService: ImageQueryServiceProtocol) -> DataSource
@@ -54,6 +55,7 @@ extension AlbumSelectionModalLayout {
         return dataSource
     }
 
+    @MainActor
     private static func configureCell(thumbnailProcessingQueue: ImageProcessingQueue,
                                       imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<AlbumSelectionCell, Album>
     {

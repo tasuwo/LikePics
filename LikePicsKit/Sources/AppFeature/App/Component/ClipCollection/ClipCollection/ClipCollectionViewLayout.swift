@@ -123,6 +123,7 @@ extension ClipCollection.Layout {
 // MARK: - DataSource
 
 extension ClipCollectionViewLayout {
+    @MainActor
     static func configureDataSource(store: ClipCollectionViewController.Store,
                                     collectionView: UICollectionView,
                                     thumbnailProcessingQueue: ImageProcessingQueue,
@@ -135,6 +136,7 @@ extension ClipCollectionViewLayout {
         }
     }
 
+    @MainActor
     private static func configureCell(store: ClipCollectionViewController.Store,
                                       thumbnailProcessingQueue: ImageProcessingQueue,
                                       imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<ClipCollectionViewCell, Item>
@@ -175,6 +177,7 @@ extension ClipCollectionViewLayout {
         }
     }
 
+    @MainActor
     private static func loadThumbnail(item: ClipItem,
                                       processingQueue: ImageProcessingQueue,
                                       thumbnailView: ClipCollectionThumbnailView,

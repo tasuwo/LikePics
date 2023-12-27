@@ -14,7 +14,7 @@ name: realm-cocoa, nameSpecified: realm-cocoa, owner: realm, version: 10.44.0, s
 
 name: realm-core, nameSpecified: realm-core, owner: realm, version: 13.23.1, source: https://github.com/realm/realm-core
 
-name: swift-async-algorithms, nameSpecified: swift-async-algorithms, owner: apple, version: 1.0.0-beta.1, source: https://github.com/apple/swift-async-algorithms
+name: swift-async-algorithms, nameSpecified: swift-async-algorithms, owner: apple, version: 1.0.0, source: https://github.com/apple/swift-async-algorithms
 
 name: swift-collections, nameSpecified: swift-collections, owner: apple, version: 1.0.5, source: https://github.com/apple/swift-collections
 

@@ -97,6 +97,7 @@ extension ClipItemListViewLayout {
 // MARK: - DataSource
 
 extension ClipItemListViewLayout {
+    @MainActor
     static func configureDataSource(_ collectionView: UICollectionView,
                                     _ thumbnailProcessingQueue: ImageProcessingQueue,
                                     _ imageQueryService: ImageQueryServiceProtocol) -> DataSource
@@ -110,6 +111,7 @@ extension ClipItemListViewLayout {
         }
     }
 
+    @MainActor
     private static func configureCell(collectionView: UICollectionView,
                                       thumbnailProcessingQueue: ImageProcessingQueue,
                                       imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<ClipItemCell, Item>

@@ -97,6 +97,7 @@ extension AlbumListViewLayout {
         }
     }
 
+    @MainActor
     static func configureAlbumCell(thumbnailProcessingQueue: ImageProcessingQueue,
                                    queryService: ImageQueryServiceProtocol,
                                    delegate: AlbumListCollectionViewCellDelegate) -> UICollectionView.CellRegistration<AlbumListCollectionViewCell, Item>
@@ -137,6 +138,7 @@ extension AlbumListViewLayout {
         }
     }
 
+    @MainActor
     static func configureDataSource(collectionView: UICollectionView,
                                     thumbnailProcessingQueue: ImageProcessingQueue,
                                     queryService: ImageQueryServiceProtocol,

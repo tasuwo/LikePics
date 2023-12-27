@@ -6,10 +6,12 @@ import AsyncAlgorithms
 import Combine
 import SwiftUI
 
+@available(iOS 17, macOS 14, *)
 enum LazyImageLoadResult {
     case image(Image?)
 }
 
+@available(iOS 17, macOS 14, *)
 final class LazyImageLoader: ObservableObject {
     static var associatedKey = "ImageLoadTaskController.AssociatedKey"
 
@@ -96,6 +98,7 @@ final class LazyImageLoader: ObservableObject {
     }
 }
 
+@available(iOS 17, macOS 14, *)
 public struct LazyImage<Content>: View where Content: View {
     @StateObject private var loader: LazyImageLoader
     @ViewBuilder private let content: (LazyImageLoadResult?) -> Content
@@ -139,6 +142,7 @@ public struct LazyImage<Content>: View where Content: View {
     }
 }
 
+@available(iOS 17, macOS 14, *)
 private enum ThumbnailInvalidationChecker {
     fileprivate static func shouldInvalidateDiskCache(originalImageSizeInPoint: CGSize,
                                                       thumbnailSizeInPoint: CGSize,

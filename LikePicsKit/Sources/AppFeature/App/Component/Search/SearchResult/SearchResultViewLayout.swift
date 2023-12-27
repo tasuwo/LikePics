@@ -105,6 +105,7 @@ extension SearchResultViewLayout {
 // MARK: - DataSource
 
 extension SearchResultViewLayout {
+    @MainActor
     static func createDataSource(_ collectionView: UICollectionView,
                                  _ thumbnailProcessingQueue: ImageProcessingQueue,
                                  _ imageQueryService: ImageQueryServiceProtocol,
@@ -171,6 +172,7 @@ extension SearchResultViewLayout {
         }
     }
 
+    @MainActor
     private static func configureResultCell(thumbnailProcessingQueue: ImageProcessingQueue,
                                             imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<SearchResultClipCell, Clip>
     {

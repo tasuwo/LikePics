@@ -20,7 +20,7 @@ public struct ImageRequest {
 
     let data: () async -> Data?
     let resize: Resize?
-    let cacheKey: String
+    public let cacheKey: String
     let diskCacheInvalidate: ((CGSize) -> Bool)?
     public var ignoreDiskCaching = false
 

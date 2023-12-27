@@ -6,6 +6,7 @@
 
 import UIKit
 
+@MainActor
 public func loadImage(_ request: ImageRequest, with processingQueue: ImageProcessingQueue, on view: ImageDisplayableView, completion: ((ImageResponse?) -> Void)? = nil) {
     ImageLoadTaskController.associateInstance(to: view).loadImage(request, with: processingQueue, completion: completion)
 }
@@ -15,6 +16,7 @@ public func cancelLoadImage(on view: ImageDisplayableView) {
 }
 
 public extension Smoothie where Base: UIImageView {
+    @MainActor
     func loadImage(_ request: ImageRequest, with processingQueue: ImageProcessingQueue, completion: ((ImageResponse?) -> Void)? = nil) {
         ImageLoadTaskController.associateInstance(to: base).loadImage(request, with: processingQueue, completion: completion)
     }

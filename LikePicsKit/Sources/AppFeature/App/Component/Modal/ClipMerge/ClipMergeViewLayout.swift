@@ -104,6 +104,7 @@ extension ClipMergeViewLayout {
             + items.map({ Item.item($0) })
     }
 
+    @MainActor
     static func createDataSource(_ collectionView: UICollectionView,
                                  _ thumbnailProcessingQueue: ImageProcessingQueue,
                                  _ imageQueryService: ImageQueryServiceProtocol) -> (DataSource, Proxy)
@@ -150,6 +151,7 @@ extension ClipMergeViewLayout {
         }
     }
 
+    @MainActor
     private static func configureItemCell(proxy: Proxy,
                                           thumbnailProcessingQueue: ImageProcessingQueue,
                                           imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem>

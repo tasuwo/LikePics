@@ -47,6 +47,7 @@ final class ImageLoadTaskController {
         return objc_getAssociatedObject(view, &associatedKey) as? ImageLoadTaskController
     }
 
+    @MainActor
     func loadImage(_ request: ImageRequest, with processingQueue: ImageProcessingQueue, completion: ((ImageResponse?) -> Void)?) {
         cancelLoadImage()
 
