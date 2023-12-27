@@ -122,7 +122,7 @@ private enum ThumbnailInvalidationChecker {
             return false
         }
 
-        let thresholdInPoint: CGFloat = 0
+        let thresholdInPoint: CGFloat = 10
         let widthDiff = thumbnailSizeInPoint.width - diskCacheSizeInPixel.width / displayScale
         let heightDiff = thumbnailSizeInPoint.height - diskCacheSizeInPixel.height / displayScale
 
