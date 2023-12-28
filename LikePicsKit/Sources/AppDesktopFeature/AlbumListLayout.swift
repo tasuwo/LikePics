@@ -5,8 +5,8 @@
 import CoreGraphics
 import SwiftUI
 
-enum MultiColumnLayout {
-    static let `default` = MultiColumnLayout.column5
+enum AlbumListLayout {
+    static let `default` = AlbumListLayout.column5
     static let spacing: CGFloat = 20
 
     case column6
@@ -50,9 +50,9 @@ enum MultiColumnLayout {
     }
 
     static func layout(forWidth width: CGFloat) -> Self {
-        if width > MultiColumnLayout.column5.maxRowWidth {
+        if width > AlbumListLayout.column5.maxRowWidth {
             .column6
-        } else if width > MultiColumnLayout.column4.maxRowWidth {
+        } else if width > AlbumListLayout.column4.maxRowWidth {
             .column5
         } else {
             .column4

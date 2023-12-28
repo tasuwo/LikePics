@@ -8,7 +8,7 @@ import SwiftUI
 
 struct AlbumListView: View {
     @StateObject var controller: DragAndDropInteractionController<AlbumStore>
-    @State var layout: MultiColumnLayout = .default
+    @State var layout: AlbumListLayout = .default
     @EnvironmentObject var router: Router
 
     var body: some View {
@@ -17,7 +17,7 @@ struct AlbumListView: View {
                 Color.clear
                     .frame(maxWidth: .infinity)
 
-                LazyVGrid(columns: layout.columns, spacing: MultiColumnLayout.spacing) {
+                LazyVGrid(columns: layout.columns, spacing: AlbumListLayout.spacing) {
                     ForEach(controller.displayItems) { album in
                         AlbumView(album: album)
                             .contextMenu {
@@ -52,12 +52,12 @@ struct AlbumListView: View {
                             }
                     }
                 }
-                .frame(minWidth: MultiColumnLayout.column4.minRowWidth, maxWidth: layout.maxRowWidth)
+                .frame(minWidth: AlbumListLayout.column4.minRowWidth, maxWidth: layout.maxRowWidth)
                 .padding(.all, 41)
             }
         }
         .onChangeFrame { size in
-            layout = MultiColumnLayout.layout(forWidth: size.width - 41 * 2)
+            layout = AlbumListLayout.layout(forWidth: size.width - 41 * 2)
         }
     }
 }
