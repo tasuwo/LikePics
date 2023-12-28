@@ -12,6 +12,7 @@ struct AppView: View {
     @StateObject private var albumStore: AlbumStore
     @StateObject private var tagStore: TagStore
 
+    @StateObject private var allTabRouter = Router()
     @StateObject private var albumTabRouter = Router()
 
     init(clipStore: ClipStore, albumStore: AlbumStore, tagStore: TagStore) {
@@ -26,13 +27,25 @@ struct AppView: View {
         } detail: {
             switch selectedItem {
             case .all:
-                ClipListView(clips: clipStore.clips)
+                NavigationStack(path: $allTabRouter.path) {
+                    ClipListView(clips: clipStore.clips)
+                        .navigationDestination(for: Route.ClipItem.self) { route in
+                            ClipItemView(item: route.clipItem)
+                                .environmentObject(allTabRouter)
+                        }
+                }
+                .environmentObject(allTabRouter)
 
             case .albums:
                 NavigationStack(path: $albumTabRouter.path) {
                     AlbumListView(controller: .init(underlying: albumStore))
                         .navigationDestination(for: Route.ClipList.self) { route in
                             ClipListView(clips: route.clips)
+                                .environmentObject(albumTabRouter)
+                        }
+                        .navigationDestination(for: Route.ClipItem.self) { route in
+                            ClipItemView(item: route.clipItem)
+                                .environmentObject(albumTabRouter)
                         }
                 }
                 .environmentObject(albumTabRouter)

@@ -11,6 +11,7 @@ struct ClipListView: View {
 
     @State var layout: ClipListLayout = .default
     @Namespace var animation
+    @EnvironmentObject var router: Router
 
     var body: some View {
         ScrollView {
@@ -25,6 +26,11 @@ struct ClipListView: View {
             } content: { clip in
                 ClipView(clip: clip)
                     .matchedGeometryEffect(id: clip.id, in: animation)
+                    .onTapGesture {
+                        if let primaryItem = clip.primaryItem {
+                            router.path.append(Route.ClipItem(clipItem: primaryItem))
+                        }
+                    }
             }
             .frame(minWidth: ClipListLayout.minimum.minRowWidth)
             .padding(.all, 20)
