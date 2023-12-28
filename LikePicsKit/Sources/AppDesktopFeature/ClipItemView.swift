@@ -12,20 +12,79 @@ struct ClipItemView: View {
     @Environment(\.imageQueryService) var imageQueryService
     @Environment(\.clipThumbnailProcessingQueue) var processingQueue
 
+    @State private var isRightHovered = false
+    @State private var isLeftHovered = false
+
     var body: some View {
-        LazyImage(originalSize: item.imageSize.cgSize, cacheKey: "clip-item-\(item.imageId.uuidString)") {
-            try? imageQueryService.read(having: item.imageId)
-        } content: { image in
-            if let image {
-                image
-                    .resizable()
-            } else {
+        ZStack {
+            LazyImage(originalSize: item.imageSize.cgSize, cacheKey: "clip-item-\(item.imageId.uuidString)") {
+                try? imageQueryService.read(having: item.imageId)
+            } content: { image in
+                if let image {
+                    image
+                        .resizable()
+                } else {
+                    Color(NSColor.secondarySystemFill)
+                }
+            } placeholder: {
                 Color(NSColor.secondarySystemFill)
             }
-        } placeholder: {
-            Color(NSColor.secondarySystemFill)
+            .aspectRatio(item.imageSize.aspectRatio, contentMode: .fit)
+
+            HStack {
+                Color.clear
+                    .frame(maxWidth: 120)
+                    .overlay {
+                        if isLeftHovered {
+                            Button {
+                                // TODO: 実装する
+                            } label: {
+                                Image(systemName: "chevron.backward")
+                                    .padding(8)
+                                    .contentShape(.focusEffect, RoundedRectangle(cornerRadius: 4, style: .continuous))
+                                    .contentShape(.interaction, RoundedRectangle(cornerRadius: 4, style: .continuous))
+                                    .bold()
+                            }
+                            .buttonStyle(.plain)
+                            .background {
+                                Color(nsColor: .systemFill)
+                                    .opacity(0.5)
+                                    .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                            }
+                        }
+                    }
+                    .onHover { hovering in
+                        isLeftHovered = hovering
+                    }
+
+                Spacer()
+
+                Color.clear
+                    .frame(maxWidth: 120)
+                    .overlay {
+                        if isRightHovered {
+                            Button {
+                                // TODO: 実装する
+                            } label: {
+                                Image(systemName: "chevron.forward")
+                                    .padding(8)
+                                    .contentShape(.focusEffect, RoundedRectangle(cornerRadius: 4, style: .continuous))
+                                    .contentShape(.interaction, RoundedRectangle(cornerRadius: 4, style: .continuous))
+                                    .bold()
+                            }
+                            .buttonStyle(.plain)
+                            .background {
+                                Color(nsColor: .systemFill)
+                                    .opacity(0.5)
+                                    .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                            }
+                        }
+                    }
+                    .onHover { hovering in
+                        isRightHovered = hovering
+                    }
+            }
         }
-        .aspectRatio(item.imageSize.aspectRatio, contentMode: .fit)
         .environment(\.imageProcessingQueue, processingQueue)
         .navigationBarBackButtonHidden()
         .toolbar {
