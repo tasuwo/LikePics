@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "git@github.com:tasuwo/MasonryGrid.git",
       "state" : {
-        "revision" : "a0225d6a039fe5fe5809167d86289bcaeed99957",
-        "version" : "0.0.1-alpha.1"
+        "revision" : "77cb68ed1afe429c241d247f494f2f34af8361f1",
+        "version" : "0.0.1-alpha.2"
       }
     },
     {
