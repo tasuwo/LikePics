@@ -6,14 +6,13 @@ import SwiftUI
 
 enum ClipListLayout {
     static let `default` = ClipListLayout.column5
+    static let minimum = ClipListLayout.column4
     static let spacing: CGFloat = 20
 
     case column7
     case column6
     case column5
     case column4
-    case column3
-    case column2
 
     var numberOfColumns: Int {
         switch self {
@@ -21,8 +20,6 @@ enum ClipListLayout {
         case .column6: 6
         case .column5: 5
         case .column4: 4
-        case .column3: 3
-        case .column2: 2
         }
     }
 
@@ -32,8 +29,6 @@ enum ClipListLayout {
         case .column6: 250
         case .column5: 232
         case .column4: 215
-        case .column3: 199
-        case .column2: 184
         }
     }
 
@@ -43,8 +38,6 @@ enum ClipListLayout {
         case .column6: 190
         case .column5: 168
         case .column4: 156
-        case .column3: 150
-        case .column2: 147
         }
     }
 
@@ -54,8 +47,6 @@ enum ClipListLayout {
         case .column6: 18
         case .column5: 16
         case .column4: 14
-        case .column3: 12
-        case .column2: 10
         }
     }
 
@@ -74,12 +65,8 @@ enum ClipListLayout {
             .column6
         } else if width > ClipListLayout.column4.maxRowWidth {
             .column5
-        } else if width > ClipListLayout.column3.maxRowWidth {
-            .column4
-        } else if width > ClipListLayout.column2.maxRowWidth {
-            .column3
         } else {
-            .column2
+            .column4
         }
     }
 }

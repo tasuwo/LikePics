@@ -26,11 +26,11 @@ struct ClipListView: View {
                 ClipView(clip: clip)
                     .matchedGeometryEffect(id: clip.id, in: animation)
             }
-            .frame(minWidth: ClipListLayout.column2.minRowWidth)
-            .padding(.all, 41)
+            .frame(minWidth: ClipListLayout.minimum.minRowWidth)
+            .padding(.all, 20)
         }
         .onChangeFrame { size in
-            layout = ClipListLayout.layout(forWidth: size.width - 41 * 2)
+            layout = ClipListLayout.layout(forWidth: size.width - 20 * 2)
         }
     }
 }
