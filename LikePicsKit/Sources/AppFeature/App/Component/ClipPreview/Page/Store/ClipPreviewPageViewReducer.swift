@@ -363,13 +363,13 @@ extension ClipPreviewPageViewReducer {
 }
 
 private extension ClipPreviewPlayConfiguration.Animation {
-    var pageChange: ClipPreviewPageViewState.PageChange {
+    var pageChange: ClipPreviewTransitionDirection {
         switch self {
         case .forward, .off:
             return .forward
 
         case .reverse:
-            return .reverse
+            return .backward
         }
     }
 }

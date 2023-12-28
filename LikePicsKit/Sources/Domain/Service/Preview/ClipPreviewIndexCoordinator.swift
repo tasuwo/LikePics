@@ -2,20 +2,18 @@
 //  Copyright ©︎ 2022 Tasuku Tozawa. All rights reserved.
 //
 
-import Domain
-
-enum ClipPreviewIndexCoordinator {
-    struct Result {
-        let indexPath: ClipCollection.IndexPath
-        let pageChange: ClipPreviewPageViewState.PageChange?
-        let isPageAnimated: Bool
-        let isDismissed: Bool
+public enum ClipPreviewIndexCoordinator {
+    public struct Result {
+        public let indexPath: ClipCollection.IndexPath
+        public let pageChange: ClipPreviewTransitionDirection?
+        public let isPageAnimated: Bool
+        public let isDismissed: Bool
     }
 
-    static func coordinate(previousIndexPath: ClipCollection.IndexPath,
-                           previousSelectedClip: Clip?,
-                           previousSelectedItem: ClipItem?,
-                           newPreviewingClips: PreviewingClips) -> Result
+    public static func coordinate(previousIndexPath: ClipCollection.IndexPath,
+                                  previousSelectedClip: Clip?,
+                                  previousSelectedItem: ClipItem?,
+                                  newPreviewingClips: PreviewingClips) -> Result
     {
         guard let previousSelectedClip = previousSelectedClip,
               let previousSelectedItem = previousSelectedItem
@@ -39,7 +37,7 @@ enum ClipPreviewIndexCoordinator {
                 } else {
                     // 直前にフォーカスしていた Item が存在しなかった場合、Clipの一番最初に移動する
                     return .init(indexPath: .init(clipIndex: clipIndex, itemIndex: 0),
-                                 pageChange: .reverse,
+                                 pageChange: .backward,
                                  isPageAnimated: true,
                                  isDismissed: false)
                 }
@@ -74,7 +72,7 @@ enum ClipPreviewIndexCoordinator {
         } else if let indexPath = newPreviewingClips.visibleIndexPath(beforeClipAt: clipIndex) {
             // 直前にフォーカスしていたindexから後方向に表示可能なClipが存在すれば、移動する
             return .init(indexPath: indexPath,
-                         pageChange: .reverse,
+                         pageChange: .backward,
                          isPageAnimated: true,
                          isDismissed: false)
         } else {

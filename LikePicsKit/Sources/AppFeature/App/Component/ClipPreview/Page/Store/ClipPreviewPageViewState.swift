@@ -17,11 +17,6 @@ struct ClipPreviewPageViewState: Equatable {
         case playConfig(id: UUID)
     }
 
-    enum PageChange: String, Codable {
-        case forward
-        case reverse
-    }
-
     let query: ClipPreviewPageQuery
 
     var clips: PreviewingClips
@@ -29,7 +24,7 @@ struct ClipPreviewPageViewState: Equatable {
     var playingAt: UUID?
 
     var currentIndexPath: ClipCollection.IndexPath
-    var pageChange: PageChange?
+    var pageChange: ClipPreviewTransitionDirection?
 
     var alert: Alert?
     var modal: Modal?
@@ -75,13 +70,13 @@ extension ClipPreviewPageViewState {
     }
 }
 
-extension ClipPreviewPageViewState.PageChange {
+extension ClipPreviewTransitionDirection {
     var navigationDirection: UIPageViewController.NavigationDirection {
         switch self {
         case .forward:
             return .forward
 
-        case .reverse:
+        case .backward:
             return .reverse
         }
     }
