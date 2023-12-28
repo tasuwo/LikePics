@@ -9,7 +9,7 @@ import SwiftUI
 struct AlbumListView: View {
     @StateObject var controller: DragAndDropInteractionController<AlbumStore>
     @State var layout: MultiColumnLayout = .default
-    @Environment(\.router) var router
+    @EnvironmentObject var router: Router
 
     var body: some View {
         ScrollView {

@@ -35,7 +35,7 @@ struct AppView: View {
                             ClipListView(clips: route.clips)
                         }
                 }
-                .environment(\.router, albumTabRouter)
+                .environmentObject(albumTabRouter)
 
             case let .album(album):
                 ClipListView(clips: album.clips)
