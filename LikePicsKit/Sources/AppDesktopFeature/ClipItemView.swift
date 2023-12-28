@@ -8,6 +8,7 @@ import SwiftUI
 
 struct ClipItemView: View {
     let item: ClipItem
+    @EnvironmentObject var router: Router
     @Environment(\.imageQueryService) var imageQueryService
     @Environment(\.clipThumbnailProcessingQueue) var processingQueue
 
@@ -26,6 +27,15 @@ struct ClipItemView: View {
         }
         .aspectRatio(item.imageSize.aspectRatio, contentMode: .fit)
         .environment(\.imageProcessingQueue, processingQueue)
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            ToolbarItem(placement: .navigation) {
+                BackButton {
+                    // TODO: アニメーションさせる
+                    router.path.removeLast()
+                }
+            }
+        }
     }
 }
 
