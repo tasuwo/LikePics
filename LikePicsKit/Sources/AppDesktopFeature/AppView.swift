@@ -27,31 +27,19 @@ struct AppView: View {
         } detail: {
             switch selectedItem {
             case .all:
-                NavigationStack(path: $allTabRouter.path) {
+                AppStack {
                     ClipListView(clips: clipStore.clips)
-                        .navigationDestination(for: Route.ClipItem.self) { route in
-                            ClipItemView(item: route.clipItem)
-                                .environmentObject(allTabRouter)
-                        }
                 }
-                .environmentObject(allTabRouter)
 
             case .albums:
-                NavigationStack(path: $albumTabRouter.path) {
+                AppStack {
                     AlbumListView(controller: .init(underlying: albumStore))
-                        .navigationDestination(for: Route.ClipList.self) { route in
-                            ClipListView(clips: route.clips)
-                                .environmentObject(albumTabRouter)
-                        }
-                        .navigationDestination(for: Route.ClipItem.self) { route in
-                            ClipItemView(item: route.clipItem)
-                                .environmentObject(albumTabRouter)
-                        }
                 }
-                .environmentObject(albumTabRouter)
 
             case let .album(album):
-                ClipListView(clips: album.clips)
+                AppStack {
+                    ClipListView(clips: album.clips)
+                }
 
             case nil:
                 // TODO: 実装する
