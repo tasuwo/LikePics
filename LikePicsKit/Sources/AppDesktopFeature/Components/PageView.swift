@@ -10,6 +10,13 @@ struct PageView<Data: Identifiable & Hashable, Content: View>: View {
     enum Direction {
         case forward
         case backward
+
+        var imageName: String {
+            switch self {
+            case .forward: "chevron.forward"
+            case .backward: "chevron.backward"
+            }
+        }
     }
 
     class AnimationCoordinator: ObservableObject {
@@ -114,61 +121,67 @@ struct PageView<Data: Identifiable & Hashable, Content: View>: View {
         }
         .overlay {
             HStack {
-                Color.black
-                    .opacity(isLeftHovered ? 0.4 : 0)
-                    .frame(maxWidth: 120)
+                Color.clear
+                    .frame(width: 120)
                     .overlay {
                         if isLeftHovered {
                             Button {
                                 coordinator.onRequestTranstition(to: .backward)
                             } label: {
-                                Image(systemName: "chevron.backward")
-                                    .padding(8)
-                                    .contentShape(.focusEffect, RoundedRectangle(cornerRadius: 4, style: .continuous))
-                                    .contentShape(.interaction, RoundedRectangle(cornerRadius: 4, style: .continuous))
-                                    .bold()
+                                pagingButton(for: .backward)
                             }
                             .buttonStyle(.plain)
                             .background {
                                 Color(nsColor: .systemFill)
-                                    .opacity(0.5)
                                     .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
                             }
                         }
                     }
                     .onHover { hovering in
-                        isLeftHovered = hovering
+                        withAnimation(.linear(duration: 0.1)) {
+                            isLeftHovered = hovering
+                        }
                     }
 
                 Spacer()
 
-                Color.black
-                    .opacity(isRightHovered ? 0.4 : 0)
-                    .frame(maxWidth: 120)
+                Color.clear
+                    .frame(width: 120)
                     .overlay {
                         if isRightHovered {
                             Button {
                                 coordinator.onRequestTranstition(to: .forward)
                             } label: {
-                                Image(systemName: "chevron.forward")
-                                    .padding(8)
-                                    .contentShape(.focusEffect, RoundedRectangle(cornerRadius: 4, style: .continuous))
-                                    .contentShape(.interaction, RoundedRectangle(cornerRadius: 4, style: .continuous))
-                                    .bold()
+                                pagingButton(for: .forward)
                             }
                             .buttonStyle(.plain)
-                            .background {
-                                Color(nsColor: .systemFill)
-                                    .opacity(0.5)
-                                    .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
-                            }
                         }
                     }
                     .onHover { hovering in
-                        isRightHovered = hovering
+                        withAnimation(.linear(duration: 0.1)) {
+                            isRightHovered = hovering
+                        }
                     }
             }
         }
+    }
+
+    @ViewBuilder
+    func pagingButton(for direction: Direction) -> some View {
+        ZStack {
+            Color.white
+                .frame(width: 44)
+                .aspectRatio(1, contentMode: .fit)
+                .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+
+            Image(systemName: direction.imageName)
+                .foregroundColor(.black)
+                .font(.title)
+                .bold()
+        }
+        .opacity(0.5)
+        .contentShape(.focusEffect, RoundedRectangle(cornerRadius: 4, style: .continuous))
+        .contentShape(.interaction, RoundedRectangle(cornerRadius: 4, style: .continuous))
     }
 
     static func resolvePages(from data: [Data], at index: Int) -> [Data] {
