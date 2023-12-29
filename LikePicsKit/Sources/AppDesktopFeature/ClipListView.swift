@@ -14,28 +14,32 @@ struct ClipListView: View {
     @EnvironmentObject var router: Router
 
     var body: some View {
-        ScrollView {
-            VMasonryGrid(clips,
-                         numberOfColumns: layout.numberOfColumns,
-                         columnSpacing: layout.spacing,
-                         contentSpacing: layout.spacing)
-            { clip in
-                ClipView(clip: clip)
-                    .matchedGeometryEffect(id: clip.id, in: animation)
-                    .onTapGesture {
-                        if let primaryItem = clip.primaryItem {
-                            router.path.append(Route.ClipItemPage(clips: clips, clipItem: primaryItem))
+        if clips.isEmpty {
+            EmptyView()
+        } else {
+            ScrollView {
+                VMasonryGrid(clips,
+                             numberOfColumns: layout.numberOfColumns,
+                             columnSpacing: layout.spacing,
+                             contentSpacing: layout.spacing)
+                { clip in
+                    ClipView(clip: clip)
+                        .matchedGeometryEffect(id: clip.id, in: animation)
+                        .onTapGesture {
+                            if let primaryItem = clip.primaryItem {
+                                router.path.append(Route.ClipItemPage(clips: clips, clipItem: primaryItem))
+                            }
                         }
-                    }
-            } height: { clip in
-                let columnWidth: CGFloat = 100
-                guard let primaryItem = clip.primaryItem else { return columnWidth }
-                return columnWidth / primaryItem.imageSize.cgSize.width * primaryItem.imageSize.cgSize.height
+                } height: { clip in
+                    let columnWidth: CGFloat = 100
+                    guard let primaryItem = clip.primaryItem else { return columnWidth }
+                    return columnWidth / primaryItem.imageSize.cgSize.width * primaryItem.imageSize.cgSize.height
+                }
+                .padding(.all, type(of: layout).padding)
             }
-            .padding(.all, type(of: layout).padding)
-        }
-        .onChangeFrame { size in
-            layout = ClipListLayout.layout(forWidth: size.width)
+            .onChangeFrame { size in
+                layout = ClipListLayout.layout(forWidth: size.width)
+            }
         }
     }
 }
