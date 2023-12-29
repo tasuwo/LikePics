@@ -39,10 +39,10 @@
     {
       "identity" : "masonrygrid",
       "kind" : "remoteSourceControl",
-      "location" : "git@github.com:tasuwo/MasonryGrid.git",
+      "location" : "https://github.com/tasuwo/MasonryGrid",
       "state" : {
-        "revision" : "b0da71f6ecb1f4f5d614fb1822cebb3e5f0b9501",
-        "version" : "0.0.1-alpha.3"
+        "revision" : "2b63f9fbaeaf2fdfd1dcb7887cae2fe1ad1e3ed8",
+        "version" : "0.0.1-alpha.4"
       }
     },
     {
