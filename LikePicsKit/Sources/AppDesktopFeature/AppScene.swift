@@ -13,8 +13,7 @@ public struct AppScene: Scene {
 
     public var body: some Scene {
         WindowGroup {
-            AppView(clipStore: .init(clipQueryService: container.clipQueryService),
-                    albumStore: .init(clipQueryService: container.clipQueryService))
+            AppView(albumStore: .init(clipQueryService: container.clipQueryService))
                 .environmentObject(container)
                 .environment(\.albumThumbnailProcessingQueue, container.albumThumbnailProcessingQueue)
                 .environment(\.clipThumbnailProcessingQueue, container.clipThumbnailProcessingQueue)

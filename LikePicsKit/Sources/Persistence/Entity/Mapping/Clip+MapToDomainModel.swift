@@ -4,7 +4,7 @@
 
 import Domain
 
-extension Persistence.Clip {
+public extension Persistence.Clip {
     func map(to type: Domain.Clip.Type) -> Domain.Clip? {
         guard let id = self.id,
               let createdDate = self.createdDate,
@@ -27,7 +27,7 @@ extension Persistence.Clip {
     }
 }
 
-extension Persistence.Clip {
+public extension Persistence.Clip {
     func map(to type: Domain.ListingClip.Type) -> Domain.ListingClip? {
         guard let id = self.id else {
             return nil

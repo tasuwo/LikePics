@@ -8,7 +8,6 @@ import SwiftUI
 struct AppView: View {
     @State private var selectedItem: SidebarItem? = .all
 
-    @StateObject private var clipStore: ClipStore
     @StateObject private var albumStore: AlbumStore
 
     @StateObject private var allTabRouter = Router()
@@ -23,8 +22,7 @@ struct AppView: View {
     /// これを避けるためには `FetchRequest` を再生成するしかないようなので、View 自体を再描画するために用意しているプロパティ
     @State var refreshId = UUID()
 
-    init(clipStore: ClipStore, albumStore: AlbumStore) {
-        self._clipStore = .init(wrappedValue: clipStore)
+    init(albumStore: AlbumStore) {
         self._albumStore = .init(wrappedValue: albumStore)
     }
 
@@ -40,7 +38,7 @@ struct AppView: View {
             switch selectedItem {
             case .all:
                 AppStack {
-                    ClipListView(clips: clipStore.clips)
+                    ClipListQueryView(.all)
                 }
                 .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
 
@@ -50,15 +48,15 @@ struct AppView: View {
                 }
                 .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
 
-            case let .album(album):
+            case let .album(id):
                 AppStack {
-                    Text("Album")
+                    ClipListQueryView(.album(id))
                 }
                 .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
 
-            case let .tag(tag):
+            case let .tag(id):
                 AppStack {
-                    Text("Tag")
+                    ClipListQueryView(.tagged(id))
                 }
                 .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
 
@@ -72,7 +70,6 @@ struct AppView: View {
             refreshId = UUID()
         }
         .onAppear {
-            clipStore.load()
             albumStore.load()
         }
     }
