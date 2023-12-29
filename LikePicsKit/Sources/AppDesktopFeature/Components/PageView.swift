@@ -12,6 +12,34 @@ struct PageView<Data: Identifiable & Hashable, Content: View>: View {
         case backward
     }
 
+    class AnimationCoordinator: ObservableObject {
+        @Published private(set) var direction: Direction?
+        @Published var animated = true
+
+        private var lastTransitionRequestedDate: Date?
+
+        @MainActor
+        func onRequestTranstition(to direction: Direction) {
+            let requestedDate = Date()
+
+            if let lastTransitionRequestedDate {
+                if requestedDate.timeIntervalSince(lastTransitionRequestedDate) < 0.5 {
+                    animated = false
+                } else if requestedDate.timeIntervalSince(lastTransitionRequestedDate) > 1 {
+                    animated = true
+                }
+            }
+
+            lastTransitionRequestedDate = requestedDate
+            self.direction = direction
+        }
+
+        @MainActor
+        func onTransitioned() {
+            direction = nil
+        }
+    }
+
     @ViewBuilder
     let content: (Data) -> Content
 
@@ -19,11 +47,9 @@ struct PageView<Data: Identifiable & Hashable, Content: View>: View {
     @State private var displayData: [Data]
 
     @State private var currentIndex: Int
-    @State private var direction: Direction?
     @State private var isLeftHovered = false
     @State private var isRightHovered = false
-    // TODO: 自動切り替えできる
-    @State private var animated = true
+    @StateObject private var coordinator = AnimationCoordinator()
 
     init(_ data: [Data], from index: Int = 0, @ViewBuilder content: @escaping (Data) -> Content) {
         self.content = content
@@ -47,7 +73,7 @@ struct PageView<Data: Identifiable & Hashable, Content: View>: View {
                 .onAppear(perform: {
                     proxy.scrollTo(data[currentIndex])
                 })
-                .onChange(of: direction) { _, direction in
+                .onChange(of: coordinator.direction) { _, direction in
                     guard let direction else { return }
 
                     switch direction {
@@ -60,19 +86,19 @@ struct PageView<Data: Identifiable & Hashable, Content: View>: View {
                         currentIndex -= 1
                     }
 
-                    if animated {
+                    if coordinator.animated {
                         withAnimation(.linear(duration: 0.5)) {
                             proxy.scrollTo(data[currentIndex])
                         }
 
                         Task {
                             try? await Task.sleep(for: .seconds(0.5))
-                            self.direction = nil
+                            coordinator.onTransitioned()
                             displayData = Self.resolvePages(from: data, at: currentIndex)
                         }
                     } else {
                         proxy.scrollTo(data[currentIndex])
-                        self.direction = nil
+                        coordinator.onTransitioned()
                         displayData = Self.resolvePages(from: data, at: currentIndex)
                     }
                 }
@@ -94,7 +120,7 @@ struct PageView<Data: Identifiable & Hashable, Content: View>: View {
                     .overlay {
                         if isLeftHovered {
                             Button {
-                                direction = .backward
+                                coordinator.onRequestTranstition(to: .backward)
                             } label: {
                                 Image(systemName: "chevron.backward")
                                     .padding(8)
@@ -122,7 +148,7 @@ struct PageView<Data: Identifiable & Hashable, Content: View>: View {
                     .overlay {
                         if isRightHovered {
                             Button {
-                                direction = .forward
+                                coordinator.onRequestTranstition(to: .forward)
                             } label: {
                                 Image(systemName: "chevron.forward")
                                     .padding(8)
