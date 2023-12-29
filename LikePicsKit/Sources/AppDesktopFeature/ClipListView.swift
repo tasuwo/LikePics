@@ -32,11 +32,10 @@ struct ClipListView: View {
                         }
                     }
             }
-            .frame(minWidth: ClipListLayout.minimum.minRowWidth)
-            .padding(.all, 20)
+            .padding(.all, type(of: layout).padding)
         }
         .onChangeFrame { size in
-            layout = ClipListLayout.layout(forWidth: size.width - 20 * 2)
+            layout = ClipListLayout.layout(forWidth: size.width)
         }
     }
 }

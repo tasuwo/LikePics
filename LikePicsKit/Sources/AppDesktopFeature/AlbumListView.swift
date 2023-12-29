@@ -52,12 +52,11 @@ struct AlbumListView: View {
                             }
                     }
                 }
-                .frame(minWidth: AlbumListLayout.column4.minRowWidth, maxWidth: layout.maxRowWidth)
-                .padding(.all, 41)
+                .padding(.all, type(of: layout).padding)
             }
         }
         .onChangeFrame { size in
-            layout = AlbumListLayout.layout(forWidth: size.width - 41 * 2)
+            layout = AlbumListLayout.layout(forWidth: size.width)
         }
     }
 }

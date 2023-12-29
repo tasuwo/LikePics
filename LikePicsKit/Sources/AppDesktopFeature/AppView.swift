@@ -22,6 +22,11 @@ struct AppView: View {
     }
 
     var body: some View {
+        let minWidth = max(
+            AlbumListLayout.minimum.minWidth,
+            ClipListLayout.minimum.minWidth
+        )
+
         NavigationSplitView {
             Sidebar(selectedItem: $selectedItem, tags: tagStore.tags, albums: albumStore.albums)
         } detail: {
@@ -30,16 +35,19 @@ struct AppView: View {
                 AppStack {
                     ClipListView(clips: clipStore.clips)
                 }
+                .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
 
             case .albums:
                 AppStack {
                     AlbumListView(controller: .init(underlying: albumStore))
                 }
+                .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
 
             case let .album(album):
                 AppStack {
                     ClipListView(clips: album.clips)
                 }
+                .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
 
             case nil:
                 // TODO: 実装する

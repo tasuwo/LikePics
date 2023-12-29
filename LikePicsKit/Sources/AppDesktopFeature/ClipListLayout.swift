@@ -7,7 +7,7 @@ import SwiftUI
 enum ClipListLayout {
     static let `default` = ClipListLayout.column5
     static let minimum = ClipListLayout.column4
-    static let spacing: CGFloat = 20
+    static let padding: CGFloat = 20
 
     case column7
     case column6
@@ -51,15 +51,20 @@ enum ClipListLayout {
     }
 
     var maxRowWidth: CGFloat {
-        CGFloat(integerLiteral: numberOfColumns) * maxCellWidth + CGFloat(integerLiteral: numberOfColumns - 1) * Self.spacing
+        CGFloat(integerLiteral: numberOfColumns) * maxCellWidth + CGFloat(integerLiteral: numberOfColumns - 1) * spacing
     }
 
     var minRowWidth: CGFloat {
-        CGFloat(integerLiteral: numberOfColumns) * minCellWidth + CGFloat(integerLiteral: numberOfColumns - 1) * Self.spacing
+        CGFloat(integerLiteral: numberOfColumns) * minCellWidth + CGFloat(integerLiteral: numberOfColumns - 1) * spacing
+    }
+
+    var minWidth: CGFloat {
+        minRowWidth + Self.padding * 2
     }
 
     static func layout(forWidth width: CGFloat) -> Self {
-        if width > ClipListLayout.column6.maxRowWidth {
+        let width = width - Self.padding * 2
+        return if width > ClipListLayout.column6.maxRowWidth {
             .column7
         } else if width > ClipListLayout.column5.maxRowWidth {
             .column6

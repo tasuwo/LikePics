@@ -7,7 +7,9 @@ import SwiftUI
 
 enum AlbumListLayout {
     static let `default` = AlbumListLayout.column5
+    static let minimum = ClipListLayout.column5
     static let spacing: CGFloat = 20
+    static let padding: CGFloat = 40
 
     case column6
     case column5
@@ -45,12 +47,17 @@ enum AlbumListLayout {
         CGFloat(integerLiteral: numberOfColumns) * minCellWidth + CGFloat(integerLiteral: numberOfColumns - 1) * Self.spacing
     }
 
+    var minWidth: CGFloat {
+        minRowWidth + Self.padding * 2
+    }
+
     var columns: [GridItem] {
         Array(repeating: GridItem(.flexible(minimum: minCellWidth, maximum: maxRowWidth), spacing: Self.spacing), count: numberOfColumns)
     }
 
     static func layout(forWidth width: CGFloat) -> Self {
-        if width > AlbumListLayout.column5.maxRowWidth {
+        let width = width - Self.padding * 2
+        return if width > AlbumListLayout.column5.maxRowWidth {
             .column6
         } else if width > AlbumListLayout.column4.maxRowWidth {
             .column5

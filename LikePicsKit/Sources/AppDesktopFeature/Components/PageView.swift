@@ -5,7 +5,6 @@
 import SwiftUI
 
 // TODO: 無限スクロールに対応させる
-// TODO: ウインドウを小さくした時の問題を修正する
 struct PageView<Data: Identifiable & Hashable, Content: View>: View {
     enum Direction {
         case forward
