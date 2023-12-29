@@ -7,12 +7,6 @@ import SwiftUI
 
 struct AppView: View {
     @State private var selectedItem: SidebarItem? = .all
-
-    @StateObject private var albumStore: AlbumStore
-
-    @StateObject private var allTabRouter = Router()
-    @StateObject private var albumTabRouter = Router()
-
     @EnvironmentObject private var container: AppContainer
 
     /// ## HACK
@@ -21,10 +15,6 @@ struct AppView: View {
     /// クラッシュしてしまう
     /// これを避けるためには `FetchRequest` を再生成するしかないようなので、View 自体を再描画するために用意しているプロパティ
     @State var refreshId = UUID()
-
-    init(albumStore: AlbumStore) {
-        self._albumStore = .init(wrappedValue: albumStore)
-    }
 
     var body: some View {
         let minWidth = min(
@@ -44,7 +34,7 @@ struct AppView: View {
 
             case .albums:
                 AppStack {
-                    AlbumListView(controller: .init(underlying: albumStore))
+                    AlbumListView()
                 }
                 .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
 
@@ -68,9 +58,6 @@ struct AppView: View {
         .id(refreshId)
         .onChange(of: container.viewContext) { _, _ in
             refreshId = UUID()
-        }
-        .onAppear {
-            albumStore.load()
         }
     }
 }

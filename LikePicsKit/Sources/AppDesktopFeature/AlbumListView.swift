@@ -4,10 +4,11 @@
 
 import Combine
 import Domain
+import Persistence
 import SwiftUI
 
 struct AlbumListView: View {
-    @StateObject var controller: DragAndDropInteractionController<AlbumStore>
+    @FetchRequest(sortDescriptors: [.init(keyPath: \Persistence.Album.index, ascending: true)]) private var albums: FetchedResults<Persistence.Album>
     @State var layout: AlbumListLayout = .default
     @EnvironmentObject var router: Router
 
@@ -18,7 +19,7 @@ struct AlbumListView: View {
                     .frame(maxWidth: .infinity)
 
                 LazyVGrid(columns: layout.columns, spacing: AlbumListLayout.spacing) {
-                    ForEach(controller.displayItems) { album in
+                    ForEach(albums.compactMap({ $0.map(to: Domain.Album.self) })) { album in
                         AlbumView(album: album)
                             .contextMenu {
                                 Button {
@@ -37,16 +38,6 @@ struct AlbumListView: View {
                                     Text("削除")
                                 }
                             }
-                            .onDrag {
-                                controller.onDragStart(forItemHaving: album.id)
-                                let provider = NSItemProvider()
-                                provider.registerDataRepresentation(for: .text, visibility: .ownProcess) { completion in
-                                    completion(Data(), nil)
-                                    return nil
-                                }
-                                return provider
-                            }
-                            .onDrop(of: [.text], delegate: AlbumListDropDelegate(id: album.id, store: controller))
                             .onTapGesture {
                                 router.path.append(Route.ClipList(clips: album.clips))
                             }
@@ -61,40 +52,36 @@ struct AlbumListView: View {
     }
 }
 
-struct AlbumListDropDelegate: DropDelegate {
-    let id: Album.ID
-    let store: DragAndDropInteractionController<AlbumStore>
-
-    func performDrop(info: DropInfo) -> Bool {
-        return store.onPerformDrop(forItemHaving: id)
-    }
-
-    func dropEntered(info: DropInfo) {
-        store.onDragEnter(toItemHaving: id)
-    }
-
-    func dropExited(info: DropInfo) {
-        store.onDragExit(fromItemHaving: id)
-    }
-
-    func dropUpdated(info: DropInfo) -> DropProposal? {
-        return .init(operation: .move)
-    }
-
-    func validateDrop(info: DropInfo) -> Bool {
-        return store.isValidDrop(forItemHaving: id)
-    }
-}
-
 #Preview {
-    let albums: [Album] = Array((0 ... 6).map { _ in Album(id: UUID(), title: randomAlbumName(), clips: [], isHidden: false, registeredDate: Date(), updatedDate: Date()) })
+    let persistentContainer: NSPersistentContainer = {
+        let model = NSManagedObjectModel(contentsOf: ManagedObjectModelUrl)!
+        let container = NSPersistentContainer(name: "Model", managedObjectModel: model)
+
+        let persistentStoreDescription = NSPersistentStoreDescription()
+        persistentStoreDescription.url = URL(fileURLWithPath: "/dev/null")
+        container.persistentStoreDescriptions = [persistentStoreDescription]
+
+        container.loadPersistentStores { _, _ in }
+
+        (0 ... 6).forEach { index in
+            let album = Persistence.Album(context: container.viewContext)
+            album.id = UUID()
+            album.title = randomAlbumName()
+            album.index = Int64(index)
+            album.updatedDate = Date()
+            album.createdDate = Date()
+        }
+
+        try! container.viewContext.save()
+
+        return container
+    }()
 
     func randomAlbumName() -> String {
         let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         return String((0 ..< Int.random(in: 8 ... 15)).map { _ in letters.randomElement()! })
     }
 
-    // TODO:
-    // return AlbumListView(controller: DragAndDropInteractionController(underlying: AlbumStore(albums: albums)))
-    return EmptyView()
+    return AlbumListView()
+        .environment(\.managedObjectContext, persistentContainer.viewContext)
 }

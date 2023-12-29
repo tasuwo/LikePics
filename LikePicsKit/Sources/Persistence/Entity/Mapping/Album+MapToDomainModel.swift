@@ -4,7 +4,7 @@
 
 import Domain
 
-extension Persistence.Album {
+public extension Persistence.Album {
     func map(to: Domain.Album.Type) -> Domain.Album? {
         guard let id = self.id,
               let title = self.title,
