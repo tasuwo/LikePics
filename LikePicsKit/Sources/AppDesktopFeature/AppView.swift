@@ -22,7 +22,7 @@ struct AppView: View {
     }
 
     var body: some View {
-        let minWidth = max(
+        let minWidth = min(
             AlbumListLayout.minimum.minWidth,
             ClipListLayout.minimum.minWidth
         )
