@@ -30,7 +30,7 @@ extension Persistence.Album {
     }
 }
 
-extension Persistence.Album {
+public extension Persistence.Album {
     func map(to: Domain.ListingAlbumTitle.Type) -> Domain.ListingAlbumTitle? {
         guard let id = self.id,
               let title = self.title,

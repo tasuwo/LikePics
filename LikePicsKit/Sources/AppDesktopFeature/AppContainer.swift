@@ -14,6 +14,8 @@ import Smoothie
 public final class AppContainer: ObservableObject {
     // MARK: - Properties
 
+    @Published private(set) var viewContext: NSManagedObjectContext
+
     // MARK: Image Loader
 
     let clipThumbnailProcessingQueue: ImageProcessingQueue
@@ -59,6 +61,8 @@ public final class AppContainer: ObservableObject {
         persistentStackConf.persistentHistoryTokenFileName = "token.data"
         persistentStackConf.shouldLoadPersistentContainerAtInitialized = true
         self.persistentStack = PersistentStack(configuration: persistentStackConf, isCloudKitEnabled: true) // TODO: 設定できるようにする
+        self.viewContext = persistentStack.viewContext
+
         self.persistentStackLoader = PersistentStackLoader(persistentStack: persistentStack,
                                                            availabilityProvider: CloudKitSyncAvailabilityProvider())
         self.persistentStackMonitor = PersistentStackMonitor()
@@ -102,8 +106,9 @@ public final class AppContainer: ObservableObject {
             .reloaded
             .sink { [weak self] in
                 guard let self else { return }
-                let newImageQueryContext = self.persistentStack.newBackgroundContext(on: self.imageQueryQueue)
+                self.viewContext = self.persistentStack.viewContext
 
+                let newImageQueryContext = self.persistentStack.newBackgroundContext(on: self.imageQueryQueue)
                 self.imageQueryContext = newImageQueryContext
 
                 self.clipQueryService.internalService.context = self.persistentStack.viewContext

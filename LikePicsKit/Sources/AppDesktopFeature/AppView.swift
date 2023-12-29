@@ -10,15 +10,22 @@ struct AppView: View {
 
     @StateObject private var clipStore: ClipStore
     @StateObject private var albumStore: AlbumStore
-    @StateObject private var tagStore: TagStore
 
     @StateObject private var allTabRouter = Router()
     @StateObject private var albumTabRouter = Router()
 
-    init(clipStore: ClipStore, albumStore: AlbumStore, tagStore: TagStore) {
+    @EnvironmentObject private var container: AppContainer
+
+    /// ## HACK
+    /// `managedObjectContext` は iCloud 同期の切り替え時に別インスタンスに差し替えられる
+    /// この時、古い `managedObjectContext` を参照した `FetchRequest` が残っていると、CoreDataオブジェクト参照時に
+    /// クラッシュしてしまう
+    /// これを避けるためには `FetchRequest` を再生成するしかないようなので、View 自体を再描画するために用意しているプロパティ
+    @State var refreshId = UUID()
+
+    init(clipStore: ClipStore, albumStore: AlbumStore) {
         self._clipStore = .init(wrappedValue: clipStore)
         self._albumStore = .init(wrappedValue: albumStore)
-        self._tagStore = .init(wrappedValue: tagStore)
     }
 
     var body: some View {
@@ -28,7 +35,7 @@ struct AppView: View {
         )
 
         NavigationSplitView {
-            Sidebar(selectedItem: $selectedItem, tags: tagStore.tags, albums: albumStore.albums)
+            Sidebar(selectedItem: $selectedItem)
         } detail: {
             switch selectedItem {
             case .all:
@@ -45,7 +52,7 @@ struct AppView: View {
 
             case let .album(album):
                 AppStack {
-                    ClipListView(clips: album.clips)
+                    Text("Album")
                 }
                 .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
 
@@ -59,10 +66,14 @@ struct AppView: View {
                 EmptyView()
             }
         }
-        .onAppear(perform: {
+        .environment(\.managedObjectContext, container.viewContext)
+        .id(refreshId)
+        .onChange(of: container.viewContext) { _, _ in
+            refreshId = UUID()
+        }
+        .onAppear {
             clipStore.load()
             albumStore.load()
-            tagStore.load()
-        })
+        }
     }
 }
