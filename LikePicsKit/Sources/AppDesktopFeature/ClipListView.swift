@@ -18,12 +18,7 @@ struct ClipListView: View {
             VMasonryGrid(clips,
                          numberOfColumns: layout.numberOfColumns,
                          columnSpacing: layout.spacing,
-                         contentSpacing: layout.spacing)
-            { clip in
-                let columnWidth: CGFloat = 100
-                guard let primaryItem = clip.primaryItem else { return columnWidth }
-                return columnWidth / primaryItem.imageSize.cgSize.width * primaryItem.imageSize.cgSize.height
-            } content: { clip in
+                         contentSpacing: layout.spacing) { clip in
                 ClipView(clip: clip)
                     .matchedGeometryEffect(id: clip.id, in: animation)
                     .onTapGesture {
@@ -31,6 +26,10 @@ struct ClipListView: View {
                             router.path.append(Route.ClipItemPage(clips: clips, clipItem: primaryItem))
                         }
                     }
+            } height: { clip in
+                let columnWidth: CGFloat = 100
+                guard let primaryItem = clip.primaryItem else { return columnWidth }
+                return columnWidth / primaryItem.imageSize.cgSize.width * primaryItem.imageSize.cgSize.height
             }
             .padding(.all, type(of: layout).padding)
         }

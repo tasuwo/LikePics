@@ -93,8 +93,6 @@ struct Sidebar: View {
 
             Section("タグ") {
                 HMasonryGrid(tags) { tag in
-                    TagButton.preferredWidth(for: tag.name)
-                } content: { tag in
                     ContextMenuView {
                         TagButton(tag: tag, isSelected: selectedTags.contains(tag.id))
                             .onTapGesture {
@@ -121,6 +119,8 @@ struct Sidebar: View {
                         ]
                     }
                     .matchedGeometryEffect(id: tag.id, in: animation)
+                } width: { tag in
+                    TagButton.preferredWidth(for: tag.name)
                 }
             }
         }
