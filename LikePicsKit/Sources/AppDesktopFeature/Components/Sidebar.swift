@@ -12,7 +12,6 @@ struct Sidebar: View {
     let tags: [Tag]
     let albums: [Album]
 
-    @State private var selectedTags: Set<Tag.ID> = .init()
     @State private var isAlbumHovered = false
     @State private var isAlbumExpanded = false
 
@@ -93,45 +92,18 @@ struct Sidebar: View {
 
             Section("タグ") {
                 HMasonryGrid(tags) { tag in
-                    ContextMenuView {
-                        TagButton(tag: tag, isSelected: selectedTags.contains(tag.id))
-                            .onTapGesture {
-                                if selectedTags.contains(tag.id) {
-                                    selectedTags.remove(tag.id)
-                                } else {
-                                    selectedTags.insert(tag.id)
-                                }
+                    TagButton(tag: tag, isSelected: selectedItem?.tagId() == tag.id)
+                        .onTapGesture {
+                            if selectedItem?.tagId() == tag.id {
+                                selectedItem = nil
+                            } else {
+                                selectedItem = .tag(tag)
                             }
-                    } menuItems: {
-                        [
-                            NSMenuItem(title: "コピー") {
-                                // TODO:
-                            },
-                            NSMenuItem(title: "名前の変更") {
-                                // TODO:
-                            },
-                            NSMenuItem(title: "隠す") {
-                                // TODO:
-                            },
-                            NSMenuItem(title: "削除する") {
-                                // TODO:
-                            }
-                        ]
-                    }
-                    .matchedGeometryEffect(id: tag.id, in: animation)
+                        }
+                        .matchedGeometryEffect(id: tag.id, in: animation)
                 } width: { tag in
                     TagButton.preferredWidth(for: tag.name)
                 }
-            }
-        }
-        .onChange(of: selectedTags) { _, newValue in
-            if !newValue.isEmpty {
-                selectedItem = nil
-            }
-        }
-        .onChange(of: selectedItem) { _, newValue in
-            if newValue != nil {
-                selectedTags.removeAll()
             }
         }
     }

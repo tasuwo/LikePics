@@ -18,7 +18,8 @@ struct ClipListView: View {
             VMasonryGrid(clips,
                          numberOfColumns: layout.numberOfColumns,
                          columnSpacing: layout.spacing,
-                         contentSpacing: layout.spacing) { clip in
+                         contentSpacing: layout.spacing)
+            { clip in
                 ClipView(clip: clip)
                     .matchedGeometryEffect(id: clip.id, in: animation)
                     .onTapGesture {

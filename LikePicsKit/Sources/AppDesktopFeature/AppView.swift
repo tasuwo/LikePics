@@ -49,8 +49,13 @@ struct AppView: View {
                 }
                 .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
 
+            case let .tag(tag):
+                AppStack {
+                    Text("Tag")
+                }
+                .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
+
             case nil:
-                // TODO: 実装する
                 EmptyView()
             }
         }
