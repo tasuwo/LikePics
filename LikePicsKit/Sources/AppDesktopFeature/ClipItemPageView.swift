@@ -12,6 +12,7 @@ struct ClipItemPageView: View {
     @EnvironmentObject var router: Router
 
     init(clips: [Clip], clipItem: ClipItem) {
+        // TODO: パフォーマンス改善
         clipItems = clips.flatMap({ $0.items })
         ini = clipItems.firstIndex(of: clipItem)!
     }
