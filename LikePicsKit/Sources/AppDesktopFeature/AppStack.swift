@@ -20,8 +20,8 @@ struct AppStack<Content: View>: View {
                     ClipListView(clips: route.clips)
                         .environmentObject(router)
                 }
-                .navigationDestination(for: Route.ClipItem.self) { route in
-                    ClipItemView(item: route.clipItem)
+                .navigationDestination(for: Route.ClipItemPage.self) { route in
+                    ClipItemPageView(clips: route.clips, clipItem: route.clipItem)
                         .environmentObject(router)
                 }
         }

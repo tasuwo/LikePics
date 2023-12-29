@@ -13,7 +13,8 @@ extension Route {
 }
 
 extension Route {
-    struct ClipItem: Hashable {
+    struct ClipItemPage: Hashable {
+        let clips: [Domain.Clip]
         let clipItem: Domain.ClipItem
     }
 }

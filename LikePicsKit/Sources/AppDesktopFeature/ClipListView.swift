@@ -28,7 +28,7 @@ struct ClipListView: View {
                     .matchedGeometryEffect(id: clip.id, in: animation)
                     .onTapGesture {
                         if let primaryItem = clip.primaryItem {
-                            router.path.append(Route.ClipItem(clipItem: primaryItem))
+                            router.path.append(Route.ClipItemPage(clips: clips, clipItem: primaryItem))
                         }
                     }
             }
