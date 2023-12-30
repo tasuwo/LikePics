@@ -29,7 +29,7 @@ struct ClipView: View {
                                         .offset(x: geometry.frame(in: .local).maxX - markSize - 12,
                                                 y: geometry.frame(in: .local).maxY - markSize - 12)
                                 }
-                                .opacity(clip.isHidden ? 0 : 1)
+                                .opacity(clip.isHidden ? 1 : 0)
                             }
                     } else {
                         Color(NSColor.secondarySystemFill)

@@ -41,7 +41,7 @@ struct AlbumView: View {
                             .offset(x: geometry.frame(in: .local).maxX - markSize - 12,
                                     y: geometry.frame(in: .local).maxY - markSize - 12)
                     }
-                    .opacity(album.isHidden ? 0 : 1)
+                    .opacity(album.isHidden ? 1 : 0)
                 }
                 .environment(\.imageProcessingQueue, processingQueue)
             } else {
