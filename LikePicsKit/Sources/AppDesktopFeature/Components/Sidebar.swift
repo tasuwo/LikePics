@@ -64,6 +64,7 @@ struct Sidebar: View {
                                 Text("Delete Album", bundle: .module, comment: "Context Menu")
                             }
                         }
+                        .opacity(album.isHidden ? 0.5 : 1)
                         .tag(SidebarItem.album(album.id))
                     }
                 } label: {
@@ -111,6 +112,7 @@ struct Sidebar: View {
                                 selectedItem = .tag(tag.id)
                             }
                         }
+                        .opacity(tag.isHidden ? 0.5 : 1)
                         .matchedGeometryEffect(id: tag.id, in: animation)
                 } width: { tag in
                     TagButton.preferredWidth(for: tag.name)
@@ -131,10 +133,11 @@ struct Sidebar: View {
 
         container.loadPersistentStores { _, _ in }
 
-        (0 ... 20).forEach { _ in
+        (0 ... 20).forEach { index in
             let tag = Persistence.Tag(context: container.viewContext)
             tag.id = UUID()
             tag.name = randomTagName()
+            tag.isHidden = index % 2 == 0
         }
 
         (0 ... 6).forEach { index in
