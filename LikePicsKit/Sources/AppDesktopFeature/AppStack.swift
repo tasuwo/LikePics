@@ -16,8 +16,8 @@ struct AppStack<Content: View>: View {
         NavigationStack(path: $router.path) {
             content()
                 .environmentObject(router)
-                .navigationDestination(for: Route.ClipList.self) { route in
-                    ClipListView(clips: route.clips)
+                .navigationDestination(for: Route.AlbumClipList.self) { route in
+                    ClipListQueryView(.album(route.albumId))
                         .environmentObject(router)
                 }
                 .navigationDestination(for: Route.ClipItemPage.self) { route in

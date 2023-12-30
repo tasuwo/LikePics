@@ -10,10 +10,11 @@ struct AlbumView: View {
     let album: Album
     @Environment(\.imageQueryService) var imageQueryService
     @Environment(\.albumThumbnailProcessingQueue) var processingQueue
+    @AppStorage(StorageKey.showHiddenItems.rawValue) var showHiddenItems: Bool = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            if let primaryItem = album.clips.first?.primaryItem {
+            if let primaryItem = album.clips.first(where: { showHiddenItems ? true : $0.isHidden == false })?.primaryItem {
                 Color.clear
                     .overlay {
                         LazyImage {
@@ -61,7 +62,8 @@ struct AlbumView: View {
                                   clips: [],
                                   isHidden: false,
                                   registeredDate: Date(),
-                                  updatedDate: Date()))
+                                  updatedDate: Date()),
+                     showHiddenItems: true)
         .padding()
         .environment(\.imageQueryService, _ImageQueryService())
 }

@@ -27,6 +27,7 @@ struct ClipListQueryView: View {
 
     struct AlbumSource: View {
         @FetchRequest private var albums: FetchedResults<Persistence.Album>
+        @AppStorage(StorageKey.showHiddenItems.rawValue) var showHiddenItems: Bool = false
 
         init(_ request: FetchRequest<Persistence.Album>) {
             _albums = request
@@ -36,6 +37,7 @@ struct ClipListQueryView: View {
             let clips = albums.first?
                 .items?
                 .compactMap({ $0 as? AlbumItem })
+                .filter({ showHiddenItems ? true : $0.clip?.isHidden == false })
                 .sorted(by: { $0.index < $1.index })
                 .compactMap({ $0.clip?.map(to: Domain.Clip.self) }) ?? []
             ClipListView(clips: clips)
@@ -44,22 +46,36 @@ struct ClipListQueryView: View {
 
     private let query: Query
 
+    @AppStorage(StorageKey.showHiddenItems.rawValue) var showHiddenItems: Bool = false
+
     init(_ query: Query) {
         self.query = query
     }
 
     var body: some View {
-        switch query {
-        case .all:
-            ClipSource(.init(sortDescriptors: [.init(keyPath: \Persistence.Clip.createdDate, ascending: false)], predicate: nil, animation: .default))
+        Group {
+            switch query {
+            case .all:
+                ClipSource(.init(sortDescriptors: [.init(keyPath: \Persistence.Clip.createdDate, ascending: false)],
+                                 predicate: showHiddenItems ? nil : NSPredicate(format: "isHidden == false"),
+                                 animation: .default))
 
-        case let .tagged(id):
-            ClipSource(.init(sortDescriptors: [.init(keyPath: \Persistence.Clip.createdDate, ascending: false)],
-                             predicate: NSPredicate(format: "SUBQUERY(tags, $tag, $tag.id == %@).@count > 0", id as CVarArg),
-                             animation: .default))
+            case let .tagged(id):
+                ClipSource(.init(sortDescriptors: [.init(keyPath: \Persistence.Clip.createdDate, ascending: false)],
+                                 predicate: showHiddenItems
+                                     ? NSPredicate(format: "SUBQUERY(tags, $tag, $tag.id == %@).@count > 0", id as CVarArg)
+                                     : NSCompoundPredicate(andPredicateWithSubpredicates: [
+                                         NSPredicate(format: "SUBQUERY(tags, $tag, $tag.id == %@).@count > 0", id as CVarArg),
+                                         NSPredicate(format: "isHidden == false", id as CVarArg)
+                                     ]),
+                                 animation: .default))
 
-        case let .album(id):
-            AlbumSource(.init(sortDescriptors: [], predicate: NSPredicate(format: "id == %@", id as CVarArg)))
+            case let .album(id):
+                AlbumSource(.init(sortDescriptors: [],
+                                  predicate: NSPredicate(format: "id == %@", id as CVarArg),
+                                  animation: .default))
+            }
         }
+        .animation(.default, value: showHiddenItems)
     }
 }

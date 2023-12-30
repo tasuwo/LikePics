@@ -7,8 +7,8 @@ import Domain
 enum Route {}
 
 extension Route {
-    struct ClipList: Hashable {
-        let clips: [Clip]
+    struct AlbumClipList: Hashable {
+        let albumId: Album.ID
     }
 }
 

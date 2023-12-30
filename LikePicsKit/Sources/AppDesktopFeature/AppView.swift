@@ -8,6 +8,7 @@ import SwiftUI
 struct AppView: View {
     @State private var selectedItem: SidebarItem? = .all
     @EnvironmentObject private var container: AppContainer
+    @AppStorage(StorageKey.showHiddenItems.rawValue) var showHiddenItems: Bool = false
 
     /// ## HACK
     /// `managedObjectContext` は iCloud 同期の切り替え時に別インスタンスに差し替えられる
@@ -23,7 +24,8 @@ struct AppView: View {
         )
 
         NavigationSplitView {
-            Sidebar(selectedItem: $selectedItem)
+            Sidebar(selectedItem: $selectedItem, showHiddenItems: showHiddenItems)
+                .animation(.default, value: showHiddenItems)
         } detail: {
             switch selectedItem {
             case .all:
@@ -34,7 +36,8 @@ struct AppView: View {
 
             case .albums:
                 AppStack {
-                    AlbumListView()
+                    AlbumListView(showHiddenItems: showHiddenItems)
+                        .animation(.default, value: showHiddenItems)
                 }
                 .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
 

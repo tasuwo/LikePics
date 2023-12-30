@@ -8,9 +8,15 @@ import Persistence
 import SwiftUI
 
 struct AlbumListView: View {
-    @FetchRequest(sortDescriptors: [.init(keyPath: \Persistence.Album.index, ascending: true)]) private var albums: FetchedResults<Persistence.Album>
+    @FetchRequest private var albums: FetchedResults<Persistence.Album>
     @State var layout: AlbumListLayout = .default
     @EnvironmentObject var router: Router
+
+    init(showHiddenItems: Bool) {
+        _albums = .init(sortDescriptors: [.init(keyPath: \Persistence.Album.index, ascending: true)],
+                        predicate: showHiddenItems ? nil : NSPredicate(format: "isHidden == false"),
+                        animation: .default)
+    }
 
     var body: some View {
         ScrollView {
@@ -39,7 +45,7 @@ struct AlbumListView: View {
                                 }
                             }
                             .onTapGesture {
-                                router.path.append(Route.ClipList(clips: album.clips))
+                                router.path.append(Route.AlbumClipList(albumId: album.id))
                             }
                     }
                 }
@@ -82,6 +88,6 @@ struct AlbumListView: View {
         return String((0 ..< Int.random(in: 8 ... 15)).map { _ in letters.randomElement()! })
     }
 
-    return AlbumListView()
+    return AlbumListView(showHiddenItems: true)
         .environment(\.managedObjectContext, persistentContainer.viewContext)
 }

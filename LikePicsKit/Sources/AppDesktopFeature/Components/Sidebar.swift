@@ -13,13 +13,19 @@ struct Sidebar: View {
     @State private var isAlbumHovered = false
     @State private var isAlbumExpanded = false
 
-    @FetchRequest(sortDescriptors: [.init(keyPath: \Persistence.Tag.name, ascending: true)]) private var tags: FetchedResults<Persistence.Tag>
-    @FetchRequest(sortDescriptors: [.init(keyPath: \Persistence.Album.index, ascending: true)]) private var albums: FetchedResults<Persistence.Album>
+    @FetchRequest private var tags: FetchedResults<Persistence.Tag>
+    @FetchRequest private var albums: FetchedResults<Persistence.Album>
 
     @Namespace private var animation
 
-    init(selectedItem: Binding<SidebarItem?>) {
+    init(selectedItem: Binding<SidebarItem?>, showHiddenItems: Bool) {
         self._selectedItem = selectedItem
+        _tags = .init(sortDescriptors: [.init(keyPath: \Persistence.Tag.name, ascending: true)],
+                      predicate: showHiddenItems ? nil : NSPredicate(format: "isHidden == false"),
+                      animation: .default)
+        _albums = .init(sortDescriptors: [.init(keyPath: \Persistence.Album.index, ascending: true)],
+                        predicate: showHiddenItems ? nil : NSPredicate(format: "isHidden == false"),
+                        animation: .default)
     }
 
     var body: some View {
@@ -150,7 +156,7 @@ struct Sidebar: View {
 
         var body: some View {
             NavigationSplitView {
-                Sidebar(selectedItem: $selectedItem)
+                Sidebar(selectedItem: $selectedItem, showHiddenItems: false)
             } detail: {
                 Color.clear
             }
