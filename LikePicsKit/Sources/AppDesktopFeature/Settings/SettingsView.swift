@@ -6,6 +6,8 @@ import Domain
 import SwiftUI
 
 struct SettingsView: View {
+    @Environment(CloudSyncAvailability.self) var cloudSyncAvailability
+
     var body: some View {
         TabView {
             GeneralSettingsView()
@@ -14,7 +16,7 @@ struct SettingsView: View {
                 }
                 .navigationTitle("一般")
 
-            CloudSettingsView()
+            CloudSettingsView(cloudSyncAvailability: cloudSyncAvailability)
                 .tabItem {
                     Label("iCloud", systemImage: "icloud")
                 }

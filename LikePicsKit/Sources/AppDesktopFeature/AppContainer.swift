@@ -36,8 +36,10 @@ public final class AppContainer: ObservableObject {
     private var persistentStackLoading: Task<Void, Never>?
     private var persistentStackReloading: AnyCancellable?
     private var persistentStackEventsObserving: Set<AnyCancellable> = .init()
-    private let cloudAvailabilityService: CloudAvailabilityService
     private var imageQueryContext: NSManagedObjectContext
+    private var cloudAvailabilityObservationTask: Task<Void, Never>?
+
+    let cloudAvailability: CloudSyncAvailability
 
     // MARK: Queue
 
@@ -49,6 +51,7 @@ public final class AppContainer: ObservableObject {
 
     public init(appBundle: Bundle) throws {
         self.appBundle = appBundle
+        let isCloudSyncEnabled = UserDefaults.standard.bool(forKey: AppStorageKeys.CloudSync.key)
 
         // MARK: CoreData
 
@@ -60,17 +63,19 @@ public final class AppContainer: ObservableObject {
             .appendingPathComponent("TBox", isDirectory: true)
         persistentStackConf.persistentHistoryTokenFileName = "token.data"
         persistentStackConf.shouldLoadPersistentContainerAtInitialized = true
-        self.persistentStack = PersistentStack(configuration: persistentStackConf, isCloudKitEnabled: true) // TODO: 設定できるようにする
+        self.persistentStack = PersistentStack(configuration: persistentStackConf, isCloudKitSyncEnabled: isCloudSyncEnabled)
         self.viewContext = persistentStack.viewContext
 
         self.persistentStackLoader = PersistentStackLoader(persistentStack: persistentStack,
-                                                           availabilityProvider: CloudKitSyncAvailabilityProvider())
+                                                           settingStorage: CloudSyncSettingStorage())
         self.persistentStackMonitor = PersistentStackMonitor()
-        self.cloudAvailabilityService = CloudAvailabilityService()
 
         self.imageQueryContext = self.persistentStack.newBackgroundContext(on: self.imageQueryQueue)
         self.clipQueryService = ClipQueryCacheService(ClipQueryService(context: self.persistentStack.viewContext))
         self.imageQueryService = ImageQueryService(context: self.imageQueryContext)
+
+        self.cloudAvailability = .init()
+        self.cloudAvailability.isAvailable = persistentStackLoader.isCloudKitSyncAvailable
 
         // MARK: Image Loader
 
@@ -100,7 +105,13 @@ public final class AppContainer: ObservableObject {
         albumCacheConfig.memoryCache = memoryCache
         self.albumThumbnailProcessingQueue = ImageProcessingQueue(config: albumCacheConfig)
 
-        // MARK: Service
+        // MARK: Observation
+
+        cloudAvailabilityObservationTask = Task { [persistentStackLoader, cloudAvailability] in
+            for await isAvailable in persistentStackLoader.isCloudKitSyncAvailables() {
+                cloudAvailability.isAvailable = isAvailable
+            }
+        }
 
         persistentStackReloading = persistentStack
             .reloaded
@@ -122,6 +133,10 @@ public final class AppContainer: ObservableObject {
         persistentStackLoading = self.persistentStackLoader.run()
     }
 
+    deinit {
+        cloudAvailabilityObservationTask?.cancel()
+    }
+
     private static func resolveCacheDirectoryUrl(name: String, appBundle: Bundle) -> URL {
         guard let bundleIdentifier = appBundle.bundleIdentifier else {
             fatalError("Failed to resolve bundle identifier")
@@ -139,48 +154,5 @@ public final class AppContainer: ObservableObject {
         }()
 
         return targetUrl
-    }
-}
-
-class CloudKitSyncAvailabilityProvider: CloudKitSyncAvailabilityProviding {
-    public var isCloudKitSyncAvailable: AsyncStream<Bool> {
-        AsyncStream { continuation in
-            // TODO: 設定できるようにする
-            continuation.yield(true)
-        }
-    }
-}
-
-class CloudAvailabilityService {
-    private let _availability: CurrentValueSubject<CloudAvailability?, Never> = .init(nil)
-    private let task: Task<Void, Never>
-
-    init() {
-        self.task = Task { [_availability] in
-            for await status in CKAccountStatus.ps.stream {
-                _availability.send(CloudAvailability(status))
-            }
-        }
-    }
-
-    deinit {
-        task.cancel()
-    }
-}
-
-extension CloudAvailabilityService: CloudAvailabilityServiceProtocol {
-    var availability: AnyPublisher<CloudAvailability?, Never> { _availability.eraseToAnyPublisher() }
-}
-
-private extension CloudAvailability {
-    init?(_ status: CKAccountStatus?) {
-        guard let status else { return nil }
-        switch status {
-        case .available:
-            self = .available
-
-        default:
-            self = .unavailable
-        }
     }
 }

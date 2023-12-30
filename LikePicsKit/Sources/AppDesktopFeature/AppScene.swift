@@ -26,6 +26,7 @@ public struct AppScene: Scene {
 
         Settings {
             SettingsView()
+                .environment(container.cloudAvailability)
                 .preferredColorScheme(userInterfaceStyle.colorScheme)
         }
     }
