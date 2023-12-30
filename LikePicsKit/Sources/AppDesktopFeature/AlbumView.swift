@@ -7,6 +7,8 @@ import Smoothie
 import SwiftUI
 
 struct AlbumView: View {
+    static let cornerRadius: CGFloat = 12
+
     let album: Album
     @Environment(\.imageQueryService) var imageQueryService
     @Environment(\.albumThumbnailProcessingQueue) var processingQueue
@@ -15,29 +17,35 @@ struct AlbumView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let primaryItem = album.clips.first(where: { showHiddenItems ? true : $0.isHidden == false })?.primaryItem {
-                Color.clear
-                    .overlay {
-                        LazyImage {
-                            try? imageQueryService.read(having: primaryItem.imageId)
-                        } content: { image in
-                            if let image {
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                            } else {
-                                Color(NSColor.secondarySystemFill)
-                            }
-                        } placeholder: {
-                            Color(NSColor.secondarySystemFill)
-                        }
-                        .environment(\.lazyImageCacheInfo, .init(key: "album-\(primaryItem.imageId.uuidString)", originalImageSize: primaryItem.imageSize.cgSize))
+                LazyImage {
+                    try? imageQueryService.read(having: primaryItem.imageId)
+                } content: { image in
+                    if let image {
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    } else {
+                        Color(NSColor.secondarySystemFill)
                     }
-                    .aspectRatio(1, contentMode: .fit)
-                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                    .clipped()
-                    .environment(\.imageProcessingQueue, processingQueue)
+                } placeholder: {
+                    Color(NSColor.secondarySystemFill)
+                }
+                .environment(\.lazyImageCacheInfo, .init(key: "album-\(primaryItem.imageId.uuidString)", originalImageSize: primaryItem.imageSize.cgSize))
+                .aspectRatio(1, contentMode: .fit)
+                .clipShape(RoundedRectangle(cornerRadius: Self.cornerRadius, style: .continuous))
+                .clipped()
+                .overlay {
+                    GeometryReader { geometry in
+                        let markSize = min(geometry.size.width / 5, 40)
+                        HiddenMark(size: markSize)
+                            .offset(x: geometry.frame(in: .local).maxX - markSize - 12,
+                                    y: geometry.frame(in: .local).maxY - markSize - 12)
+                    }
+                    .opacity(album.isHidden ? 0 : 1)
+                }
+                .environment(\.imageProcessingQueue, processingQueue)
             } else {
-                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                RoundedRectangle(cornerRadius: Self.cornerRadius, style: .continuous)
                     .aspectRatio(1, contentMode: .fit)
             }
 
@@ -59,7 +67,27 @@ struct AlbumView: View {
 
     return AlbumView(album: Album(id: UUID(),
                                   title: "Test Album",
-                                  clips: [],
+                                  clips: [
+                                      .init(id: UUID(),
+                                            description: "",
+                                            items: [
+                                                .init(id: UUID(),
+                                                      url: nil,
+                                                      clipId: UUID(),
+                                                      clipIndex: 0,
+                                                      imageId: UUID(),
+                                                      imageFileName: "",
+                                                      imageUrl: nil,
+                                                      imageSize: .init(height: 150, width: 100),
+                                                      imageDataSize: 0,
+                                                      registeredDate: Date(),
+                                                      updatedDate: Date()),
+                                            ],
+                                            isHidden: false,
+                                            dataSize: 0,
+                                            registeredDate: Date(),
+                                            updatedDate: Date())
+                                  ],
                                   isHidden: false,
                                   registeredDate: Date(),
                                   updatedDate: Date()))

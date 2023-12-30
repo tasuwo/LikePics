@@ -7,6 +7,8 @@ import Smoothie
 import SwiftUI
 
 struct ClipView: View {
+    static let cornerRadius: CGFloat = 12
+
     let clip: Clip
     @Environment(\.imageQueryService) var imageQueryService
     @Environment(\.clipThumbnailProcessingQueue) var processingQueue
@@ -18,14 +20,24 @@ struct ClipView: View {
                     try? imageQueryService.read(having: primaryItem.imageId)
                 } content: { image in
                     if let image {
-                        image.resizable()
+                        image
+                            .resizable()
+                            .overlay {
+                                GeometryReader { geometry in
+                                    let markSize = min(geometry.size.width / 5, 40)
+                                    HiddenMark(size: markSize)
+                                        .offset(x: geometry.frame(in: .local).maxX - markSize - 12,
+                                                y: geometry.frame(in: .local).maxY - markSize - 12)
+                                }
+                                .opacity(clip.isHidden ? 0 : 1)
+                            }
                     } else {
                         Color(NSColor.secondarySystemFill)
                     }
                 } placeholder: {
                     Color(NSColor.secondarySystemFill)
                 }
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: Self.cornerRadius, style: .continuous))
                 .aspectRatio(primaryItem.imageSize.aspectRatio, contentMode: .fit)
                 .environment(\.lazyImageCacheInfo, .init(key: "item-\(primaryItem.imageId.uuidString)", originalImageSize: primaryItem.imageSize.cgSize))
                 .background {
@@ -48,7 +60,7 @@ struct ClipView: View {
                                 } placeholder: {
                                     Color(NSColor.secondarySystemFill)
                                 }
-                                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                                .clipShape(RoundedRectangle(cornerRadius: Self.cornerRadius, style: .continuous))
                                 .environment(\.lazyImageCacheInfo, .init(key: "item-\(secondaryItem.imageId.uuidString)", originalImageSize: secondaryItem.imageSize.cgSize))
                                 .frame(width: geometry.size.width)
                                 .aspectRatio(secondaryItem.imageSize.aspectRatio, contentMode: .fit)
@@ -73,7 +85,7 @@ struct ClipView: View {
                                         } placeholder: {
                                             Color(NSColor.secondarySystemFill)
                                         }
-                                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                                        .clipShape(RoundedRectangle(cornerRadius: Self.cornerRadius, style: .continuous))
                                         .environment(\.lazyImageCacheInfo, .init(key: "item-\(tertiaryItem.imageId.uuidString)", originalImageSize: tertiaryItem.imageSize.cgSize))
                                         .frame(width: geometry.size.width)
                                         .aspectRatio(tertiaryItem.imageSize.aspectRatio, contentMode: .fit)
@@ -88,7 +100,7 @@ struct ClipView: View {
                                            height: geometry.size.height + (clip.secondaryItem != nil ? (clip.tertiaryItem != nil ? 32 : 16) : 0))
                                     .fixedSize()
                             }
-                            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                            .clipShape(RoundedRectangle(cornerRadius: Self.cornerRadius, style: .continuous))
                         }
                     }
                 }
@@ -98,7 +110,7 @@ struct ClipView: View {
                     .frame(height: clip.secondaryItem != nil ? (clip.tertiaryItem != nil ? 32 : 16) : 0)
             }
         } else {
-            RoundedRectangle(cornerRadius: 8, style: .continuous)
+            RoundedRectangle(cornerRadius: Self.cornerRadius, style: .continuous)
                 .aspectRatio(1, contentMode: .fit)
         }
     }
@@ -151,7 +163,4 @@ struct ClipView: View {
                                 registeredDate: Date(),
                                 updatedDate: Date()))
         .environment(\.imageQueryService, _ImageQueryService())
-        .background {
-            Color.red
-        }
 }
