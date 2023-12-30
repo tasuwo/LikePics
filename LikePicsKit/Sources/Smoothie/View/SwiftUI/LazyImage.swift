@@ -12,67 +12,79 @@ enum LazyImageLoadResult {
 }
 
 @available(iOS 17, macOS 14, *)
+public struct LazyImageCacheInfo: Equatable {
+    public var key: String
+    public var originalImageSize: CGSize
+
+    public init(key: String, originalImageSize: CGSize) {
+        self.key = key
+        self.originalImageSize = originalImageSize
+    }
+}
+
+@available(iOS 17, macOS 14, *)
 final class LazyImageLoader: ObservableObject {
-    static var associatedKey = "ImageLoadTaskController.AssociatedKey"
+    struct Context {
+        var data: () async -> Data?
+        var cacheInfo: LazyImageCacheInfo
+        var displayScale: CGFloat
+        var imageProcessingQueue: ImageProcessingQueue
+    }
 
     @Published var result: LazyImageLoadResult?
 
-    private let originalSize: CGSize
-    private let cacheKey: String
-    private let data: () async -> Data?
-    private var cancellable: ImageLoadTaskCancellable?
+    var context: Context?
 
-    var displayScale: CGFloat = 1
-    var imageProcessingQueue: ImageProcessingQueue = .init()
+    private var cancellable: ImageLoadTaskCancellable?
 
     private let frameSizes: AsyncStream<CGSize>
     private let frameSizeContinuation: AsyncStream<CGSize>.Continuation
     private var frameSizeObservation: Task<Void, Never>?
 
-    init(originalSize: CGSize, cacheKey: String, data: @escaping () async -> Data?) {
-        self.originalSize = originalSize
-        self.cacheKey = cacheKey
-        self.data = data
+    init() {
         let (stream, continuation) = AsyncStream.makeStream(of: CGSize.self)
         self.frameSizes = stream
         self.frameSizeContinuation = continuation
 
         frameSizeObservation = Task { [weak self, stream] in
             for await frameSize in stream.debounce(for: .seconds(1)) {
-                await self?.load(with: frameSize)
+                await self?.load(thumbnailSize: frameSize)
             }
         }
     }
 
     deinit {
         cancellable?.cancel()
+        frameSizeObservation?.cancel()
     }
 
     @MainActor
-    func load(with thumbnailSize: CGSize) {
-        guard thumbnailSize != .zero else {
+    func load(thumbnailSize: CGSize) {
+        guard thumbnailSize != .zero, let context, !context.cacheInfo.key.isEmpty else {
             return
         }
 
         cancel()
 
-        let request = ImageRequest(resize: .init(size: thumbnailSize, scale: displayScale), cacheKey: cacheKey, diskCacheInvalidate: { [originalSize, thumbnailSize, displayScale] pixelSize in
-            return ThumbnailInvalidationChecker.shouldInvalidateDiskCache(originalImageSizeInPoint: originalSize,
+        let request = ImageRequest(resize: .init(size: thumbnailSize, scale: context.displayScale), cacheKey: context.cacheInfo.key, diskCacheInvalidate: { [context, thumbnailSize] pixelSize in
+            return ThumbnailInvalidationChecker.shouldInvalidateDiskCache(originalImageSizeInPoint: context.cacheInfo.originalImageSize,
                                                                           thumbnailSizeInPoint: thumbnailSize,
                                                                           diskCacheSizeInPixel: pixelSize,
-                                                                          displayScale: displayScale)
-        }, data)
-        cancellable = imageProcessingQueue.loadImage(request) { [cacheKey, originalSize, thumbnailSize, displayScale, weak self] response in
+                                                                          displayScale: context.displayScale)
+        }, context.data)
+        cancellable = context.imageProcessingQueue.loadImage(request) { [context, thumbnailSize, weak self] response in
             if let response {
+                guard context.cacheInfo.key == self?.context?.cacheInfo.key else { return }
+
                 if response.source == .memoryCache {
-                    if ThumbnailInvalidationChecker.shouldInvalidateMemoryCache(originalImageSizeInPoint: originalSize,
+                    if ThumbnailInvalidationChecker.shouldInvalidateMemoryCache(originalImageSizeInPoint: context.cacheInfo.originalImageSize,
                                                                                 thumbnailSizeInPoint: thumbnailSize,
                                                                                 memoryCacheSizeInPixel: .init(width: response.image.size.width,
                                                                                                               height: response.image.size.height),
-                                                                                displayScale: displayScale)
+                                                                                displayScale: context.displayScale)
                     {
-                        self?.imageProcessingQueue.config.memoryCache.remove(forKey: cacheKey)
-                        self?.load(with: thumbnailSize)
+                        context.imageProcessingQueue.config.memoryCache.remove(forKey: context.cacheInfo.key)
+                        self?.load(thumbnailSize: thumbnailSize)
                     }
                 }
 
@@ -100,18 +112,21 @@ final class LazyImageLoader: ObservableObject {
 
 @available(iOS 17, macOS 14, *)
 public struct LazyImage<Content>: View where Content: View {
-    @StateObject private var loader: LazyImageLoader
+    @StateObject private var loader = LazyImageLoader()
+
     @ViewBuilder private let content: (LazyImageLoadResult?) -> Content
+
     @Environment(\.displayScale) var displayScale
     @Environment(\.imageProcessingQueue) var imageProcessingQueue
+    @Environment(\.lazyImageCacheInfo) var cacheInfo
 
-    public init<C, P>(originalSize: CGSize,
-                      cacheKey: String,
-                      data: @escaping () async -> Data?,
+    private let data: () async -> Data?
+
+    public init<C, P>(data: @escaping () async -> Data?,
                       @ViewBuilder content: @escaping (Image?) -> C,
                       @ViewBuilder placeholder: @escaping () -> P) where C: View, P: View, Content == _ConditionalContent<C, P>
     {
-        self._loader = .init(wrappedValue: .init(originalSize: originalSize, cacheKey: cacheKey, data: data))
+        self.data = data
         self.content = { result in
             switch result {
             case let .image(image):
@@ -127,9 +142,8 @@ public struct LazyImage<Content>: View where Content: View {
         GeometryReader { geometry in
             content(loader.result)
                 .onAppear {
-                    loader.displayScale = displayScale
-                    loader.imageProcessingQueue = imageProcessingQueue
-                    loader.load(with: geometry.size)
+                    loader.context = context()
+                    loader.load(thumbnailSize: geometry.size)
                 }
                 .onDisappear {
                     loader.cancel()
@@ -138,7 +152,22 @@ public struct LazyImage<Content>: View where Content: View {
                 .onChange(of: geometry.size) { oldValue, newValue in
                     loader.onChangeFrame(newValue)
                 }
+                .onChange(of: displayScale) { _, newValue in
+                    loader.context = context()
+                    loader.load(thumbnailSize: geometry.size)
+                }
+                .onChange(of: cacheInfo) { _, newValue in
+                    loader.context = context()
+                    loader.load(thumbnailSize: geometry.size)
+                }
         }
+    }
+
+    private func context() -> LazyImageLoader.Context {
+        return .init(data: data,
+                     cacheInfo: cacheInfo,
+                     displayScale: displayScale,
+                     imageProcessingQueue: imageProcessingQueue)
     }
 }
 
@@ -182,5 +211,18 @@ private enum ThumbnailInvalidationChecker {
         let result = widthDiff > thresholdInPoint || heightDiff > thresholdInPoint
 
         return result
+    }
+}
+
+@available(iOS 17, macOS 14, *)
+private struct LazyImageCacheInfoKey: EnvironmentKey {
+    static let defaultValue = LazyImageCacheInfo(key: "", originalImageSize: .zero)
+}
+
+@available(iOS 17, macOS 14, *)
+public extension EnvironmentValues {
+    var lazyImageCacheInfo: LazyImageCacheInfo {
+        get { self[LazyImageCacheInfoKey.self] }
+        set { self[LazyImageCacheInfoKey.self] = newValue }
     }
 }

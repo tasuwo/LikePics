@@ -13,7 +13,7 @@ struct ClipItemView: View {
 
     var body: some View {
         ZStack {
-            LazyImage(originalSize: item.imageSize.cgSize, cacheKey: "clip-item-\(item.imageId.uuidString)") {
+            LazyImage {
                 try? imageQueryService.read(having: item.imageId)
             } content: { image in
                 if let image {
@@ -27,6 +27,7 @@ struct ClipItemView: View {
             }
             .aspectRatio(item.imageSize.aspectRatio, contentMode: .fit)
         }
+        .environment(\.lazyImageCacheInfo, .init(key: "clip-item-\(item.imageId.uuidString)", originalImageSize: item.imageSize.cgSize))
         .environment(\.imageProcessingQueue, processingQueue)
     }
 }

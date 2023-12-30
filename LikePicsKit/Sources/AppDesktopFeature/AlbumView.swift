@@ -16,7 +16,7 @@ struct AlbumView: View {
             if let primaryItem = album.clips.first?.primaryItem {
                 Color.clear
                     .overlay {
-                        LazyImage(originalSize: primaryItem.imageSize.cgSize, cacheKey: "album-\(primaryItem.imageId.uuidString)") {
+                        LazyImage {
                             try? imageQueryService.read(having: primaryItem.imageId)
                         } content: { image in
                             if let image {
@@ -29,6 +29,7 @@ struct AlbumView: View {
                         } placeholder: {
                             Color(NSColor.secondarySystemFill)
                         }
+                        .environment(\.lazyImageCacheInfo, .init(key: "album-\(primaryItem.imageId.uuidString)", originalImageSize: primaryItem.imageSize.cgSize))
                     }
                     .aspectRatio(1, contentMode: .fit)
                     .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
