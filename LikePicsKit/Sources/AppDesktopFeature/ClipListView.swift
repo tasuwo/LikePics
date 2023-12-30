@@ -31,9 +31,22 @@ struct ClipListView: View {
                             }
                         }
                 } height: { clip in
+                    // 配置計算に利用されるだけなので、相対的なサイズで良い
                     let columnWidth: CGFloat = 100
+
                     guard let primaryItem = clip.primaryItem else { return columnWidth }
-                    return columnWidth / primaryItem.imageSize.cgSize.width * primaryItem.imageSize.cgSize.height
+
+                    var columnHeight = columnWidth / primaryItem.imageSize.cgSize.width * primaryItem.imageSize.cgSize.height
+
+                    if clip.secondaryItem != nil {
+                        columnHeight += 16
+                    }
+
+                    if clip.tertiaryItem != nil {
+                        columnHeight += 16
+                    }
+
+                    return columnHeight
                 }
                 .padding(.all, type(of: layout).padding)
             }

@@ -8,37 +8,98 @@ import SwiftUI
 
 struct ClipView: View {
     let clip: Clip
-    @State var primaryThumbnailSize: CGSize?
     @Environment(\.imageQueryService) var imageQueryService
     @Environment(\.clipThumbnailProcessingQueue) var processingQueue
 
     var body: some View {
         if let primaryItem = clip.primaryItem {
-            LazyImage {
-                try? imageQueryService.read(having: primaryItem.imageId)
-            } content: { image in
-                if let image {
-                    image
-                        .resizable()
-                } else {
+            VStack(spacing: 0) {
+                LazyImage {
+                    try? imageQueryService.read(having: primaryItem.imageId)
+                } content: { image in
+                    if let image {
+                        image.resizable()
+                    } else {
+                        Color(NSColor.secondarySystemFill)
+                    }
+                } placeholder: {
                     Color(NSColor.secondarySystemFill)
                 }
-            } placeholder: {
-                Color(NSColor.secondarySystemFill)
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .aspectRatio(primaryItem.imageSize.aspectRatio, contentMode: .fit)
+                .environment(\.lazyImageCacheInfo, .init(key: "item-\(primaryItem.imageId.uuidString)", originalImageSize: primaryItem.imageSize.cgSize))
+                .background {
+                    if let secondaryItem = clip.secondaryItem {
+                        GeometryReader { geometry in
+                            ZStack(alignment: .top) {
+                                LazyImage {
+                                    try? imageQueryService.read(having: secondaryItem.imageId)
+                                } content: { image in
+                                    if let image {
+                                        image
+                                            .resizable()
+                                            .overlay(content: {
+                                                Color.black
+                                                    .opacity(0.4)
+                                            })
+                                    } else {
+                                        Color(NSColor.secondarySystemFill)
+                                    }
+                                } placeholder: {
+                                    Color(NSColor.secondarySystemFill)
+                                }
+                                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                                .environment(\.lazyImageCacheInfo, .init(key: "item-\(secondaryItem.imageId.uuidString)", originalImageSize: secondaryItem.imageSize.cgSize))
+                                .frame(width: geometry.size.width)
+                                .aspectRatio(secondaryItem.imageSize.aspectRatio, contentMode: .fit)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .offset(y: 16)
+                                .frame(height: geometry.size.height, alignment: .bottom)
+                                .background {
+                                    if let tertiaryItem = clip.tertiaryItem {
+                                        LazyImage {
+                                            try? imageQueryService.read(having: tertiaryItem.imageId)
+                                        } content: { image in
+                                            if let image {
+                                                image
+                                                    .resizable()
+                                                    .overlay(content: {
+                                                        Color.black
+                                                            .opacity(0.6)
+                                                    })
+                                            } else {
+                                                Color(NSColor.secondarySystemFill)
+                                            }
+                                        } placeholder: {
+                                            Color(NSColor.secondarySystemFill)
+                                        }
+                                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                                        .environment(\.lazyImageCacheInfo, .init(key: "item-\(tertiaryItem.imageId.uuidString)", originalImageSize: tertiaryItem.imageSize.cgSize))
+                                        .frame(width: geometry.size.width)
+                                        .aspectRatio(tertiaryItem.imageSize.aspectRatio, contentMode: .fit)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                        .offset(y: 32)
+                                        .frame(height: geometry.size.height, alignment: .bottom)
+                                    }
+                                }
+
+                                Color.clear
+                                    .frame(width: geometry.size.width,
+                                           height: geometry.size.height + (clip.secondaryItem != nil ? (clip.tertiaryItem != nil ? 32 : 16) : 0))
+                                    .fixedSize()
+                            }
+                            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                        }
+                    }
+                }
+                .environment(\.imageProcessingQueue, processingQueue)
+
+                Color.clear
+                    .frame(height: clip.secondaryItem != nil ? (clip.tertiaryItem != nil ? 32 : 16) : 0)
             }
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-            .aspectRatio(primaryItem.imageSize.aspectRatio, contentMode: .fit)
-            .onChangeFrame { size in
-                primaryThumbnailSize = size
-            }
-            .environment(\.imageProcessingQueue, processingQueue)
-            .environment(\.lazyImageCacheInfo, .init(key: "item-\(primaryItem.imageId.uuidString)", originalImageSize: primaryItem.imageSize.cgSize))
         } else {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .aspectRatio(1, contentMode: .fit)
-                .onChangeFrame { size in
-                    primaryThumbnailSize = size
-                }
         }
     }
 }
@@ -69,7 +130,18 @@ struct ClipView: View {
                                           imageId: UUID(),
                                           imageFileName: "",
                                           imageUrl: nil,
-                                          imageSize: .init(height: 150, width: 100),
+                                          imageSize: .init(height: 100, width: 150),
+                                          imageDataSize: 0,
+                                          registeredDate: Date(),
+                                          updatedDate: Date()),
+                                    .init(id: UUID(),
+                                          url: nil,
+                                          clipId: UUID(),
+                                          clipIndex: 0,
+                                          imageId: UUID(),
+                                          imageFileName: "",
+                                          imageUrl: nil,
+                                          imageSize: .init(height: 1000, width: 150),
                                           imageDataSize: 0,
                                           registeredDate: Date(),
                                           updatedDate: Date())
@@ -79,4 +151,7 @@ struct ClipView: View {
                                 registeredDate: Date(),
                                 updatedDate: Date()))
         .environment(\.imageQueryService, _ImageQueryService())
+        .background {
+            Color.red
+        }
 }

@@ -33,13 +33,13 @@ struct AlbumListView: View {
                                 } label: {
                                     Text("Rename Album", bundle: .module, comment: "Context Menu")
                                 }
-                                
+
                                 Button {
                                     // TODO:
                                 } label: {
                                     Text("Hide Album", bundle: .module, comment: "Context Menu")
                                 }
-                                
+
                                 Button(role: .destructive) {
                                     // TODO:
                                 } label: {
