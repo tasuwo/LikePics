@@ -34,7 +34,7 @@ public final class AppContainer: ObservableObject {
     private let persistentStackLoader: PersistentStackLoader
     private let persistentStackMonitor: PersistentStackMonitor
     private var persistentStackLoading: Task<Void, Never>?
-    private var persistentStackReloading: AnyCancellable?
+    private var persistentStackReloading: Task<Void, Never>?
     private var persistentStackEventsObserving: Set<AnyCancellable> = .init()
     private var imageQueryContext: NSManagedObjectContext
     private var cloudAvailabilityObservationTask: Task<Void, Never>?
@@ -107,24 +107,23 @@ public final class AppContainer: ObservableObject {
 
         // MARK: Observation
 
-        cloudAvailabilityObservationTask = Task { [persistentStackLoader, cloudAvailability] in
+        cloudAvailabilityObservationTask = Task { @MainActor [persistentStackLoader, cloudAvailability] in
             for await isAvailable in persistentStackLoader.isCloudKitSyncAvailables() {
                 cloudAvailability.isAvailable = isAvailable
             }
         }
 
-        persistentStackReloading = persistentStack
-            .reloaded
-            .sink { [weak self] in
-                guard let self else { return }
-                self.viewContext = self.persistentStack.viewContext
+        persistentStackReloading = Task { @MainActor [persistentStack, imageQueryQueue, weak self] in
+            for await _ in persistentStack.reloaded.values {
+                self?.viewContext = persistentStack.viewContext
 
-                let newImageQueryContext = self.persistentStack.newBackgroundContext(on: self.imageQueryQueue)
-                self.imageQueryContext = newImageQueryContext
+                let newImageQueryContext = persistentStack.newBackgroundContext(on: imageQueryQueue)
+                self?.imageQueryContext = newImageQueryContext
 
-                self.clipQueryService.internalService.context = self.persistentStack.viewContext
-                self.imageQueryService.context = newImageQueryContext
+                self?.clipQueryService.internalService.context = persistentStack.viewContext
+                self?.imageQueryService.context = newImageQueryContext
             }
+        }
 
         // TODO: RemoteChangeMergeHandler
 
@@ -134,6 +133,7 @@ public final class AppContainer: ObservableObject {
     }
 
     deinit {
+        persistentStackReloading?.cancel()
         cloudAvailabilityObservationTask?.cancel()
     }
 
