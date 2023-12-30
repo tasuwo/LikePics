@@ -19,5 +19,9 @@ public struct AppScene: Scene {
                 .environment(\.clipThumbnailProcessingQueue, container.clipThumbnailProcessingQueue)
                 .environment(\.imageQueryService, container.imageQueryService)
         }
+
+        Settings {
+            SettingsView()
+        }
     }
 }
