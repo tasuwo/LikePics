@@ -44,7 +44,7 @@ struct AlbumView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(album.title)
                     .font(.body)
-                Text("\(album.clips.count)")
+                Text("\(album.clips.count)", bundle: .module, comment: "Clips count in album.")
                     .font(.callout)
                     .foregroundStyle(.secondary)
             }

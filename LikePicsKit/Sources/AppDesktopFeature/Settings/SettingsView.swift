@@ -12,15 +12,15 @@ struct SettingsView: View {
         TabView {
             GeneralSettingsView()
                 .tabItem {
-                    Label("一般", systemImage: "gear")
+                    Label(String(localized: "General", bundle: .module, comment: "Setting Title"), systemImage: "gear")
                 }
-                .navigationTitle("一般")
+                .navigationTitle(Text("General", bundle: .module, comment: "Setting Title"))
 
             CloudSettingsView(cloudSyncAvailability: cloudSyncAvailability)
                 .tabItem {
-                    Label("iCloud", systemImage: "icloud")
+                    Label(String(localized: "iCloud", bundle: .module, comment: "Setting Title"), systemImage: "icloud")
                 }
-                .navigationTitle("iCloud")
+                .navigationTitle(Text("iCloud", bundle: .module, comment: "Setting Title"))
         }
         .padding(20)
         .frame(width: 375, height: 150)
@@ -28,5 +28,7 @@ struct SettingsView: View {
 }
 
 #Preview() {
-    SettingsView()
+    let availability = CloudSyncAvailability()
+    return SettingsView()
+        .environment(availability)
 }

@@ -1,0 +1,333 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+      "comment" : "Picker title placeholder in general setting.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        }
+      }
+    },
+    "%lld" : {
+      "comment" : "Clips count in album.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        }
+      }
+    },
+    "Albums" : {
+      "comment" : "Sidebar Item",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アルバム"
+          }
+        }
+      }
+    },
+    "All" : {
+      "comment" : "Sidebar Item",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全て"
+          }
+        }
+      }
+    },
+    "Always turn off" : {
+      "comment" : "Alert action",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "常にオフ"
+          }
+        }
+      }
+    },
+    "Appearance:" : {
+      "comment" : "General setting",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示設定:"
+          }
+        }
+      }
+    },
+    "Auto" : {
+      "comment" : "Display Theme",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自動"
+          }
+        }
+      }
+    },
+    "Automatically upload and store all photos in iCloud so you can access them from any of your devices." : {
+      "comment" : "Toggle description for icloud sync setting",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべての写真をiCloudに自動的にアップロードして保存し、任意のデバイスからアクセスして表示できるようにします。"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "キャンセル"
+          }
+        }
+      }
+    },
+    "Dark" : {
+      "comment" : "Display Theme",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ダーク"
+          }
+        }
+      }
+    },
+    "Data on this device will no longer be shared with other iOS/iPadOS devices. If you turn on iCloud sync later, data on this device will be merged with data on other iOS/iPadOS devices." : {
+      "comment" : "Alert message",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この端末に保存したデータを他のiOS/iPadOS端末と共有できなくなります。同期がオフの最中に保存したデータは、後ほどiCloud同期が有効になった際に、他のiOS/iPadOS端末のデータと統合されます"
+          }
+        }
+      }
+    },
+    "Delete Album" : {
+      "comment" : "Context Menu",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除"
+          }
+        }
+      }
+    },
+    "General" : {
+      "comment" : "Setting Title",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一般"
+          }
+        }
+      }
+    },
+    "Hide Album" : {
+      "comment" : "Context Menu",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隠す"
+          }
+        }
+      }
+    },
+    "iCloud" : {
+      "comment" : "Setting Title",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud"
+          }
+        }
+      }
+    },
+    "iCloud Sync" : {
+      "comment" : "Toggle title for icloud sync setting",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud同期"
+          }
+        }
+      }
+    },
+    "iCloud Unavailable" : {
+      "comment" : "Alert title",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloudが利用できません"
+          }
+        }
+      }
+    },
+    "Library" : {
+      "comment" : "Sidebar Section Title",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ライブラリ"
+          }
+        }
+      }
+    },
+    "Light" : {
+      "comment" : "Display Theme",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ライト"
+          }
+        }
+      }
+    },
+    "New Album" : {
+      "comment" : "Context Menu",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新規アルバム"
+          }
+        }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
+    "Please sign in to iCloud or enable using iCloud for this app at device setting.\nData saved while iCloud unavailable will be merged with other devices data when iCloud avaialable." : {
+      "comment" : "Alert message",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloudアカウントでログインしていないか、端末のiCloud同期設定がオフになっている可能性があります\\niCluoudが利用できない間に保存したデータは、後ほどiCloudが有効になった際に統合されます"
+          }
+        }
+      }
+    },
+    "Rename Album" : {
+      "comment" : "Context Menu",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タイトルの変更"
+          }
+        }
+      }
+    },
+    "Right click me" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        }
+      }
+    },
+    "Show hidden items" : {
+      "comment" : "General setting",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隠した項目を表示する"
+          }
+        }
+      }
+    },
+    "Tags" : {
+      "comment" : "Sidebar Section Title",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タグ"
+          }
+        }
+      }
+    },
+    "Theme:" : {
+      "comment" : "General setting",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "テーマ:"
+          }
+        }
+      }
+    },
+    "Turn off" : {
+      "comment" : "Alert action",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オフにする"
+          }
+        }
+      }
+    },
+    "Turn off iCloud Sync" : {
+      "comment" : "Alert title",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud同期をオフにしますか？"
+          }
+        }
+      }
+    },
+    "Turn on when available" : {
+      "comment" : "Alert action",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "利用可能になったらオンにする"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

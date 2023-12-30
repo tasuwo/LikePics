@@ -31,17 +31,19 @@ struct AlbumListView: View {
                                 Button {
                                     // TODO:
                                 } label: {
-                                    Text("タイトルの変更")
+                                    Text("Rename Album", bundle: .module, comment: "Context Menu")
                                 }
+                                
                                 Button {
                                     // TODO:
                                 } label: {
-                                    Text("隠す")
+                                    Text("Hide Album", bundle: .module, comment: "Context Menu")
                                 }
+                                
                                 Button(role: .destructive) {
                                     // TODO:
                                 } label: {
-                                    Text("削除")
+                                    Text("Delete Album", bundle: .module, comment: "Context Menu")
                                 }
                             }
                             .onTapGesture {

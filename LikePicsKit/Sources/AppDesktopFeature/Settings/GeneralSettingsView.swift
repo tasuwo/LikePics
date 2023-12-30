@@ -12,21 +12,21 @@ struct GeneralSettingsView: View {
     var body: some View {
         Grid(alignment: .leadingFirstTextBaseline) {
             GridRow {
-                Text("テーマ:")
+                Text("Theme:", bundle: .module, comment: "General setting")
                     .gridColumnAlignment(.trailing)
-                Picker("", selection: $userInterfaceStyle) {
-                    Text("ライト").tag(UserInterfaceStyle.light)
-                    Text("ダーク").tag(UserInterfaceStyle.dark)
-                    Text("自動").tag(UserInterfaceStyle.unspecified)
+                Picker(String(localized: "", bundle: .module, comment: "Picker title placeholder in general setting."), selection: $userInterfaceStyle) {
+                    Text("Light", bundle: .module, comment: "Display Theme").tag(UserInterfaceStyle.light)
+                    Text("Dark", bundle: .module, comment: "Display Theme").tag(UserInterfaceStyle.dark)
+                    Text("Auto", bundle: .module, comment: "Display Theme").tag(UserInterfaceStyle.unspecified)
                 }
                 .labelsHidden()
                 .pickerStyle(.radioGroup)
             }
 
             GridRow {
-                Text("表示設定:")
+                Text("Appearance:", bundle: .module, comment: "General setting")
                     .gridColumnAlignment(.trailing)
-                Toggle("隠した項目を表示", isOn: $showHiddenItems)
+                Toggle(String(localized: "Show hidden items", bundle: .module, comment: "General setting"), isOn: $showHiddenItems)
                     .gridCellColumns(2)
             }
 

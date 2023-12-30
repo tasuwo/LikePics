@@ -30,10 +30,10 @@ struct Sidebar: View {
 
     var body: some View {
         List(selection: $selectedItem) {
-            Section("ライブラリ") {
+            Section(String(localized: "Library", bundle: .module, comment: "Sidebar Section Title")) {
                 HStack {
                     Label {
-                        Text("全て")
+                        Text("All", bundle: .module, comment: "Sidebar Item")
                     } icon: {
                         Image(systemName: "square.grid.2x2")
                     }
@@ -51,17 +51,17 @@ struct Sidebar: View {
                             Button {
                                 // TODO:
                             } label: {
-                                Text("タイトルの変更")
+                                Text("Rename Album", bundle: .module, comment: "Context Menu")
                             }
                             Button {
                                 // TODO:
                             } label: {
-                                Text("隠す")
+                                Text("Hide Album", bundle: .module, comment: "Context Menu")
                             }
                             Button {
                                 // TODO:
                             } label: {
-                                Text("削除")
+                                Text("Delete Album", bundle: .module, comment: "Context Menu")
                             }
                         }
                         .tag(SidebarItem.album(album.id))
@@ -69,7 +69,7 @@ struct Sidebar: View {
                 } label: {
                     HStack {
                         Label {
-                            Text("アルバム")
+                            Text("Albums", bundle: .module, comment: "Sidebar Item")
                         } icon: {
                             Image(systemName: "square.stack")
                         }
@@ -88,7 +88,7 @@ struct Sidebar: View {
                         Button {
                             // TODO:
                         } label: {
-                            Text("新規アルバム")
+                            Text("New Album", bundle: .module, comment: "Context Menu")
                         }
                     }
                     .tag(SidebarItem.albums)
@@ -101,7 +101,7 @@ struct Sidebar: View {
                 )
             }
 
-            Section("タグ") {
+            Section(String(localized: "Tags", bundle: .module, comment: "Sidebar Section Title")) {
                 HMasonryGrid(tags.compactMap({ $0.map(to: Domain.Tag.self) })) { tag in
                     TagButton(tag: tag, isSelected: selectedItem?.tagId() == tag.id)
                         .onTapGesture {
