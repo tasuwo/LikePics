@@ -25,7 +25,6 @@ public final class AppContainer: ObservableObject {
 
     // MARK: Service
 
-    let clipQueryService: ClipQueryCacheService<ClipQueryService>
     let imageQueryService: ImageQueryService
 
     // MARK: Core Data
@@ -71,7 +70,6 @@ public final class AppContainer: ObservableObject {
         self.persistentStackMonitor = PersistentStackMonitor()
 
         self.imageQueryContext = self.persistentStack.newBackgroundContext(on: self.imageQueryQueue)
-        self.clipQueryService = ClipQueryCacheService(ClipQueryService(context: self.persistentStack.viewContext))
         self.imageQueryService = ImageQueryService(context: self.imageQueryContext)
 
         self.cloudAvailability = .init()
@@ -120,7 +118,6 @@ public final class AppContainer: ObservableObject {
                 let newImageQueryContext = persistentStack.newBackgroundContext(on: imageQueryQueue)
                 self?.imageQueryContext = newImageQueryContext
 
-                self?.clipQueryService.internalService.context = persistentStack.viewContext
                 self?.imageQueryService.context = newImageQueryContext
             }
         }
