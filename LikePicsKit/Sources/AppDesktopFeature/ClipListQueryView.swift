@@ -27,7 +27,7 @@ struct ClipListQueryView: View {
 
     struct AlbumSource: View {
         @FetchRequest private var albums: FetchedResults<Persistence.Album>
-        @AppStorage(StorageKey.showHiddenItems.rawValue) var showHiddenItems: Bool = false
+        @AppStorage(\.showHiddenItems) var showHiddenItems
 
         init(_ request: FetchRequest<Persistence.Album>) {
             _albums = request
@@ -46,7 +46,7 @@ struct ClipListQueryView: View {
 
     private let query: Query
 
-    @AppStorage(StorageKey.showHiddenItems.rawValue) var showHiddenItems: Bool = false
+    @AppStorage(\.showHiddenItems) var showHiddenItems
 
     init(_ query: Query) {
         self.query = query

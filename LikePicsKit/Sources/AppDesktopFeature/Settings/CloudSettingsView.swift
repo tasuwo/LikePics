@@ -5,7 +5,7 @@
 import SwiftUI
 
 struct CloudSettingsView: View {
-    @AppStorage(StorageKey.isCloudSyncEnabled.rawValue) private var isCloudSyncEnabled = true
+    @AppStorage(\.isCloudSyncEnabled) private var isCloudSyncEnabled
 
     var body: some View {
         Form {

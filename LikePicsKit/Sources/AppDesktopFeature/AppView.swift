@@ -8,7 +8,7 @@ import SwiftUI
 struct AppView: View {
     @State private var selectedItem: SidebarItem? = .all
     @EnvironmentObject private var container: AppContainer
-    @AppStorage(StorageKey.showHiddenItems.rawValue) var showHiddenItems: Bool = false
+    @AppStorage(\.showHiddenItems) var showHiddenItems
 
     /// ## HACK
     /// `managedObjectContext` は iCloud 同期の切り替え時に別インスタンスに差し替えられる

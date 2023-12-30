@@ -10,7 +10,7 @@ struct AlbumView: View {
     let album: Album
     @Environment(\.imageQueryService) var imageQueryService
     @Environment(\.albumThumbnailProcessingQueue) var processingQueue
-    @AppStorage(StorageKey.showHiddenItems.rawValue) var showHiddenItems: Bool = false
+    @AppStorage(\.showHiddenItems) var showHiddenItems
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -62,8 +62,7 @@ struct AlbumView: View {
                                   clips: [],
                                   isHidden: false,
                                   registeredDate: Date(),
-                                  updatedDate: Date()),
-                     showHiddenItems: true)
+                                  updatedDate: Date()))
         .padding()
         .environment(\.imageQueryService, _ImageQueryService())
 }

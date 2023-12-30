@@ -8,7 +8,7 @@ import SwiftUI
 public struct AppScene: Scene {
     private let container: AppContainer
 
-    @AppStorage(StorageKey.userInterfaceStyle.rawValue) var userInterfaceStyle: UserInterfaceStyle = .unspecified
+    @AppStorage(\.userInterfaceStyle) var userInterfaceStyle
 
     public init(_ container: AppContainer) {
         self.container = container
