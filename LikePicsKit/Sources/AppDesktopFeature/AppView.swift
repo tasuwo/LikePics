@@ -30,7 +30,9 @@ struct AppView: View {
             switch selectedItem {
             case .all:
                 AppStack {
-                    ClipListQueryView(.all)
+                    ClipListQueryView(.all) {
+                        ClipListView(clips: $0)
+                    }
                 }
                 .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
 
@@ -43,13 +45,17 @@ struct AppView: View {
 
             case let .album(id):
                 AppStack {
-                    ClipListQueryView(.album(id))
+                    ClipListQueryView(.album(id)) {
+                        ClipListView(clips: $0)
+                    }
                 }
                 .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
 
             case let .tag(id):
                 AppStack {
-                    ClipListQueryView(.tagged(id))
+                    ClipListQueryView(.tagged(id)) {
+                        ClipListView(clips: $0)
+                    }
                 }
                 .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
 

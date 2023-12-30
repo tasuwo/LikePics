@@ -17,8 +17,10 @@ struct AppStack<Content: View>: View {
             content()
                 .environmentObject(router)
                 .navigationDestination(for: Route.AlbumClipList.self) { route in
-                    ClipListQueryView(.album(route.albumId))
-                        .environmentObject(router)
+                    ClipListQueryView(.album(route.albumId)) {
+                        ClipListView(clips: $0)
+                    }
+                    .environmentObject(router)
                 }
                 .navigationDestination(for: Route.ClipItemPage.self) { route in
                     ClipItemPageView(clips: route.clips, clipItem: route.clipItem)
