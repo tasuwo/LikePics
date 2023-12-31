@@ -2,13 +2,13 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-public struct SearchableStorage<Item: Searchable & Codable>: Equatable, Codable where Item.ID: Codable {
+public struct SearchableStorage<Item: Searchable & Codable>: Equatable, Codable {
     struct History: Equatable, Codable {
         let lastComparableFilterQuery: String
         let items: [Item]
     }
 
-    private var cache = Set<Item.ID>()
+    private var cache = Set<Item.Identity>()
     private var lastResult: History?
 
     // MARK: - Lifecycle
@@ -18,7 +18,7 @@ public struct SearchableStorage<Item: Searchable & Codable>: Equatable, Codable 
     // MARK: - Methods
 
     public mutating func perform(query: String, to items: [Item]) -> [Item] {
-        let itemByIds = items.reduce(into: [Item.ID: Item]()) { $0[$1.id] = $1 }
+        let itemByIds = items.reduce(into: [Item.Identity: Item]()) { $0[$1.identity] = $1 }
         let ids = Set(itemByIds.keys)
 
         defer {
@@ -58,9 +58,9 @@ public struct SearchableStorage<Item: Searchable & Codable>: Equatable, Codable 
         return filteredItems
     }
 
-    private static func apply(_ itemsByIds: [Item.ID: Item], to items: [Item]) -> [Item] {
+    private static func apply(_ itemsByIds: [Item.Identity: Item], to items: [Item]) -> [Item] {
         return items
-            .map { $0.id }
+            .map { $0.identity }
             .compactMap { itemsByIds[$0] }
     }
 }
