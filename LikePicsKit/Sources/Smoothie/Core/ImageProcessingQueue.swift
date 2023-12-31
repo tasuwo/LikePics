@@ -58,7 +58,7 @@ public extension ImageProcessingQueue {
                 .task(for: ImageRequestKey(request)) {
                     ImageLoadTask(request: request, processingQueue: self)
                 }
-                .subscribe { _ in
+                .subscribe(queue: queue) { _ in
                     completion?()
                 }
         }
@@ -80,7 +80,7 @@ extension ImageProcessingQueue {
                 .task(for: ImageRequestKey(request)) {
                     ImageLoadTask(request: request, processingQueue: self)
                 }
-                .subscribe(completion: completion)
+                .subscribe(queue: queue, completion: completion)
         }
     }
 }

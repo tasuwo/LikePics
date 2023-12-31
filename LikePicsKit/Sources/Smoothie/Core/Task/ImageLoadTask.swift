@@ -34,7 +34,7 @@ class ImageLoadTask {
 
     // MARK: Subscribe/Unsubscribe
 
-    func subscribe(completion: @MainActor @escaping (ImageResponse?) -> Void) -> ImageLoadTaskCancellable {
+    func subscribe(queue: DispatchQueue, completion: @MainActor @escaping (ImageResponse?) -> Void) -> ImageLoadTaskCancellable {
         let id = UUID()
 
         let subscription = Subscription(id: id, completion: completion)
@@ -44,7 +44,7 @@ class ImageLoadTask {
             self.start()
         }
 
-        let cancellable = ImageLoadTaskCancellable(id: id, task: self)
+        let cancellable = ImageLoadTaskCancellable(id: id, task: self, queue: queue)
         return cancellable
     }
 

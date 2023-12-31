@@ -9,17 +9,21 @@ public struct ImageLoadTaskCancellable {
 
     private let id: UUID
     private let task: ImageLoadTask
+    private let queue: DispatchQueue
 
     // MARK: - Initializers
 
-    init(id: UUID, task: ImageLoadTask) {
+    init(id: UUID, task: ImageLoadTask, queue: DispatchQueue) {
         self.id = id
         self.task = task
+        self.queue = queue
     }
 
     // MARK: - Methods
 
     public func cancel() {
-        task.unsubscribe(for: id)
+        queue.async {
+            task.unsubscribe(for: id)
+        }
     }
 }
