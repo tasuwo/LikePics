@@ -117,6 +117,7 @@ struct Sidebar: View {
                 } width: { tag in
                     TagButton.preferredWidth(for: tag.name)
                 }
+                .environment(\.frameTrackingMode, .debounce(0.15))
             }
         }
     }
