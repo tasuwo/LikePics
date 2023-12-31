@@ -75,7 +75,8 @@ public final class AppContainer: ObservableObject {
 
         // MARK: Image Loader
 
-        let memoryCache = MemoryCache(config: .default)
+        let memoryCache = MemoryCache(config: .init(costLimit: 2 * 1024 * 1024 * 1024,
+                                                    countLimit: Int.max))
 
         // Clip
 
