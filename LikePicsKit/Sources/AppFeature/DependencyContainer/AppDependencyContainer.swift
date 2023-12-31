@@ -43,6 +43,11 @@ public typealias AppDependencyContaining = HasAlbumCommandService
     & HasUserSettingStorage
 
 public class AppDependencyContainer {
+    final class CloudSyncAvailabilityService: CloudAvailabilityServiceProtocol {
+        let cloudSyncAvailability = CurrentValueSubject<Domain.CloudAvailability?, Never>(nil)
+        public var availability: AnyPublisher<Domain.CloudAvailability?, Never> { cloudSyncAvailability.eraseToAnyPublisher() }
+    }
+
     // MARK: - Properties
 
     // MARK: Image Loader
@@ -85,9 +90,11 @@ public class AppDependencyContainer {
     private var persistentStackLoading: Task<Void, Never>?
     private var persistentStackReloading: AnyCancellable?
     private var persistentStackEventsObserving: Set<AnyCancellable> = .init()
-    private let _cloudAvailabilityService: CloudAvailabilityService
+    private let _cloudAvailabilityService = CloudSyncAvailabilityService()
     private var imageQueryContext: NSManagedObjectContext
     private var commandContext: NSManagedObjectContext
+
+    private var cloudSyncAvailabilityTask: Task<Void, Never>?
 
     // MARK: Queue
 
@@ -130,11 +137,11 @@ public class AppDependencyContainer {
             .appendingPathComponent("TBox", isDirectory: true)
         persistentStackConf.persistentHistoryTokenFileName = "token.data"
         persistentStackConf.shouldLoadPersistentContainerAtInitialized = true
-        self.persistentStack = PersistentStack(configuration: persistentStackConf, isCloudKitEnabled: self._userSettingStorage.readEnabledICloudSync())
+        self.persistentStack = PersistentStack(configuration: persistentStackConf,
+                                               isCloudKitSyncEnabled: self._userSettingStorage.readEnabledICloudSync())
         self.persistentStackLoader = PersistentStackLoader(persistentStack: persistentStack,
-                                                           availabilityProvider: userSettingsStorage)
+                                                           settingStorage: userSettingsStorage)
         self.persistentStackMonitor = PersistentStackMonitor()
-        self._cloudAvailabilityService = CloudAvailabilityService()
 
         self.imageQueryContext = self.persistentStack.newBackgroundContext(on: self.imageQueryQueue)
         self.commandContext = self.persistentStack.newBackgroundContext(on: self.clipCommandQueue)
@@ -262,6 +269,12 @@ public class AppDependencyContainer {
         persistentStackMonitor.startMonitoring()
 
         persistentStackLoading = self.persistentStackLoader.run()
+
+        cloudSyncAvailabilityTask = Task { [_cloudAvailabilityService, persistentStackLoader] in
+            for await isAvailable in persistentStackLoader.isCloudKitSyncAvailables() {
+                _cloudAvailabilityService.cloudSyncAvailability.send(isAvailable.flatMap({ $0 ? .available : .unavailable }))
+            }
+        }
     }
 
     private static func sweepLegacyThumbnailCachesIfExists(appBundle: Bundle) {
@@ -302,6 +315,10 @@ public class AppDependencyContainer {
         }()
 
         return targetUrl
+    }
+
+    deinit {
+        cloudSyncAvailabilityTask?.cancel()
     }
 }
 
@@ -402,8 +419,8 @@ extension AppDependencyContainer: HasClipPreviewPlayConfigurationStorage {
 
 extension AppDependencyContainer: HasPreviewPrefetcher {}
 
-extension UserSettingsStorage: CloudKitSyncAvailabilityProviding {
-    public var isCloudKitSyncAvailable: AsyncStream<Bool> {
+extension UserSettingsStorage: CloudKitSyncSettingStorage {
+    public var isCloudKitSyncEnabled: AsyncStream<Bool> {
         AsyncStream { continuation in
             let cancellables = self.enabledICloudSync
                 .sink { continuation.yield($0) }
@@ -412,9 +429,5 @@ extension UserSettingsStorage: CloudKitSyncAvailabilityProviding {
                 cancellables.cancel()
             }
         }
-    }
-
-    public func set(isCloudKitSyncEnabled: Bool) {
-        set(enabledICloudSync: isCloudKitSyncEnabled)
     }
 }
