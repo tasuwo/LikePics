@@ -47,7 +47,7 @@ final class LazyImageLoader: ObservableObject {
         self.frameSizeContinuation = continuation
 
         frameSizeObservation = Task { [weak self, stream] in
-            for await frameSize in stream.debounce(for: .seconds(1)) {
+            for await frameSize in stream.removeDuplicates().debounce(for: .seconds(1)) {
                 await self?.load(thumbnailSize: frameSize)
             }
         }
@@ -140,6 +140,8 @@ public struct LazyImage<Content>: View where Content: View {
 
     public var body: some View {
         GeometryReader { geometry in
+            // swiftlint:disable:next redundant_discardable_let
+            let _ = loader.onChangeFrame(geometry.size)
             content(loader.result)
                 .onAppear {
                     loader.context = context()
@@ -149,9 +151,6 @@ public struct LazyImage<Content>: View where Content: View {
                     loader.cancel()
                 }
                 .position(x: geometry.frame(in: .local).midX, y: geometry.frame(in: .local).midY)
-                .onChange(of: geometry.size) { oldValue, newValue in
-                    loader.onChangeFrame(newValue)
-                }
                 .onChange(of: displayScale) { _, newValue in
                     loader.context = context()
                     loader.load(thumbnailSize: geometry.size)
