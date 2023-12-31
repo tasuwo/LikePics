@@ -23,50 +23,54 @@ struct AppView: View {
             ClipListLayout.minimum.minWidth
         )
 
-        NavigationSplitView {
-            Sidebar(selectedItem: $selectedItem, showHiddenItems: showHiddenItems)
-                .animation(.default, value: showHiddenItems)
-        } detail: {
-            switch selectedItem {
-            case .all:
-                AppStack {
-                    ClipListQueryView(.all) {
-                        ClipListView(clips: $0)
+        if let viewContext = container.viewContext {
+            NavigationSplitView {
+                Sidebar(selectedItem: $selectedItem, showHiddenItems: showHiddenItems)
+                    .animation(.default, value: showHiddenItems)
+            } detail: {
+                switch selectedItem {
+                case .all:
+                    AppStack {
+                        ClipListQueryView(.all) {
+                            ClipListView(clips: $0)
+                        }
                     }
-                }
-                .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
+                    .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
 
-            case .albums:
-                AppStack {
-                    AlbumListView(showHiddenItems: showHiddenItems)
-                        .animation(.default, value: showHiddenItems)
-                }
-                .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
-
-            case let .album(id):
-                AppStack {
-                    ClipListQueryView(.album(id)) {
-                        ClipListView(clips: $0)
+                case .albums:
+                    AppStack {
+                        AlbumListView(showHiddenItems: showHiddenItems)
+                            .animation(.default, value: showHiddenItems)
                     }
-                }
-                .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
+                    .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
 
-            case let .tag(id):
-                AppStack {
-                    ClipListQueryView(.tagged(id)) {
-                        ClipListView(clips: $0)
+                case let .album(id):
+                    AppStack {
+                        ClipListQueryView(.album(id)) {
+                            ClipListView(clips: $0)
+                        }
                     }
-                }
-                .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
+                    .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
 
-            case nil:
-                EmptyView()
+                case let .tag(id):
+                    AppStack {
+                        ClipListQueryView(.tagged(id)) {
+                            ClipListView(clips: $0)
+                        }
+                    }
+                    .navigationSplitViewColumnWidth(min: minWidth, ideal: minWidth)
+
+                case nil:
+                    EmptyView()
+                }
             }
-        }
-        .environment(\.managedObjectContext, container.viewContext)
-        .id(refreshId)
-        .onChange(of: container.viewContext) { _, _ in
-            refreshId = UUID()
+            .environment(\.managedObjectContext, viewContext)
+            .id(refreshId)
+            .onChange(of: container.viewContext) { _, _ in
+                refreshId = UUID()
+            }
+        } else {
+            ProgressView()
         }
     }
 }

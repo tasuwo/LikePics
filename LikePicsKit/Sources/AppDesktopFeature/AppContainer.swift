@@ -14,7 +14,7 @@ import Smoothie
 public final class AppContainer: ObservableObject {
     // MARK: - Properties
 
-    @Published private(set) var viewContext: NSManagedObjectContext
+    @Published private(set) var viewContext: NSManagedObjectContext?
 
     // MARK: Image Loader
 
@@ -61,9 +61,7 @@ public final class AppContainer: ObservableObject {
             .defaultDirectoryURL()
             .appendingPathComponent("TBox", isDirectory: true)
         persistentStackConf.persistentHistoryTokenFileName = "token.data"
-        persistentStackConf.shouldLoadPersistentContainerAtInitialized = true
         self.persistentStack = PersistentStack(configuration: persistentStackConf, isCloudKitSyncEnabled: isCloudSyncEnabled)
-        self.viewContext = persistentStack.viewContext
 
         self.persistentStackLoader = PersistentStackLoader(persistentStack: persistentStack,
                                                            settingStorage: CloudSyncSettingStorage())
