@@ -70,9 +70,10 @@ class ImageLoadTask {
 
     // MARK: Event
 
-    @MainActor
     func didLoad(_ response: ImageResponse?) {
-        subscriptions.values.forEach { $0.completion(response) }
+        Task { @MainActor [subscriptions] in
+            subscriptions.values.forEach { $0.completion(response) }
+        }
         terminate(isCancelled: false)
     }
 

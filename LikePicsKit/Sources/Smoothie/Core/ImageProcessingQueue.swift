@@ -145,9 +145,7 @@ extension ImageProcessingQueue {
                     if let data = data {
                         self.enqueueDownsampleOperation(task, data: data)
                     } else {
-                        Task { @MainActor in
-                            task.didLoad(nil)
-                        }
+                        task.didLoad(nil)
                     }
                 }
             }
@@ -168,9 +166,7 @@ extension ImageProcessingQueue {
 
             self.queue.async {
                 guard let thumbnail = thumbnail else {
-                    Task { @MainActor in
-                        task.didLoad(nil)
-                    }
+                    task.didLoad(nil)
                     return
                 }
                 if task.request.resize == nil {
@@ -182,9 +178,7 @@ extension ImageProcessingQueue {
                     let image = NSImage(cgImage: thumbnail, size: .init(width: thumbnail.width, height: thumbnail.height))
                     #endif
                     self.config.memoryCache.insert(image, forKey: task.request.cacheKey)
-                    Task { @MainActor in
-                        task.didLoad(.init(image: image, diskCacheImageSize: nil, source: .processed))
-                    }
+                    task.didLoad(.init(image: image, diskCacheImageSize: nil, source: .processed))
                 } else {
                     self.enqueueEncodingOperation(task, thumbnail: thumbnail)
                 }
@@ -205,9 +199,7 @@ extension ImageProcessingQueue {
 
             self.queue.async {
                 guard let encodedImage = encodedImage else {
-                    Task { @MainActor in
-                        task.didLoad(nil)
-                    }
+                    task.didLoad(nil)
                     return
                 }
 
@@ -256,13 +248,9 @@ extension ImageProcessingQueue {
                 self.config.memoryCache.insert(image, forKey: task.request.cacheKey)
 
                 if let image = image {
-                    Task { @MainActor in
-                        task.didLoad(.init(image: image, diskCacheImageSize: nil, source: .processed))
-                    }
+                    task.didLoad(.init(image: image, diskCacheImageSize: nil, source: .processed))
                 } else {
-                    Task { @MainActor in
-                        task.didLoad(nil)
-                    }
+                    task.didLoad(nil)
                 }
             }
         }
@@ -281,9 +269,7 @@ extension ImageProcessingQueue {
 
             self.queue.async {
                 guard let thumbnail = thumbnail else {
-                    Task { @MainActor in
-                        task.didLoad(nil)
-                    }
+                    task.didLoad(nil)
                     return
                 }
                 #if canImport(UIKit)
@@ -293,9 +279,7 @@ extension ImageProcessingQueue {
                 let image = NSImage(cgImage: thumbnail, size: .init(width: thumbnail.width, height: thumbnail.height))
                 #endif
                 self.config.memoryCache.insert(image, forKey: task.request.cacheKey)
-                Task { @MainActor in
-                    task.didLoad(ImageResponse(image: image, diskCacheImageSize: diskCacheImageSize, source: .diskCache))
-                }
+                task.didLoad(ImageResponse(image: image, diskCacheImageSize: diskCacheImageSize, source: .diskCache))
             }
         }
         config.imageDecompressingQueue.addOperation(operation)
