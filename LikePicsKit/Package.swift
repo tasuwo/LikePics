@@ -14,6 +14,7 @@ let package = Package(
         .library(name: "AlbumSelectionModalFeature", targets: ["TagSelectionModalFeature"]),
         .library(name: "TagSelectionModalFeature", targets: ["TagSelectionModalFeature"]),
         .library(name: "ShareExtensionFeature", targets: ["ShareExtensionFeature"]),
+        .library(name: "ShareExtensionDesktopFeature", targets: ["ShareExtensionDesktopFeature"]),
         .library(name: "Domain", targets: ["Domain"]),
         .library(name: "MobileTransition", targets: ["MobileTransition"]),
         .library(name: "Persistence", targets: ["Persistence"]),
@@ -29,7 +30,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/realm/realm-cocoa", .upToNextMinor(from: "10.44.0")),
         .package(url: "https://github.com/phimage/Erik", .upToNextMajor(from: "5.1.0")),
-        .package(url: "https://github.com/tasuwo/PersistentStack", .upToNextMajor(from: "0.8.0")),
+        .package(url: "https://github.com/tasuwo/PersistentStack", .upToNextMajor(from: "0.8.1")),
         .package(url: "https://github.com/tasuwo/swift", .upToNextMajor(from: "0.8.1")),
         .package(url: "https://github.com/tasuwo/MasonryGrid", .upToNextMajor(from: "0.0.1-alpha.5")),
         .package(url: "https://github.com/apple/swift-async-algorithms", .upToNextMajor(from: "1.0.0"))
@@ -85,6 +86,14 @@ let package = Package(
             ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
+            ]
+        ),
+        .target(
+            name: "ShareExtensionDesktopFeature",
+            dependencies: [
+                "Persistence",
+                "Smoothie",
+                .product(name: "PersistentStack", package: "PersistentStack")
             ]
         ),
 

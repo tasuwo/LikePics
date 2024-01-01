@@ -57,9 +57,12 @@ public final class AppContainer: ObservableObject {
         var persistentStackConf = PersistentStack.Configuration(author: "app",
                                                                 persistentContainerName: "Model",
                                                                 managedObjectModelUrl: ManagedObjectModelUrl)
+        persistentStackConf.persistentContainerUrl = FileManager.default
+            .containerURL(forSecurityApplicationGroupIdentifier: "group.\(appBundle.bundleIdentifier!)")!
+            .appending(path: "likepics.sqlite", directoryHint: .notDirectory)
         persistentStackConf.persistentHistoryTokenSaveDirectory = NSPersistentContainer
             .defaultDirectoryURL()
-            .appendingPathComponent("TBox", isDirectory: true)
+            .appendingPathComponent("LikePics", isDirectory: true)
         persistentStackConf.persistentHistoryTokenFileName = "token.data"
         self.persistentStack = PersistentStack(configuration: persistentStackConf, isCloudKitSyncEnabled: isCloudSyncEnabled)
 
