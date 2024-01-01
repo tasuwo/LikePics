@@ -13,7 +13,7 @@ let package = Package(
         .library(name: "AlbumMultiSelectionModalFeature", targets: ["TagSelectionModalFeature"]),
         .library(name: "AlbumSelectionModalFeature", targets: ["TagSelectionModalFeature"]),
         .library(name: "TagSelectionModalFeature", targets: ["TagSelectionModalFeature"]),
-        .library(name: "ShareExtensionFeature", targets: ["ShareExtensionFeature"]),
+        .library(name: "ShareExtensionMobileFeature", targets: ["ShareExtensionMobileFeature"]),
         .library(name: "ShareExtensionDesktopFeature", targets: ["ShareExtensionDesktopFeature"]),
         .library(name: "Domain", targets: ["Domain"]),
         .library(name: "MobileTransition", targets: ["MobileTransition"]),
@@ -73,7 +73,7 @@ let package = Package(
             ]
         ),
         .target(
-            name: "ShareExtensionFeature",
+            name: "ShareExtensionMobileFeature",
             dependencies: [
                 "Common",
                 "Domain",

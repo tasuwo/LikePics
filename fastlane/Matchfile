@@ -53,6 +53,8 @@ for_platform :mac do
   app_identifier([
       "net.tasuwo.TBox",
       "net.tasuwo.TBox.dev",
+      "net.tasuwo.TBox.ShareExtension",
+      "net.tasuwo.TBox.dev.ShareExtension"
   ])
 
   for_lane :update_development_pp do
