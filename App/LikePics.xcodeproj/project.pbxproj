@@ -16,7 +16,7 @@
 		2C5E39FB27E76166008CE0FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C5E39FA27E76166008CE0FF /* Assets.xcassets */; };
 		2CAAF8E12B39C5C900479411 /* LikePicsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CAAF8E02B39C5C900479411 /* LikePicsApp.swift */; };
 		2CAAF8E52B39C5CB00479411 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CAAF8E42B39C5CB00479411 /* Assets.xcassets */; };
-		953320B06B0B1D6AF7D75B8F /* ShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3244CDEF6543830E6F56EDB0 /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		953320B06B0B1D6AF7D75B8F /* ShareExtension (iOS).appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3244CDEF6543830E6F56EDB0 /* ShareExtension (iOS).appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CBC0890201886D3367DEA9FA /* ShareNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27ABC8239271CCDAABD4CC4 /* ShareNavigationController.swift */; };
 		CDA61B3939F06F9C0081E6D3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 313B82C59D48077CA373AC41 /* InfoPlist.strings */; };
 		D63256AF1AF1B810615CDF21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8DB994011BC03FDBCB8CB48 /* Assets.xcassets */; };
@@ -39,7 +39,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				953320B06B0B1D6AF7D75B8F /* ShareExtension.appex in Embed Foundation Extensions */,
+				953320B06B0B1D6AF7D75B8F /* ShareExtension (iOS).appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -55,7 +55,7 @@
 		2CAAF8E02B39C5C900479411 /* LikePicsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikePicsApp.swift; sourceTree = "<group>"; };
 		2CAAF8E42B39C5CB00479411 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2CAAF8E92B39C5CB00479411 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
-		3244CDEF6543830E6F56EDB0 /* ShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		3244CDEF6543830E6F56EDB0 /* ShareExtension (iOS).appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ShareExtension (iOS).appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3684FED84FD8B94672573DF7 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4B2AB01D75A41E3263AE08BB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7B507EAEA05D7AA1CB822352 /* LikePics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LikePics.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,7 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				7B507EAEA05D7AA1CB822352 /* LikePics.app */,
-				3244CDEF6543830E6F56EDB0 /* ShareExtension.appex */,
+				3244CDEF6543830E6F56EDB0 /* ShareExtension (iOS).appex */,
 				2CAAF8DE2B39C5C900479411 /* LikePics.app */,
 			);
 			name = Products;
@@ -127,15 +127,15 @@
 			isa = PBXGroup;
 			children = (
 				A4EA02D9C2DAB493DA922AAF /* iOS */,
-				822206BA7D39F4811EA840F5 /* ShareExtension */,
-				91F9CB56E3FC3F330821A977 /* Packages */,
 				2CAAF8DF2B39C5C900479411 /* macOS */,
+				822206BA7D39F4811EA840F5 /* ShareExtension (iOS) */,
+				91F9CB56E3FC3F330821A977 /* Packages */,
 				5E7B059DCE3EC305FA4E0FB6 /* Products */,
 				2C9B91DE27E0C2F6009741FF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
-		822206BA7D39F4811EA840F5 /* ShareExtension */ = {
+		822206BA7D39F4811EA840F5 /* ShareExtension (iOS) */ = {
 			isa = PBXGroup;
 			children = (
 				99B32BC78BA54672D07BD46D /* Info.plist */,
@@ -143,7 +143,7 @@
 				A27ABC8239271CCDAABD4CC4 /* ShareNavigationController.swift */,
 				2C5E39FA27E76166008CE0FF /* Assets.xcassets */,
 			);
-			path = ShareExtension;
+			path = "ShareExtension (iOS)";
 			sourceTree = "<group>";
 		};
 		90D9667538C1D6CD10CCB89E /* Resources */ = {
@@ -232,9 +232,9 @@
 			productReference = 7B507EAEA05D7AA1CB822352 /* LikePics.app */;
 			productType = "com.apple.product-type.application";
 		};
-		921B2540D9F4435911E35DBB /* ShareExtension */ = {
+		921B2540D9F4435911E35DBB /* ShareExtension (iOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 820399E8E2FF22F1A874547A /* Build configuration list for PBXNativeTarget "ShareExtension" */;
+			buildConfigurationList = 820399E8E2FF22F1A874547A /* Build configuration list for PBXNativeTarget "ShareExtension (iOS)" */;
 			buildPhases = (
 				6E08A68836D633F75FF3999D /* Sources */,
 				7B85D2921118D7CD3F4391CB /* Resources */,
@@ -245,12 +245,12 @@
 			dependencies = (
 				2C157FE42B1C003E00B96EBB /* PBXTargetDependency */,
 			);
-			name = ShareExtension;
+			name = "ShareExtension (iOS)";
 			packageProductDependencies = (
 				2C16355827E877F9006C2C24 /* ShareExtensionFeature */,
 			);
 			productName = ShareExtension;
-			productReference = 3244CDEF6543830E6F56EDB0 /* ShareExtension.appex */;
+			productReference = 3244CDEF6543830E6F56EDB0 /* ShareExtension (iOS).appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -294,7 +294,7 @@
 			projectRoot = "";
 			targets = (
 				8084EEB0A690B12BDD5EF1B5 /* LikePics (iOS) */,
-				921B2540D9F4435911E35DBB /* ShareExtension */,
+				921B2540D9F4435911E35DBB /* ShareExtension (iOS) */,
 				2CAAF8DD2B39C5C900479411 /* LikePics (macOS) */,
 			);
 		};
@@ -409,7 +409,7 @@
 		};
 		EC1B0E7A11722DAAE7A51ED0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 921B2540D9F4435911E35DBB /* ShareExtension */;
+			target = 921B2540D9F4435911E35DBB /* ShareExtension (iOS) */;
 			targetProxy = 3E03E120431047D0B109ABAC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -906,9 +906,9 @@
 		C80699BCFB2825C9A26AFC2D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "ShareExtension (iOS)/ShareExtension.entitlements";
 				DEVELOPMENT_TEAM = RY2377PP7S;
-				INFOPLIST_FILE = ShareExtension/Info.plist;
+				INFOPLIST_FILE = "ShareExtension (iOS)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -995,10 +995,10 @@
 		DEAEBA83907B1C40E5F4514B /* ReleaseDev */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "ShareExtension (iOS)/ShareExtension.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				DEVELOPMENT_TEAM = RY2377PP7S;
-				INFOPLIST_FILE = ShareExtension/Info.plist;
+				INFOPLIST_FILE = "ShareExtension (iOS)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1016,10 +1016,10 @@
 		E5FFF59ADDE0143011D9D5FB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "ShareExtension (iOS)/ShareExtension.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				DEVELOPMENT_TEAM = RY2377PP7S;
-				INFOPLIST_FILE = ShareExtension/Info.plist;
+				INFOPLIST_FILE = "ShareExtension (iOS)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1037,9 +1037,9 @@
 		FE3A060DEB93478E4CDA6ACE /* DebugDev */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "ShareExtension (iOS)/ShareExtension.entitlements";
 				DEVELOPMENT_TEAM = RY2377PP7S;
-				INFOPLIST_FILE = ShareExtension/Info.plist;
+				INFOPLIST_FILE = "ShareExtension (iOS)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1068,7 +1068,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		820399E8E2FF22F1A874547A /* Build configuration list for PBXNativeTarget "ShareExtension" */ = {
+		820399E8E2FF22F1A874547A /* Build configuration list for PBXNativeTarget "ShareExtension (iOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C80699BCFB2825C9A26AFC2D /* Debug */,

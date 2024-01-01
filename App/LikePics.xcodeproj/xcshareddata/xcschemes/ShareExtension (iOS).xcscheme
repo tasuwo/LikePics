@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "921B2540D9F4435911E35DBB"
-               BuildableName = "ShareExtension.appex"
-               BlueprintName = "ShareExtension"
+               BuildableName = "ShareExtension (iOS).appex"
+               BlueprintName = "ShareExtension (iOS)"
                ReferencedContainer = "container:LikePics.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,8 +32,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "921B2540D9F4435911E35DBB"
-            BuildableName = "ShareExtension.appex"
-            BlueprintName = "ShareExtension"
+            BuildableName = "ShareExtension (iOS).appex"
+            BlueprintName = "ShareExtension (iOS)"
             ReferencedContainer = "container:LikePics.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -67,8 +67,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "921B2540D9F4435911E35DBB"
-            BuildableName = "ShareExtension.appex"
-            BlueprintName = "ShareExtension"
+            BuildableName = "ShareExtension (iOS).appex"
+            BlueprintName = "ShareExtension (iOS)"
             ReferencedContainer = "container:LikePics.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -84,8 +84,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "921B2540D9F4435911E35DBB"
-            BuildableName = "ShareExtension.appex"
-            BlueprintName = "ShareExtension"
+            BuildableName = "ShareExtension (iOS).appex"
+            BlueprintName = "ShareExtension (iOS)"
             ReferencedContainer = "container:LikePics.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
