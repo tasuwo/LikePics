@@ -130,11 +130,10 @@ struct PageView<Data: Identifiable & Hashable, Content: View>: View {
                                 pagingButton(for: .backward)
                             }
                             .buttonStyle(.plain)
-                            .background {
-                                Color(nsColor: .systemFill)
-                                    .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
-                            }
                         }
+                    }
+                    .keyboardShortcut(.leftArrow, modifiers: []) {
+                        coordinator.onRequestTranstition(to: .backward)
                     }
                     .onHover { hovering in
                         withAnimation(.linear(duration: 0.1)) {
@@ -155,6 +154,9 @@ struct PageView<Data: Identifiable & Hashable, Content: View>: View {
                             }
                             .buttonStyle(.plain)
                         }
+                    }
+                    .keyboardShortcut(.rightArrow, modifiers: []) {
+                        coordinator.onRequestTranstition(to: .forward)
                     }
                     .onHover { hovering in
                         withAnimation(.linear(duration: 0.1)) {
