@@ -2,16 +2,16 @@
 //  Copyright ©︎ 2024 Tasuku Tozawa. All rights reserved.
 //
 
-import PersistentStack
-import Foundation
 import Combine
 import CoreData
+import Foundation
 import Persistence
+import PersistentStack
 
 public final class Container {
     private(set) var viewContext: NSManagedObjectContext
     private let persistentStack: PersistentStack
-    
+
     public init(bundleIdentifier: String) {
         // MARK: CoreData
 
