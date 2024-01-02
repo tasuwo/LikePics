@@ -25,16 +25,18 @@
 		<key>NSExtensionAttributes</key>
 		<dict>
 			<key>NSExtensionActivationRule</key>
-			<dict>
-				<key>NSExtensionActivationSupportsAttachmentsWithMaxCount</key>
-				<integer>20</integer>
-				<key>NSExtensionActivationSupportsImageWithMaxCount</key>
-				<integer>20</integer>
-				<key>NSExtensionActivationSupportsWebPageWithMaxCount</key>
-				<integer>20</integer>
-				<key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
-				<integer>20</integer>
-			</dict>
+			<string>SUBQUERY (
+  extensionItems,
+  $extensionItem,
+  SUBQUERY (
+    $extensionItem.attachments,
+    $attachment,
+    (
+      ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.url&quot;
+      || ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;image&quot;
+    )
+  ).@count &gt;= 1
+).@count &gt; 0</string>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.share-services</string>
