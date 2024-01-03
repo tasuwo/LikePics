@@ -5,6 +5,5 @@
 import Foundation
 
 public protocol SuggestionItem: Identifiable, Hashable {
-    var listingValue: String { get }
-    var completionValue: String? { get }
+    var title: String { get }
 }

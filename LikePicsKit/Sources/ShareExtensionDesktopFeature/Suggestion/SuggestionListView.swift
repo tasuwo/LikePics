@@ -5,45 +5,89 @@
 import SwiftUI
 
 struct SuggestionListView<Item: SuggestionItem>: View {
-    var model: SuggestionListModel<Item>
-    var onTap: (Item) -> Void
+    enum RowID: Hashable {
+        case fallback
+        case item(Item.ID)
+    }
 
-    init(_ model: SuggestionListModel<Item>, onTap: @escaping (Item) -> Void) {
+    @ObservedObject var model: SuggestionListModel<Item>
+    var onTap: (SuggestionListModel<Item>.Selection) -> Void
+    var fallbackItemTitle: (String) -> String
+
+    init(_ model: SuggestionListModel<Item>,
+         onTap: @escaping (SuggestionListModel<Item>.Selection) -> Void,
+         fallbackItemTitle: @escaping (String) -> String)
+    {
         self.model = model
         self.onTap = onTap
+        self.fallbackItemTitle = fallbackItemTitle
     }
 
     var body: some View {
-        List {
-            ForEach(model.items) { item in
-                Text(item.listingValue)
-                    .font(.body)
-                    .padding(.vertical, 4)
-                    .padding(.horizontal, 8)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background {
-                        Color.accentColor
-                            .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
-                            .opacity(model.selectedId == item.id ? 1 : 0)
-                    }
-                    .onHover { hovering in
-                        guard hovering else { return }
-                        model.selectedId = item.id
-                    }
-                    .onTapGesture {
-                        onTap(item)
-                    }
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color.clear)
-                    .listRowInsets(.init(top: 2, leading: 0, bottom: 2, trailing: 0))
+        ScrollViewReader { proxy in
+            List {
+                if let fallbackItemSource = model.fallbackItem {
+                    Text(fallbackItemTitle(fallbackItemSource))
+                        .font(.body)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background {
+                            Color.accentColor
+                                .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                                .opacity(model.selection?.isFallback == true ? 1 : 0)
+                        }
+                        .onHover { hovering in
+                            guard hovering else { return }
+                            model.selection = .fallback
+                        }
+                        .onTapGesture {
+                            onTap(.fallback)
+                        }
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                        .listRowInsets(.init(top: 2, leading: 0, bottom: 2, trailing: 0))
+                        .id(RowID.fallback)
+                }
+
+                ForEach(model.items) { item in
+                    Text(item.title)
+                        .font(.body)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background {
+                            Color.accentColor
+                                .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                                .opacity(model.selection?.itemId == item.id ? 1 : 0)
+                        }
+                        .onHover { hovering in
+                            guard hovering else { return }
+                            model.selection = .item(item.id)
+                        }
+                        .onTapGesture {
+                            onTap(.item(item.id))
+                        }
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                        .listRowInsets(.init(top: 2, leading: 0, bottom: 2, trailing: 0))
+                        .id(RowID.item(item.id))
+                }
+            }
+            .listStyle(.plain)
+            .padding(.vertical, 8)
+            .background(Color.clear)
+            .frame(height: min(preferredHeight(forItemsCount: CGFloat(model.items.count) + (model.fallbackItem != nil ? 1 : 0)),
+                               preferredHeight(forItemsCount: 5.5)))
+            .scrollContentBackground(.hidden)
+            .onChange(of: model.selection, initial: true) { _, newValue in
+                switch newValue {
+                case .fallback: proxy.scrollTo(RowID.fallback)
+                case let .item(id): proxy.scrollTo(RowID.item(id))
+                case .none: break
+                }
             }
         }
-        .listStyle(.plain)
-        .padding(.vertical, 8)
-        .background(Color.clear)
-        .frame(height: min(preferredHeight(forItemsCount: CGFloat(model.items.count)),
-                           preferredHeight(forItemsCount: 5.5)))
-        .scrollContentBackground(.hidden)
     }
 
     private func preferredHeight(forItemsCount count: CGFloat) -> CGFloat {
@@ -58,23 +102,26 @@ struct SuggestionListView<Item: SuggestionItem>: View {
 #Preview {
     struct PreviewSuggestion: SuggestionItem {
         var id = UUID()
-        var listingValue: String
-        var completionValue: String?
+        var title: String
 
         init(_ value: String) {
-            self.listingValue = value
-            self.completionValue = value
+            self.title = value
         }
     }
 
-    return SuggestionListView(.init(items: [
+    let model = SuggestionListModel<PreviewSuggestion>(items: [
         PreviewSuggestion("hoge"),
-        PreviewSuggestion("hoge"),
-        PreviewSuggestion("fuga"),
         PreviewSuggestion("fuga"),
         PreviewSuggestion("piyo"),
-        PreviewSuggestion("piyo")
-    ])) { suggestion in
-        print("Tapped \(suggestion.listingValue)")
+        PreviewSuggestion("puyo"),
+        PreviewSuggestion("poyo"),
+        PreviewSuggestion("poe")
+    ])
+    model.fallbackItem = "Fallback"
+
+    return SuggestionListView(model) { suggestion in
+        print("Tapped \(suggestion)")
+    } fallbackItemTitle: { text in
+        "\(text)を追加"
     }
 }

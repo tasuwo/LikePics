@@ -6,15 +6,20 @@ import SwiftUI
 
 final class SuggestionListWindowController<Item: SuggestionItem>: NSWindowController {
     private let model: SuggestionListModel<Item>
-    private let onTap: (Item) -> Void
+    private let onTap: (SuggestionListModel<Item>.Selection) -> Void
+    private let fallbackItemTitle: (String) -> String
 
     private var suggestListView: NSView?
     private var localMouseDownEventMonitor: Any?
     private var lostFocusObserver: Any?
 
-    init(_ model: SuggestionListModel<Item>, onTap: @escaping (Item) -> Void) {
+    init(_ model: SuggestionListModel<Item>,
+         onTap: @escaping (SuggestionListModel<Item>.Selection) -> Void,
+         fallbackItemTitle: @escaping (String) -> String)
+    {
         self.model = model
         self.onTap = onTap
+        self.fallbackItemTitle = fallbackItemTitle
 
         let contentRec = NSRect(x: 0, y: 0, width: 20, height: 20)
         let window = SuggestionListWindow(contentRect: contentRec, defer: true)
@@ -49,7 +54,7 @@ final class SuggestionListWindowController<Item: SuggestionItem>: NSWindowContro
             self.suggestListView?.removeFromSuperview()
             self.suggestListView = nil
 
-            let view = NSHostingView(rootView: SuggestionListView(model, onTap: onTap))
+            let view = NSHostingView(rootView: SuggestionListView(model, onTap: onTap, fallbackItemTitle: fallbackItemTitle))
             view.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview(view)
 
@@ -89,7 +94,7 @@ final class SuggestionListWindowController<Item: SuggestionItem>: NSWindowContro
                 if hitView != parentTextField, let fieldEditor, hitView != fieldEditor {
                     // TextField外をクリックしたら、サジェストを閉じる
                     self.hideSuggestList()
-                    return nil
+                    return event
                 }
             } else {
                 // サジェストウインドウを表示しているウインドウとは別のウインドウをタップしていたら、サジェストを閉じる

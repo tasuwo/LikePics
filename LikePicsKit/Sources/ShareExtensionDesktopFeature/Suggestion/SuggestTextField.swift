@@ -10,54 +10,59 @@ public final class SuggestTextFieldCoordinator<Item: SuggestionItem>: NSObject, 
 
     var textField: NSTextField?
     var suggestions: (String) -> [Item]
-    var fallback: (String) -> Item
-    var onSelect: (String) -> Void
+    var fallbackItemTitle: (String) -> String
+    var onSelect: (SuggestionListSelection<Item>) -> Void
+    var cancellable: AnyCancellable?
 
     private var windowController: SuggestionListWindowController<Item>?
     private var skipNextCompletion = false
 
-    private var inputs: CurrentValueSubject<Void, Never> = .init(())
-    private var cancellable: AnyCancellable?
-
     init(suggestions: @escaping (String) -> [Item],
-         fallback: @escaping (String) -> Item,
-         onSelect: @escaping (String) -> Void)
+         fallback: @escaping (String) -> String,
+         onSelect: @escaping (SuggestionListSelection<Item>) -> Void)
     {
         self.model = .init(items: suggestions(""))
         self.suggestions = suggestions
-        self.fallback = fallback
+        self.fallbackItemTitle = fallback
         self.onSelect = onSelect
 
         super.init()
 
-        cancellable = inputs
-            .debounce(for: 0.2, scheduler: RunLoop.main)
-            .sink { [weak self] _ in
-                self?.updateSuggestions()
-            }
+        cancellable = model.$selection
+            .sink { [weak self] newValue in
+                guard let fieldEditor = self?.textField?.currentEditor() else { return }
+                switch newValue {
+                case let .item(itemId):
+                    if let suggestion = self?.model.item(having: itemId)?.title {
+                        self?.updateFieldEditor(fieldEditor, withSuggestion: suggestion)
+                    } else {
+                        self?.updateFieldEditor(fieldEditor, withSuggestion: nil)
+                    }
 
-        model.observe(\.selectedId) { [weak self] _, newValue in
-            guard let fieldEditor = self?.textField?.currentEditor() else { return }
-            // TODO: パフォーマンス向上
-            if let suggestion = self?.model.items.first(where: { $0.id == newValue }) {
-                self?.updateFieldEditor(fieldEditor, withSuggestion: suggestion.completionValue)
-            } else {
-                self?.updateFieldEditor(fieldEditor, withSuggestion: nil)
+                case .fallback:
+                    if let fallbackItemSource = self?.model.fallbackItem {
+                        self?.updateFieldEditor(fieldEditor, withSuggestion: fallbackItemSource)
+                    }
+
+                case .none:
+                    self?.updateFieldEditor(fieldEditor, withSuggestion: nil)
+                }
             }
-        }
     }
 
     public func controlTextDidBeginEditing(_ obj: Notification) {
         if windowController == nil {
             windowController = SuggestionListWindowController<Item>(model) { [weak self] suggest in
                 guard let self else { return }
-                if let stringValue = self.textField?.stringValue, !stringValue.isEmpty {
-                    onSelect(stringValue)
+                if let selection = self.model.listSelection {
+                    onSelect(selection)
                 }
                 self.textField?.validateEditing()
                 self.textField?.abortEditing()
                 self.textField?.stringValue = ""
                 self.windowController?.hideSuggestList()
+            } fallbackItemTitle: { [weak self] text in
+                self?.fallbackItemTitle(text) ?? ""
             }
         }
 
@@ -65,12 +70,12 @@ public final class SuggestTextFieldCoordinator<Item: SuggestionItem>: NSObject, 
     }
 
     public func controlTextDidChange(_ obj: Notification) {
-        inputs.send(())
+        updateSuggestions()
     }
 
     public func controlTextDidEndEditing(_ obj: Notification) {
-        if let stringValue = self.textField?.stringValue, !stringValue.isEmpty {
-            onSelect(stringValue)
+        if let selection = model.listSelection {
+            onSelect(selection)
         }
         textField?.stringValue = ""
         windowController?.hideSuggestList()
@@ -119,25 +124,27 @@ public final class SuggestTextFieldCoordinator<Item: SuggestionItem>: NSObject, 
         // キャレット位置までのテキストを利用する
         let text = fieldEditor.selectedRange.length == 0 ? fieldEditor.string : (fieldEditor.string as NSString).substring(to: fieldEditor.selectedRange.location)
 
-        var items = suggestions(text)
-        if !text.isEmpty {
-            if items.isEmpty {
-                // 候補がなければ、フォールバックを表示
-                items.insert(fallback(text), at: 0)
-            } else if skipNextCompletion, items.first?.listingValue != text {
+        let items = suggestions(text)
+
+        if !text.isEmpty && (
+            // 候補がなければ、フォールバックを表示
+            items.isEmpty
                 // 補完を停止中、かつ候補に合致するものがなければ、フォールバックを表示
-                items.insert(fallback(text), at: 0)
-            } else if items.first?.listingValue.hasPrefix(text) == false {
+                || (skipNextCompletion && items.first?.title != text)
                 // caseの違いなどにより候補の先頭とprefixが不一致だった場合、フォールバックを表示
-                items.insert(fallback(text), at: 0)
-            }
+                || items.first?.title.hasPrefix(text) == false
+        ) {
+            model.fallbackItem = text
+            model.selection = .fallback
+        } else {
+            model.fallbackItem = nil
+            model.selection = text.isEmpty ? nil : items.first.flatMap({ .item($0.id) })
         }
 
-        self.model.items = items
-        self.model.selectedId = text.isEmpty ? nil : items.first?.id
-        self.skipNextCompletion = false
+        model.items = items
+        skipNextCompletion = false
 
-        self.windowController?.showSuggestList(for: textField)
+        windowController?.showSuggestList(for: textField)
     }
 }
 
@@ -147,22 +154,22 @@ public struct SuggestTextField<Item: SuggestionItem>: NSViewRepresentable {
 
     let placeholder: String?
     let suggestions: (String) -> [Item]
-    let fallback: (String) -> Item
-    let onSelect: (String) -> Void
+    let fallbackItemTitle: (String) -> String
+    let onSelect: (SuggestionListSelection<Item>) -> Void
 
     public init(placeholder: String? = nil,
                 suggestions: @escaping (String) -> [Item],
-                fallback: @escaping (String) -> Item,
-                onSelect: @escaping (String) -> Void)
+                fallbackItemTitle: @escaping (String) -> String,
+                onSelect: @escaping (SuggestionListSelection<Item>) -> Void)
     {
         self.placeholder = placeholder
         self.suggestions = suggestions
-        self.fallback = fallback
+        self.fallbackItemTitle = fallbackItemTitle
         self.onSelect = onSelect
     }
 
     public func makeCoordinator() -> Coordinator {
-        Coordinator(suggestions: suggestions, fallback: fallback, onSelect: onSelect)
+        Coordinator(suggestions: suggestions, fallback: fallbackItemTitle, onSelect: onSelect)
     }
 
     public func makeNSView(context: Context) -> NSViewType {
@@ -180,7 +187,7 @@ public struct SuggestTextField<Item: SuggestionItem>: NSViewRepresentable {
     public func updateNSView(_ nsView: NSViewType, context: Context) {
         nsView.placeholderString = placeholder
         context.coordinator.suggestions = suggestions
-        context.coordinator.fallback = fallback
+        context.coordinator.fallbackItemTitle = fallbackItemTitle
     }
 }
 
@@ -191,17 +198,10 @@ public struct Sugg<Item: SuggestionItem> {
 #Preview {
     struct Item: SuggestionItem {
         let id = UUID()
-        var listingValue: String
-        var completionValue: String?
+        var title: String
 
         init(_ value: String) {
-            self.listingValue = value
-            self.completionValue = value
-        }
-
-        init(listingValue: String, completionValue: String?) {
-            self.listingValue = listingValue
-            self.completionValue = completionValue
+            self.title = value
         }
     }
 
@@ -218,9 +218,9 @@ public struct Sugg<Item: SuggestionItem> {
         }
 
         return store
-            .filter({ $0.listingValue.contains(text) })
-    } fallback: { text in
-        Item(listingValue: "\(text)を新たに作成", completionValue: nil)
+            .filter({ $0.title.hasPrefix(text) })
+    } fallbackItemTitle: { text in
+        "\(text)を新たに作成"
     } onSelect: { value in
         print("Selected: \(value)")
     }
