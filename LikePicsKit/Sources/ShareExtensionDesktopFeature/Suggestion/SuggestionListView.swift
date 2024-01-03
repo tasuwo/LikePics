@@ -59,14 +59,14 @@ struct SuggestionListView<Item: SuggestionItem>: View {
                         .background {
                             Color.accentColor
                                 .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
-                                .opacity(model.selection?.itemId == item.id ? 1 : 0)
+                                .opacity(model.selection?.item?.id == item.id ? 1 : 0)
                         }
                         .onHover { hovering in
                             guard hovering else { return }
-                            model.selection = .item(item.id)
+                            model.selection = .item(item)
                         }
                         .onTapGesture {
-                            onTap(.item(item.id))
+                            onTap(.item(item))
                         }
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
@@ -83,7 +83,7 @@ struct SuggestionListView<Item: SuggestionItem>: View {
             .onChange(of: model.selection, initial: true) { _, newValue in
                 switch newValue {
                 case .fallback: proxy.scrollTo(RowID.fallback)
-                case let .item(id): proxy.scrollTo(RowID.item(id))
+                case let .item(item): proxy.scrollTo(RowID.item(item.id))
                 case .none: break
                 }
             }

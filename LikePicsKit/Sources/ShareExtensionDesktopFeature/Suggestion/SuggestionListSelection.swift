@@ -3,6 +3,6 @@
 //
 
 public enum SuggestionListSelection<Item: SuggestionItem>: Hashable {
-    case item(Item.ID)
+    case item(Item)
     case fallback(String)
 }

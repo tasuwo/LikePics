@@ -6,12 +6,12 @@ import Foundation
 
 class SuggestionListModel<Item: SuggestionItem>: ObservableObject {
     enum Selection: Hashable {
-        case item(Item.ID)
+        case item(Item)
         case fallback
 
-        var itemId: Item.ID? {
+        var item: Item? {
             switch self {
-            case let .item(id): id
+            case let .item(item): item
             case .fallback: nil
             }
         }
@@ -24,19 +24,14 @@ class SuggestionListModel<Item: SuggestionItem>: ObservableObject {
         }
     }
 
-    @Published var items: [Item] {
-        didSet {
-            self.itemIndicesById = Self.composeDictionary(by: items)
-        }
-    }
-
+    @Published var items: [Item]
     @Published var fallbackItem: String?
     @Published var selection: Selection?
 
     var listSelection: SuggestionListSelection<Item>? {
         switch selection {
-        case let .item(id):
-            return .item(id)
+        case let .item(item):
+            return .item(item)
 
         case .fallback:
             if let fallbackItem {
@@ -50,33 +45,23 @@ class SuggestionListModel<Item: SuggestionItem>: ObservableObject {
         }
     }
 
-    private(set) var itemIndicesById: [Item.ID: Int]
-
     init(items: [Item]) {
         self.items = items
-        self.itemIndicesById = Self.composeDictionary(by: items)
-    }
-
-    func item(having itemId: Item.ID) -> Item? {
-        guard let index = itemIndicesById[itemId], items.indices.contains(index) else {
-            return nil
-        }
-        return items[index]
     }
 
     func moveSelectonUp() {
         switch selection {
-        case let .item(selectedId):
-            guard let selectedIndex = items.firstIndex(where: { $0.id == selectedId }) else {
+        case let .item(selected):
+            guard let selectedIndex = items.firstIndex(where: { $0.id == selected.id }) else {
                 self.selection = headItemSelection()
                 return
             }
             if selectedIndex - 1 < 0 {
-                if let fallbackItem {
+                if fallbackItem != nil {
                     self.selection = .fallback
                 }
             } else {
-                self.selection = .item(items[selectedIndex - 1].id)
+                self.selection = .item(items[selectedIndex - 1])
             }
 
         case .fallback:
@@ -89,18 +74,18 @@ class SuggestionListModel<Item: SuggestionItem>: ObservableObject {
 
     func moveSelectionDown() {
         switch selection {
-        case let .item(selectedId):
-            guard let selectedIndex = items.firstIndex(where: { $0.id == selectedId }) else {
+        case let .item(selected):
+            guard let selectedIndex = items.firstIndex(where: { $0.id == selected.id }) else {
                 self.selection = headItemSelection()
                 return
             }
             if selectedIndex + 1 < items.count {
-                self.selection = .item(items[selectedIndex + 1].id)
+                self.selection = .item(items[selectedIndex + 1])
             }
 
         case .fallback:
-            if let firstItemId = items.first?.id {
-                self.selection = .item(firstItemId)
+            if let firstItem = items.first {
+                self.selection = .item(firstItem)
             }
 
         case nil:
@@ -109,22 +94,12 @@ class SuggestionListModel<Item: SuggestionItem>: ObservableObject {
     }
 
     private func headItemSelection() -> Selection? {
-        if let fallbackItem {
+        if fallbackItem != nil {
             .fallback
-        } else if let firstItemId = items.first?.id {
-            .item(firstItemId)
+        } else if let firstItem = items.first {
+            .item(firstItem)
         } else {
             nil
         }
-    }
-
-    private static func composeDictionary(by items: [Item]) -> [Item.ID: Int] {
-        var index = 0
-        var itemIndicesById = [Item.ID: Int]()
-        for item in items {
-            itemIndicesById[item.id] = index
-            index += 1
-        }
-        return itemIndicesById
     }
 }

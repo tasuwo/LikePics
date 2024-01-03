@@ -32,12 +32,8 @@ public final class SuggestTextFieldCoordinator<Item: SuggestionItem>: NSObject, 
             .sink { [weak self] newValue in
                 guard let fieldEditor = self?.textField?.currentEditor() else { return }
                 switch newValue {
-                case let .item(itemId):
-                    if let suggestion = self?.model.item(having: itemId)?.title {
-                        self?.updateFieldEditor(fieldEditor, withSuggestion: suggestion)
-                    } else {
-                        self?.updateFieldEditor(fieldEditor, withSuggestion: nil)
-                    }
+                case let .item(item):
+                    self?.updateFieldEditor(fieldEditor, withSuggestion: item.title)
 
                 case .fallback:
                     if let fallbackItemSource = self?.model.fallbackItem {
@@ -138,7 +134,7 @@ public final class SuggestTextFieldCoordinator<Item: SuggestionItem>: NSObject, 
             model.selection = .fallback
         } else {
             model.fallbackItem = nil
-            model.selection = text.isEmpty ? nil : items.first.flatMap({ .item($0.id) })
+            model.selection = text.isEmpty ? nil : items.first.flatMap({ .item($0) })
         }
 
         model.items = items
