@@ -15,15 +15,6 @@ extension AppStorageKeys {
 }
 
 extension AppStorageKeys {
-    enum ShowHiddenItems: AppStorageKey {
-        static var defaultValue: Bool { false }
-        static var key: String { "showHidenItems" }
-    }
-
-    var showHiddenItems: ShowHiddenItems.Type { ShowHiddenItems.self }
-}
-
-extension AppStorageKeys {
     enum CloudSync: AppStorageKey {
         static var defaultValue: Bool { true }
         static var key: String { "isCloudSyncEnabled" }
