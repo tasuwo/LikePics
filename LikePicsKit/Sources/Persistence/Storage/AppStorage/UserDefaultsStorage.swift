@@ -6,7 +6,7 @@ import Combine
 import Foundation
 
 @propertyWrapper
-struct UserDefaultsStorage<Value> {
+public struct UserDefaultsStorage<Value> {
     private final class Observer: NSObject {
         private let userDefaults: UserDefaults
         private let key: String
@@ -36,7 +36,7 @@ struct UserDefaultsStorage<Value> {
     private let observer: Observer
     private let publisher: CurrentValueSubject<Value, Never>
 
-    var wrappedValue: Value {
+    public var wrappedValue: Value {
         get {
             return userDefaults.object(forKey: key) as? Value ?? defaultValue
         }
@@ -45,11 +45,11 @@ struct UserDefaultsStorage<Value> {
         }
     }
 
-    var projectedValue: AnyPublisher<Value, Never> {
+    public var projectedValue: AnyPublisher<Value, Never> {
         publisher.eraseToAnyPublisher()
     }
 
-    init(key: String, defaultValue: Value, store: UserDefaults = .standard) {
+    public init(key: String, defaultValue: Value, store: UserDefaults = .standard) {
         self.key = key
         self.defaultValue = defaultValue
         self.userDefaults = store

@@ -2,6 +2,7 @@
 //  Copyright ©︎ 2023 Tasuku Tozawa. All rights reserved.
 //
 
+import Persistence
 import SwiftUI
 
 class CloudSyncSettingCoordinator: ObservableObject {

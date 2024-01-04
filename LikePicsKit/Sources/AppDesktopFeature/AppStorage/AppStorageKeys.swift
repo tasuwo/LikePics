@@ -3,12 +3,7 @@
 //
 
 import Domain
-import SwiftUI
-
-final class AppStorageKeys {
-    static let shared = AppStorageKeys()
-    private init() {}
-}
+import Persistence
 
 extension AppStorageKeys {
     enum UserInterfaceStyleKey: AppStorageKey {
