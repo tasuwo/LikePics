@@ -19,6 +19,7 @@ let package = Package(
         .library(name: "MobileTransition", targets: ["MobileTransition"]),
         .library(name: "Persistence", targets: ["Persistence"]),
         .library(name: "ClipCreationFeature", targets: ["ClipCreationFeature"]),
+        .library(name: "ClipCreationDesktopFeature", targets: ["ClipCreationDesktopFeature"]),
         .library(name: "ClipPreviewPlayConfigurationModalFeature", targets: ["ClipPreviewPlayConfigurationModalFeature"]),
         .library(name: "LikePicsUIKit", targets: ["LikePicsUIKit"]),
         .library(name: "CompositeKit", targets: ["CompositeKit"]),
@@ -151,6 +152,17 @@ let package = Package(
                 "Common",
                 "CompositeKit",
                 .product(name: "Erik", package: "Erik")
+            ],
+            plugins: [
+                .plugin(name: "LintSwift", package: "swift")
+            ]
+        ),
+        .target(
+            name: "ClipCreationDesktopFeature",
+            dependencies: [
+                "Persistence",
+                "Smoothie",
+                .product(name: "MasonryGrid", package: "MasonryGrid")
             ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
