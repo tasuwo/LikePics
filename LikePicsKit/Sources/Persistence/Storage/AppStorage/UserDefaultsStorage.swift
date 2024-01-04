@@ -49,9 +49,11 @@ public struct UserDefaultsStorage<Value> {
         publisher.eraseToAnyPublisher()
     }
 
-    public init(key: String, defaultValue: Value, store: UserDefaults = .standard) {
+    public init(key: String, defaultValue: Value, store: UserDefaults? = nil) {
         self.key = key
         self.defaultValue = defaultValue
+
+        let store = store ?? .standard
         self.userDefaults = store
         store.register(defaults: [key: defaultValue])
 
