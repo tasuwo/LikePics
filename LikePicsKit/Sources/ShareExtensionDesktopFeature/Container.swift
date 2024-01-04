@@ -13,13 +13,16 @@ public final class Container {
     private let persistentStack: PersistentStack
 
     public init(bundleIdentifier: String) {
+        let appGroupIdentifier = "group.\(bundleIdentifier)"
+        UserDefaults.appGroup = UserDefaults(suiteName: appGroupIdentifier)!
+
         // MARK: CoreData
 
         var persistentStackConf = PersistentStack.Configuration(author: "app",
                                                                 persistentContainerName: "Model",
                                                                 managedObjectModelUrl: ManagedObjectModelUrl)
         persistentStackConf.persistentContainerUrl = FileManager.default
-            .containerURL(forSecurityApplicationGroupIdentifier: "group.\(bundleIdentifier)")!
+            .containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier)!
             .appending(path: "likepics.sqlite", directoryHint: .notDirectory)
         persistentStackConf.persistentHistoryTokenSaveDirectory = NSPersistentContainer
             .defaultDirectoryURL()

@@ -1,0 +1,149 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%lld" : {
+      "comment" : "Image entry order",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        }
+      }
+    },
+    "Add Albums..." : {
+      "comment" : "Form on CilpCreateView",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アルバムを追加"
+          }
+        }
+      }
+    },
+    "Add Tags..." : {
+      "comment" : "Form on ClipCreateView",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タグを追加"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "comment" : "Button on footer",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "キャンセル"
+          }
+        }
+      }
+    },
+    "Combie multiple images into a single clip." : {
+      "comment" : "Toggle description on ClipCreateView",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "複数枚の画像を1つのクリップにまとめることができます"
+          }
+        }
+      }
+    },
+    "Combine into Clip" : {
+      "comment" : "Toggle on CilpCreateView",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "クリップにまとめる"
+          }
+        }
+      }
+    },
+    "Create new album \"%@\"" : {
+      "comment" : "Fallback on suggest list.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新規アルバム \"%@\" を作成"
+          }
+        }
+      }
+    },
+    "Create new tag \"%@\"" : {
+      "comment" : "Fallback on suggest list.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新規タグ \"%@\" を作成"
+          }
+        }
+      }
+    },
+    "Remove album" : {
+      "comment" : "Context menu",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除"
+          }
+        }
+      }
+    },
+    "Remove tag" : {
+      "comment" : "Context menu",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除"
+          }
+        }
+      }
+    },
+    "Save" : {
+      "comment" : "Button on footer",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存"
+          }
+        }
+      }
+    },
+    "Save as hidden items" : {
+      "comment" : "Toggle on CilpCreateView",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存した画像を隠す"
+          }
+        }
+      }
+    },
+    "URL" : {
+      "comment" : "Form on ClipCreateView",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

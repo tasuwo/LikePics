@@ -7,4 +7,52 @@ import CoreData
 import Foundation
 
 public class Album: NSManagedObject {
+    public static func create(withTitle title: String, in context: NSManagedObjectContext) throws -> UUID {
+        let newId = UUID()
+
+        let album = Album(context: context)
+        album.id = newId
+        album.title = title
+        album.isHidden = false
+        album.createdDate = Date()
+        album.updatedDate = Date()
+
+        try context.save()
+
+        return newId
+    }
+
+    public static func fetch(beginsWith text: String,
+                             showHiddenItems: Bool,
+                             context: NSManagedObjectContext) throws -> [Album]
+    {
+        let request: NSFetchRequest<Album> = Album.fetchRequest()
+        var predicate: NSPredicate?
+
+        if !text.isEmpty {
+            // HACK: ひらがな,カタカナを区別しない
+            if let transformed = text.applyingTransform(.hiraganaToKatakana, reverse: false), transformed != text {
+                predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
+                    NSPredicate(format: "title BEGINSWITH[cd] %@", transformed as CVarArg),
+                    NSPredicate(format: "title BEGINSWITH[cd] %@", text as CVarArg)
+                ])
+            } else {
+                predicate = NSPredicate(format: "title BEGINSWITH[cd] %@", text as CVarArg)
+            }
+        }
+
+        if let _predicate = predicate {
+            predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+                _predicate,
+                NSPredicate(format: "isHidden == false")
+            ])
+        } else {
+            predicate = NSPredicate(format: "isHidden == false")
+        }
+
+        request.predicate = predicate
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Album.title, ascending: true)]
+
+        return try context.fetch(request)
+    }
 }

@@ -32,7 +32,7 @@ final class SuggestionListWindowController<Item: SuggestionItem>: NSWindowContro
 
     @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError()
+        fatalError("Not implemented")
     }
 
     func showSuggestList(for parentTextField: NSTextField) {
