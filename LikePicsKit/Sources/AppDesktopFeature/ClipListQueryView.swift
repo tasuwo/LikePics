@@ -30,7 +30,7 @@ struct ClipListQueryView<Content: View>: View {
     struct AlbumSource: View {
         private let content: ([Domain.Clip]) -> Content
         @FetchRequest private var albums: FetchedResults<Persistence.Album>
-        @AppStorage(\.showHiddenItems) var showHiddenItems
+        @AppStorage(\.showHiddenItems, store: .appGroup) var showHiddenItems
 
         init(request: FetchRequest<Persistence.Album>, content: @escaping ([Domain.Clip]) -> Content) {
             _albums = request
@@ -51,7 +51,7 @@ struct ClipListQueryView<Content: View>: View {
     private let query: Query
     private let content: ([Domain.Clip]) -> Content
 
-    @AppStorage(\.showHiddenItems) var showHiddenItems
+    @AppStorage(\.showHiddenItems, store: .appGroup) var showHiddenItems
 
     init(_ query: Query, @ViewBuilder content: @escaping ([Domain.Clip]) -> Content) {
         self.query = query

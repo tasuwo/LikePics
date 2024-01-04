@@ -12,7 +12,7 @@ struct AlbumView: View {
     let album: Album
     @Environment(\.imageQueryService) var imageQueryService
     @Environment(\.albumThumbnailProcessingQueue) var processingQueue
-    @AppStorage(\.showHiddenItems) var showHiddenItems
+    @AppStorage(\.showHiddenItems, store: .appGroup) var showHiddenItems
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {

@@ -50,6 +50,9 @@ public final class AppContainer: ObservableObject {
 
     public init(appBundle: Bundle) throws {
         self.appBundle = appBundle
+
+        let appGroupIdentifier = "group.\(appBundle.bundleIdentifier!)"
+        UserDefaults.appGroup = UserDefaults(suiteName: appGroupIdentifier)!
         let isCloudSyncEnabled = UserDefaults.standard.bool(forKey: AppStorageKeys.CloudSync.key)
 
         // MARK: CoreData
@@ -58,7 +61,7 @@ public final class AppContainer: ObservableObject {
                                                                 persistentContainerName: "Model",
                                                                 managedObjectModelUrl: ManagedObjectModelUrl)
         persistentStackConf.persistentContainerUrl = FileManager.default
-            .containerURL(forSecurityApplicationGroupIdentifier: "group.\(appBundle.bundleIdentifier!)")!
+            .containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier)!
             .appending(path: "likepics.sqlite", directoryHint: .notDirectory)
         persistentStackConf.persistentHistoryTokenSaveDirectory = NSPersistentContainer
             .defaultDirectoryURL()

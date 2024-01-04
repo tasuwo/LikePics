@@ -7,7 +7,7 @@ import SwiftUI
 
 struct GeneralSettingsView: View {
     @AppStorage(\.userInterfaceStyle) var userInterfaceStyle
-    @AppStorage(\.showHiddenItems) var showHiddenItems
+    @AppStorage(\.showHiddenItems, store: .appGroup) var showHiddenItems
 
     var body: some View {
         Grid(alignment: .leadingFirstTextBaseline) {
