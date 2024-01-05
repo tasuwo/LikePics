@@ -32,7 +32,7 @@ extension NSItemProvider {
         return nil
     }
 
-    func imageSource() async throws -> ImageSouce? {
+    func imageSource() async throws -> ImageSource? {
         if hasItemConformingToTypeIdentifier(UTType.fileURL.identifier),
            let url = try await loadItem(forTypeIdentifier: UTType.fileURL.identifier) as? URL
         {

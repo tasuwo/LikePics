@@ -10,7 +10,7 @@ import UIKit
 import AppKit
 #endif
 
-public enum ImageSouce {
+public enum ImageSource {
     case fileUrl(URL)
     case webUrl(URL)
     case data(Data)
