@@ -33,7 +33,7 @@ extension NSItemProvider {
         return nil
     }
 
-    public func imageSource() async throws -> SharedImageSource? {
+    public func sharedItem() async throws -> SharedItem? {
         if hasItemConformingToTypeIdentifier(UTType.fileURL.identifier),
            let url = try await loadItem(forTypeIdentifier: UTType.fileURL.identifier) as? URL
         {

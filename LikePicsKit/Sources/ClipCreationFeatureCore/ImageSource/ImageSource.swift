@@ -24,12 +24,12 @@ public struct ImageSource: Hashable {
         self.value = .webURL(urlSet)
     }
 
-    init(fileURL: URL) {
+    public init(fileURL: URL) {
         self.identifier = UUID()
         self.value = .fileURL(fileURL)
     }
 
-    init(data: LazyImageData) {
+    public init(data: LazyImageData) {
         self.identifier = UUID()
         self.value = .data(data)
     }

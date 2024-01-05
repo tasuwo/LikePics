@@ -18,7 +18,7 @@ import UIKit
 public protocol ViewControllerFactory {
     func makeShareNavigationRootViewController() -> UIViewController
     func makeClipTargetCollectionViewController(id: UUID, webUrl: URL) -> UIViewController
-    func makeClipTargetCollectionViewController(id: UUID, data: [LazyImageData], fileURLs: [URL]) -> UIViewController
+    func makeClipTargetCollectionViewController(id: UUID, sources: [ClipCreationFeatureCore.ImageSource]) -> UIViewController
 }
 
 public class DependencyContainer {
@@ -141,7 +141,7 @@ extension DependencyContainer: ViewControllerFactory {
                                           modalRouter: self)
     }
 
-    public func makeClipTargetCollectionViewController(id: UUID, data: [LazyImageData], fileURLs: [URL]) -> UIViewController {
+    public func makeClipTargetCollectionViewController(id: UUID, sources: [ClipCreationFeatureCore.ImageSource]) -> UIViewController {
         struct Dependency: ClipCreationViewDependency {
             var clipRecipeFactory: ClipRecipeFactoryProtocol
             var clipStore: ClipStorable
@@ -154,7 +154,7 @@ extension DependencyContainer: ViewControllerFactory {
         let dependency = Dependency(clipRecipeFactory: ClipRecipeFactory(),
                                     clipStore: clipStore,
                                     imageLoader: imageLoader,
-                                    imageSourceProvider: LocalImageSourceResolver(data: data, fileURLs: fileURLs),
+                                    imageSourceProvider: ImageSourcePassthrough(sources),
                                     userSettingsStorage: userSettingsStorage,
                                     modalNotificationCenter: .default)
         return ClipCreationViewController(state: .init(id: id,

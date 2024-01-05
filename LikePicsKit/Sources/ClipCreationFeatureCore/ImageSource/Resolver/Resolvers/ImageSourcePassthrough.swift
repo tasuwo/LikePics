@@ -11,25 +11,23 @@ import UIKit
 import AppKit
 #endif
 
-public class LocalImageSourceResolver {
+public class ImageSourcePassthrough {
     #if canImport(UIKit)
     public var loadedView: PassthroughSubject<UIView, Never> = .init()
     #endif
     #if canImport(AppKit)
     public var loadedView: PassthroughSubject<NSView, Never> = .init()
     #endif
-    private let data: [LazyImageData]
-    private let fileUrls: [URL]
+    private let sources: [ImageSource]
 
     // MARK: - Lifecycle
 
-    public init(data: [LazyImageData], fileURLs: [URL]) {
-        self.data = data
-        self.fileUrls = fileURLs
+    public init(_ sources: [ImageSource]) {
+        self.sources = sources
     }
 }
 
-extension LocalImageSourceResolver: ImageSourceResolver {
+extension ImageSourcePassthrough: ImageSourceResolver {
     // MARK: - ImageSourceResolver
 
     public func resolveSources() -> Future<[ImageSource], ImageSourceResolverError> {
@@ -38,10 +36,7 @@ extension LocalImageSourceResolver: ImageSourceResolver {
                 promise(.failure(.internalError))
                 return
             }
-
-            let loaderSources = self.data.map { ImageSource(data: $0) }
-            let fileSources = self.fileUrls.map { ImageSource(fileURL: $0) }
-            promise(.success(loaderSources + fileSources))
+            promise(.success(self.sources))
         }
     }
 }

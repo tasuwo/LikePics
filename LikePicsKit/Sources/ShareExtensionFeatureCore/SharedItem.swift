@@ -5,7 +5,7 @@
 import ClipCreationFeatureCore
 import Foundation
 
-public enum SharedImageSource {
+public enum SharedItem {
     case webPageURL(URL)
     case fileURL(URL)
     case data(LazyImageData)

@@ -72,14 +72,14 @@ extension ShareNavigationRootViewController: ShareNavigationViewProtocol {
         self.navigationController?.pushViewController(viewController, animated: true)
     }
 
-    func presentClipTargetSelectionView(data: [LazyImageData], fileURLs: [URL]) {
+    func presentClipTargetSelectionView(sources: [ImageSource]) {
         let id = UUID()
 
         modalSubscription = ModalNotificationCenter.default
             .publisher(for: id, name: .clipCreationModalDidFinish)
             .sink { [weak self] _ in self?.didFinish() }
 
-        let viewController = self.factory.makeClipTargetCollectionViewController(id: id, data: data, fileURLs: fileURLs)
+        let viewController = self.factory.makeClipTargetCollectionViewController(id: id, sources: sources)
         self.navigationController?.pushViewController(viewController, animated: true)
     }
 
