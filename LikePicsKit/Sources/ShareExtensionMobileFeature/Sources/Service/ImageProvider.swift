@@ -15,10 +15,10 @@ class ImageProvider {
     }
 }
 
-extension ImageProvider: ImageLazyLoadable {
+extension ImageProvider: LazyImageData {
     // MARK: - ImageProvider
 
-    func resolveFilename() async -> String? {
+    func fileName() async -> String? {
         if let name = underlyingProvider.suggestedName {
             return name
         }
@@ -63,7 +63,7 @@ extension ImageProvider: ImageLazyLoadable {
         }
     }
 
-    func load() async -> Data? {
+    func get() async -> Data? {
         guard let data = try? await underlyingProvider.loadItem(forTypeIdentifier: UTType.image.identifier) else { return nil }
         if let data = data as? Data {
             return data
@@ -76,7 +76,7 @@ extension ImageProvider: ImageLazyLoadable {
         }
     }
 
-    func load(_ completion: @escaping (Data?) -> Void) {
+    func fetch(_ completion: @escaping (Data?) -> Void) {
         underlyingProvider.loadItem(forTypeIdentifier: UTType.image.identifier, options: nil) { data, _ in
             if let data = data as? Data {
                 completion(data)

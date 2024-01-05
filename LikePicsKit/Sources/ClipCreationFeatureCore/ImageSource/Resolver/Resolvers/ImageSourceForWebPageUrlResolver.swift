@@ -6,7 +6,7 @@ import Combine
 import Kanna
 import WebKit
 
-public class WebPageImageLoadSourceResolver {
+public class ImageSourceForWebPageUrlResolver {
     // MARK: - Properties
 
     weak var webView: WKWebView?
@@ -18,8 +18,8 @@ public class WebPageImageLoadSourceResolver {
     }
 }
 
-extension WebPageImageLoadSourceResolver: ImageLoadSourceResolver {
-    // MARK: - ImageLoadSourceResolver
+extension ImageSourceForWebPageUrlResolver: ImageSourceResolver {
+    // MARK: - ImageSourceResolver
 
     #if canImport(UIKit)
     public var loadedView: PassthroughSubject<UIView, Never> {
@@ -32,7 +32,7 @@ extension WebPageImageLoadSourceResolver: ImageLoadSourceResolver {
     }
     #endif
 
-    public func resolveSources() -> Future<[ImageLoadSource], ImageLoadSourceResolverError> {
+    public func resolveSources() -> Future<[ImageSource], ImageSourceResolverError> {
         return Future { [weak self] promise in
             guard let self = self else {
                 promise(.failure(.internalError))
@@ -45,8 +45,8 @@ extension WebPageImageLoadSourceResolver: ImageLoadSourceResolver {
                     return
                 }
 
-                let result = document.webImageUrlSet()
-                    .map { ImageLoadSource(urlSet: $0) }
+                let result = document.webImageUrls()
+                    .map { ImageSource(urlSet: $0) }
 
                 promise(.success(result))
             }
@@ -55,7 +55,7 @@ extension WebPageImageLoadSourceResolver: ImageLoadSourceResolver {
 }
 
 private extension HTMLDocument {
-    func webImageUrlSet() -> [WebImageUrlSet] {
+    func webImageUrls() -> [WebImageUrlSet] {
         return css("img", namespaces: nil)
             .compactMap { $0["src"] }
             .compactMap { URL(string: $0) }

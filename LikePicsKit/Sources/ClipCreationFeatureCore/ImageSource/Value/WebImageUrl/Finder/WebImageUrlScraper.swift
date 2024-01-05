@@ -9,12 +9,12 @@ import Foundation
 import WebKit
 
 /// @mockable
-protocol WebImageUrlSetFinderProtocol {
+protocol WebImageUrlScraperProtocol {
     var webView: WKWebView { get }
-    func findImageUrls(inWebSiteAt url: URL, delay milliseconds: Int, completion: @escaping (Swift.Result<[WebImageUrlSet], WebImageUrlSetFinderError>) -> Void)
+    func findImageUrls(inWebSiteAt url: URL, delay milliseconds: Int, completion: @escaping (Swift.Result<[WebImageUrlSet], WebImageUrlScraperError>) -> Void)
 }
 
-class WebImageUrlSetFinder {
+class WebImageUrlScraper {
     let webView: WKWebView
     private let browser: Erik
 
@@ -33,7 +33,7 @@ class WebImageUrlSetFinder {
 
     // MARK: - Methods
 
-    private func openPage(url: URL) -> Future<Document, WebImageUrlSetFinderError> {
+    private func openPage(url: URL) -> Future<Document, WebImageUrlScraperError> {
         return Future { [weak self] promise in
             guard let self = self else {
                 promise(.failure(.internalError))
@@ -60,7 +60,7 @@ class WebImageUrlSetFinder {
         }
     }
 
-    func checkCurrentContent(fulfilled: @escaping (Document) -> Bool) -> Future<Document, WebImageUrlSetFinderError> {
+    func checkCurrentContent(fulfilled: @escaping (Document) -> Bool) -> Future<Document, WebImageUrlScraperError> {
         return Future { promise in
             self.browser.currentContent { document, error in
                 if let error = error {
@@ -84,16 +84,16 @@ class WebImageUrlSetFinder {
     }
 }
 
-extension WebImageUrlSetFinder: WebImageUrlSetFinderProtocol {
-    // MARK: - WebImageUrlSetFinderProtocol
+extension WebImageUrlScraper: WebImageUrlScraperProtocol {
+    // MARK: - WebImageUrlScraperProtocol
 
-    func findImageUrls(inWebSiteAt url: URL, delay milliseconds: Int, completion: @escaping (Result<[WebImageUrlSet], WebImageUrlSetFinderError>) -> Void) {
-        var preprocessedStep: AnyPublisher<Void, WebImageUrlSetFinderError>
+    func findImageUrls(inWebSiteAt url: URL, delay milliseconds: Int, completion: @escaping (Result<[WebImageUrlSet], WebImageUrlScraperError>) -> Void) {
+        var preprocessedStep: AnyPublisher<Void, WebImageUrlScraperError>
         if let provider = WebImageProviderPreset.resolveProvider(by: url), provider.shouldPreprocess(for: url) {
             preprocessedStep = self.openPage(url: url)
-                .flatMap { [weak self] document -> AnyPublisher<Void, WebImageUrlSetFinderError> in
+                .flatMap { [weak self] document -> AnyPublisher<Void, WebImageUrlScraperError> in
                     guard let self = self else {
-                        return Fail(error: WebImageUrlSetFinderError.internalError)
+                        return Fail(error: WebImageUrlScraperError.internalError)
                             .eraseToAnyPublisher()
                     }
                     return provider.preprocess(self.browser, document: document)

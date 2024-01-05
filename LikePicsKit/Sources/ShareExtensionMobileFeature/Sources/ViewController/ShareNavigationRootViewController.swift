@@ -61,7 +61,7 @@ extension ShareNavigationRootViewController: ShareNavigationViewProtocol {
         self.present(alert, animated: true, completion: nil)
     }
 
-    func presentClipTargetSelectionView(by url: URL) {
+    func presentClipTargetSelectionView(forWebPageURL url: URL) {
         let id = UUID()
 
         modalSubscription = ModalNotificationCenter.default
@@ -72,14 +72,14 @@ extension ShareNavigationRootViewController: ShareNavigationViewProtocol {
         self.navigationController?.pushViewController(viewController, animated: true)
     }
 
-    func presentClipTargetSelectionView(by providers: [ImageProvider], fileUrls: [URL]) {
+    func presentClipTargetSelectionView(data: [LazyImageData], fileURLs: [URL]) {
         let id = UUID()
 
         modalSubscription = ModalNotificationCenter.default
             .publisher(for: id, name: .clipCreationModalDidFinish)
             .sink { [weak self] _ in self?.didFinish() }
 
-        let viewController = self.factory.makeClipTargetCollectionViewController(id: id, loaders: providers, fileUrls: fileUrls)
+        let viewController = self.factory.makeClipTargetCollectionViewController(id: id, data: data, fileURLs: fileURLs)
         self.navigationController?.pushViewController(viewController, animated: true)
     }
 

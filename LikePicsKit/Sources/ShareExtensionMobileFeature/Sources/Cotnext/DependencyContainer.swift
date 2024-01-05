@@ -18,7 +18,7 @@ import UIKit
 public protocol ViewControllerFactory {
     func makeShareNavigationRootViewController() -> UIViewController
     func makeClipTargetCollectionViewController(id: UUID, webUrl: URL) -> UIViewController
-    func makeClipTargetCollectionViewController(id: UUID, loaders: [ImageLazyLoadable], fileUrls: [URL]) -> UIViewController
+    func makeClipTargetCollectionViewController(id: UUID, data: [LazyImageData], fileURLs: [URL]) -> UIViewController
 }
 
 public class DependencyContainer {
@@ -120,7 +120,7 @@ extension DependencyContainer: ViewControllerFactory {
             var clipRecipeFactory: ClipRecipeFactoryProtocol
             var clipStore: ClipStorable
             var imageLoader: ImageLoadable
-            var imageSourceProvider: ImageLoadSourceResolver
+            var imageSourceProvider: ImageSourceResolver
             var userSettingsStorage: UserSettingsStorageProtocol
             var modalNotificationCenter: ModalNotificationCenter
         }
@@ -128,7 +128,7 @@ extension DependencyContainer: ViewControllerFactory {
         let dependency = Dependency(clipRecipeFactory: ClipRecipeFactory(),
                                     clipStore: clipStore,
                                     imageLoader: imageLoader,
-                                    imageSourceProvider: WebImageLoadSourceResolver(url: webUrl),
+                                    imageSourceProvider: ImageSourceOnWebViewResolver(url: webUrl),
                                     userSettingsStorage: userSettingsStorage,
                                     modalNotificationCenter: .default)
         return ClipCreationViewController(state: .init(id: id,
@@ -141,12 +141,12 @@ extension DependencyContainer: ViewControllerFactory {
                                           modalRouter: self)
     }
 
-    public func makeClipTargetCollectionViewController(id: UUID, loaders: [ImageLazyLoadable], fileUrls: [URL]) -> UIViewController {
+    public func makeClipTargetCollectionViewController(id: UUID, data: [LazyImageData], fileURLs: [URL]) -> UIViewController {
         struct Dependency: ClipCreationViewDependency {
             var clipRecipeFactory: ClipRecipeFactoryProtocol
             var clipStore: ClipStorable
             var imageLoader: ImageLoadable
-            var imageSourceProvider: ImageLoadSourceResolver
+            var imageSourceProvider: ImageSourceResolver
             var userSettingsStorage: UserSettingsStorageProtocol
             var modalNotificationCenter: ModalNotificationCenter
         }
@@ -154,7 +154,7 @@ extension DependencyContainer: ViewControllerFactory {
         let dependency = Dependency(clipRecipeFactory: ClipRecipeFactory(),
                                     clipStore: clipStore,
                                     imageLoader: imageLoader,
-                                    imageSourceProvider: LocalImageLoadSourceResolver(loaders: loaders, fileUrls: fileUrls),
+                                    imageSourceProvider: LocalImageSourceResolver(data: data, fileURLs: fileURLs),
                                     userSettingsStorage: userSettingsStorage,
                                     modalNotificationCenter: .default)
         return ClipCreationViewController(state: .init(id: id,

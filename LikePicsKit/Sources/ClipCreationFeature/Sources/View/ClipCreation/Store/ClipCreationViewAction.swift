@@ -14,9 +14,9 @@ enum ClipCreationViewAction: Action {
 
     // MARK: State Observer
 
-    case imagesLoaded([ImageLoadSource])
+    case imagesLoaded([ClipCreationFeatureCore.ImageSource])
     case imagesSaved
-    case failedToLoadImages(ImageLoadSourceResolverError)
+    case failedToLoadImages(ImageSourceResolverError)
     case failedToSaveImages(ClipCreationViewReducer.DownloadError)
     case settingsUpdated(isSomeItemsHidden: Bool)
 

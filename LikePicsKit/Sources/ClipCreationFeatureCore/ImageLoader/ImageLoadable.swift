@@ -6,7 +6,7 @@ import Combine
 import Foundation
 
 public protocol ImageLoadable: AnyObject {
-    func data(for source: ImageLoadSource) async -> Data?
-    func loadData(for source: ImageLoadSource, completion: @escaping (Data?) -> Void)
-    func load(from source: ImageLoadSource) -> Future<ImageLoaderResult, ImageLoaderError>
+    func data(for source: ImageSource) async -> Data?
+    func loadData(for source: ImageSource, completion: @escaping (Data?) -> Void)
+    func load(from source: ImageSource) -> Future<ImageLoaderResult, ImageLoaderError>
 }

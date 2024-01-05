@@ -18,7 +18,7 @@ public protocol HasClipRecipeFactory {
 }
 
 public protocol HasImageSourceProvider {
-    var imageSourceProvider: ImageLoadSourceResolver { get }
+    var imageSourceProvider: ImageSourceResolver { get }
 }
 
 public protocol HasImageLoader {
@@ -55,7 +55,7 @@ struct ClipCreationViewReducer: Reducer {
         // MARK: State Observation
 
         case let .imagesLoaded(sources):
-            nextState.imageLoadSources = .init(sources, selectAll: state.source.fromLocal)
+            nextState.ImageSources = .init(sources, selectAll: state.source.fromLocal)
             nextState.displayState = .loaded
             return (nextState, .none)
 
@@ -113,13 +113,13 @@ struct ClipCreationViewReducer: Reducer {
             return (nextState, .none)
 
         case let .selected(id):
-            guard !state.imageLoadSources.selections.contains(id) else { return (nextState, .none) }
-            nextState.imageLoadSources = state.imageLoadSources.selected(id)
+            guard !state.ImageSources.selections.contains(id) else { return (nextState, .none) }
+            nextState.ImageSources = state.ImageSources.selected(id)
             return (nextState, .none)
 
         case let .deselected(id):
-            guard state.imageLoadSources.selections.contains(id) else { return (nextState, .none) }
-            nextState.imageLoadSources = state.imageLoadSources.deselected(id)
+            guard state.ImageSources.selections.contains(id) else { return (nextState, .none) }
+            nextState.ImageSources = state.ImageSources.deselected(id)
             return (nextState, .none)
 
         // MARK: Modal Completion
@@ -185,11 +185,11 @@ extension ClipCreationViewReducer {
         let stream = Deferred { dependency.imageSourceProvider.resolveSources() }
             .map { sources in sources.filter { $0.isValid } }
             .tryMap { sources -> Action? in
-                guard !sources.isEmpty else { throw ImageLoadSourceResolverError.notFound }
+                guard !sources.isEmpty else { throw ImageSourceResolverError.notFound }
                 return Action.imagesLoaded(sources)
             }
             .catch { error -> AnyPublisher<Action?, Never> in
-                let error = (error as? ImageLoadSourceResolverError) ?? ImageLoadSourceResolverError.internalError
+                let error = (error as? ImageSourceResolverError) ?? ImageSourceResolverError.internalError
                 return Just(Action.failedToLoadImages(error))
                     .eraseToAnyPublisher()
             }
@@ -200,7 +200,7 @@ extension ClipCreationViewReducer {
     }
 }
 
-private extension ImageLoadSourceResolverError {
+private extension ImageSourceResolverError {
     var displayTitle: String {
         switch self {
         case .notFound:
@@ -299,10 +299,10 @@ extension ClipCreationViewReducer {
 
         nextState.displayState = .saving
 
-        let selections = state.imageLoadSources.selections
-            .compactMap { state.imageLoadSources.imageLoadSourceById[$0] }
+        let selections = state.ImageSources.selections
+            .compactMap { state.ImageSources.ImageSourceById[$0] }
             .enumerated()
-            .reduce(into: [(Int, ImageLoadSource)]()) { $0.append(($1.offset, $1.element)) }
+            .reduce(into: [(Int, ImageSource)]()) { $0.append(($1.offset, $1.element)) }
 
         let stream = self.fetchImages(for: selections, dependency: dependency)
             .flatMap { [dependency] partialRecipes -> AnyPublisher<Action?, DownloadError> in
@@ -326,7 +326,7 @@ extension ClipCreationViewReducer {
         return (nextState, [effect])
     }
 
-    private static func fetchImages(for selections: [(index: Int, source: ImageLoadSource)], dependency: Dependency) -> AnyPublisher<[ClipItemPartialRecipe], DownloadError> {
+    private static func fetchImages(for selections: [(index: Int, source: ImageSource)], dependency: Dependency) -> AnyPublisher<[ClipItemPartialRecipe], DownloadError> {
         let publishers: [AnyPublisher<ClipItemPartialRecipe, DownloadError>] = selections
             .map { [dependency] selection in
                 return dependency.imageLoader.load(from: selection.source)

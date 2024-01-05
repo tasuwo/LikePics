@@ -17,7 +17,7 @@ public protocol ClipCreationViewDelegate: AnyObject {
 }
 
 public protocol ClipSelectionCollectionViewCellDataSource: AnyObject {
-    var imageSources: [UUID: ImageLoadSource] { get }
+    var imageSources: [UUID: ClipCreationFeatureCore.ImageSource] { get }
     func selectionOrder(of id: UUID) -> Int?
     func shouldSaveAsClip() -> Bool
 }

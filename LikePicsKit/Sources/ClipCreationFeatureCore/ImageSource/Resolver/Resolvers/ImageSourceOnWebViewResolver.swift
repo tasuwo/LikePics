@@ -10,12 +10,12 @@ import UIKit
 import AppKit
 #endif
 
-public class WebImageLoadSourceResolver {
+public class ImageSourceOnWebViewResolver {
     private static let maxDelayMs = 5000
     private static let incrementalDelayMs = 1000
 
     private let url: URL
-    private let finder = WebImageUrlSetFinder()
+    private let scraper = WebImageUrlScraper()
 
     private var urlFinderDelayMs: Int = 1000
     private var subscriptions = Set<AnyCancellable>()
@@ -42,28 +42,28 @@ public class WebImageLoadSourceResolver {
             .sink { [weak self] view in
                 guard let self = self else { return }
                 // HACK: Add WebView to view hierarchy for loading page.
-                view.addSubview(self.finder.webView)
-                self.finder.webView.frame = view.frame
-                self.finder.webView.isHidden = true
+                view.addSubview(self.scraper.webView)
+                self.scraper.webView.frame = view.frame
+                self.scraper.webView.isHidden = true
             }
             .store(in: &self.subscriptions)
     }
 }
 
-extension WebImageLoadSourceResolver: ImageLoadSourceResolver {
-    // MARK: - ImageLoadSourceResolver
+extension ImageSourceOnWebViewResolver: ImageSourceResolver {
+    // MARK: - ImageSourceResolver
 
-    public func resolveSources() -> Future<[ImageLoadSource], ImageLoadSourceResolverError> {
+    public func resolveSources() -> Future<[ImageSource], ImageSourceResolverError> {
         return Future { [weak self] promise in
             guard let self = self else {
                 promise(.failure(.internalError))
                 return
             }
 
-            self.finder.findImageUrls(inWebSiteAt: self.url, delay: self.urlFinderDelayMs) { result in
+            self.scraper.findImageUrls(inWebSiteAt: self.url, delay: self.urlFinderDelayMs) { result in
                 switch result {
                 case let .success(urls):
-                    promise(.success(urls.map({ ImageLoadSource(urlSet: $0) })))
+                    promise(.success(urls.map({ ImageSource(urlSet: $0) })))
 
                 case let .failure(error):
                     promise(.failure(.init(finderError: error)))

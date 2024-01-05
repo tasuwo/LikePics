@@ -10,7 +10,7 @@ import UIKit
 import AppKit
 #endif
 
-public protocol ImageLoadSourceResolver {
+public protocol ImageSourceResolver {
     /// View Hierarchy にロードされた View
     ///
     /// - attention: WebViewをViewHierarchyに追加しデータをロードするために利用する
@@ -20,5 +20,5 @@ public protocol ImageLoadSourceResolver {
     #if canImport(AppKit)
     var loadedView: PassthroughSubject<NSView, Never> { get }
     #endif
-    func resolveSources() -> Future<[ImageLoadSource], ImageLoadSourceResolverError>
+    func resolveSources() -> Future<[ImageSource], ImageSourceResolverError>
 }

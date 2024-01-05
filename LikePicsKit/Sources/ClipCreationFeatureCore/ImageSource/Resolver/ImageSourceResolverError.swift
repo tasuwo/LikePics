@@ -2,13 +2,13 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
-public enum ImageLoadSourceResolverError: Error {
+public enum ImageSourceResolverError: Error {
     case networkError(Error)
     case timeout
     case internalError
     case notFound
 
-    init(finderError: WebImageUrlSetFinderError) {
+    init(finderError: WebImageUrlScraperError) {
         switch finderError {
         case .internalError:
             self = .internalError

@@ -11,36 +11,36 @@ import UIKit
 import AppKit
 #endif
 
-public class LocalImageLoadSourceResolver {
+public class LocalImageSourceResolver {
     #if canImport(UIKit)
     public var loadedView: PassthroughSubject<UIView, Never> = .init()
     #endif
     #if canImport(AppKit)
     public var loadedView: PassthroughSubject<NSView, Never> = .init()
     #endif
-    private let loaders: [ImageLazyLoadable]
+    private let data: [LazyImageData]
     private let fileUrls: [URL]
 
     // MARK: - Lifecycle
 
-    public init(loaders: [ImageLazyLoadable], fileUrls: [URL]) {
-        self.loaders = loaders
-        self.fileUrls = fileUrls
+    public init(data: [LazyImageData], fileURLs: [URL]) {
+        self.data = data
+        self.fileUrls = fileURLs
     }
 }
 
-extension LocalImageLoadSourceResolver: ImageLoadSourceResolver {
-    // MARK: - ImageLoadSourceResolver
+extension LocalImageSourceResolver: ImageSourceResolver {
+    // MARK: - ImageSourceResolver
 
-    public func resolveSources() -> Future<[ImageLoadSource], ImageLoadSourceResolverError> {
+    public func resolveSources() -> Future<[ImageSource], ImageSourceResolverError> {
         return Future { [weak self] promise in
             guard let self = self else {
                 promise(.failure(.internalError))
                 return
             }
 
-            let loaderSources = self.loaders.map { ImageLoadSource(lazyLoader: $0) }
-            let fileSources = self.fileUrls.map { ImageLoadSource(fileUrl: $0) }
+            let loaderSources = self.data.map { ImageSource(data: $0) }
+            let fileSources = self.fileUrls.map { ImageSource(fileURL: $0) }
             promise(.success(loaderSources + fileSources))
         }
     }

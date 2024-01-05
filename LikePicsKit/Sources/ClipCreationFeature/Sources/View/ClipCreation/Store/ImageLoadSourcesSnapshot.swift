@@ -5,23 +5,23 @@
 import ClipCreationFeatureCore
 import Foundation
 
-struct ImageLoadSourcesSnapshot: Equatable {
+struct ImageSourcesSnapshot: Equatable {
     let order: [UUID]
     let selections: [UUID]
-    let imageLoadSourceById: [UUID: ImageLoadSource]
+    let ImageSourceById: [UUID: ImageSource]
 
     // MARK: - Initializers
 
-    init(order: [UUID], selections: [UUID], imageSourceById: [UUID: ImageLoadSource]) {
+    init(order: [UUID], selections: [UUID], imageSourceById: [UUID: ImageSource]) {
         self.order = order
         self.selections = selections
-        self.imageLoadSourceById = imageSourceById
+        self.ImageSourceById = imageSourceById
     }
 
-    init(_ imageSources: [ImageLoadSource], selectAll: Bool) {
+    init(_ imageSources: [ImageSource], selectAll: Bool) {
         self.order = imageSources.map { $0.identifier }
         self.selections = selectAll ? imageSources.map { $0.identifier } : []
-        self.imageLoadSourceById = imageSources.reduce(into: [UUID: ImageLoadSource](), { $0[$1.identifier] = $1 })
+        self.ImageSourceById = imageSources.reduce(into: [UUID: ImageSource](), { $0[$1.identifier] = $1 })
     }
 
     // MARK: - Methods
@@ -29,12 +29,12 @@ struct ImageLoadSourcesSnapshot: Equatable {
     func selected(_ id: UUID) -> Self {
         return .init(order: order,
                      selections: selections + [id],
-                     imageSourceById: imageLoadSourceById)
+                     imageSourceById: ImageSourceById)
     }
 
     func deselected(_ id: UUID) -> Self {
         return .init(order: order,
                      selections: selections.filter { $0 != id },
-                     imageSourceById: imageLoadSourceById)
+                     imageSourceById: ImageSourceById)
     }
 }

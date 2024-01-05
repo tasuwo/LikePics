@@ -165,7 +165,7 @@ extension ClipCreationViewController {
             .store(in: &subscriptions)
 
         store.state
-            .removeDuplicates(by: \.imageLoadSources.selections)
+            .removeDuplicates(by: \.ImageSources.selections)
             .sink { [weak self] state in self?.applySelection(state) }
             .store(in: &subscriptions)
 
@@ -292,7 +292,7 @@ extension ClipCreationViewController {
         ])
 
         snapshot.appendSections([.image])
-        snapshot.appendItems(state.imageLoadSources.order.map({ Layout.Item.image($0) }))
+        snapshot.appendItems(state.ImageSources.order.map({ Layout.Item.image($0) }))
 
         return snapshot
     }
@@ -300,7 +300,7 @@ extension ClipCreationViewController {
     // MARK: Selection
 
     private func applySelection(_ state: ClipCreationViewState) {
-        zip(state.imageLoadSources.selections.indices, state.imageLoadSources.selections)
+        zip(state.ImageSources.selections.indices, state.ImageSources.selections)
             .forEach { index, id in
                 guard let indexPath = dataSource.indexPath(for: .image(id)) else { return }
                 collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
@@ -381,10 +381,10 @@ extension ClipCreationViewController {
 extension ClipCreationViewController: ClipSelectionCollectionViewCellDataSource {
     // MARK: ClipSelectionCollectionViewCellDataSource
 
-    public var imageSources: [UUID: ImageLoadSource] { store.stateValue.imageLoadSources.imageLoadSourceById }
+    public var imageSources: [UUID: ClipCreationFeatureCore.ImageSource] { store.stateValue.ImageSources.ImageSourceById }
 
     public func selectionOrder(of id: UUID) -> Int? {
-        return store.stateValue.imageLoadSources.selections.firstIndex(of: id)
+        return store.stateValue.ImageSources.selections.firstIndex(of: id)
     }
 
     public func shouldSaveAsClip() -> Bool {

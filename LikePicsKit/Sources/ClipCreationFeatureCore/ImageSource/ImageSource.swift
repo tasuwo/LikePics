@@ -7,11 +7,11 @@ import CoreGraphics
 import Domain
 import Foundation
 
-public struct ImageLoadSource: Hashable {
+public struct ImageSource: Hashable {
     public enum Value {
-        case urlSet(WebImageUrlSet)
-        case fileUrl(URL)
-        case lazyLoader(ImageLazyLoadable)
+        case webURL(WebImageUrlSet)
+        case fileURL(URL)
+        case data(LazyImageData)
     }
 
     public let identifier: UUID
@@ -21,24 +21,24 @@ public struct ImageLoadSource: Hashable {
 
     init(urlSet: WebImageUrlSet) {
         self.identifier = UUID()
-        self.value = .urlSet(urlSet)
+        self.value = .webURL(urlSet)
     }
 
-    init(fileUrl: URL) {
+    init(fileURL: URL) {
         self.identifier = UUID()
-        self.value = .fileUrl(fileUrl)
+        self.value = .fileURL(fileURL)
     }
 
-    init(lazyLoader: ImageLazyLoadable) {
+    init(data: LazyImageData) {
         self.identifier = UUID()
-        self.value = .lazyLoader(lazyLoader)
+        self.value = .data(data)
     }
 
     // MARK: - Methods
 
     public var isValid: Bool {
         switch value {
-        case let .urlSet(urlSet):
+        case let .webURL(urlSet):
             guard let size = ImageUtility.resolveSize(for: urlSet.url) else { return false }
             return size.height != 0
                 && size.width != 0
@@ -51,10 +51,10 @@ public struct ImageLoadSource: Hashable {
     }
 }
 
-public extension ImageLoadSource {
+public extension ImageSource {
     // MARK: - Equatable
 
-    static func == (lhs: ImageLoadSource, rhs: ImageLoadSource) -> Bool {
+    static func == (lhs: ImageSource, rhs: ImageSource) -> Bool {
         return lhs.identifier == rhs.identifier
     }
 

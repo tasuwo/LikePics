@@ -2,14 +2,15 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import ClipCreationFeatureCore
 import Combine
 import Domain
 import UIKit
 
 protocol ShareNavigationViewProtocol: AnyObject {
     func show(errorMessage: String)
-    func presentClipTargetSelectionView(by url: URL)
-    func presentClipTargetSelectionView(by providers: [ImageProvider], fileUrls: [URL])
+    func presentClipTargetSelectionView(forWebPageURL url: URL)
+    func presentClipTargetSelectionView(data: [LazyImageData], fileURLs: [URL])
 }
 
 class ShareNavigationRootPresenter {
@@ -42,18 +43,18 @@ class ShareNavigationRootPresenter {
                     break
                 }
             } receiveValue: { [weak self] sources in
-                if case let .webUrl(url) = sources.first(where: { $0?.isWebUrl == true }) {
-                    self?.view?.presentClipTargetSelectionView(by: url)
+                if case let .webPageURL(url) = sources.first(where: { $0?.isWebPageURL == true }) {
+                    self?.view?.presentClipTargetSelectionView(forWebPageURL: url)
                 } else {
-                    let providers = sources.compactMap { $0?.imageProvider }
-                    let fileUrls = sources.compactMap { $0?.fileUrl }
+                    let data = sources.compactMap { $0?.data }
+                    let fileUrls = sources.compactMap { $0?.fileURL }
 
-                    if providers.isEmpty, fileUrls.isEmpty {
+                    if data.isEmpty, fileUrls.isEmpty {
                         self?.view?.show(errorMessage: L10n.errorUnknown)
                         return
                     }
 
-                    self?.view?.presentClipTargetSelectionView(by: providers, fileUrls: fileUrls)
+                    self?.view?.presentClipTargetSelectionView(data: data, fileURLs: fileUrls)
                 }
             }
             .store(in: &subscriptions)

@@ -54,32 +54,32 @@ public class ImageLoader {
 extension ImageLoader: ImageLoadable {
     // MARK: - ImageLoadable
 
-    public func data(for source: ImageLoadSource) async -> Data? {
+    public func data(for source: ImageSource) async -> Data? {
         switch source.value {
-        case let .lazyLoader(loader):
-            return await loader.load()
+        case let .data(data):
+            return await data.get()
 
-        case let .fileUrl(url):
+        case let .fileURL(url):
             return try? Data(contentsOf: url)
 
-        case let .urlSet(urlSet):
+        case let .webURL(urlSet):
             return (try? await URLSession.shared.data(from: urlSet.url))?.0
         }
     }
 
-    public func loadData(for source: ImageLoadSource, completion: @escaping (Data?) -> Void) {
+    public func loadData(for source: ImageSource, completion: @escaping (Data?) -> Void) {
         switch source.value {
-        case let .lazyLoader(loader):
-            loader.load(completion)
+        case let .data(data):
+            data.fetch(completion)
 
-        case let .fileUrl(url):
+        case let .fileURL(url):
             guard let data = try? Data(contentsOf: url) else {
                 completion(nil)
                 return
             }
             completion(data)
 
-        case let .urlSet(urlSet):
+        case let .webURL(urlSet):
             let semaphore = DispatchSemaphore(value: 0)
 
             var result: Data?
@@ -98,16 +98,16 @@ extension ImageLoader: ImageLoadable {
         }
     }
 
-    public func load(from source: ImageLoadSource) -> Future<ImageLoaderResult, ImageLoaderError> {
+    public func load(from source: ImageSource) -> Future<ImageLoaderResult, ImageLoaderError> {
         switch source.value {
-        case let .lazyLoader(loader):
+        case let .data(lazyData):
             return Future { promise in
-                loader.load { data in
+                lazyData.fetch { data in
                     guard let data = data else {
                         promise(.failure(.internalError))
                         return
                     }
-                    loader.resolveFilename { filename in
+                    lazyData.resolveFilename { filename in
                         promise(.success(ImageLoaderResult(usedUrl: nil,
                                                            mimeType: nil,
                                                            fileName: filename,
@@ -116,7 +116,7 @@ extension ImageLoader: ImageLoadable {
                 }
             }
 
-        case let .fileUrl(url):
+        case let .fileURL(url):
             return Future { promise in
                 guard let data = try? Data(contentsOf: url) else {
                     promise(.failure(.internalError))
@@ -125,7 +125,7 @@ extension ImageLoader: ImageLoadable {
                 promise(.success(ImageLoaderResult(usedUrl: nil, mimeType: nil, fileName: url.lastPathComponent, data: data)))
             }
 
-        case let .urlSet(urlSet):
+        case let .webURL(urlSet):
             return Future { [weak self] promise in
                 guard let self = self else {
                     promise(.failure(.internalError))
