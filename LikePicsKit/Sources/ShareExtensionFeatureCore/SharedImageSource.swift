@@ -1,16 +1,16 @@
 //
-//  Copyright © 2021 Tasuku Tozawa. All rights reserved.
+//  Copyright ©︎ 2024 Tasuku Tozawa. All rights reserved.
 //
 
 import ClipCreationFeatureCore
 import Foundation
 
-enum SharedImageSource {
+public enum SharedImageSource {
     case webPageURL(URL)
     case fileURL(URL)
-    case data(ImageProvider)
+    case data(LazyImageData)
 
-    var isWebPageURL: Bool {
+    public var isWebPageURL: Bool {
         switch self {
         case .webPageURL:
             return true
@@ -20,7 +20,7 @@ enum SharedImageSource {
         }
     }
 
-    var fileURL: URL? {
+    public var fileURL: URL? {
         switch self {
         case let .fileURL(url):
             return url
@@ -30,10 +30,10 @@ enum SharedImageSource {
         }
     }
 
-    var data: LazyImageData? {
+    public var data: LazyImageData? {
         switch self {
-        case let .data(provider):
-            return provider
+        case let .data(data):
+            return data
 
         default:
             return nil

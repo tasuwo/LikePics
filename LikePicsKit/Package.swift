@@ -15,6 +15,7 @@ let package = Package(
         .library(name: "TagSelectionModalFeature", targets: ["TagSelectionModalFeature"]),
         .library(name: "ShareExtensionMobileFeature", targets: ["ShareExtensionMobileFeature"]),
         .library(name: "ShareExtensionDesktopFeature", targets: ["ShareExtensionDesktopFeature"]),
+        .library(name: "ShareExtensionFeatureCore", targets: ["ShareExtensionFeatureCore"]),
         .library(name: "Domain", targets: ["Domain"]),
         .library(name: "MobileTransition", targets: ["MobileTransition"]),
         .library(name: "Persistence", targets: ["Persistence"]),
@@ -86,7 +87,8 @@ let package = Package(
                 "TagSelectionModalFeature",
                 "LikePicsUIKit",
                 "Persistence",
-                "Smoothie"
+                "Smoothie",
+                "ShareExtensionFeatureCore"
             ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
@@ -97,7 +99,14 @@ let package = Package(
             dependencies: [
                 "Persistence",
                 "Smoothie",
+                "ShareExtensionFeatureCore",
                 .product(name: "PersistentStack", package: "PersistentStack")
+            ]
+        ),
+        .target(
+            name: "ShareExtensionFeatureCore",
+            dependencies: [
+                "ClipCreationFeatureCore",
             ]
         ),
 
