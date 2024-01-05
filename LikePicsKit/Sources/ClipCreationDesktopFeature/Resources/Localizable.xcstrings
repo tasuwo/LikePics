@@ -34,6 +34,17 @@
         }
       }
     },
+    "Album \"%@\" could not be created because an error occurred." : {
+      "comment" : "Alert description",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エラーが発生したため、アルバム \"%@\" の作成に失敗しました。"
+          }
+        }
+      }
+    },
     "Cancel" : {
       "comment" : "Button on footer",
       "localizations" : {
@@ -41,6 +52,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "キャンセル"
+          }
+        }
+      }
+    },
+    "Clip could not be created because an error occurred." : {
+      "comment" : "Alert description",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エラーが発生したため、クリップの作成に失敗しました。"
           }
         }
       }
@@ -89,6 +111,50 @@
         }
       }
     },
+    "Failed to Create Album" : {
+      "comment" : "Alert title",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アルバムの作成に失敗"
+          }
+        }
+      }
+    },
+    "Failed to Create Clip" : {
+      "comment" : "Alert title",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "クリップの作成に失敗"
+          }
+        }
+      }
+    },
+    "Failed to Create Tag" : {
+      "comment" : "Alert title",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タグの作成に失敗"
+          }
+        }
+      }
+    },
+    "OK" : {
+      "comment" : "Button on alert",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
     "Remove album" : {
       "comment" : "Context menu",
       "localizations" : {
@@ -129,6 +195,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "保存した画像を隠す"
+          }
+        }
+      }
+    },
+    "Tag \"%@\" could not be created because an error occurred." : {
+      "comment" : "Alert description",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エラーが発生したため、タグ \"%@\" の作成に失敗しました。"
+          }
+        }
+      }
+    },
+    "Tag \"%@\" could not be created because an error occurred. A duplicate name was specified." : {
+      "comment" : "Alert description",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タグ \"%@\" の作成に失敗しました。名前が重複しています。"
           }
         }
       }
