@@ -21,9 +21,16 @@ public class WebPageImageLoadSourceResolver {
 extension WebPageImageLoadSourceResolver: ImageLoadSourceResolver {
     // MARK: - ImageLoadSourceResolver
 
+    #if canImport(UIKit)
     public var loadedView: PassthroughSubject<UIView, Never> {
         fatalError("Not implemented.")
     }
+    #endif
+    #if canImport(AppKit)
+    public var loadedView: PassthroughSubject<NSView, Never> {
+        fatalError("Not implemented.")
+    }
+    #endif
 
     public func resolveSources() -> Future<[ImageLoadSource], ImageLoadSourceResolverError> {
         return Future { [weak self] promise in

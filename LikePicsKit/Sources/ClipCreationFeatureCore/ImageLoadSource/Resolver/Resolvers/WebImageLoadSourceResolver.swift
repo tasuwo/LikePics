@@ -3,7 +3,12 @@
 //
 
 import Combine
+#if canImport(UIKit)
 import UIKit
+#endif
+#if canImport(AppKit)
+import AppKit
+#endif
 
 public class WebImageLoadSourceResolver {
     private static let maxDelayMs = 5000
@@ -15,7 +20,12 @@ public class WebImageLoadSourceResolver {
     private var urlFinderDelayMs: Int = 1000
     private var subscriptions = Set<AnyCancellable>()
 
+    #if canImport(UIKit)
     public var loadedView: PassthroughSubject<UIView, Never> = .init()
+    #endif
+    #if canImport(AppKit)
+    public var loadedView: PassthroughSubject<NSView, Never> = .init()
+    #endif
 
     // MARK: - Lifecycle
 

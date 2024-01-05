@@ -2,6 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import ClipCreationFeatureCore
 import Combine
 import CompositeKit
 import Domain

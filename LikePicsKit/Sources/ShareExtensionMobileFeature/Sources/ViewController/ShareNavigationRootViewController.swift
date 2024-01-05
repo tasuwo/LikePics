@@ -3,6 +3,7 @@
 //
 
 import ClipCreationFeature
+import ClipCreationFeatureCore
 import Combine
 import Domain
 import UIKit

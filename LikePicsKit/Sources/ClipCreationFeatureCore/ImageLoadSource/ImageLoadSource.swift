@@ -2,19 +2,20 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import CoreGraphics
 import Domain
 import Foundation
 
 public struct ImageLoadSource: Hashable {
-    enum Value {
+    public enum Value {
         case urlSet(WebImageUrlSet)
         case fileUrl(URL)
         case lazyLoader(ImageLazyLoadable)
     }
 
-    let identifier: UUID
-    let value: Value
+    public let identifier: UUID
+    public let value: Value
 
     // MARK: - Lifecycle
 
@@ -35,7 +36,7 @@ public struct ImageLoadSource: Hashable {
 
     // MARK: - Methods
 
-    var isValid: Bool {
+    public var isValid: Bool {
         switch value {
         case let .urlSet(urlSet):
             guard let size = ImageUtility.resolveSize(for: urlSet.url) else { return false }

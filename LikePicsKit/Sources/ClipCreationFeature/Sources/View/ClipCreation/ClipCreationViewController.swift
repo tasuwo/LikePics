@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import ClipCreationFeatureCore
 import Combine
 import Common
 import CompositeKit

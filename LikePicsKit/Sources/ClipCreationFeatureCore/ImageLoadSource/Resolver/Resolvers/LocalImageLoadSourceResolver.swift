@@ -4,10 +4,20 @@
 
 import Combine
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#endif
+#if canImport(AppKit)
+import AppKit
+#endif
 
 public class LocalImageLoadSourceResolver {
+    #if canImport(UIKit)
     public var loadedView: PassthroughSubject<UIView, Never> = .init()
+    #endif
+    #if canImport(AppKit)
+    public var loadedView: PassthroughSubject<NSView, Never> = .init()
+    #endif
     private let loaders: [ImageLazyLoadable]
     private let fileUrls: [URL]
 

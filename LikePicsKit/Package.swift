@@ -20,6 +20,7 @@ let package = Package(
         .library(name: "Persistence", targets: ["Persistence"]),
         .library(name: "ClipCreationFeature", targets: ["ClipCreationFeature"]),
         .library(name: "ClipCreationDesktopFeature", targets: ["ClipCreationDesktopFeature"]),
+        .library(name: "ClipCreationFeatureCore", targets: ["ClipCreationFeatureCore"]),
         .library(name: "ClipPreviewPlayConfigurationModalFeature", targets: ["ClipPreviewPlayConfigurationModalFeature"]),
         .library(name: "LikePicsUIKit", targets: ["LikePicsUIKit"]),
         .library(name: "CompositeKit", targets: ["CompositeKit"]),
@@ -50,6 +51,7 @@ let package = Package(
                 "AlbumSelectionModalFeature",
                 "TagSelectionModalFeature",
                 "ClipCreationFeature",
+                "ClipCreationFeatureCore",
                 "ClipPreviewPlayConfigurationModalFeature",
                 "LikePicsUIKit",
                 "Persistence",
@@ -80,6 +82,7 @@ let package = Package(
                 "Domain",
                 "AlbumMultiSelectionModalFeature",
                 "ClipCreationFeature",
+                "ClipCreationFeatureCore",
                 "TagSelectionModalFeature",
                 "LikePicsUIKit",
                 "Persistence",
@@ -151,6 +154,7 @@ let package = Package(
                 "Environment",
                 "Common",
                 "CompositeKit",
+                "ClipCreationFeatureCore",
                 .product(name: "Erik", package: "Erik")
             ],
             plugins: [
@@ -163,6 +167,17 @@ let package = Package(
                 "Persistence",
                 "Smoothie",
                 .product(name: "MasonryGrid", package: "MasonryGrid")
+            ],
+            plugins: [
+                .plugin(name: "LintSwift", package: "swift")
+            ]
+        ),
+        .target(
+            name: "ClipCreationFeatureCore",
+            dependencies: [
+                "Domain",
+                "Common",
+                .product(name: "Erik", package: "Erik")
             ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")

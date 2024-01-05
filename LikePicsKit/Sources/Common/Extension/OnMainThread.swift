@@ -4,7 +4,7 @@
 
 import Foundation
 
-func onMainThread<T>(execute: @escaping () -> T) -> T {
+public func onMainThread<T>(execute: @escaping () -> T) -> T {
     if Thread.isMainThread {
         return execute()
     } else {

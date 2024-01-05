@@ -5,6 +5,7 @@
 import AlbumMultiSelectionModalFeature
 import AlbumSelectionModalFeature
 import ClipCreationFeature
+import ClipCreationFeatureCore
 import ClipPreviewPlayConfigurationModalFeature
 import Common
 import Domain

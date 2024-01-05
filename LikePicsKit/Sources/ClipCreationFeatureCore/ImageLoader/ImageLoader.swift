@@ -6,7 +6,6 @@ import Combine
 import Common
 import Domain
 import Foundation
-import UIKit
 
 public class ImageLoader {
     private var subscriptions = Set<AnyCancellable>()
