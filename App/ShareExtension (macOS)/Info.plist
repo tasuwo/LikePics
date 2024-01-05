@@ -17,7 +17,7 @@
     $attachment,
     (
       ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.url&quot;
-      || ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;image&quot;
+      || ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.image&quot;
     )
   ).@count &gt;= 1
 ).@count &gt; 0</string>
