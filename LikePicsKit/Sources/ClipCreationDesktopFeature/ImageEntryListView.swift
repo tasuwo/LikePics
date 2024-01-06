@@ -2,11 +2,11 @@
 //  Copyright ©︎ 2024 Tasuku Tozawa. All rights reserved.
 //
 
-import Smoothie
+import ClipCreationFeatureCore
 import SwiftUI
 
 struct ImageEntryListView: View {
-    let images: [ImageEntry]
+    let images: [ImageSource]
     let displayOrder: Bool
     @Binding var selectedIds: [UUID]
     @State var nextSelectionOrder = 0
@@ -32,22 +32,15 @@ struct ImageEntryListView: View {
     }
 }
 
-struct ImageReferenceKey: FocusedValueKey {
-    typealias Value = Binding<ImageEntry?>
-}
-
-extension FocusedValues {
-    var selectedImage: Binding<ImageEntry?>? {
-        get { self[ImageReferenceKey.self] }
-        set { self[ImageReferenceKey.self] = newValue }
-    }
+extension ClipCreationFeatureCore.ImageSource: Identifiable {
+    public var id: UUID { identifier }
 }
 
 #Preview {
     @State var selectedIds: [UUID] = .init()
     @State var useIndex = false
 
-    return ImageEntryListView(images: (0 ... 10).map({ _ in ImageEntry(id: UUID(), name: "", data: Data(), width: 100, height: 100) }),
+    return ImageEntryListView(images: (0 ... 10).map({ _ in .init(fileURL: URL(string: "https://localhost")!) }),
                               displayOrder: false,
                               selectedIds: $selectedIds)
         .frame(width: 300, height: 400)

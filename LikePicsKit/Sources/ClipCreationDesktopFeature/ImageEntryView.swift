@@ -2,11 +2,12 @@
 //  Copyright ©︎ 2024 Tasuku Tozawa. All rights reserved.
 //
 
-import Smoothie
+import ClipCreationFeatureCore
+import struct Smoothie.LazyImage
 import SwiftUI
 
 struct ImageEntryView: View {
-    let image: ImageEntry
+    let image: ImageSource
     let selectedOrder: Int?
     let displayOrder: Bool
 
@@ -16,7 +17,7 @@ struct ImageEntryView: View {
 
     var body: some View {
         LazyImage {
-            image.data
+            await ImageLoader().data(for: image)
         } content: { image in
             if let image {
                 image
@@ -28,9 +29,7 @@ struct ImageEntryView: View {
             Color(NSColor.secondarySystemFill)
                 .aspectRatio(1, contentMode: .fit)
         }
-        .environment(\.lazyImageCacheInfo,
-                     .init(key: image.id.uuidString,
-                           originalImageSize: .init(width: image.width, height: image.height)))
+        .environment(\.lazyImageCacheInfo, .init(key: image.id.uuidString))
         .aspectRatio(1, contentMode: .fit)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
@@ -95,10 +94,10 @@ struct ImageEntryView: View {
 
 #Preview {
     VStack {
-        ImageEntryView(image: .init(id: UUID(), name: "", data: Data(), width: 100, height: 100), selectedOrder: nil, displayOrder: false)
-        ImageEntryView(image: .init(id: UUID(), name: "", data: Data(), width: 100, height: 100), selectedOrder: 1, displayOrder: false)
-        ImageEntryView(image: .init(id: UUID(), name: "", data: Data(), width: 100, height: 100), selectedOrder: 1, displayOrder: true)
-        ImageEntryView(image: .init(id: UUID(), name: "", data: Data(), width: 100, height: 100), selectedOrder: 100, displayOrder: true)
+        ImageEntryView(image: .init(fileURL: URL(string: "https://localhost")!), selectedOrder: nil, displayOrder: false)
+        ImageEntryView(image: .init(fileURL: URL(string: "https://localhost")!), selectedOrder: 1, displayOrder: false)
+        ImageEntryView(image: .init(fileURL: URL(string: "https://localhost")!), selectedOrder: 1, displayOrder: true)
+        ImageEntryView(image: .init(fileURL: URL(string: "https://localhost")!), selectedOrder: 100, displayOrder: true)
     }
     .frame(width: 150, height: 800)
     .padding()

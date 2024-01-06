@@ -2,12 +2,14 @@
 //  Copyright ©︎ 2024 Tasuku Tozawa. All rights reserved.
 //
 
+import ClipCreationFeatureCore
+import Common
 import MasonryGrid
 import Persistence
 import SwiftUI
 
 public struct ClipCreateView: View {
-    private let images: [ImageEntry]
+    private let images: [ImageSource]
     private let onSave: () -> Void
     private let onCancel: () -> Void
 
@@ -30,7 +32,7 @@ public struct ClipCreateView: View {
     @Environment(\.managedObjectContext) var context
     @AppStorage(\.showHiddenItems, store: .appGroup) var showHiddenItems
 
-    public init(images: [ImageEntry],
+    public init(images: [ImageSource],
                 url: String? = nil,
                 tags: Set<TagPreview> = .init(),
                 albums: Set<AlbumPreview> = .init(),
@@ -245,11 +247,13 @@ public struct ClipCreateView: View {
                 .keyboardShortcut(.cancelAction)
 
                 Button {
-                    do {
-                        try createClip()
-                        onSave()
-                    } catch {
-                        isClipCreateErrorAlertPresenting = true
+                    Task { @MainActor in
+                        do {
+                            try await createClip()
+                            onSave()
+                        } catch {
+                            isClipCreateErrorAlertPresenting = true
+                        }
                     }
                 } label: {
                     Text("Save", bundle: .module, comment: "Button on footer")
@@ -312,7 +316,50 @@ public struct ClipCreateView: View {
     }
 
     @MainActor
-    private func createClip() throws {
+    private func createClip() async throws {
+        struct ClipItemEntry {
+            let index: Int
+            let width: CGFloat
+            let height: CGFloat
+            let fileName: String
+            let data: Data
+        }
+
+        enum Error: Swift.Error { case failedToSizeCalculation }
+
+        let orderedImageAndIndex = selectedImageIds
+            .compactMap({ id in images.first(where: { $0.id == id }) })
+            .enumerated()
+
+        let timestamp = Date().timeIntervalSince1970
+        let clipItemEntries = try await withThrowingTaskGroup(of: ClipItemEntry.self) { group in
+            for imageAndIndex in orderedImageAndIndex {
+                group.addTask {
+                    let result = try await ImageLoader().image(from: imageAndIndex.element)
+
+                    guard let size = ImageUtility.resolveSize(for: result.data) else {
+                        throw Error.failedToSizeCalculation
+                    }
+
+                    // 空文字だと画像の保存に失敗するので、適当なファイル名を付与する
+                    let fileName = result.fileName ?? "IMG_\(timestamp)_\(imageAndIndex.offset)"
+
+                    return ClipItemEntry(index: imageAndIndex.offset,
+                                         width: size.width,
+                                         height: size.height,
+                                         fileName: fileName,
+                                         data: result.data)
+                }
+            }
+
+            var results: [ClipItemEntry] = []
+            for try await result in group {
+                results.append(result)
+            }
+
+            return results
+        }
+
         do {
             var appendingTags: [Tag] = []
             for tag in tags {
@@ -328,31 +375,32 @@ public struct ClipCreateView: View {
             clip.id = clipId
 
             let items = NSMutableSet()
-            let selectedImages = selectedImageIds
-                .compactMap({ id in images.first(where: { $0.id == id }) })
+            for entry in clipItemEntries {
+                let imageId = UUID()
 
-            selectedImages
-                .enumerated()
-                .forEach { index, image in
-                    let item = Item(context: context)
-                    item.id = UUID()
-                    item.siteUrl = URL(string: url)
-                    item.clipId = clipId
-                    item.index = Int64(index)
-                    item.imageId = image.id
-                    item.imageFileName = image.name
-                    item.imageUrl = image.url
-                    item.imageHeight = image.height
-                    item.imageWidth = image.width
-                    item.imageSize = Int64(image.data.count)
-                    item.createdDate = currentDate
-                    item.updatedDate = currentDate
-                    items.add(item)
-                }
+                let item = Item(context: context)
+                item.id = UUID()
+                item.siteUrl = URL(string: url)
+                item.clipId = clipId
+                item.index = Int64(entry.index)
+                item.imageId = imageId
+                item.imageFileName = entry.fileName
+                item.imageHeight = entry.height
+                item.imageWidth = entry.width
+                item.imageSize = Int64(entry.data.count)
+                item.createdDate = currentDate
+                item.updatedDate = currentDate
+                items.add(item)
+
+                let image = Image(context: context)
+                image.id = imageId
+                image.data = entry.data
+            }
+
             clip.clipItems = items
             clip.tags = NSSet(array: appendingTags)
 
-            clip.imagesSize = Int64(selectedImages.map({ $0.data.count }).reduce(0, +))
+            clip.imagesSize = Int64(clipItemEntries.map(\.data.count).reduce(0, +))
             clip.isHidden = isHidden
             clip.createdDate = currentDate
             clip.updatedDate = currentDate
@@ -430,10 +478,12 @@ public struct ClipCreateView: View {
 
     return ClipCreateView(
         images: [
-            .init(id: UUID(), name: "", data: Data(), width: 100, height: 100),
-            .init(id: UUID(), name: "", data: Data(), width: 100, height: 100),
-            .init(id: UUID(), name: "", data: Data(), width: 100, height: 100),
-            .init(id: UUID(), name: "", data: Data(), width: 100, height: 100),
+            .init(fileURL: URL(string: "https://localhost")!),
+            .init(fileURL: URL(string: "https://localhost")!),
+            .init(fileURL: URL(string: "https://localhost")!),
+            .init(fileURL: URL(string: "https://localhost")!),
+            .init(fileURL: URL(string: "https://localhost")!),
+            .init(fileURL: URL(string: "https://localhost")!),
         ],
         url: nil,
         tags: .init(),

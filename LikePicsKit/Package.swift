@@ -175,6 +175,7 @@ let package = Package(
             dependencies: [
                 "Persistence",
                 "Smoothie",
+                "ClipCreationFeatureCore",
                 .product(name: "MasonryGrid", package: "MasonryGrid")
             ],
             plugins: [
