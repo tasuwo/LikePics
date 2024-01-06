@@ -294,7 +294,7 @@ extension SceneDependencyContainer: ClipCreationModalRouter {
         let dependency = Dependency(clipRecipeFactory: ClipRecipeFactory(),
                                     clipStore: container.clipStore,
                                     imageLoader: imageLoader,
-                                    imageSourceProvider: ImageSourceForWebPageUrlResolver(webView: webView),
+                                    imageSourceProvider: ImageSourceOnWebViewResolver(webView: webView),
                                     userSettingsStorage: container.userSettingStorage,
                                     modalNotificationCenter: .default)
 

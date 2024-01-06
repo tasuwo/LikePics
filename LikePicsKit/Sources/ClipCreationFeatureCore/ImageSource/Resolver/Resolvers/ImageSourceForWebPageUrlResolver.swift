@@ -3,34 +3,55 @@
 //
 
 import Combine
-import Kanna
-import WebKit
+#if canImport(UIKit)
+import UIKit
+#endif
+#if canImport(AppKit)
+import AppKit
+#endif
 
 public class ImageSourceForWebPageUrlResolver {
-    // MARK: - Properties
+    private static let maxDelayMs = 5000
+    private static let incrementalDelayMs = 1000
 
-    weak var webView: WKWebView?
+    private let url: URL
+    private let scraper = WebImageUrlScraper()
 
-    // MARK: - Initializers
+    private var urlFinderDelayMs: Int = 1000
+    private var subscriptions = Set<AnyCancellable>()
 
-    public init(webView: WKWebView) {
-        self.webView = webView
+    #if canImport(UIKit)
+    public var loadedView: PassthroughSubject<UIView, Never> = .init()
+    #endif
+    #if canImport(AppKit)
+    public var loadedView: PassthroughSubject<NSView, Never> = .init()
+    #endif
+
+    // MARK: - Lifecycle
+
+    public init(url: URL) {
+        self.url = url
+
+        self.bind()
+    }
+
+    // MARK: - Methods
+
+    private func bind() {
+        self.loadedView
+            .sink { [weak self] view in
+                guard let self = self else { return }
+                // HACK: Add WebView to view hierarchy for loading page.
+                view.addSubview(self.scraper.webView)
+                self.scraper.webView.frame = view.frame
+                self.scraper.webView.isHidden = true
+            }
+            .store(in: &self.subscriptions)
     }
 }
 
 extension ImageSourceForWebPageUrlResolver: ImageSourceResolver {
     // MARK: - ImageSourceResolver
-
-    #if canImport(UIKit)
-    public var loadedView: PassthroughSubject<UIView, Never> {
-        fatalError("Not implemented.")
-    }
-    #endif
-    #if canImport(AppKit)
-    public var loadedView: PassthroughSubject<NSView, Never> {
-        fatalError("Not implemented.")
-    }
-    #endif
 
     public func resolveSources() -> Future<[ImageSource], ImageSourceResolverError> {
         return Future { [weak self] promise in
@@ -39,60 +60,18 @@ extension ImageSourceForWebPageUrlResolver: ImageSourceResolver {
                 return
             }
 
-            self.webView?.currentContent { result in
-                guard let document = result.successValue else {
-                    promise(.failure(.internalError))
-                    return
+            self.scraper.findImageUrls(inWebSiteAt: self.url, delay: self.urlFinderDelayMs) { result in
+                switch result {
+                case let .success(urls):
+                    promise(.success(urls.map({ ImageSource(urlSet: $0) })))
+
+                case let .failure(error):
+                    promise(.failure(.init(finderError: error)))
                 }
-
-                let result = document.webImageUrls()
-                    .map { ImageSource(urlSet: $0) }
-
-                promise(.success(result))
             }
-        }
-    }
-}
 
-private extension HTMLDocument {
-    func webImageUrls() -> [WebImageUrlSet] {
-        return css("img", namespaces: nil)
-            .compactMap { $0["src"] }
-            .compactMap { URL(string: $0) }
-            .map {
-                guard let provider = WebImageProviderPreset.resolveProvider(by: $0) else {
-                    return WebImageUrlSet(url: $0, alternativeUrl: nil)
-                }
-                return WebImageUrlSet(url: $0, alternativeUrl: provider.resolveHighQualityImageUrl(of: $0))
-            }
-    }
-}
-
-private extension WKWebView {
-    enum ParseError: Error {
-        case noContent
-        case webViewError(Error)
-        case failedToParse(Error)
-    }
-
-    func currentContent(_ completion: @escaping (Result<HTMLDocument, ParseError>) -> Void) {
-        DispatchQueue.main.async {
-            self.evaluateJavaScript("document.documentElement.outerHTML.toString()") { obj, error in
-                guard let html = obj as? String else {
-                    completion(.failure(.noContent))
-                    return
-                }
-
-                if let error = error {
-                    completion(.failure(.webViewError(error)))
-                    return
-                }
-
-                do {
-                    try completion(.success(Kanna.HTML(html: html, encoding: .utf8)))
-                } catch {
-                    completion(.failure(.failedToParse(error)))
-                }
+            if self.urlFinderDelayMs < Self.maxDelayMs {
+                self.urlFinderDelayMs += Self.incrementalDelayMs
             }
         }
     }

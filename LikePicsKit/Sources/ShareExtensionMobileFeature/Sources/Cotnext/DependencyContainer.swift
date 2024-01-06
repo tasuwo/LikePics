@@ -128,7 +128,7 @@ extension DependencyContainer: ViewControllerFactory {
         let dependency = Dependency(clipRecipeFactory: ClipRecipeFactory(),
                                     clipStore: clipStore,
                                     imageLoader: imageLoader,
-                                    imageSourceProvider: ImageSourceOnWebViewResolver(url: webUrl),
+                                    imageSourceProvider: ImageSourceForWebPageUrlResolver(url: webUrl),
                                     userSettingsStorage: userSettingsStorage,
                                     modalNotificationCenter: .default)
         return ClipCreationViewController(state: .init(id: id,
