@@ -425,6 +425,8 @@ public struct ClipCreateView: View {
 
                 album.updatedDate = Date()
             }
+
+            try context.save()
         } catch {
             context.rollback()
             throw error
