@@ -275,7 +275,7 @@ public struct ClipCreateView: View {
         for tag in tags {
             guard let id = tag.id, let title = tag.name else { continue }
             if title == text {
-                results.insert(TagPreview(id: id, title: title), at: 2)
+                results.insert(TagPreview(id: id, title: title), at: 0)
             } else {
                 results.append(TagPreview(id: id, title: title))
             }
@@ -300,7 +300,7 @@ public struct ClipCreateView: View {
         for album in albums {
             guard let id = album.id, let title = album.title else { continue }
             if title == text {
-                results.insert(AlbumPreview(id: id, title: title), at: 2)
+                results.insert(AlbumPreview(id: id, title: title), at: 0)
             } else {
                 results.append(AlbumPreview(id: id, title: title))
             }
