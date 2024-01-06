@@ -14,9 +14,9 @@ enum LazyImageLoadResult {
 @available(iOS 17, macOS 14, *)
 public struct LazyImageCacheInfo: Equatable {
     public var key: String
-    public var originalImageSize: CGSize
+    public var originalImageSize: CGSize?
 
-    public init(key: String, originalImageSize: CGSize) {
+    public init(key: String, originalImageSize: CGSize? = nil) {
         self.key = key
         self.originalImageSize = originalImageSize
     }
@@ -67,17 +67,21 @@ final class LazyImageLoader: ObservableObject {
         cancel()
 
         let request = ImageRequest(resize: .init(size: thumbnailSize, scale: context.displayScale), cacheKey: context.cacheInfo.key, diskCacheInvalidate: { [context, thumbnailSize] pixelSize in
-            return ThumbnailInvalidationChecker.shouldInvalidateDiskCache(originalImageSizeInPoint: context.cacheInfo.originalImageSize,
-                                                                          thumbnailSizeInPoint: thumbnailSize,
-                                                                          diskCacheSizeInPixel: pixelSize,
-                                                                          displayScale: context.displayScale)
+            if let originalImageSize = context.cacheInfo.originalImageSize {
+                return ThumbnailInvalidationChecker.shouldInvalidateDiskCache(originalImageSizeInPoint: originalImageSize,
+                                                                              thumbnailSizeInPoint: thumbnailSize,
+                                                                              diskCacheSizeInPixel: pixelSize,
+                                                                              displayScale: context.displayScale)
+            } else {
+                return false
+            }
         }, context.data)
         cancellable = context.imageProcessingQueue.loadImage(request) { [context, thumbnailSize, weak self] response in
             if let response {
                 guard context.cacheInfo.key == self?.context?.cacheInfo.key else { return }
 
-                if response.source == .memoryCache {
-                    if ThumbnailInvalidationChecker.shouldInvalidateMemoryCache(originalImageSizeInPoint: context.cacheInfo.originalImageSize,
+                if response.source == .memoryCache, let originalImageSize = context.cacheInfo.originalImageSize {
+                    if ThumbnailInvalidationChecker.shouldInvalidateMemoryCache(originalImageSizeInPoint: originalImageSize,
                                                                                 thumbnailSizeInPoint: thumbnailSize,
                                                                                 memoryCacheSizeInPixel: .init(width: response.image.size.width,
                                                                                                               height: response.image.size.height),
