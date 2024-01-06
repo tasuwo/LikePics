@@ -8,7 +8,7 @@ import Foundation
 import Persistence
 import PersistentStack
 
-public final class Container {
+public final class Container: ObservableObject {
     private(set) var viewContext: NSManagedObjectContext
     private let persistentStack: PersistentStack
 
@@ -18,7 +18,7 @@ public final class Container {
 
         // MARK: CoreData
 
-        var persistentStackConf = PersistentStack.Configuration(author: "app",
+        var persistentStackConf = PersistentStack.Configuration(author: "share-extension",
                                                                 persistentContainerName: "Model",
                                                                 managedObjectModelUrl: ManagedObjectModelUrl)
         persistentStackConf.persistentContainerUrl = FileManager.default
@@ -27,7 +27,7 @@ public final class Container {
         persistentStackConf.persistentHistoryTokenSaveDirectory = NSPersistentContainer
             .defaultDirectoryURL()
             .appendingPathComponent("LikePics", isDirectory: true)
-        persistentStackConf.persistentHistoryTokenFileName = "token.data"
+        persistentStackConf.persistentHistoryTokenFileName = "share-extension-token.data"
         persistentStackConf.shouldLoadPersistentContainerAtInitialized = true
         self.persistentStack = PersistentStack(configuration: persistentStackConf, isCloudKitSyncEnabled: false)
         self.viewContext = persistentStack.viewContext
