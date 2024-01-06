@@ -4,7 +4,7 @@
 
 import Foundation
 
-public struct ImageLoaderResult {
+public struct LoadedImage {
     public let usedUrl: URL?
     public let mimeType: String?
     public let fileName: String?

@@ -31,7 +31,7 @@ public struct ClipItemPartialRecipe {
 
     // MARK: - Lifecycle
 
-    init(index: Int, result: ImageLoaderResult) throws {
+    init(index: Int, result: LoadedImage) throws {
         self.index = index
         self.url = result.usedUrl
         self.data = result.data

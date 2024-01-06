@@ -7,5 +7,5 @@ import Foundation
 
 public protocol ImageLoadable: AnyObject {
     func data(for source: ImageSource) async -> Data?
-    func load(from source: ImageSource) -> Future<ImageLoaderResult, ImageLoaderError>
+    func load(from source: ImageSource) -> Future<LoadedImage, ImageLoaderError>
 }

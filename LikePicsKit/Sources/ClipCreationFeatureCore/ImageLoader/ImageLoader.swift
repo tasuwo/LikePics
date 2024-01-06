@@ -17,7 +17,7 @@ public class ImageLoader {
 
     // MARK: - Methods
 
-    private static func fetchImage(for url: URL) -> AnyPublisher<ImageLoaderResult, ImageLoaderError> {
+    private static func fetchImage(for url: URL) -> AnyPublisher<LoadedImage, ImageLoaderError> {
         let request: URLRequest
         if let provider = WebImageProviderPreset.resolveProvider(by: url),
            provider.shouldModifyRequest(for: url)
@@ -30,7 +30,7 @@ public class ImageLoader {
         return URLSession.shared.dataTaskPublisher(for: request)
             .map { data, response in
                 let fileName = resolveFileName(mimeType: response.mimeType, url: url)
-                return ImageLoaderResult(usedUrl: url, mimeType: response.mimeType, fileName: fileName, data: data)
+                return LoadedImage(usedUrl: url, mimeType: response.mimeType, fileName: fileName, data: data)
             }
             .mapError { ImageLoaderError.networkError($0) }
             .eraseToAnyPublisher()
@@ -67,7 +67,7 @@ extension ImageLoader: ImageLoadable {
         }
     }
 
-    public func load(from source: ImageSource) -> Future<ImageLoaderResult, ImageLoaderError> {
+    public func load(from source: ImageSource) -> Future<LoadedImage, ImageLoaderError> {
         switch source.value {
         case let .data(lazyData):
             return Future { promise in
@@ -77,10 +77,10 @@ extension ImageLoader: ImageLoadable {
                         return
                     }
                     lazyData.resolveFilename { filename in
-                        promise(.success(ImageLoaderResult(usedUrl: nil,
-                                                           mimeType: nil,
-                                                           fileName: filename,
-                                                           data: data)))
+                        promise(.success(LoadedImage(usedUrl: nil,
+                                                     mimeType: nil,
+                                                     fileName: filename,
+                                                     data: data)))
                     }
                 }
             }
@@ -91,7 +91,7 @@ extension ImageLoader: ImageLoadable {
                     promise(.failure(.internalError))
                     return
                 }
-                promise(.success(ImageLoaderResult(usedUrl: nil, mimeType: nil, fileName: url.lastPathComponent, data: data)))
+                promise(.success(LoadedImage(usedUrl: nil, mimeType: nil, fileName: url.lastPathComponent, data: data)))
             }
 
         case let .webURL(urlSet):
