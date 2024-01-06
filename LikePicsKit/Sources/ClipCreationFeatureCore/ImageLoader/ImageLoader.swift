@@ -17,6 +17,24 @@ public class ImageLoader {
 
     // MARK: - Methods
 
+    private static func image(from url: URL) async throws -> LoadedImage {
+        let request: URLRequest
+        if let provider = WebImageProviderPreset.resolveProvider(by: url),
+           provider.shouldModifyRequest(for: url)
+        {
+            request = provider.modifyRequest(URLRequest(url: url))
+        } else {
+            request = URLRequest(url: url)
+        }
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        let fileName = resolveFileName(mimeType: response.mimeType, url: url)
+        return LoadedImage(usedUrl: url,
+                           mimeType: response.mimeType,
+                           fileName: fileName,
+                           data: data)
+    }
+
     private static func fetchImage(for url: URL) -> AnyPublisher<LoadedImage, ImageLoaderError> {
         let request: URLRequest
         if let provider = WebImageProviderPreset.resolveProvider(by: url),
@@ -64,6 +82,37 @@ extension ImageLoader: ImageLoadable {
 
         case let .webURL(urlSet):
             return (try? await URLSession.shared.data(from: urlSet.url))?.0
+        }
+    }
+
+    public func image(from source: ImageSource) async throws -> LoadedImage {
+        switch source.value {
+        case let .data(lazyData):
+            guard let data = await lazyData.get() else {
+                throw ImageLoaderError.internalError
+            }
+            let fileName = await lazyData.fileName()
+            return .init(usedUrl: nil,
+                         mimeType: nil,
+                         fileName: fileName,
+                         data: data)
+
+        case let .fileURL(url):
+            guard let data = try? Data(contentsOf: url) else {
+                throw ImageLoaderError.internalError
+            }
+            return .init(usedUrl: nil,
+                         mimeType: nil,
+                         fileName: url.lastPathComponent,
+                         data: data)
+
+        case let .webURL(urlSet):
+            if let url = urlSet.alternativeUrl,
+               let result = try? await Self.image(from: url)
+            {
+                return result
+            }
+            return try await Self.image(from: urlSet.url)
         }
     }
 
