@@ -67,37 +67,6 @@ extension ImageLoader: ImageLoadable {
         }
     }
 
-    public func loadData(for source: ImageSource, completion: @escaping (Data?) -> Void) {
-        switch source.value {
-        case let .data(data):
-            data.fetch(completion)
-
-        case let .fileURL(url):
-            guard let data = try? Data(contentsOf: url) else {
-                completion(nil)
-                return
-            }
-            completion(data)
-
-        case let .webURL(urlSet):
-            let semaphore = DispatchSemaphore(value: 0)
-
-            var result: Data?
-            let task = URLSession.shared.dataTask(with: urlSet.url) { data, _, _ in
-                result = data
-                semaphore.signal()
-            }
-            task.resume()
-
-            if semaphore.wait(timeout: .now() + 5) == .timedOut {
-                completion(nil)
-                return
-            }
-
-            completion(result)
-        }
-    }
-
     public func load(from source: ImageSource) -> Future<ImageLoaderResult, ImageLoaderError> {
         switch source.value {
         case let .data(lazyData):
