@@ -100,6 +100,8 @@ let package = Package(
                 "Persistence",
                 "Smoothie",
                 "ShareExtensionFeatureCore",
+                "ClipCreationDesktopFeature",
+                "ClipCreationFeatureCore",
                 .product(name: "PersistentStack", package: "PersistentStack")
             ]
         ),

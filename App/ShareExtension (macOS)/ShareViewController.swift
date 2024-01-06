@@ -2,7 +2,7 @@
 //  Copyright © 2024 Tasuku Tozawa. All rights reserved.
 //
 
-import Cocoa
+import SwiftUI
 import ShareExtensionDesktopFeature
 
 let bundleIdentifier = {
@@ -18,29 +18,19 @@ final class ShareViewController: NSViewController {
         return NSNib.Name("ShareViewController")
     }
 
+    @IBOutlet weak var contentView: NSView!
+
     override func loadView() {
         super.loadView()
-    
-        // Insert code here to customize the view
-        let item = self.extensionContext!.inputItems[0] as! NSExtensionItem
-        if let attachments = item.attachments {
-            NSLog("Attachments = %@", attachments as NSArray)
-        } else {
-            NSLog("No Attachments")
-        }
+
+        let view = NSHostingView(rootView: ShareExtensionView(context: extensionContext!, container: container))
+        view.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(view)
+        NSLayoutConstraint.activate([
+            view.topAnchor.constraint(equalTo: contentView.topAnchor),
+            view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+        ])
     }
-
-    @IBAction func send(_ sender: AnyObject?) {
-        let outputItem = NSExtensionItem()
-        // Complete implementation by setting the appropriate value on the output item
-    
-        let outputItems = [outputItem]
-        self.extensionContext!.completeRequest(returningItems: outputItems, completionHandler: nil)
-}
-
-    @IBAction func cancel(_ sender: AnyObject?) {
-        let cancelError = NSError(domain: NSCocoaErrorDomain, code: NSUserCancelledError, userInfo: nil)
-        self.extensionContext!.cancelRequest(withError: cancelError)
-    }
-
 }
