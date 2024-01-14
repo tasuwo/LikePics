@@ -56,3 +56,35 @@ public class Album: NSManagedObject {
         return try context.fetch(request)
     }
 }
+
+public enum AlbumUpdateError: Error {
+    case notFound
+}
+
+public extension NSManagedObjectContext {
+    func updateAlbum(having id: UUID, isHidden: Bool) throws {
+        let request: NSFetchRequest<Album> = Album.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+
+        guard let Album = try fetch(request).first else {
+            throw AlbumUpdateError.notFound
+        }
+
+        Album.isHidden = isHidden
+
+        try save()
+    }
+
+    func removeAlbum(having id: UUID) throws {
+        let request: NSFetchRequest<Album> = Album.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+
+        guard let Album = try fetch(request).first else {
+            throw AlbumUpdateError.notFound
+        }
+
+        delete(Album)
+
+        try save()
+    }
+}

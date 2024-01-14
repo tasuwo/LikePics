@@ -23,6 +23,28 @@
         }
       }
     },
+    "Album could not be removed because an error occurred." : {
+      "comment" : "Alert message.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エラーが発生したため、アルバムの削除に失敗しました。"
+          }
+        }
+      }
+    },
+    "Album could not be updated because an error occurred." : {
+      "comment" : "Alert message.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エラーが発生したため、アルバムの更新に失敗しました。"
+          }
+        }
+      }
+    },
     "Albums" : {
       "comment" : "Sidebar Item",
       "localizations" : {
@@ -99,6 +121,28 @@
         }
       }
     },
+    "Clip could not be removed because an error occurred." : {
+      "comment" : "Alert message.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エラーが発生したため、クリップの削除に失敗しました。"
+          }
+        }
+      }
+    },
+    "Clip could not be updated because an error occurred." : {
+      "comment" : "Alert message.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エラーが発生したため、クリップの更新に失敗しました。"
+          }
+        }
+      }
+    },
     "Dark" : {
       "comment" : "Display Theme",
       "localizations" : {
@@ -132,6 +176,50 @@
         }
       }
     },
+    "Failed to Remove Album" : {
+      "comment" : "Alert title.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アルバムの削除に失敗"
+          }
+        }
+      }
+    },
+    "Failed to Remove Clip" : {
+      "comment" : "Alert title.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "クリップの削除に失敗"
+          }
+        }
+      }
+    },
+    "Failed to Update Album" : {
+      "comment" : "Alert title.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アルバムの更新に失敗"
+          }
+        }
+      }
+    },
+    "Failed to Update Cilp" : {
+      "comment" : "Alert title.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "クリップの更新に失敗"
+          }
+        }
+      }
+    },
     "General" : {
       "comment" : "Setting Title",
       "localizations" : {
@@ -145,6 +233,17 @@
     },
     "Hide Album" : {
       "comment" : "Context Menu",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隠す"
+          }
+        }
+      }
+    },
+    "Hide Clip" : {
+      "comment" : "Clip context menu.",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -241,6 +340,28 @@
         }
       }
     },
+    "Remove Album" : {
+      "comment" : "Context Menu",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除"
+          }
+        }
+      }
+    },
+    "Remove Clip" : {
+      "comment" : "Clip context menu.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除"
+          }
+        }
+      }
+    },
     "Rename Album" : {
       "comment" : "Context Menu",
       "localizations" : {
@@ -258,6 +379,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : ""
+          }
+        }
+      }
+    },
+    "Show Album" : {
+      "comment" : "Context Menu",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示する"
+          }
+        }
+      }
+    },
+    "Show Clip" : {
+      "comment" : "Clip context menu.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示する"
           }
         }
       }

@@ -10,6 +10,9 @@ import SwiftUI
 struct AlbumListView: View {
     @FetchRequest private var albums: FetchedResults<Persistence.Album>
     @State var layout: AlbumListLayout = .default
+    @State private var isPresentingUpdateAlbumFailureAlert = false
+    @State private var isPresentingRemoveAlbumFailureAlert = false
+    @Environment(\.managedObjectContext) private var context
     @EnvironmentObject var router: Router
 
     init(showHiddenItems: Bool) {
@@ -29,21 +32,27 @@ struct AlbumListView: View {
                         AlbumView(album: album)
                             .contextMenu {
                                 Button {
-                                    // TODO:
+                                    do {
+                                        try context.updateAlbum(having: album.id, isHidden: !album.isHidden)
+                                    } catch {
+                                        isPresentingUpdateAlbumFailureAlert = true
+                                    }
                                 } label: {
-                                    Text("Rename Album", bundle: .module, comment: "Context Menu")
+                                    if album.isHidden {
+                                        Text("Show Album", bundle: .module, comment: "Context Menu")
+                                    } else {
+                                        Text("Hide Album", bundle: .module, comment: "Context Menu")
+                                    }
                                 }
 
                                 Button {
-                                    // TODO:
+                                    do {
+                                        try context.removeAlbum(having: album.id)
+                                    } catch {
+                                        isPresentingRemoveAlbumFailureAlert = true
+                                    }
                                 } label: {
-                                    Text("Hide Album", bundle: .module, comment: "Context Menu")
-                                }
-
-                                Button(role: .destructive) {
-                                    // TODO:
-                                } label: {
-                                    Text("Delete Album", bundle: .module, comment: "Context Menu")
+                                    Text("Remove Album", bundle: .module, comment: "Context Menu")
                                 }
                             }
                             .onTapGesture {
@@ -53,6 +62,24 @@ struct AlbumListView: View {
                 }
                 .padding(.all, type(of: layout).padding)
             }
+        }
+        .alert(Text("Failed to Update Album", bundle: .module, comment: "Alert title."), isPresented: $isPresentingUpdateAlbumFailureAlert) {
+            Button {
+                isPresentingUpdateAlbumFailureAlert = false
+            } label: {
+                Text("OK", bundle: .module)
+            }
+        } message: {
+            Text("Album could not be updated because an error occurred.", bundle: .module, comment: "Alert message.")
+        }
+        .alert(Text("Failed to Remove Album", bundle: .module, comment: "Alert title."), isPresented: $isPresentingRemoveAlbumFailureAlert) {
+            Button {
+                isPresentingRemoveAlbumFailureAlert = false
+            } label: {
+                Text("OK", bundle: .module)
+            }
+        } message: {
+            Text("Album could not be removed because an error occurred.", bundle: .module, comment: "Alert message.")
         }
         .onChangeFrame { size in
             layout = AlbumListLayout.layout(forWidth: size.width)

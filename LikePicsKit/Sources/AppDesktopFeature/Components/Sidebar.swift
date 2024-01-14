@@ -12,11 +12,14 @@ struct Sidebar: View {
 
     @State private var isAlbumHovered = false
     @State private var isAlbumExpanded = false
+    @State private var isPresentingUpdateAlbumFailureAlert = false
+    @State private var isPresentingRemoveAlbumFailureAlert = false
 
     @FetchRequest private var tags: FetchedResults<Persistence.Tag>
     @FetchRequest private var albums: FetchedResults<Persistence.Album>
 
     @Namespace private var animation
+    @Environment(\.managedObjectContext) private var context
 
     init(selectedItem: Binding<SidebarItem?>, showHiddenItems: Bool) {
         self._selectedItem = selectedItem
@@ -47,25 +50,33 @@ struct Sidebar: View {
                         } icon: {
                             Image(systemName: "square.stack")
                         }
-                        .contextMenu {
-                            Button {
-                                // TODO:
-                            } label: {
-                                Text("Rename Album", bundle: .module, comment: "Context Menu")
-                            }
-                            Button {
-                                // TODO:
-                            } label: {
-                                Text("Hide Album", bundle: .module, comment: "Context Menu")
-                            }
-                            Button {
-                                // TODO:
-                            } label: {
-                                Text("Delete Album", bundle: .module, comment: "Context Menu")
-                            }
-                        }
                         .opacity(album.isHidden ? 0.5 : 1)
                         .tag(SidebarItem.album(album.id))
+                        .contextMenu {
+                            Button {
+                                do {
+                                    try context.updateAlbum(having: album.id, isHidden: !album.isHidden)
+                                } catch {
+                                    isPresentingUpdateAlbumFailureAlert = true
+                                }
+                            } label: {
+                                if album.isHidden {
+                                    Text("Show Album", bundle: .module, comment: "Context Menu")
+                                } else {
+                                    Text("Hide Album", bundle: .module, comment: "Context Menu")
+                                }
+                            }
+
+                            Button {
+                                do {
+                                    try context.removeAlbum(having: album.id)
+                                } catch {
+                                    isPresentingRemoveAlbumFailureAlert = true
+                                }
+                            } label: {
+                                Text("Remove Album", bundle: .module, comment: "Context Menu")
+                            }
+                        }
                     }
                 } label: {
                     HStack {
@@ -119,6 +130,24 @@ struct Sidebar: View {
                 }
                 .environment(\.frameTrackingMode, .debounce(0.15))
             }
+        }
+        .alert(Text("Failed to Update Album", bundle: .module, comment: "Alert title."), isPresented: $isPresentingUpdateAlbumFailureAlert) {
+            Button {
+                isPresentingUpdateAlbumFailureAlert = false
+            } label: {
+                Text("OK", bundle: .module)
+            }
+        } message: {
+            Text("Album could not be updated because an error occurred.", bundle: .module, comment: "Alert message.")
+        }
+        .alert(Text("Failed to Remove Album", bundle: .module, comment: "Alert title."), isPresented: $isPresentingRemoveAlbumFailureAlert) {
+            Button {
+                isPresentingRemoveAlbumFailureAlert = false
+            } label: {
+                Text("OK", bundle: .module)
+            }
+        } message: {
+            Text("Album could not be removed because an error occurred.", bundle: .module, comment: "Alert message.")
         }
     }
 }

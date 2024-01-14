@@ -8,3 +8,35 @@ import Foundation
 
 public class Clip: NSManagedObject {
 }
+
+public enum ClipUpdateError: Error {
+    case notFound
+}
+
+public extension NSManagedObjectContext {
+    func updateClip(having id: UUID, isHidden: Bool) throws {
+        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+
+        guard let clip = try fetch(request).first else {
+            throw ClipUpdateError.notFound
+        }
+
+        clip.isHidden = isHidden
+
+        try save()
+    }
+
+    func removeClip(having id: UUID) throws {
+        let request: NSFetchRequest<Clip> = Clip.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+
+        guard let clip = try fetch(request).first else {
+            throw ClipUpdateError.notFound
+        }
+
+        delete(clip)
+
+        try save()
+    }
+}

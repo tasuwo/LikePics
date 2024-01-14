@@ -4,14 +4,18 @@
 
 import Domain
 import MasonryGrid
+import Persistence
 import SwiftUI
 
 struct ClipListView: View {
-    let clips: [Clip]
+    let clips: [Domain.Clip]
 
     @State var layout: ClipListLayout = .default
+    @State var isPresentingUpdateFailureAlert = false
+    @State var isPresentingRemoveFailureAlert = false
     @Namespace var animation
     @EnvironmentObject var router: Router
+    @Environment(\.managedObjectContext) var context
 
     var body: some View {
         if clips.isEmpty {
@@ -28,6 +32,33 @@ struct ClipListView: View {
                         .onTapGesture {
                             if let primaryItem = clip.primaryItem {
                                 router.path.append(Route.ClipItemPage(clips: clips, clipItem: primaryItem))
+                            }
+                        }
+                        .contextMenu {
+                            Button {
+                                do {
+                                    try context.updateClip(having: clip.id, isHidden: !clip.isHidden)
+                                } catch {
+                                    isPresentingUpdateFailureAlert = true
+                                }
+                            } label: {
+                                if clip.isHidden {
+                                    Text("Show Clip", bundle: .module, comment: "Clip context menu.")
+                                } else {
+                                    Text("Hide Clip", bundle: .module, comment: "Clip context menu.")
+                                }
+                            }
+
+                            // TODO: アルバム/タグに追加できる
+
+                            Button(role: .destructive) {
+                                do {
+                                    try context.removeClip(having: clip.id)
+                                } catch {
+                                    isPresentingRemoveFailureAlert = true
+                                }
+                            } label: {
+                                Text("Remove Clip", bundle: .module, comment: "Clip context menu.")
                             }
                         }
                 } height: { clip in
@@ -50,6 +81,24 @@ struct ClipListView: View {
                 }
                 .padding(.all, type(of: layout).padding)
             }
+            .alert(Text("Failed to Update Cilp", bundle: .module, comment: "Alert title."), isPresented: $isPresentingUpdateFailureAlert) {
+                Button {
+                    isPresentingUpdateFailureAlert = false
+                } label: {
+                    Text("OK", bundle: .module)
+                }
+            } message: {
+                Text("Clip could not be updated because an error occurred.", bundle: .module, comment: "Alert message.")
+            }
+            .alert(Text("Failed to Remove Clip", bundle: .module, comment: "Alert title."), isPresented: $isPresentingRemoveFailureAlert) {
+                Button {
+                    isPresentingRemoveFailureAlert = false
+                } label: {
+                    Text("OK", bundle: .module)
+                }
+            } message: {
+                Text("Clip could not be removed because an error occurred.", bundle: .module, comment: "Alert message.")
+            }
             .onChangeFrame { size in
                 layout = ClipListLayout.layout(forWidth: size.width)
             }
@@ -62,7 +111,7 @@ struct ClipListView: View {
         func read(having id: Domain.ImageContainer.Identity) throws -> Data? { nil }
     }
 
-    func makeClip(size: ImageSize) -> Clip {
+    func makeClip(size: ImageSize) -> Domain.Clip {
         return .init(id: UUID(),
                      description: "",
                      items: [
