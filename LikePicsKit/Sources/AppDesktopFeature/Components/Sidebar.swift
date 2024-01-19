@@ -14,8 +14,10 @@ struct Sidebar: View {
     @State private var isAlbumExpanded = false
     @State private var isPresentingUpdateAlbumFailureAlert = false
     @State private var isPresentingRemoveAlbumFailureAlert = false
+    @State private var isPresentingCreateAlbumFailureAlert = false
     @State private var titleEditingAlbumId: Domain.Album.ID?
     @State private var editingTitle = ""
+    @State private var creatingAlbumId: Domain.Album.ID?
     @FocusState private var isTitleTextFieldFocused
 
     @FetchRequest private var tags: FetchedResults<Persistence.Tag>
@@ -60,6 +62,7 @@ struct Sidebar: View {
                                         try context.updateAlbum(having: album.id, title: editingTitle)
                                         self.titleEditingAlbumId = nil
                                     } catch {
+                                        isPresentingUpdateAlbumFailureAlert = true
                                     }
                                 }
                                 .keyboardShortcut(.escape, modifiers: []) {
@@ -78,6 +81,16 @@ struct Sidebar: View {
                                         isTitleTextFieldFocused = true
                                     }
                                     .allowsHitTesting(selectedItem == .album(album.id))
+                                    .onAppear {
+                                        if album.id == creatingAlbumId {
+                                            creatingAlbumId = nil
+                                            RunLoop.main.perform {
+                                                editingTitle = album.title
+                                                titleEditingAlbumId = album.id
+                                                isTitleTextFieldFocused = true
+                                            }
+                                        }
+                                    }
                             }
                         } icon: {
                             Image(systemName: "square.stack")
@@ -121,7 +134,18 @@ struct Sidebar: View {
                         Spacer()
 
                         Button {
-                            // TODO:
+                            titleEditingAlbumId = nil
+                            isTitleTextFieldFocused = false
+                            editingTitle = ""
+
+                            do {
+                                isAlbumExpanded = true
+                                let albumId = try context.createAlbum(withTitle: String(localized: "Untitled Album", bundle: .module, comment: "New Album Title"))
+                                creatingAlbumId = albumId
+                                selectedItem = .album(albumId)
+                            } catch {
+                                isPresentingCreateAlbumFailureAlert = true
+                            }
                         } label: {
                             Image(systemName: "plus.circle")
                         }
@@ -130,7 +154,18 @@ struct Sidebar: View {
                     }
                     .contextMenu {
                         Button {
-                            // TODO:
+                            titleEditingAlbumId = nil
+                            isTitleTextFieldFocused = false
+                            editingTitle = ""
+
+                            do {
+                                isAlbumExpanded = true
+                                let albumId = try context.createAlbum(withTitle: String(localized: "Untitled Album", bundle: .module, comment: "New Album Title"))
+                                creatingAlbumId = albumId
+                                selectedItem = .album(albumId)
+                            } catch {
+                                isPresentingCreateAlbumFailureAlert = true
+                            }
                         } label: {
                             Text("New Album", bundle: .module, comment: "Context Menu")
                         }
@@ -180,6 +215,15 @@ struct Sidebar: View {
             }
         } message: {
             Text("Album could not be removed because an error occurred.", bundle: .module, comment: "Alert message.")
+        }
+        .alert(Text("Failed to Create Album", bundle: .module, comment: "Alert title."), isPresented: $isPresentingCreateAlbumFailureAlert) {
+            Button {
+                isPresentingCreateAlbumFailureAlert = false
+            } label: {
+                Text("OK", bundle: .module)
+            }
+        } message: {
+            Text("Album could not be created because an error occurred.", bundle: .module, comment: "Alert message.")
         }
     }
 }

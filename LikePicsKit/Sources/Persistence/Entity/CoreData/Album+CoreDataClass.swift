@@ -48,15 +48,26 @@ public enum AlbumUpdateError: Error {
 
 public extension NSManagedObjectContext {
     func createAlbum(withTitle title: String) throws -> UUID {
+        let request: NSFetchRequest<Album> = Album.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Album.index, ascending: true)]
+        let albums = try self.fetch(request)
+
         let newId = UUID()
 
         let album = Album(context: self)
         let date = Date()
         album.id = newId
         album.title = title
+        album.index = 1
         album.isHidden = false
         album.createdDate = date
         album.updatedDate = date
+
+        var currentIndex: Int64 = 2
+        albums.forEach {
+            $0.index = currentIndex
+            currentIndex += 1
+        }
 
         try self.save()
 

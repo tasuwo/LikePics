@@ -23,6 +23,17 @@
         }
       }
     },
+    "Album could not be created because an error occurred." : {
+      "comment" : "Alert message.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エラーが発生したため、アルバムの作成に失敗しました。"
+          }
+        }
+      }
+    },
     "Album could not be removed because an error occurred." : {
       "comment" : "Alert message.",
       "localizations" : {
@@ -161,6 +172,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "この端末に保存したデータを他のiOS/iPadOS端末と共有できなくなります。同期がオフの最中に保存したデータは、後ほどiCloud同期が有効になった際に、他のiOS/iPadOS端末のデータと統合されます"
+          }
+        }
+      }
+    },
+    "Failed to Create Album" : {
+      "comment" : "Alert title.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アルバムの作成に失敗"
           }
         }
       }
@@ -445,6 +467,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "利用可能になったらオンにする"
+          }
+        }
+      }
+    },
+    "Untitled Album" : {
+      "comment" : "New Album Title",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名称未設定アルバム"
           }
         }
       }
