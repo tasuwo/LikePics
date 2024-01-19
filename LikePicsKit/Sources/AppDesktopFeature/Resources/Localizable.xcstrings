@@ -165,17 +165,6 @@
         }
       }
     },
-    "Delete Album" : {
-      "comment" : "Context Menu",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "削除"
-          }
-        }
-      }
-    },
     "Failed to Remove Album" : {
       "comment" : "Alert title.",
       "localizations" : {
@@ -358,17 +347,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "削除"
-          }
-        }
-      }
-    },
-    "Rename Album" : {
-      "comment" : "Context Menu",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "タイトルの変更"
           }
         }
       }

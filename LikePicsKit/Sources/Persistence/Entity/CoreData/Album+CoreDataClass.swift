@@ -66,11 +66,24 @@ public extension NSManagedObjectContext {
         let request: NSFetchRequest<Album> = Album.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
 
-        guard let Album = try fetch(request).first else {
+        guard let album = try fetch(request).first else {
             throw AlbumUpdateError.notFound
         }
 
-        Album.isHidden = isHidden
+        album.isHidden = isHidden
+
+        try save()
+    }
+
+    func updateAlbum(having id: UUID, title: String) throws {
+        let request: NSFetchRequest<Album> = Album.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+
+        guard let album = try fetch(request).first else {
+            throw AlbumUpdateError.notFound
+        }
+
+        album.title = title
 
         try save()
     }
@@ -79,11 +92,11 @@ public extension NSManagedObjectContext {
         let request: NSFetchRequest<Album> = Album.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
 
-        guard let Album = try fetch(request).first else {
+        guard let album = try fetch(request).first else {
             throw AlbumUpdateError.notFound
         }
 
-        delete(Album)
+        delete(album)
 
         try save()
     }

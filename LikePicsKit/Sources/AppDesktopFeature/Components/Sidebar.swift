@@ -14,6 +14,9 @@ struct Sidebar: View {
     @State private var isAlbumExpanded = false
     @State private var isPresentingUpdateAlbumFailureAlert = false
     @State private var isPresentingRemoveAlbumFailureAlert = false
+    @State private var titleEditingAlbumId: Domain.Album.ID?
+    @State private var editingTitle = ""
+    @FocusState private var isTitleTextFieldFocused
 
     @FetchRequest private var tags: FetchedResults<Persistence.Tag>
     @FetchRequest private var albums: FetchedResults<Persistence.Album>
@@ -46,7 +49,36 @@ struct Sidebar: View {
                 DisclosureGroup(isExpanded: $isAlbumExpanded) {
                     ForEach(albums.compactMap({ $0.map(to: Domain.ListingAlbumTitle.self) })) { album in
                         Label {
-                            Text(album.title)
+                            if let titleEditingAlbumId, titleEditingAlbumId == album.id {
+                                TextField(text: $editingTitle) {
+                                    EmptyView()
+                                }
+                                .focused($isTitleTextFieldFocused)
+                                .onSubmit {
+                                    do {
+                                        guard !editingTitle.isEmpty else { return }
+                                        try context.updateAlbum(having: album.id, title: editingTitle)
+                                        self.titleEditingAlbumId = nil
+                                    } catch {
+                                    }
+                                }
+                                .keyboardShortcut(.escape, modifiers: []) {
+                                    self.titleEditingAlbumId = nil
+                                }
+                                .onChange(of: isTitleTextFieldFocused) { _, isFocused in
+                                    if !isFocused {
+                                        self.titleEditingAlbumId = nil
+                                    }
+                                }
+                            } else {
+                                Text(album.title)
+                                    .onTapGesture {
+                                        editingTitle = album.title
+                                        titleEditingAlbumId = album.id
+                                        isTitleTextFieldFocused = true
+                                    }
+                                    .allowsHitTesting(selectedItem == .album(album.id))
+                            }
                         } icon: {
                             Image(systemName: "square.stack")
                         }
