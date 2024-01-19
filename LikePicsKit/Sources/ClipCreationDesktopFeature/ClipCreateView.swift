@@ -311,7 +311,7 @@ public struct ClipCreateView: View {
 
     @MainActor
     private func createAlbum(with title: String) throws -> AlbumPreview {
-        let newId = try Album.create(withTitle: title, in: context)
+        let newId = try context.createAlbum(withTitle: title)
         return .init(id: newId, title: title)
     }
 

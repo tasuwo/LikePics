@@ -7,21 +7,6 @@ import CoreData
 import Foundation
 
 public class Album: NSManagedObject {
-    public static func create(withTitle title: String, in context: NSManagedObjectContext) throws -> UUID {
-        let newId = UUID()
-
-        let album = Album(context: context)
-        album.id = newId
-        album.title = title
-        album.isHidden = false
-        album.createdDate = Date()
-        album.updatedDate = Date()
-
-        try context.save()
-
-        return newId
-    }
-
     public static func fetch(beginsWith text: String,
                              showHiddenItems: Bool,
                              context: NSManagedObjectContext) throws -> [Album]
@@ -62,6 +47,22 @@ public enum AlbumUpdateError: Error {
 }
 
 public extension NSManagedObjectContext {
+    func createAlbum(withTitle title: String) throws -> UUID {
+        let newId = UUID()
+
+        let album = Album(context: self)
+        let date = Date()
+        album.id = newId
+        album.title = title
+        album.isHidden = false
+        album.createdDate = date
+        album.updatedDate = date
+
+        try self.save()
+
+        return newId
+    }
+
     func updateAlbum(having id: UUID, isHidden: Bool) throws {
         let request: NSFetchRequest<Album> = Album.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
