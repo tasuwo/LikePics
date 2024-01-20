@@ -10,12 +10,11 @@ import SwiftUI
 struct ClipListView: View {
     let clips: [Domain.Clip]
 
-    @State var layout: ClipListLayout = .default
-    @State var isPresentingUpdateFailureAlert = false
-    @State var isPresentingDeleteFailureAlert = false
-    @Namespace var animation
-    @EnvironmentObject var router: Router
-    @Environment(\.managedObjectContext) var context
+    @State private var layout: ClipListLayout = .default
+    @State private var clipEditableViewModel = ClipEditableViewModel()
+    @Namespace private var animation
+    @EnvironmentObject private var router: Router
+    @Environment(\.managedObjectContext) private var context
 
     var body: some View {
         if clips.isEmpty {
@@ -36,11 +35,7 @@ struct ClipListView: View {
                         }
                         .contextMenu {
                             Button {
-                                do {
-                                    try context.updateClip(having: clip.id, isHidden: !clip.isHidden)
-                                } catch {
-                                    isPresentingUpdateFailureAlert = true
-                                }
+                                clipEditableViewModel.updateClip(having: clip.id, isHidden: !clip.isHidden, in: context)
                             } label: {
                                 if clip.isHidden {
                                     Text("Show Clip", bundle: .module, comment: "Clip context menu.")
@@ -52,11 +47,7 @@ struct ClipListView: View {
                             // TODO: アルバム/タグに追加できる
 
                             Button(role: .destructive) {
-                                do {
-                                    try context.deleteClip(having: clip.id)
-                                } catch {
-                                    isPresentingDeleteFailureAlert = true
-                                }
+                                clipEditableViewModel.requestToDeleteClip(id: clip.id, in: context)
                             } label: {
                                 Text("Delete Clip", bundle: .module, comment: "Clip context menu.")
                             }
@@ -81,24 +72,7 @@ struct ClipListView: View {
                 }
                 .padding(.all, type(of: layout).padding)
             }
-            .alert(Text("Failed to Update Cilp", bundle: .module, comment: "Alert title."), isPresented: $isPresentingUpdateFailureAlert) {
-                Button {
-                    isPresentingUpdateFailureAlert = false
-                } label: {
-                    Text("OK", bundle: .module)
-                }
-            } message: {
-                Text("Clip could not be updated because an error occurred.", bundle: .module, comment: "Alert message.")
-            }
-            .alert(Text("Failed to Delete Clip", bundle: .module, comment: "Alert title."), isPresented: $isPresentingDeleteFailureAlert) {
-                Button {
-                    isPresentingDeleteFailureAlert = false
-                } label: {
-                    Text("OK", bundle: .module)
-                }
-            } message: {
-                Text("Clip could not be deleted because an error occurred.", bundle: .module, comment: "Alert message.")
-            }
+            .alertForClipEditableView(viewModel: clipEditableViewModel)
             .onChangeFrame { size in
                 layout = ClipListLayout.layout(forWidth: size.width)
             }

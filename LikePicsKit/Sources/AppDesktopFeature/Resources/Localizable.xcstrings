@@ -100,6 +100,17 @@
         }
       }
     },
+    "Are you sure want to delete this clip?" : {
+      "comment" : "Alert title.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このクリップを削除してもよろしいですか？"
+          }
+        }
+      }
+    },
     "Are you sure you want to delete this album?" : {
       "comment" : "Alert title.",
       "localizations" : {
@@ -230,6 +241,17 @@
         }
       }
     },
+    "Delete from all your devices?" : {
+      "comment" : "Alert title.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべてのデバイスから削除しますか？"
+          }
+        }
+      }
+    },
     "Delete Tag" : {
       "comment" : "Context Menu",
       "localizations" : {
@@ -296,7 +318,7 @@
         }
       }
     },
-    "Failed to Update Cilp" : {
+    "Failed to Update Clip" : {
       "comment" : "Alert title.",
       "localizations" : {
         "ja" : {
@@ -565,6 +587,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "テーマ:"
+          }
+        }
+      }
+    },
+    "This clip will be deleted from LikePics on all your devices." : {
+      "comment" : "Alert message.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このクリップは、すべてのデバイスのLikePicsから削除されます。"
+          }
+        }
+      }
+    },
+    "This clip will be deleted immediately. This operation cannot be undone." : {
+      "comment" : "Alert message.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このクリップは、即座に削除されます。この操作は取り消せません。"
           }
         }
       }

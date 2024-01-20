@@ -105,6 +105,7 @@ struct AlbumEditableViewModifier: ViewModifier {
                 }
 
                 Button(role: .destructive) {
+                    viewModel.isPresentingDeleteConfirmationAlert = false
                     viewModel.deleteAlbum(having: target, in: context)
                 } label: {
                     Text("Delete", bundle: .module)

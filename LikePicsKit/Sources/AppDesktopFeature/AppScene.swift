@@ -21,6 +21,7 @@ public struct AppScene: Scene {
                 .environment(\.albumThumbnailProcessingQueue, container.albumThumbnailProcessingQueue)
                 .environment(\.clipThumbnailProcessingQueue, container.clipThumbnailProcessingQueue)
                 .environment(\.imageQueryService, container.imageQueryService)
+                .environment(container.cloudAvailability)
                 .preferredColorScheme(userInterfaceStyle.colorScheme)
         }
 

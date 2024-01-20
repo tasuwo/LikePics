@@ -75,6 +75,7 @@ struct TagEditableViewModifier: ViewModifier {
 
                 Button(role: .destructive) {
                     viewModel.deleteTag(having: target, in: context)
+                    viewModel.isPresentingDeleteConfirmationAlert = false
                 } label: {
                     Text("Delete", bundle: .module)
                 }
