@@ -15,6 +15,8 @@ struct Sidebar: View {
     @State private var isPresentingUpdateAlbumFailureAlert = false
     @State private var isPresentingRemoveAlbumFailureAlert = false
     @State private var isPresentingCreateAlbumFailureAlert = false
+    @State private var isPresentingUpdateTagFailureAlert = false
+    @State private var isPresentingRemoveTagFailureAlert = false
     @State private var titleEditingAlbumId: Domain.Album.ID?
     @State private var editingTitle = ""
     @State private var creatingAlbumId: Domain.Album.ID?
@@ -170,6 +172,30 @@ struct Sidebar: View {
                         }
                         .opacity(tag.isHidden ? 0.5 : 1)
                         .matchedGeometryEffect(id: tag.id, in: animation)
+                        .nsContextMenu {
+                            var items: [NSMenuItem] = []
+
+                            let title = tag.isHidden
+                                ? String(localized: "Show Tag", bundle: .module, comment: "Context Menu")
+                                : String(localized: "Hide Tag", bundle: .module, comment: "Context Menu")
+                            items.append(NSMenuItem(title: title) {
+                                do {
+                                    try context.updateTag(having: tag.id, isHidden: !tag.isHidden)
+                                } catch {
+                                    isPresentingUpdateTagFailureAlert = true
+                                }
+                            })
+
+                            items.append(NSMenuItem(title: String(localized: "Remove Tag", bundle: .module, comment: "Context Menu")) {
+                                do {
+                                    try context.removeTag(having: tag.id)
+                                } catch {
+                                    isPresentingRemoveTagFailureAlert = true
+                                }
+                            })
+
+                            return items
+                        }
                 } width: { tag in
                     TagButton.preferredWidth(for: tag.name)
                 }
@@ -202,6 +228,24 @@ struct Sidebar: View {
             }
         } message: {
             Text("Album could not be created because an error occurred.", bundle: .module, comment: "Alert message.")
+        }
+        .alert(Text("Failed to Update Tag", bundle: .module, comment: "Alert title."), isPresented: $isPresentingUpdateTagFailureAlert) {
+            Button {
+                isPresentingUpdateTagFailureAlert = false
+            } label: {
+                Text("OK", bundle: .module)
+            }
+        } message: {
+            Text("Tag could not be updated because an error occurred.", bundle: .module, comment: "Alert message.")
+        }
+        .alert(Text("Failed to Remove Tag", bundle: .module, comment: "Alert title."), isPresented: $isPresentingRemoveTagFailureAlert) {
+            Button {
+                isPresentingRemoveTagFailureAlert = false
+            } label: {
+                Text("OK", bundle: .module)
+            }
+        } message: {
+            Text("Tag could not be removed because an error occurred.", bundle: .module, comment: "Alert message.")
         }
     }
 

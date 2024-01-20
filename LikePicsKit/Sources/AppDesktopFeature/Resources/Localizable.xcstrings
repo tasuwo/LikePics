@@ -209,6 +209,9 @@
         }
       }
     },
+    "Failed to Remove Tag" : {
+      "comment" : "Alert title."
+    },
     "Failed to Update Album" : {
       "comment" : "Alert title.",
       "localizations" : {
@@ -230,6 +233,9 @@
           }
         }
       }
+    },
+    "Failed to Update Tag" : {
+      "comment" : "Alert title."
     },
     "General" : {
       "comment" : "Setting Title",
@@ -263,6 +269,9 @@
           }
         }
       }
+    },
+    "Hide Tag" : {
+      "comment" : "Context Menu"
     },
     "iCloud" : {
       "comment" : "Setting Title",
@@ -373,6 +382,9 @@
         }
       }
     },
+    "Remove Tag" : {
+      "comment" : "Context Menu"
+    },
     "Right click me" : {
       "localizations" : {
         "ja" : {
@@ -415,6 +427,15 @@
           }
         }
       }
+    },
+    "Show Tag" : {
+      "comment" : "Context Menu"
+    },
+    "Tag could not be removed because an error occurred." : {
+      "comment" : "Alert message."
+    },
+    "Tag could not be updated because an error occurred." : {
+      "comment" : "Alert message."
     },
     "Tags" : {
       "comment" : "Sidebar Section Title",

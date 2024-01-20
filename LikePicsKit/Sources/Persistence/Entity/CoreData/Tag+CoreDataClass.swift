@@ -6,7 +6,10 @@
 import CoreData
 import Foundation
 
-public enum TagError: Error { case duplicate }
+public enum TagError: Error {
+    case notFound
+    case duplicate
+}
 
 public class Tag: NSManagedObject {
 }
@@ -63,5 +66,33 @@ public extension Tag {
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Tag.name, ascending: true)]
 
         return try context.fetch(request)
+    }
+}
+
+public extension NSManagedObjectContext {
+    func updateTag(having id: UUID, isHidden: Bool) throws {
+        let request: NSFetchRequest<Tag> = Tag.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+
+        guard let tag = try fetch(request).first else {
+            throw TagError.notFound
+        }
+
+        tag.isHidden = isHidden
+
+        try save()
+    }
+
+    func removeTag(having id: UUID) throws {
+        let request: NSFetchRequest<Tag> = Tag.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+
+        guard let tag = try fetch(request).first else {
+            throw TagError.notFound
+        }
+
+        delete(tag)
+
+        try save()
     }
 }

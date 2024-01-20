@@ -4,10 +4,51 @@
 
 import SwiftUI
 
-struct ContextMenuView<Content: View>: NSViewRepresentable {
+extension View {
+    func nsContextMenu(menuItems: () -> [NSMenuItem]) -> some View {
+        modifier(NSContextMenu(menuItems: menuItems()))
+    }
+}
+
+private struct NSContextMenu: ViewModifier {
+    let menuItems: [NSMenuItem]
+
+    func body(content: Content) -> some View {
+        content
+            .overlay {
+                ContextMenuView {
+                    Color.clear
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } menuItems: {
+                    return menuItems
+                }
+                .allowsHitTesting(false)
+            }
+    }
+}
+
+private struct ContextMenuView<Content: View>: NSViewRepresentable {
+    final class EventMonitorCoordinator {
+        var monitoring: Any? {
+            willSet {
+                guard let monitoring else { return }
+                NSEvent.removeMonitor(monitoring)
+            }
+        }
+
+        deinit {
+            guard let monitoring else { return }
+            NSEvent.removeMonitor(monitoring)
+        }
+    }
+
     @ViewBuilder
     let content: () -> Content
     let menuItems: () -> [NSMenuItem]
+
+    func makeCoordinator() -> EventMonitorCoordinator {
+        return EventMonitorCoordinator()
+    }
 
     func makeNSView(context: Context) -> NSView {
         let hostingView = NSHostingView(rootView: content())
@@ -23,7 +64,7 @@ struct ContextMenuView<Content: View>: NSViewRepresentable {
             hostingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
 
-        NSEvent.addLocalMonitorForEvents(matching: .rightMouseUp) { event in
+        context.coordinator.monitoring = NSEvent.addLocalMonitorForEvents(matching: .rightMouseUp) { event in
             let eventLocation = event.locationInWindow
             let convertedLocation = view.convert(eventLocation, from: nil)
 
