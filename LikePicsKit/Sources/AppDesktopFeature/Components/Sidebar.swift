@@ -134,18 +134,7 @@ struct Sidebar: View {
                         Spacer()
 
                         Button {
-                            titleEditingAlbumId = nil
-                            isTitleTextFieldFocused = false
-                            editingTitle = ""
-
-                            do {
-                                isAlbumExpanded = true
-                                let albumId = try context.createAlbum(withTitle: String(localized: "Untitled Album", bundle: .module, comment: "New Album Title"))
-                                creatingAlbumId = albumId
-                                selectedItem = .album(albumId)
-                            } catch {
-                                isPresentingCreateAlbumFailureAlert = true
-                            }
+                            onCreateNewAlbum()
                         } label: {
                             Image(systemName: "plus.circle")
                         }
@@ -154,18 +143,7 @@ struct Sidebar: View {
                     }
                     .contextMenu {
                         Button {
-                            titleEditingAlbumId = nil
-                            isTitleTextFieldFocused = false
-                            editingTitle = ""
-
-                            do {
-                                isAlbumExpanded = true
-                                let albumId = try context.createAlbum(withTitle: String(localized: "Untitled Album", bundle: .module, comment: "New Album Title"))
-                                creatingAlbumId = albumId
-                                selectedItem = .album(albumId)
-                            } catch {
-                                isPresentingCreateAlbumFailureAlert = true
-                            }
+                            onCreateNewAlbum()
                         } label: {
                             Text("New Album", bundle: .module, comment: "Context Menu")
                         }
@@ -174,9 +152,9 @@ struct Sidebar: View {
                 }
                 .listRowBackground(
                     Color.clear
-                        .onHover(perform: { hovering in
+                        .onHover { hovering in
                             isAlbumHovered = hovering
-                        })
+                        }
                 )
             }
 
@@ -224,6 +202,21 @@ struct Sidebar: View {
             }
         } message: {
             Text("Album could not be created because an error occurred.", bundle: .module, comment: "Alert message.")
+        }
+    }
+
+    private func onCreateNewAlbum() {
+        titleEditingAlbumId = nil
+        isTitleTextFieldFocused = false
+        editingTitle = ""
+
+        do {
+            isAlbumExpanded = true
+            let albumId = try context.createAlbum(withTitle: String(localized: "Untitled Album", bundle: .module, comment: "New Album Title"))
+            creatingAlbumId = albumId
+            selectedItem = .album(albumId)
+        } catch {
+            isPresentingCreateAlbumFailureAlert = true
         }
     }
 }
