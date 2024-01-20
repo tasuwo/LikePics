@@ -48,7 +48,7 @@ struct Sidebar: View {
                 .tag(SidebarItem.all)
 
                 DisclosureGroup(isExpanded: $isAlbumExpanded) {
-                    ForEach(albums.compactMap({ $0.map(to: Domain.ListingAlbumTitle.self) })) { album in
+                    ForEach(albums.compactMap({ $0.map(to: Domain.Album.self) })) { album in
                         Label {
                             if let titleEditingAlbumId, titleEditingAlbumId == album.id {
                                 TextField(text: $editingTitle) {
@@ -104,7 +104,7 @@ struct Sidebar: View {
                             }
 
                             Button {
-                                albumEditableViewModel.deleteAlbum(having: album.id, in: context)
+                                albumEditableViewModel.requestToDeleteAlbum(id: album.id, clipsCount: album.clips.count, in: context)
                             } label: {
                                 Text("Delete Album", bundle: .module, comment: "Context Menu")
                             }
@@ -168,7 +168,7 @@ struct Sidebar: View {
                             })
 
                             items.append(NSMenuItem(title: String(localized: "Delete Tag", bundle: .module, comment: "Context Menu")) {
-                                tagEditableViewModel.deleteTag(having: tag.id, in: context)
+                                tagEditableViewModel.requestToDeleteTag(id: tag.id, clipsCount: tag.clipCount ?? 1, in: context)
                             })
 
                             return items

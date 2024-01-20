@@ -41,7 +41,7 @@ struct AlbumListView: View {
                                 }
 
                                 Button {
-                                    albumEditableViewModel.deleteAlbum(having: album.id, in: context)
+                                    albumEditableViewModel.requestToDeleteAlbum(id: album.id, clipsCount: album.clips.count, in: context)
                                 } label: {
                                     Text("Delete Album", bundle: .module, comment: "Context Menu")
                                 }
