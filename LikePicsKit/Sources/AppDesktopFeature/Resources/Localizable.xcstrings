@@ -210,7 +210,15 @@
       }
     },
     "Failed to Remove Tag" : {
-      "comment" : "Alert title."
+      "comment" : "Alert title.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タグの削除に失敗"
+          }
+        }
+      }
     },
     "Failed to Update Album" : {
       "comment" : "Alert title.",
@@ -235,7 +243,15 @@
       }
     },
     "Failed to Update Tag" : {
-      "comment" : "Alert title."
+      "comment" : "Alert title.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タグの更新に失敗"
+          }
+        }
+      }
     },
     "General" : {
       "comment" : "Setting Title",
@@ -271,7 +287,15 @@
       }
     },
     "Hide Tag" : {
-      "comment" : "Context Menu"
+      "comment" : "Context Menu",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隠す"
+          }
+        }
+      }
     },
     "iCloud" : {
       "comment" : "Setting Title",
@@ -383,7 +407,15 @@
       }
     },
     "Remove Tag" : {
-      "comment" : "Context Menu"
+      "comment" : "Context Menu",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除"
+          }
+        }
+      }
     },
     "Right click me" : {
       "localizations" : {
@@ -429,13 +461,37 @@
       }
     },
     "Show Tag" : {
-      "comment" : "Context Menu"
+      "comment" : "Context Menu",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示する"
+          }
+        }
+      }
     },
     "Tag could not be removed because an error occurred." : {
-      "comment" : "Alert message."
+      "comment" : "Alert message.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エラーが発生したため、タグの削除に失敗しました。"
+          }
+        }
+      }
     },
     "Tag could not be updated because an error occurred." : {
-      "comment" : "Alert message."
+      "comment" : "Alert message.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エラーが発生したため、タグの更新に失敗しました。"
+          }
+        }
+      }
     },
     "Tags" : {
       "comment" : "Sidebar Section Title",
