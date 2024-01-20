@@ -12,11 +12,8 @@ struct Sidebar: View {
 
     @State private var isAlbumHovered = false
     @State private var isAlbumExpanded = false
-    @State private var isPresentingUpdateAlbumFailureAlert = false
-    @State private var isPresentingDeleteAlbumFailureAlert = false
-    @State private var isPresentingCreateAlbumFailureAlert = false
-    @State private var isPresentingUpdateTagFailureAlert = false
-    @State private var isPresentingDeleteTagFailureAlert = false
+    @State private var albumEditableViewModel = AlbumEditableViewModel()
+    @State private var tagEditableViewModel = TagEditableViewModel()
     @State private var titleEditingAlbumId: Domain.Album.ID?
     @State private var editingTitle = ""
     @State private var creatingAlbumId: Domain.Album.ID?
@@ -59,13 +56,9 @@ struct Sidebar: View {
                                 }
                                 .focused($isTitleTextFieldFocused)
                                 .onSubmit {
-                                    do {
-                                        guard !editingTitle.isEmpty else { return }
-                                        try context.updateAlbum(having: album.id, title: editingTitle)
-                                        self.titleEditingAlbumId = nil
-                                    } catch {
-                                        isPresentingUpdateAlbumFailureAlert = true
-                                    }
+                                    guard !editingTitle.isEmpty else { return }
+                                    guard albumEditableViewModel.updateAlbum(having: album.id, title: editingTitle, in: context) else { return }
+                                    self.titleEditingAlbumId = nil
                                 }
                                 .keyboardShortcut(.escape, modifiers: []) {
                                     self.titleEditingAlbumId = nil
@@ -101,11 +94,7 @@ struct Sidebar: View {
                         .tag(SidebarItem.album(album.id))
                         .contextMenu {
                             Button {
-                                do {
-                                    try context.updateAlbum(having: album.id, isHidden: !album.isHidden)
-                                } catch {
-                                    isPresentingUpdateAlbumFailureAlert = true
-                                }
+                                albumEditableViewModel.updateAlbum(having: album.id, isHidden: !album.isHidden, in: context)
                             } label: {
                                 if album.isHidden {
                                     Text("Show Album", bundle: .module, comment: "Context Menu")
@@ -115,11 +104,7 @@ struct Sidebar: View {
                             }
 
                             Button {
-                                do {
-                                    try context.deleteAlbum(having: album.id)
-                                } catch {
-                                    isPresentingDeleteAlbumFailureAlert = true
-                                }
+                                albumEditableViewModel.deleteAlbum(having: album.id, in: context)
                             } label: {
                                 Text("Delete Album", bundle: .module, comment: "Context Menu")
                             }
@@ -179,19 +164,11 @@ struct Sidebar: View {
                                 ? String(localized: "Show Tag", bundle: .module, comment: "Context Menu")
                                 : String(localized: "Hide Tag", bundle: .module, comment: "Context Menu")
                             items.append(NSMenuItem(title: title) {
-                                do {
-                                    try context.updateTag(having: tag.id, isHidden: !tag.isHidden)
-                                } catch {
-                                    isPresentingUpdateTagFailureAlert = true
-                                }
+                                tagEditableViewModel.updateTag(having: tag.id, isHidden: !tag.isHidden, in: context)
                             })
 
                             items.append(NSMenuItem(title: String(localized: "Delete Tag", bundle: .module, comment: "Context Menu")) {
-                                do {
-                                    try context.deleteTag(having: tag.id)
-                                } catch {
-                                    isPresentingDeleteTagFailureAlert = true
-                                }
+                                tagEditableViewModel.deleteTag(having: tag.id, in: context)
                             })
 
                             return items
@@ -202,51 +179,8 @@ struct Sidebar: View {
                 .environment(\.frameTrackingMode, .debounce(0.15))
             }
         }
-        .alert(Text("Failed to Update Album", bundle: .module, comment: "Alert title."), isPresented: $isPresentingUpdateAlbumFailureAlert) {
-            Button {
-                isPresentingUpdateAlbumFailureAlert = false
-            } label: {
-                Text("OK", bundle: .module)
-            }
-        } message: {
-            Text("Album could not be updated because an error occurred.", bundle: .module, comment: "Alert message.")
-        }
-        .alert(Text("Failed to Delete Album", bundle: .module, comment: "Alert title."), isPresented: $isPresentingDeleteAlbumFailureAlert) {
-            Button {
-                isPresentingDeleteAlbumFailureAlert = false
-            } label: {
-                Text("OK", bundle: .module)
-            }
-        } message: {
-            Text("Album could not be deleted because an error occurred.", bundle: .module, comment: "Alert message.")
-        }
-        .alert(Text("Failed to Create Album", bundle: .module, comment: "Alert title."), isPresented: $isPresentingCreateAlbumFailureAlert) {
-            Button {
-                isPresentingCreateAlbumFailureAlert = false
-            } label: {
-                Text("OK", bundle: .module)
-            }
-        } message: {
-            Text("Album could not be created because an error occurred.", bundle: .module, comment: "Alert message.")
-        }
-        .alert(Text("Failed to Update Tag", bundle: .module, comment: "Alert title."), isPresented: $isPresentingUpdateTagFailureAlert) {
-            Button {
-                isPresentingUpdateTagFailureAlert = false
-            } label: {
-                Text("OK", bundle: .module)
-            }
-        } message: {
-            Text("Tag could not be updated because an error occurred.", bundle: .module, comment: "Alert message.")
-        }
-        .alert(Text("Failed to Delete Tag", bundle: .module, comment: "Alert title."), isPresented: $isPresentingDeleteTagFailureAlert) {
-            Button {
-                isPresentingDeleteTagFailureAlert = false
-            } label: {
-                Text("OK", bundle: .module)
-            }
-        } message: {
-            Text("Tag could not be deleted because an error occurred.", bundle: .module, comment: "Alert message.")
-        }
+        .alertForAlbumEditableView(viewModel: albumEditableViewModel)
+        .alertForTagEditableView(viewModel: tagEditableViewModel)
     }
 
     private func onCreateNewAlbum() {
@@ -254,14 +188,10 @@ struct Sidebar: View {
         isTitleTextFieldFocused = false
         editingTitle = ""
 
-        do {
-            isAlbumExpanded = true
-            let albumId = try context.createAlbum(withTitle: String(localized: "Untitled Album", bundle: .module, comment: "New Album Title"))
-            creatingAlbumId = albumId
-            selectedItem = .album(albumId)
-        } catch {
-            isPresentingCreateAlbumFailureAlert = true
-        }
+        isAlbumExpanded = true
+        guard let albumId = albumEditableViewModel.createNewAlbum(in: context) else { return }
+        creatingAlbumId = albumId
+        selectedItem = .album(albumId)
     }
 }
 

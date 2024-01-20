@@ -8,12 +8,11 @@ import Persistence
 import SwiftUI
 
 struct AlbumListView: View {
+    @State private var layout: AlbumListLayout = .default
+    @State private var albumEditableViewModel = AlbumEditableViewModel()
     @FetchRequest private var albums: FetchedResults<Persistence.Album>
-    @State var layout: AlbumListLayout = .default
-    @State private var isPresentingUpdateAlbumFailureAlert = false
-    @State private var isPresentingDeleteAlbumFailureAlert = false
     @Environment(\.managedObjectContext) private var context
-    @EnvironmentObject var router: Router
+    @EnvironmentObject private var router: Router
 
     init(showHiddenItems: Bool) {
         _albums = .init(sortDescriptors: [.init(keyPath: \Persistence.Album.index, ascending: true)],
@@ -32,11 +31,7 @@ struct AlbumListView: View {
                         AlbumView(album: album)
                             .contextMenu {
                                 Button {
-                                    do {
-                                        try context.updateAlbum(having: album.id, isHidden: !album.isHidden)
-                                    } catch {
-                                        isPresentingUpdateAlbumFailureAlert = true
-                                    }
+                                    albumEditableViewModel.updateAlbum(having: album.id, isHidden: !album.isHidden, in: context)
                                 } label: {
                                     if album.isHidden {
                                         Text("Show Album", bundle: .module, comment: "Context Menu")
@@ -46,11 +41,7 @@ struct AlbumListView: View {
                                 }
 
                                 Button {
-                                    do {
-                                        try context.deleteAlbum(having: album.id)
-                                    } catch {
-                                        isPresentingDeleteAlbumFailureAlert = true
-                                    }
+                                    albumEditableViewModel.deleteAlbum(having: album.id, in: context)
                                 } label: {
                                     Text("Delete Album", bundle: .module, comment: "Context Menu")
                                 }
@@ -63,24 +54,7 @@ struct AlbumListView: View {
                 .padding(.all, type(of: layout).padding)
             }
         }
-        .alert(Text("Failed to Update Album", bundle: .module, comment: "Alert title."), isPresented: $isPresentingUpdateAlbumFailureAlert) {
-            Button {
-                isPresentingUpdateAlbumFailureAlert = false
-            } label: {
-                Text("OK", bundle: .module)
-            }
-        } message: {
-            Text("Album could not be updated because an error occurred.", bundle: .module, comment: "Alert message.")
-        }
-        .alert(Text("Failed to Delete Album", bundle: .module, comment: "Alert title."), isPresented: $isPresentingDeleteAlbumFailureAlert) {
-            Button {
-                isPresentingDeleteAlbumFailureAlert = false
-            } label: {
-                Text("OK", bundle: .module)
-            }
-        } message: {
-            Text("Album could not be deleted because an error occurred.", bundle: .module, comment: "Alert message.")
-        }
+        .alertForAlbumEditableView(viewModel: albumEditableViewModel)
         .onChangeFrame { size in
             layout = AlbumListLayout.layout(forWidth: size.width)
         }
