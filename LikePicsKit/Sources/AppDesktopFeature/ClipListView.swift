@@ -12,7 +12,7 @@ struct ClipListView: View {
 
     @State var layout: ClipListLayout = .default
     @State var isPresentingUpdateFailureAlert = false
-    @State var isPresentingRemoveFailureAlert = false
+    @State var isPresentingDeleteFailureAlert = false
     @Namespace var animation
     @EnvironmentObject var router: Router
     @Environment(\.managedObjectContext) var context
@@ -53,12 +53,12 @@ struct ClipListView: View {
 
                             Button(role: .destructive) {
                                 do {
-                                    try context.removeClip(having: clip.id)
+                                    try context.deleteClip(having: clip.id)
                                 } catch {
-                                    isPresentingRemoveFailureAlert = true
+                                    isPresentingDeleteFailureAlert = true
                                 }
                             } label: {
-                                Text("Remove Clip", bundle: .module, comment: "Clip context menu.")
+                                Text("Delete Clip", bundle: .module, comment: "Clip context menu.")
                             }
                         }
                 } height: { clip in
@@ -90,14 +90,14 @@ struct ClipListView: View {
             } message: {
                 Text("Clip could not be updated because an error occurred.", bundle: .module, comment: "Alert message.")
             }
-            .alert(Text("Failed to Remove Clip", bundle: .module, comment: "Alert title."), isPresented: $isPresentingRemoveFailureAlert) {
+            .alert(Text("Failed to Delete Clip", bundle: .module, comment: "Alert title."), isPresented: $isPresentingDeleteFailureAlert) {
                 Button {
-                    isPresentingRemoveFailureAlert = false
+                    isPresentingDeleteFailureAlert = false
                 } label: {
                     Text("OK", bundle: .module)
                 }
             } message: {
-                Text("Clip could not be removed because an error occurred.", bundle: .module, comment: "Alert message.")
+                Text("Clip could not be deleted because an error occurred.", bundle: .module, comment: "Alert message.")
             }
             .onChangeFrame { size in
                 layout = ClipListLayout.layout(forWidth: size.width)

@@ -11,7 +11,7 @@ struct AlbumListView: View {
     @FetchRequest private var albums: FetchedResults<Persistence.Album>
     @State var layout: AlbumListLayout = .default
     @State private var isPresentingUpdateAlbumFailureAlert = false
-    @State private var isPresentingRemoveAlbumFailureAlert = false
+    @State private var isPresentingDeleteAlbumFailureAlert = false
     @Environment(\.managedObjectContext) private var context
     @EnvironmentObject var router: Router
 
@@ -47,12 +47,12 @@ struct AlbumListView: View {
 
                                 Button {
                                     do {
-                                        try context.removeAlbum(having: album.id)
+                                        try context.deleteAlbum(having: album.id)
                                     } catch {
-                                        isPresentingRemoveAlbumFailureAlert = true
+                                        isPresentingDeleteAlbumFailureAlert = true
                                     }
                                 } label: {
-                                    Text("Remove Album", bundle: .module, comment: "Context Menu")
+                                    Text("Delete Album", bundle: .module, comment: "Context Menu")
                                 }
                             }
                             .onTapGesture {
@@ -72,14 +72,14 @@ struct AlbumListView: View {
         } message: {
             Text("Album could not be updated because an error occurred.", bundle: .module, comment: "Alert message.")
         }
-        .alert(Text("Failed to Remove Album", bundle: .module, comment: "Alert title."), isPresented: $isPresentingRemoveAlbumFailureAlert) {
+        .alert(Text("Failed to Delete Album", bundle: .module, comment: "Alert title."), isPresented: $isPresentingDeleteAlbumFailureAlert) {
             Button {
-                isPresentingRemoveAlbumFailureAlert = false
+                isPresentingDeleteAlbumFailureAlert = false
             } label: {
                 Text("OK", bundle: .module)
             }
         } message: {
-            Text("Album could not be removed because an error occurred.", bundle: .module, comment: "Alert message.")
+            Text("Album could not be deleted because an error occurred.", bundle: .module, comment: "Alert message.")
         }
         .onChangeFrame { size in
             layout = AlbumListLayout.layout(forWidth: size.width)

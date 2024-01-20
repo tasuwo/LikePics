@@ -34,7 +34,7 @@
         }
       }
     },
-    "Album could not be removed because an error occurred." : {
+    "Album could not be deleted because an error occurred." : {
       "comment" : "Alert message.",
       "localizations" : {
         "ja" : {
@@ -132,7 +132,7 @@
         }
       }
     },
-    "Clip could not be removed because an error occurred." : {
+    "Clip could not be deleted because an error occurred." : {
       "comment" : "Alert message.",
       "localizations" : {
         "ja" : {
@@ -176,6 +176,39 @@
         }
       }
     },
+    "Delete Album" : {
+      "comment" : "Context Menu",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除"
+          }
+        }
+      }
+    },
+    "Delete Clip" : {
+      "comment" : "Clip context menu.",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除"
+          }
+        }
+      }
+    },
+    "Delete Tag" : {
+      "comment" : "Context Menu",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除"
+          }
+        }
+      }
+    },
     "Failed to Create Album" : {
       "comment" : "Alert title.",
       "localizations" : {
@@ -187,7 +220,7 @@
         }
       }
     },
-    "Failed to Remove Album" : {
+    "Failed to Delete Album" : {
       "comment" : "Alert title.",
       "localizations" : {
         "ja" : {
@@ -198,7 +231,7 @@
         }
       }
     },
-    "Failed to Remove Clip" : {
+    "Failed to Delete Clip" : {
       "comment" : "Alert title.",
       "localizations" : {
         "ja" : {
@@ -209,7 +242,7 @@
         }
       }
     },
-    "Failed to Remove Tag" : {
+    "Failed to Delete Tag" : {
       "comment" : "Alert title.",
       "localizations" : {
         "ja" : {
@@ -384,39 +417,6 @@
         }
       }
     },
-    "Remove Album" : {
-      "comment" : "Context Menu",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "削除"
-          }
-        }
-      }
-    },
-    "Remove Clip" : {
-      "comment" : "Clip context menu.",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "削除"
-          }
-        }
-      }
-    },
-    "Remove Tag" : {
-      "comment" : "Context Menu",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "削除"
-          }
-        }
-      }
-    },
     "Right click me" : {
       "localizations" : {
         "ja" : {
@@ -471,7 +471,7 @@
         }
       }
     },
-    "Tag could not be removed because an error occurred." : {
+    "Tag could not be deleted because an error occurred." : {
       "comment" : "Alert message.",
       "localizations" : {
         "ja" : {

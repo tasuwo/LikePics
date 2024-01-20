@@ -27,7 +27,7 @@ public extension NSManagedObjectContext {
         try save()
     }
 
-    func removeClip(having id: UUID) throws {
+    func deleteClip(having id: UUID) throws {
         let request: NSFetchRequest<Clip> = Clip.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
 

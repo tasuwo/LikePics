@@ -83,7 +83,7 @@ public extension NSManagedObjectContext {
         try save()
     }
 
-    func removeTag(having id: UUID) throws {
+    func deleteTag(having id: UUID) throws {
         let request: NSFetchRequest<Tag> = Tag.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
 

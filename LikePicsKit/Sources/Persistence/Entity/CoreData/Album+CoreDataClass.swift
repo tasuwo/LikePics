@@ -100,7 +100,7 @@ public extension NSManagedObjectContext {
         try save()
     }
 
-    func removeAlbum(having id: UUID) throws {
+    func deleteAlbum(having id: UUID) throws {
         let request: NSFetchRequest<Album> = Album.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
 

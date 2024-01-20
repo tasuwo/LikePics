@@ -13,10 +13,10 @@ struct Sidebar: View {
     @State private var isAlbumHovered = false
     @State private var isAlbumExpanded = false
     @State private var isPresentingUpdateAlbumFailureAlert = false
-    @State private var isPresentingRemoveAlbumFailureAlert = false
+    @State private var isPresentingDeleteAlbumFailureAlert = false
     @State private var isPresentingCreateAlbumFailureAlert = false
     @State private var isPresentingUpdateTagFailureAlert = false
-    @State private var isPresentingRemoveTagFailureAlert = false
+    @State private var isPresentingDeleteTagFailureAlert = false
     @State private var titleEditingAlbumId: Domain.Album.ID?
     @State private var editingTitle = ""
     @State private var creatingAlbumId: Domain.Album.ID?
@@ -116,12 +116,12 @@ struct Sidebar: View {
 
                             Button {
                                 do {
-                                    try context.removeAlbum(having: album.id)
+                                    try context.deleteAlbum(having: album.id)
                                 } catch {
-                                    isPresentingRemoveAlbumFailureAlert = true
+                                    isPresentingDeleteAlbumFailureAlert = true
                                 }
                             } label: {
-                                Text("Remove Album", bundle: .module, comment: "Context Menu")
+                                Text("Delete Album", bundle: .module, comment: "Context Menu")
                             }
                         }
                     }
@@ -186,11 +186,11 @@ struct Sidebar: View {
                                 }
                             })
 
-                            items.append(NSMenuItem(title: String(localized: "Remove Tag", bundle: .module, comment: "Context Menu")) {
+                            items.append(NSMenuItem(title: String(localized: "Delete Tag", bundle: .module, comment: "Context Menu")) {
                                 do {
-                                    try context.removeTag(having: tag.id)
+                                    try context.deleteTag(having: tag.id)
                                 } catch {
-                                    isPresentingRemoveTagFailureAlert = true
+                                    isPresentingDeleteTagFailureAlert = true
                                 }
                             })
 
@@ -211,14 +211,14 @@ struct Sidebar: View {
         } message: {
             Text("Album could not be updated because an error occurred.", bundle: .module, comment: "Alert message.")
         }
-        .alert(Text("Failed to Remove Album", bundle: .module, comment: "Alert title."), isPresented: $isPresentingRemoveAlbumFailureAlert) {
+        .alert(Text("Failed to Delete Album", bundle: .module, comment: "Alert title."), isPresented: $isPresentingDeleteAlbumFailureAlert) {
             Button {
-                isPresentingRemoveAlbumFailureAlert = false
+                isPresentingDeleteAlbumFailureAlert = false
             } label: {
                 Text("OK", bundle: .module)
             }
         } message: {
-            Text("Album could not be removed because an error occurred.", bundle: .module, comment: "Alert message.")
+            Text("Album could not be deleted because an error occurred.", bundle: .module, comment: "Alert message.")
         }
         .alert(Text("Failed to Create Album", bundle: .module, comment: "Alert title."), isPresented: $isPresentingCreateAlbumFailureAlert) {
             Button {
@@ -238,14 +238,14 @@ struct Sidebar: View {
         } message: {
             Text("Tag could not be updated because an error occurred.", bundle: .module, comment: "Alert message.")
         }
-        .alert(Text("Failed to Remove Tag", bundle: .module, comment: "Alert title."), isPresented: $isPresentingRemoveTagFailureAlert) {
+        .alert(Text("Failed to Delete Tag", bundle: .module, comment: "Alert title."), isPresented: $isPresentingDeleteTagFailureAlert) {
             Button {
-                isPresentingRemoveTagFailureAlert = false
+                isPresentingDeleteTagFailureAlert = false
             } label: {
                 Text("OK", bundle: .module)
             }
         } message: {
-            Text("Tag could not be removed because an error occurred.", bundle: .module, comment: "Alert message.")
+            Text("Tag could not be deleted because an error occurred.", bundle: .module, comment: "Alert message.")
         }
     }
 
