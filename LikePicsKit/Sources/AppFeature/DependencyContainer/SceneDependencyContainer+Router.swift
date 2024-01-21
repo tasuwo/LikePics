@@ -179,8 +179,9 @@ extension SceneDependencyContainer: Router {
     public func showFindView() -> Bool {
         let state = FindViewState()
         let viewController = FindViewController(state: state, dependency: self, modalRouter: self)
-        guard let detailViewController = rootViewController?.currentViewController else { return false }
-        detailViewController.show(viewController, sender: nil)
+        let navViewController = UINavigationController(rootViewController: viewController)
+        navViewController.modalPresentationStyle = .fullScreen
+        rootViewController?.present(navViewController, animated: true)
         return true
     }
 

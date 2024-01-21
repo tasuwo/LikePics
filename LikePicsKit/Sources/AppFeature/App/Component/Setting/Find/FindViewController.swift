@@ -36,7 +36,6 @@ class FindViewController: UIViewController {
     // MARK: Store
 
     private var store: Store
-    private var previousOffset: CGPoint?
     private var subscriptions: Set<AnyCancellable> = .init()
     private var observations: [NSKeyValueObservation] = []
     private var modalSubscription: Cancellable?
@@ -162,6 +161,11 @@ extension FindViewController {
         store.state
             .bind(\.modal) { [weak self] modal in self?.presentModalIfNeeded(for: modal) }
             .store(in: &subscriptions)
+
+        let closeItem = UIBarButtonItem(systemItem: .close, primaryAction: .init(handler: { [weak self] _ in
+            self?.dismiss(animated: true)
+        }))
+        navigationItem.setLeftBarButtonItems([closeItem], animated: false)
     }
 
     private func presentModalIfNeeded(for modal: FindViewState.Modal?) {
@@ -209,7 +213,6 @@ extension FindViewController {
 
         webView.uiDelegate = self
         webView.navigationDelegate = self
-        webView.scrollView.delegate = self
         webView.allowsBackForwardNavigationGestures = true
 
         progressBar.translatesAutoresizingMaskIntoConstraints = false
@@ -302,56 +305,8 @@ extension FindViewController: WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        let alert = UIAlertController(title: "Error", message: "ページ遷移中にエラーが発生しました\n\(error.localizedDescription)", preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alert.addAction(action)
-        present(alert, animated: true, completion: nil)
+        // ページ遷移のキャンセル時等にも呼び出されるので、エラーは無視する
         store.execute(.updatedEstimatedProgress(1))
-    }
-}
-
-extension FindViewController: UIScrollViewDelegate {
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        previousOffset = nil
-    }
-
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        defer {
-            previousOffset = scrollView.contentOffset
-        }
-
-        guard let previousContentOffset = previousOffset else {
-            return
-        }
-
-        if scrollView.contentOffset.y < -scrollView.contentInset.top {
-            // 上方向にバウンスする
-            showBars()
-            return
-        } else if scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.frame.size.height {
-            // 下方向にバウンスする
-            return
-        }
-
-        let delta = scrollView.contentOffset.y - previousContentOffset.y
-        guard abs(delta) > 8 else { return }
-        guard scrollView.isDragging else { return }
-
-        if delta > 0 {
-            hideBars()
-        } else {
-            showBars()
-        }
-    }
-
-    private func showBars() {
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.navigationController?.setToolbarHidden(false, animated: true)
-    }
-
-    private func hideBars() {
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
-        self.navigationController?.setToolbarHidden(true, animated: true)
     }
 }
 
