@@ -63,6 +63,11 @@ class FindViewController: UIViewController {
     {
         let webView = WKWebView()
 
+        // HACK: Twitterが見られなくなってしまう問題への対応
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            webView.customUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Safari/605.1.15"
+        }
+
         // swiftlint:disable:next force_unwrapping
         let request = URLRequest(url: URL(string: "https://google.com")!)
         webView.load(request)
