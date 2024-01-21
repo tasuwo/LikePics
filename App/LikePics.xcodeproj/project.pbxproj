@@ -15,13 +15,13 @@
 		2C56CBB22B427C4A005F7EA8 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2C56CBB12B427C4A005F7EA8 /* icon.icns */; };
 		2C56CBB42B427C4A005F7EA8 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C56CBB32B427C4A005F7EA8 /* ShareViewController.swift */; };
 		2C56CBB72B427C4A005F7EA8 /* ShareViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C56CBB52B427C4A005F7EA8 /* ShareViewController.xib */; };
-		2C56CBBC2B427C4A005F7EA8 /* ShareExtension (macOS).appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2C56CBAF2B427C4A005F7EA8 /* ShareExtension (macOS).appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2C56CBBC2B427C4A005F7EA8 /* ShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2C56CBAF2B427C4A005F7EA8 /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2C59E97B2B39C81500012349 /* AppDesktopFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 2C59E97A2B39C81500012349 /* AppDesktopFeature */; };
 		2C5E39FB27E76166008CE0FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C5E39FA27E76166008CE0FF /* Assets.xcassets */; };
 		2CA08F532B42BDE6002CB890 /* ShareExtensionMobileFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 2CA08F522B42BDE6002CB890 /* ShareExtensionMobileFeature */; };
 		2CAAF8E12B39C5C900479411 /* LikePicsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CAAF8E02B39C5C900479411 /* LikePicsApp.swift */; };
 		2CAAF8E52B39C5CB00479411 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CAAF8E42B39C5CB00479411 /* Assets.xcassets */; };
-		953320B06B0B1D6AF7D75B8F /* ShareExtension (iOS).appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3244CDEF6543830E6F56EDB0 /* ShareExtension (iOS).appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		953320B06B0B1D6AF7D75B8F /* ShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3244CDEF6543830E6F56EDB0 /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CBC0890201886D3367DEA9FA /* ShareNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27ABC8239271CCDAABD4CC4 /* ShareNavigationController.swift */; };
 		CDA61B3939F06F9C0081E6D3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 313B82C59D48077CA373AC41 /* InfoPlist.strings */; };
 		D63256AF1AF1B810615CDF21 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8DB994011BC03FDBCB8CB48 /* Assets.xcassets */; };
@@ -51,7 +51,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				2C56CBBC2B427C4A005F7EA8 /* ShareExtension (macOS).appex in Embed Foundation Extensions */,
+				2C56CBBC2B427C4A005F7EA8 /* ShareExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -62,7 +62,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				953320B06B0B1D6AF7D75B8F /* ShareExtension (iOS).appex in Embed Foundation Extensions */,
+				953320B06B0B1D6AF7D75B8F /* ShareExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -73,7 +73,7 @@
 		179E31659F21FC20FCCA1405 /* iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOS.entitlements; sourceTree = "<group>"; };
 		2C16355527E87752006C2C24 /* LikePicsKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = LikePicsKit; path = ../LikePicsKit; sourceTree = "<group>"; };
 		2C2CB21A27E9401400243281 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		2C56CBAF2B427C4A005F7EA8 /* ShareExtension (macOS).appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ShareExtension (macOS).appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C56CBAF2B427C4A005F7EA8 /* ShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C56CBB12B427C4A005F7EA8 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 		2C56CBB32B427C4A005F7EA8 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		2C56CBB62B427C4A005F7EA8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ShareViewController.xib; sourceTree = "<group>"; };
@@ -84,7 +84,7 @@
 		2CAAF8E02B39C5C900479411 /* LikePicsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikePicsApp.swift; sourceTree = "<group>"; };
 		2CAAF8E42B39C5CB00479411 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2CAAF8E92B39C5CB00479411 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
-		3244CDEF6543830E6F56EDB0 /* ShareExtension (iOS).appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ShareExtension (iOS).appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3244CDEF6543830E6F56EDB0 /* ShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		3684FED84FD8B94672573DF7 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4B2AB01D75A41E3263AE08BB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7B507EAEA05D7AA1CB822352 /* LikePics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LikePics.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -166,9 +166,9 @@
 			isa = PBXGroup;
 			children = (
 				7B507EAEA05D7AA1CB822352 /* LikePics.app */,
-				3244CDEF6543830E6F56EDB0 /* ShareExtension (iOS).appex */,
+				3244CDEF6543830E6F56EDB0 /* ShareExtension.appex */,
 				2CAAF8DE2B39C5C900479411 /* LikePics.app */,
-				2C56CBAF2B427C4A005F7EA8 /* ShareExtension (macOS).appex */,
+				2C56CBAF2B427C4A005F7EA8 /* ShareExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -255,7 +255,7 @@
 				2C180FC62B42899800E2C9DF /* ShareExtensionDesktopFeature */,
 			);
 			productName = ShareExtension;
-			productReference = 2C56CBAF2B427C4A005F7EA8 /* ShareExtension (macOS).appex */;
+			productReference = 2C56CBAF2B427C4A005F7EA8 /* ShareExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 		2CAAF8DD2B39C5C900479411 /* LikePics (macOS) */ = {
@@ -323,7 +323,7 @@
 				2CA08F522B42BDE6002CB890 /* ShareExtensionMobileFeature */,
 			);
 			productName = ShareExtension;
-			productReference = 3244CDEF6543830E6F56EDB0 /* ShareExtension (iOS).appex */;
+			productReference = 3244CDEF6543830E6F56EDB0 /* ShareExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -620,7 +620,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.ShareExtension;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = ShareExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "match Development net.tasuwo.TBox.ShareExtension macos";
 				SDKROOT = macosx;
@@ -659,7 +659,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.dev.ShareExtension;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = ShareExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "match Development net.tasuwo.TBox.dev.ShareExtension macos";
 				SDKROOT = macosx;
@@ -698,7 +698,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.ShareExtension;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = ShareExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "match AppStore net.tasuwo.TBox.ShareExtension macos";
 				SDKROOT = macosx;
@@ -736,7 +736,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.dev.ShareExtension;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = ShareExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "match AppStore net.tasuwo.TBox.dev.ShareExtension macos";
 				SDKROOT = macosx;
@@ -1181,6 +1181,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.ShareExtension;
+				PRODUCT_NAME = ShareExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "match Development net.tasuwo.TBox.ShareExtension";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1271,6 +1272,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.dev.ShareExtension;
+				PRODUCT_NAME = ShareExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore net.tasuwo.TBox.dev.ShareExtension";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1292,6 +1294,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.ShareExtension;
+				PRODUCT_NAME = ShareExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore net.tasuwo.TBox.ShareExtension";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1312,6 +1315,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.dev.ShareExtension;
+				PRODUCT_NAME = ShareExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "match Development net.tasuwo.TBox.dev.ShareExtension";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
