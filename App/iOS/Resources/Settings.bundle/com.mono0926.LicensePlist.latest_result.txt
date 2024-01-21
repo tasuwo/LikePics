@@ -6,7 +6,7 @@ name: FileKit, nameSpecified: FileKit, owner: nvzqz, version: 6.0.0, source: htt
 
 name: Kanna, nameSpecified: Kanna, owner: tid-kijyun, version: 5.2.7, source: https://github.com/tid-kijyun/Kanna
 
-name: MasonryGrid, nameSpecified: MasonryGrid, owner: tasuwo, version: 0.0.1-alpha.5, source: https://github.com/tasuwo/MasonryGrid
+name: MasonryGrid, nameSpecified: MasonryGrid, owner: tasuwo, version: 0.0.1-alpha.6, source: https://github.com/tasuwo/MasonryGrid
 
 name: PersistentStack, nameSpecified: PersistentStack, owner: tasuwo, version: 0.8.1, source: https://github.com/tasuwo/PersistentStack
 
