@@ -126,8 +126,10 @@ extension SearchResultViewController {
                 let currentTokens = self.searchController.searchBar.searchTextField.tokens.compactMap { $0.underlyingToken }
                 let nextTokens = state.inputtedTokens
                 if currentTokens != nextTokens {
-                    self.searchController.searchBar.searchTextField.text = state.inputtedText
+                    // textを先に更新すると `UISearchResultsUpdating` のメソッドが呼び出されて無限ループしてしまうので、
+                    // トークンを先に更新する
                     self.searchController.searchBar.searchTextField.tokens = nextTokens.map { $0.uiSearchToken }
+                    self.searchController.searchBar.searchTextField.text = state.inputtedText
                 }
             }
             .store(in: &subscriptions)
