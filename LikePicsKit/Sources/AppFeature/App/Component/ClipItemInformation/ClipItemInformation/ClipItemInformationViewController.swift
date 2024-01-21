@@ -296,6 +296,7 @@ extension ClipItemInformationViewController {
 
     private func configureGestureRecognizer() {
         panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didPan(_:)))
+        panGestureRecognizer.allowedScrollTypesMask = .all
         panGestureRecognizer.delegate = self
         view.addGestureRecognizer(self.panGestureRecognizer)
     }

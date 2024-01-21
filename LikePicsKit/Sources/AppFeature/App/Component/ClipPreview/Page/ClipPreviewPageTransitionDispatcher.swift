@@ -100,6 +100,7 @@ class ClipPreviewPageTransitionController: NSObject,
 
     private func setupGestureRecognizer() {
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.didPan(_:)))
+        panGestureRecognizer.allowedScrollTypesMask = .all
         panGestureRecognizer.delegate = self
         self.baseViewController?.view.addGestureRecognizer(panGestureRecognizer)
         self.panGestureRecognizer = panGestureRecognizer
