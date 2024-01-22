@@ -66,6 +66,10 @@ public class AlbumMultiSelectionModalController: UIViewController {
 
         store.execute(.viewDidLoad)
     }
+
+    override public func viewDidAppear(_ animated: Bool) {
+        searchBar.becomeFirstResponder()
+    }
 }
 
 // MARK: - Bind

@@ -85,6 +85,10 @@ public class TagSelectionModalController: UIViewController {
 
         store.execute(.viewDidLoad)
     }
+
+    override public func viewDidAppear(_ animated: Bool) {
+        searchBar.becomeFirstResponder()
+    }
 }
 
 // MARK: - Bind
