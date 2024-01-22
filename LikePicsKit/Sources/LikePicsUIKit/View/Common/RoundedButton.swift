@@ -87,6 +87,8 @@ public class RoundedButton: UIControl {
 
         updateAppearance()
         updateAccessibilityInfo()
+
+        addInteraction(UIPointerInteraction(delegate: self))
     }
 
     private func updateAppearance() {
@@ -112,5 +114,16 @@ public class RoundedButton: UIControl {
         }
         accessibilityTraits = newTraits
         accessibilityLabel = title
+    }
+}
+
+extension RoundedButton: UIPointerInteractionDelegate {
+    public func pointerInteraction(_ interaction: UIPointerInteraction, regionFor request: UIPointerRegionRequest, defaultRegion: UIPointerRegion) -> UIPointerRegion? {
+        return UIPointerRegion(rect: bounds)
+    }
+
+    public func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
+        return UIPointerStyle(effect: .highlight(UITargetedPreview(view: self)),
+                              shape: .roundedRect(frame, radius: 12))
     }
 }

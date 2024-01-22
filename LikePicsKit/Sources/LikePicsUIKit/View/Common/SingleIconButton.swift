@@ -109,6 +109,8 @@ public class SingleIconButton: UIControl {
 
         updateAppearance()
         updateAccessibilityInfo()
+
+        addInteraction(UIPointerInteraction(delegate: self))
     }
 
     private func updateAppearance() {
@@ -133,5 +135,16 @@ public class SingleIconButton: UIControl {
             newTraits.insert(.notEnabled)
         }
         accessibilityTraits = newTraits
+    }
+}
+
+extension SingleIconButton: UIPointerInteractionDelegate {
+    public func pointerInteraction(_ interaction: UIPointerInteraction, regionFor request: UIPointerRegionRequest, defaultRegion: UIPointerRegion) -> UIPointerRegion? {
+        return UIPointerRegion(rect: bounds)
+    }
+
+    public func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
+        return UIPointerStyle(effect: .highlight(UITargetedPreview(view: self)),
+                              shape: .roundedRect(frame, radius: bounds.size.width / 2))
     }
 }

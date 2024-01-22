@@ -117,6 +117,9 @@ public class ListCell: UICollectionViewCell {
         }
 
         self.updateAccessoryVisibility()
+
+        rightAccessoryButton.isPointerInteractionEnabled = true
+        bottomAccessoryButton.isPointerInteractionEnabled = true
     }
 
     private func updateAccessoryVisibility() {

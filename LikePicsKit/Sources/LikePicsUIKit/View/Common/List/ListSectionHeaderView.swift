@@ -60,6 +60,7 @@ public extension ListSectionHeaderView {
 
             button.titleLabel?.adjustsFontForContentSizeCategory = true
             button.titleLabel?.font = $0.font
+            button.isPointerInteractionEnabled = true
 
             return button
         }
