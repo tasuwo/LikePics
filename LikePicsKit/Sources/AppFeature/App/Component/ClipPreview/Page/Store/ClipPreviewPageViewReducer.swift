@@ -152,6 +152,51 @@ struct ClipPreviewPageViewReducer: Reducer {
         case .alertDismissed:
             nextState.alert = nil
             return (nextState, .none)
+
+       // MARK: Key Binding
+
+        case .inputUpArrow:
+            if let currentClipId = state.currentClip?.id,
+               let currentItemId = state.currentItem?.id,
+               let transitioningController = dependency.clipItemInformationTransitioningController
+            {
+                dependency.router.showClipInformationView(clipId: currentClipId,
+                                                          itemId: currentItemId,
+                                                          transitioningController: transitioningController)
+            }
+            return (nextState, .none)
+
+        case .inputRightArrow:
+            guard let currentItemId = state.currentItem?.id,
+                  let nextItem = state.clips.pickNextVisibleItem(ofItemHaving: currentItemId)?.id,
+                  let nextIndexPath = state.clips.indexPath(ofItemHaving: nextItem)
+            else {
+                return (nextState, .none)
+            }
+
+            nextState.currentIndexPath = nextIndexPath
+            nextState.isPageAnimated = true
+            nextState.pageChange = .forward
+
+            return (nextState, .none)
+
+        case .inputLeftArrow:
+            guard let currentItemId = state.currentItem?.id,
+                  let nextItem = state.clips.pickPreviousVisibleItem(ofItemHaving: currentItemId)?.id,
+                  let nextIndexPath = state.clips.indexPath(ofItemHaving: nextItem)
+            else {
+                return (nextState, .none)
+            }
+
+            nextState.currentIndexPath = nextIndexPath
+            nextState.isPageAnimated = true
+            nextState.pageChange = .backward
+
+            return (nextState, .none)
+
+        case .inputDownArrow:
+            nextState.isDismissed = true
+            return (nextState, .none)
         }
     }
 }

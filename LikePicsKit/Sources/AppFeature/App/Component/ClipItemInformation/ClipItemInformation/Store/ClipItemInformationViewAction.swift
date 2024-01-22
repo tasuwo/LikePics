@@ -55,4 +55,8 @@ enum ClipItemInformationViewAction: Action {
 
     case siteUrlEditConfirmed(text: String)
     case alertDismissed
+
+    // MARK: Key Binding
+
+    case inputDownArrow
 }

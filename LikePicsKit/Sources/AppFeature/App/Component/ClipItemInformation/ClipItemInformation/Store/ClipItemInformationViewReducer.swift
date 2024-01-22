@@ -166,6 +166,12 @@ struct ClipItemInformationViewReducer: Reducer {
         case .alertDismissed:
             nextState.alert = nil
             return (nextState, .none)
+
+        // MARK: Key Binding
+
+        case .inputDownArrow:
+            nextState.isDismissed = true
+            return (nextState, .none)
         }
     }
 }

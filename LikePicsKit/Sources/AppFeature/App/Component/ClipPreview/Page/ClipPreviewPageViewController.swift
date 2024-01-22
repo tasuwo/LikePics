@@ -137,6 +137,7 @@ class ClipPreviewPageViewController: UIPageViewController {
         configureViewHierarchy()
         configureGestureRecognizer()
         configureBarController()
+        configureKeybinding()
 
         delegate = self
         dataSource = self
@@ -418,6 +419,43 @@ extension ClipPreviewPageViewController {
     private func configureBarController() {
         barController.alertHostingViewController = self
         barController.barHostingViewController = self
+    }
+
+    private func configureKeybinding() {
+        let upKeyCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(handle(key:)))
+        upKeyCommand.wantsPriorityOverSystemBehavior = true
+        addKeyCommand(upKeyCommand)
+
+        let leftKeyCommand = UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [], action: #selector(handle(key:)))
+        leftKeyCommand.wantsPriorityOverSystemBehavior = true
+        addKeyCommand(leftKeyCommand)
+
+        let rightKeyCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(handle(key:)))
+        rightKeyCommand.wantsPriorityOverSystemBehavior = true
+        addKeyCommand(rightKeyCommand)
+
+        let downKeyCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(handle(key:)))
+        downKeyCommand.wantsPriorityOverSystemBehavior = true
+        addKeyCommand(downKeyCommand)
+    }
+
+    @objc func handle(key: UIKeyCommand?) {
+        switch key?.input {
+        case UIKeyCommand.inputUpArrow:
+            store.execute(.inputUpArrow)
+
+        case UIKeyCommand.inputLeftArrow:
+            store.execute(.inputLeftArrow)
+
+        case UIKeyCommand.inputRightArrow:
+            store.execute(.inputRightArrow)
+
+        case UIKeyCommand.inputDownArrow:
+            store.execute(.inputDownArrow)
+
+        default:
+            break
+        }
     }
 }
 

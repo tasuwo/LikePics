@@ -100,6 +100,7 @@ class ClipItemInformationViewController: UIViewController {
 
         configureViewHierarchy()
         configureGestureRecognizer()
+        configureKeybinding()
 
         bind(to: store)
 
@@ -299,6 +300,22 @@ extension ClipItemInformationViewController {
         panGestureRecognizer.allowedScrollTypesMask = .all
         panGestureRecognizer.delegate = self
         view.addGestureRecognizer(self.panGestureRecognizer)
+    }
+
+    private func configureKeybinding() {
+        let keyCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(handle(key:)))
+        keyCommand.wantsPriorityOverSystemBehavior = true
+        addKeyCommand(keyCommand)
+    }
+
+    @objc func handle(key: UIKeyCommand?) {
+        switch key?.input {
+        case UIKeyCommand.inputDownArrow:
+            store.execute(.inputDownArrow)
+
+        default:
+            break
+        }
     }
 }
 

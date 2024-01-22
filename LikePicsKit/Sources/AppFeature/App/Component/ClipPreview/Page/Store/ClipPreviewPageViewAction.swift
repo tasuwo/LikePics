@@ -41,4 +41,11 @@ enum ClipPreviewPageViewAction: Action {
     // MARK: Alert Completion
 
     case alertDismissed
+
+    // MARK: Key Binding
+
+    case inputUpArrow
+    case inputLeftArrow
+    case inputRightArrow
+    case inputDownArrow
 }
