@@ -8,5 +8,7 @@
 
 "confirm_alert_ok" = "OK";
 
+"quick_add_tag" = "Add New Tag \"%@\"";
+
 "error_tag_rename_duplicated" = "Duplicated tag name.";
 "error_tag_default" = "Failed to update tag";

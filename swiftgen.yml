@@ -15,10 +15,10 @@ strings:
         - templateName: structured-swift5
           output: LikePicsKit/Sources/LikePicsUIKit/Generated/String.swift
     - inputs:
-        - LikePicsKit/Sources/ShareExtensionFeature/Resources/ja.lproj
+        - LikePicsKit/Sources/ShareExtensionMobileFeature/Resources/ja.lproj
       outputs:
         - templateName: structured-swift5
-          output: LikePicsKit/Sources/ShareExtensionFeature/Sources/Generated/String.swift
+          output: LikePicsKit/Sources/ShareExtensionMobileFeature/Sources/Generated/String.swift
     - inputs:
         - LikePicsKit/Sources/TagSelectionModalFeature/Resources/ja.lproj
       outputs:

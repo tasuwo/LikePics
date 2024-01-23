@@ -8,4 +8,6 @@
 
 "placeholder_search_album" = "アルバムを探す";
 
+"quick_add_album" = "\"%@\"を追加";
+
 "confirm_alert_ok" = "OK";

@@ -22,6 +22,7 @@ public class AlbumMultiSelectionModalController: UIViewController {
     private let emptyMessageView = EmptyMessageView()
     private var dataSource: Layout.DataSource!
     private var selectionApplier: UICollectionViewSelectionLazyApplier<Layout.Section, Layout.Item, ListingAlbumTitle>!
+    private var quickAddButton = UIButton()
 
     // MARK: Component
 
@@ -117,6 +118,18 @@ extension AlbumMultiSelectionModalController {
                 self?.dismissAll(completion: nil)
             }
             .store(in: &subscriptions)
+
+        store.state
+            .sink { [weak self] state in
+                guard let title = state.quickAddButtonTitle, !state.isQuickAddButtonHidden else {
+                    self?.quickAddButton.configuration?.title = ""
+                    self?.quickAddButton.alpha = 0
+                    return
+                }
+                self?.quickAddButton.configuration?.title = title
+                self?.quickAddButton.alpha = 1
+            }
+            .store(in: &subscriptions)
     }
 
     // MARK: Alert
@@ -173,6 +186,21 @@ extension AlbumMultiSelectionModalController {
         emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(emptyMessageView)
         NSLayoutConstraint.activate(emptyMessageView.constraints(fittingIn: view.safeAreaLayoutGuide))
+
+        let quickAddButton = UIButton(primaryAction: .init { [weak self] _ in
+            self?.store.execute(.quickAddButtonTapped)
+        })
+        var configuration = UIButton.Configuration.plain()
+        configuration.title = ""
+        quickAddButton.configuration = configuration
+        quickAddButton.isPointerInteractionEnabled = true
+        quickAddButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(quickAddButton)
+        NSLayoutConstraint.activate([
+            quickAddButton.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 4),
+            quickAddButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 12),
+        ])
+        self.quickAddButton = quickAddButton
     }
 
     private func configureDataSource() {

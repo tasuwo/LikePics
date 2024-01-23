@@ -18,6 +18,11 @@ enum L10n {
     static let errorTagRenameDuplicated = L10n.tr("Localizable", "error_tag_rename_duplicated")
     /// タグを探す
     static let placeholderSearchTag = L10n.tr("Localizable", "placeholder_search_tag")
+    /// "%@"を追加
+    static func quickAddTag(_ p1: Any) -> String {
+        return L10n.tr("Localizable", "quick_add_tag", String(describing: p1))
+    }
+
     /// はじめてのタグを追加する
     static let tagListViewEmptyActionTitle = L10n.tr("Localizable", "tag_list_view_empty_action_title")
     /// クリップをタグで分類すると、後から特定のタグに所属したクリップを一覧できます

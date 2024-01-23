@@ -23,6 +23,7 @@ public enum AlbumMultiSelectionModalAction: Action {
     case emptyMessageViewActionButtonTapped
     case addButtonTapped
     case saveButtonTapped
+    case quickAddButtonTapped
 
     // MARK: Alert Completion
 

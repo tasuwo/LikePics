@@ -24,6 +24,10 @@ enum L10n {
     static let confirmAlertOk = L10n.tr("Localizable", "confirm_alert_ok")
     /// アルバムを探す
     static let placeholderSearchAlbum = L10n.tr("Localizable", "placeholder_search_album")
+    /// "%@"を追加
+    static func quickAddAlbum(_ p1: Any) -> String {
+        return L10n.tr("Localizable", "quick_add_album", String(describing: p1))
+    }
 }
 
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length

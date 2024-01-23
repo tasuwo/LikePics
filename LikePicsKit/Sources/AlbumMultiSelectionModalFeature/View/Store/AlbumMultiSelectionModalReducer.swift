@@ -60,6 +60,17 @@ public struct AlbumMultiSelectionModalReducer: Reducer {
             nextState.isDismissed = true
             return (nextState, .none)
 
+        case .quickAddButtonTapped:
+            switch dependency.albumCommandService.create(albumWithTitle: state.searchQuery) {
+            case let .success(id):
+                nextState.albums = state.albums.selected(id, forced: true)
+                nextState.alert = nil
+
+            case .failure:
+                nextState.alert = .error(L10n.albumListViewErrorAtAddAlbum)
+            }
+            return (nextState, .none)
+
         // MARK: Alert Completion
 
         case let .alertSaveButtonTapped(text: text):
@@ -173,6 +184,9 @@ extension AlbumMultiSelectionModalReducer {
         nextState.isCollectionViewHidden = filteringAlbums.isEmpty
         nextState.isEmptyMessageViewHidden = !filteringAlbums.isEmpty
         nextState.searchStorage = searchStorage
+
+        nextState.quickAddButtonTitle = L10n.quickAddAlbum(searchQuery)
+        nextState.isQuickAddButtonHidden = !filteredAlbumIds.isEmpty
 
         if filteringAlbums.isEmpty, !searchQuery.isEmpty {
             nextState.searchQuery = ""

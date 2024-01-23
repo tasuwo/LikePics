@@ -24,6 +24,9 @@ public struct AlbumSelectionModalState: Equatable {
     var isSearchBarEnabled: Bool
     var isSomeItemsHidden: Bool
 
+    var quickAddButtonTitle: String?
+    var isQuickAddButtonHidden: Bool
+
     var alert: Alert?
 
     var isDismissed: Bool
@@ -41,6 +44,7 @@ public extension AlbumSelectionModalState {
         isCollectionViewHidden = true
         isEmptyMessageViewHidden = true
         isSearchBarEnabled = false
+        isQuickAddButtonHidden = true
         self.isSomeItemsHidden = isSomeItemsHidden
 
         alert = nil

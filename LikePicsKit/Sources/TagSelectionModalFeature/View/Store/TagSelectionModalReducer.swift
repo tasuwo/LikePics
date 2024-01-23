@@ -63,6 +63,20 @@ public struct TagSelectionModalReducer: Reducer {
             nextState.isDismissed = true
             return (nextState, .none)
 
+        case .quickAddButtonTapped:
+            switch dependency.tagCommandService.create(tagWithName: state.searchQuery) {
+            case let .success(tagId):
+                nextState.tags = state.tags.selected(tagId, forced: true)
+                nextState.alert = nil
+
+            case .failure(.duplicated):
+                nextState.alert = .error(L10n.errorTagRenameDuplicated)
+
+            case .failure:
+                nextState.alert = .error(L10n.errorTagDefault)
+            }
+            return (nextState, .none)
+
         // MARK: Alert Completion
 
         case let .alertSaveButtonTapped(text: name):
@@ -179,6 +193,9 @@ extension TagSelectionModalReducer {
         nextState.isCollectionViewHidden = filteringTags.isEmpty
         nextState.isEmptyMessageViewHidden = !filteringTags.isEmpty
         nextState.searchStorage = searchStorage
+
+        nextState.quickAddButtonTitle = L10n.quickAddTag(searchQuery)
+        nextState.isQuickAddButtonHidden = !filteredTagIds.isEmpty
 
         if filteringTags.isEmpty, !searchQuery.isEmpty {
             nextState.searchQuery = ""

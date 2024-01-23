@@ -8,4 +8,6 @@
 
 "placeholder_search_album" = "Search Albums";
 
+"quick_add_album" = "Add New Album \"%@\"";
+
 "confirm_alert_ok" = "OK";

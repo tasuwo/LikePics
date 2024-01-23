@@ -22,6 +22,7 @@ public enum AlbumSelectionModalAction: Action {
     case selected(Album.Identity)
     case emptyMessageViewActionButtonTapped
     case addButtonTapped
+    case quickAddButtonTapped
 
     // MARK: Alert Completion
 

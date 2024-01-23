@@ -20,6 +20,7 @@ public class TagSelectionModalController: UIViewController {
     private var collectionView: UICollectionView!
     private var searchBar: UISearchBar!
     private let emptyMessageView = EmptyMessageView()
+    private var quickAddButton = UIButton()
     private var dataSource: Layout.DataSource!
     private var selectionApplier: UICollectionViewSelectionLazyApplier<Layout.Section, Layout.Item, Tag>!
 
@@ -132,6 +133,18 @@ extension TagSelectionModalController {
                 self?.dismissAll(completion: nil)
             }
             .store(in: &subscriptions)
+
+        store.state
+            .sink { [weak self] state in
+                guard let title = state.quickAddButtonTitle, !state.isQuickAddButtonHidden else {
+                    self?.quickAddButton.configuration?.title = ""
+                    self?.quickAddButton.alpha = 0
+                    return
+                }
+                self?.quickAddButton.configuration?.title = title
+                self?.quickAddButton.alpha = 1
+            }
+            .store(in: &subscriptions)
     }
 
     private func presentAlertIfNeeded(for alert: TagSelectionModalState.Alert?) {
@@ -186,6 +199,21 @@ extension TagSelectionModalController {
         emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(emptyMessageView)
         NSLayoutConstraint.activate(emptyMessageView.constraints(fittingIn: view.safeAreaLayoutGuide))
+
+        let quickAddButton = UIButton(primaryAction: .init { [weak self] _ in
+            self?.store.execute(.quickAddButtonTapped)
+        })
+        var configuration = UIButton.Configuration.plain()
+        configuration.title = ""
+        quickAddButton.configuration = configuration
+        quickAddButton.isPointerInteractionEnabled = true
+        quickAddButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(quickAddButton)
+        NSLayoutConstraint.activate([
+            quickAddButton.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 4),
+            quickAddButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 12),
+        ])
+        self.quickAddButton = quickAddButton
     }
 
     private func configureDataSource() {
