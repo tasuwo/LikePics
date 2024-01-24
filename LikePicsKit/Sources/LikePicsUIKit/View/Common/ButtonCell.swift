@@ -36,6 +36,7 @@ public class ButtonCell: UICollectionViewCell {
     public func setupAppearance() {
         self.additionButton.titleLabel?.adjustsFontForContentSizeCategory = true
         self.additionButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+        self.additionButton.isPointerInteractionEnabled = true
     }
 
     @IBAction func tapAdditionButton(_ sender: UIButton) {

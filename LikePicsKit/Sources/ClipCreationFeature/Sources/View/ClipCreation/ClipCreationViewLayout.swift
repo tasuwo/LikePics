@@ -273,6 +273,7 @@ extension ClipCreationViewLayout {
             switch info.accessory {
             case let .button(title: title):
                 let button = UIButton(type: .system)
+                button.isPointerInteractionEnabled = true
                 button.setTitle(title, for: .normal)
                 button.addAction(.init(handler: { [weak proxy] _ in
                     proxy?.didTapButton(cell, at: indexPath)
