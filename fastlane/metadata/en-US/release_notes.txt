@@ -1,2 +1,1 @@
-- Fixed an issue where searching with tokens was not working.
-- Changed the "Find" screen to full-screen.
+- Support keybind for iPad.
