@@ -303,18 +303,15 @@ extension ClipItemInformationViewController {
     }
 
     private func configureKeybinding() {
-        let keyCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(handle(key:)))
+        let keyCommand = UIKeyCommand(title: L10n.clipInformationKeyCommandDown, action: #selector(handle(key:)), input: UIKeyCommand.inputDownArrow, modifierFlags: [])
         keyCommand.wantsPriorityOverSystemBehavior = true
         addKeyCommand(keyCommand)
     }
 
     @objc func handle(key: UIKeyCommand?) {
         switch key?.input {
-        case UIKeyCommand.inputDownArrow:
-            store.execute(.inputDownArrow)
-
-        default:
-            break
+        case UIKeyCommand.inputDownArrow: store.execute(.inputDownArrow)
+        default: break
         }
     }
 }

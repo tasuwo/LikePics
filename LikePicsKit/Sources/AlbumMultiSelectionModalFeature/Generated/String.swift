@@ -22,6 +22,10 @@ enum L10n {
     static let albumSelectionViewTitle = L10n.tr("Localizable", "album_selection_view_title")
     /// OK
     static let confirmAlertOk = L10n.tr("Localizable", "confirm_alert_ok")
+    /// 新規アルバムを追加
+    static let keyCommandAdd = L10n.tr("Localizable", "key_command_add")
+    /// 選択を保存
+    static let keyCommandSave = L10n.tr("Localizable", "key_command_save")
     /// アルバムを探す
     static let placeholderSearchAlbum = L10n.tr("Localizable", "placeholder_search_album")
     /// "%@"を追加

@@ -384,7 +384,7 @@ extension ClipCreationViewController {
     }
 
     private func configureKeybinding() {
-        addKeyCommand(UIKeyCommand(input: "\r", modifierFlags: .command, action: #selector(handle(key:))))
+        addKeyCommand(UIKeyCommand(title: L10n.keyCommandSave, action: #selector(handle(key:)), input: "\r", modifierFlags: .command))
     }
 
     @objc func handle(key: UIKeyCommand?) {

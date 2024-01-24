@@ -254,6 +254,10 @@
 "clip_preview.option_menu_item_title.info" = "See detail info";
 "clip_preview.option_menu_item_title.browse" = "Open URL";
 "clip_preview.option_menu_item_title.play_config" = "Change playback settings";
+"clip_preview.key_command.forward" = "Move to next item";
+"clip_preview.key_command.backward" = "Move to previous item";
+"clip_preview.key_command.detail" = "See detail info";
+"clip_preview.key_command.back" = "Back";
 
 // MARK: Clip Information
 
@@ -262,6 +266,7 @@
 "clip_information_error_at_remove_tags" = "Failed to remove tags.";
 "clip_information_error_at_update_hidden" = "Failed to update.";
 "clip_information_error_at_update_site_url" = "Failed to update site url.";
+"clip_information_key_command_down" = "Back";
 
 // MARK: Album
 

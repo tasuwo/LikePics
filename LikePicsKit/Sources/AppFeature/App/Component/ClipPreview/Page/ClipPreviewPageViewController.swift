@@ -422,39 +422,30 @@ extension ClipPreviewPageViewController {
     }
 
     private func configureKeybinding() {
-        let upKeyCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(handle(key:)))
+        let upKeyCommand = UIKeyCommand(title: L10n.ClipPreview.KeyCommand.detail, action: #selector(handle(key:)), input: UIKeyCommand.inputUpArrow, modifierFlags: [])
         upKeyCommand.wantsPriorityOverSystemBehavior = true
         addKeyCommand(upKeyCommand)
 
-        let leftKeyCommand = UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [], action: #selector(handle(key:)))
+        let leftKeyCommand = UIKeyCommand(title: L10n.ClipPreview.KeyCommand.backward, action: #selector(handle(key:)), input: UIKeyCommand.inputLeftArrow, modifierFlags: [])
         leftKeyCommand.wantsPriorityOverSystemBehavior = true
         addKeyCommand(leftKeyCommand)
 
-        let rightKeyCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(handle(key:)))
+        let rightKeyCommand = UIKeyCommand(title: L10n.ClipPreview.KeyCommand.forward, action: #selector(handle(key:)), input: UIKeyCommand.inputRightArrow, modifierFlags: [])
         rightKeyCommand.wantsPriorityOverSystemBehavior = true
         addKeyCommand(rightKeyCommand)
 
-        let downKeyCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(handle(key:)))
+        let downKeyCommand = UIKeyCommand(title: L10n.ClipPreview.KeyCommand.back, action: #selector(handle(key:)), input: UIKeyCommand.inputDownArrow, modifierFlags: [])
         downKeyCommand.wantsPriorityOverSystemBehavior = true
         addKeyCommand(downKeyCommand)
     }
 
     @objc func handle(key: UIKeyCommand?) {
         switch key?.input {
-        case UIKeyCommand.inputUpArrow:
-            store.execute(.inputUpArrow)
-
-        case UIKeyCommand.inputLeftArrow:
-            store.execute(.inputLeftArrow)
-
-        case UIKeyCommand.inputRightArrow:
-            store.execute(.inputRightArrow)
-
-        case UIKeyCommand.inputDownArrow:
-            store.execute(.inputDownArrow)
-
-        default:
-            break
+        case UIKeyCommand.inputUpArrow: store.execute(.inputUpArrow)
+        case UIKeyCommand.inputLeftArrow: store.execute(.inputLeftArrow)
+        case UIKeyCommand.inputRightArrow: store.execute(.inputRightArrow)
+        case UIKeyCommand.inputDownArrow: store.execute(.inputDownArrow)
+        default: break
         }
     }
 }

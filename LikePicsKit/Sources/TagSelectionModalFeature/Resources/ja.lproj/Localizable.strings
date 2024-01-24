@@ -12,3 +12,6 @@
 
 "error_tag_rename_duplicated" = "同じ名前のタグが既に存在します";
 "error_tag_default" = "タグの更新に失敗しました";
+
+"key_command_save" = "選択を保存";
+"key_command_add" = "新規タグを追加";

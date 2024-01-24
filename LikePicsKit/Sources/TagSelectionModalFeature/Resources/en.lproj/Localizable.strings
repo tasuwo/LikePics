@@ -12,3 +12,6 @@
 
 "error_tag_rename_duplicated" = "Duplicated tag name.";
 "error_tag_default" = "Failed to update tag";
+
+"key_command_save" = "Save Selection";
+"key_command_add" = "Add New Tag";

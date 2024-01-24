@@ -86,6 +86,8 @@ enum L10n {
     static let errorTagAddDefault = L10n.tr("Localizable", "error_tag_add_default")
     /// 同名のタグを追加することはできません
     static let errorTagAddDuplicated = L10n.tr("Localizable", "error_tag_add_duplicated")
+    /// クリップを保存
+    static let keyCommandSave = L10n.tr("Localizable", "key_command_save")
     /// タグを探す
     static let placeholderSearchTag = L10n.tr("Localizable", "placeholder_search_tag")
     /// このタグの名前を入力してください

@@ -57,6 +57,8 @@
 
 "confirm_alert_ok" = "OK";
 
+"key_command_save" = "Save Clip";
+
 // MARK: - Clip Meta
 
 "clip_meta_should_hides" = "Hide saved images";

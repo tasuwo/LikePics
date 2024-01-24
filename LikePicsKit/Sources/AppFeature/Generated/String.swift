@@ -198,6 +198,8 @@ enum L10n {
     static let clipInformationErrorAtUpdateHidden = L10n.tr("Localizable", "clip_information_error_at_update_hidden")
     /// URLの更新に失敗しました
     static let clipInformationErrorAtUpdateSiteUrl = L10n.tr("Localizable", "clip_information_error_at_update_site_url")
+    /// 戻る
+    static let clipInformationKeyCommandDown = L10n.tr("Localizable", "clip_information_key_command_down")
     /// 削除
     static let clipInformationViewAlertForDeleteTagAction = L10n.tr("Localizable", "clip_information_view_alert_for_delete_tag_action")
     /// このタグを削除しますか？
@@ -473,6 +475,17 @@ enum L10n {
     static let urlContextMenuOpen = L10n.tr("Localizable", "url_context_menu_open")
 
     enum ClipPreview {
+        enum KeyCommand {
+            /// 戻る
+            static let back = L10n.tr("Localizable", "clip_preview.key_command.back")
+            /// 前のアイテムへ移動
+            static let backward = L10n.tr("Localizable", "clip_preview.key_command.backward")
+            /// 詳細情報を見る
+            static let detail = L10n.tr("Localizable", "clip_preview.key_command.detail")
+            /// 次のアイテムへ移動
+            static let forward = L10n.tr("Localizable", "clip_preview.key_command.forward")
+        }
+
         enum OptionMenuItemTitle {
             /// URLを開く
             static let browse = L10n.tr("Localizable", "clip_preview.option_menu_item_title.browse")

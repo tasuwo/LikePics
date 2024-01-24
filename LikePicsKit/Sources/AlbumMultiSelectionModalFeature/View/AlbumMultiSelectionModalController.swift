@@ -248,12 +248,14 @@ extension AlbumMultiSelectionModalController {
     }
 
     private func configureKeybinding() {
-        addKeyCommand(UIKeyCommand(input: "\r", modifierFlags: .command, action: #selector(handle(key:))))
+        addKeyCommand(UIKeyCommand(title: L10n.keyCommandSave, action: #selector(handle(key:)), input: "\r", modifierFlags: .command))
+        addKeyCommand(UIKeyCommand(title: L10n.keyCommandAdd, action: #selector(handle(key:)), input: "n", modifierFlags: .command))
     }
 
     @objc func handle(key: UIKeyCommand?) {
         switch key?.input {
         case "\r": store.execute(.saveButtonTapped)
+        case "n": store.execute(.addButtonTapped)
         default: break
         }
     }

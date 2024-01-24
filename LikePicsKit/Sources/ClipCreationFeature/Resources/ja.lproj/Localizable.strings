@@ -57,6 +57,8 @@
 
 "confirm_alert_ok" = "OK";
 
+"key_command_save" = "クリップを保存";
+
 // MARK: - Clip Meta
 
 "clip_meta_should_hides" = "保存した画像を隠す";

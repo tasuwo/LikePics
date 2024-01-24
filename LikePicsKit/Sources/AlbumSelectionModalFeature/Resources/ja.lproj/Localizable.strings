@@ -10,4 +10,6 @@
 
 "quick_add_album" = "\"%@\"を追加";
 
+"key_command_add" = "新規アルバムを追加";
+
 "confirm_alert_ok" = "OK";

@@ -75,6 +75,7 @@ public class AlbumSelectionModalController: UIViewController {
         configureSearchBar()
         configureNavigationBar()
         configureEmptyMessageView()
+        configureKeybinding()
 
         bind(to: store)
 
@@ -241,6 +242,17 @@ extension AlbumSelectionModalController {
         emptyMessageView.message = L10n.albumListViewEmptyMessage
         emptyMessageView.actionButtonTitle = L10n.albumListViewEmptyActionTitle
         emptyMessageView.delegate = self
+    }
+
+    private func configureKeybinding() {
+        addKeyCommand(UIKeyCommand(title: L10n.keyCommandAdd, action: #selector(handle(key:)), input: "n", modifierFlags: .command))
+    }
+
+    @objc func handle(key: UIKeyCommand?) {
+        switch key?.input {
+        case "n": store.execute(.addButtonTapped)
+        default: break
+        }
     }
 }
 

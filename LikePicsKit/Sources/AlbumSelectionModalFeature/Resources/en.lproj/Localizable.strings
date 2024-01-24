@@ -10,4 +10,6 @@
 
 "quick_add_album" = "Add New Album \"%@\"";
 
+"key_command_add" = "Add New Album";
+
 "confirm_alert_ok" = "OK";

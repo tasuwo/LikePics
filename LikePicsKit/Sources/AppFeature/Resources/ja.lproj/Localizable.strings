@@ -254,6 +254,10 @@
 "clip_preview.option_menu_item_title.info" = "詳細情報を見る";
 "clip_preview.option_menu_item_title.browse" = "URLを開く";
 "clip_preview.option_menu_item_title.play_config" = "再生設定を開く";
+"clip_preview.key_command.forward" = "次のアイテムへ移動";
+"clip_preview.key_command.backward" = "前のアイテムへ移動";
+"clip_preview.key_command.detail" = "詳細情報を見る";
+"clip_preview.key_command.back" = "戻る";
 
 // MARK: Clip Information
 
@@ -262,6 +266,7 @@
 "clip_information_error_at_remove_tags" = "タグの削除に失敗しました";
 "clip_information_error_at_update_hidden" = "更新に失敗しました";
 "clip_information_error_at_update_site_url" = "URLの更新に失敗しました";
+"clip_information_key_command_down" = "戻る";
 
 // MARK: Album
 

@@ -16,6 +16,10 @@ enum L10n {
     static let errorTagDefault = L10n.tr("Localizable", "error_tag_default")
     /// 同じ名前のタグが既に存在します
     static let errorTagRenameDuplicated = L10n.tr("Localizable", "error_tag_rename_duplicated")
+    /// 新規タグを追加
+    static let keyCommandAdd = L10n.tr("Localizable", "key_command_add")
+    /// 選択を保存
+    static let keyCommandSave = L10n.tr("Localizable", "key_command_save")
     /// タグを探す
     static let placeholderSearchTag = L10n.tr("Localizable", "placeholder_search_tag")
     /// "%@"を追加
