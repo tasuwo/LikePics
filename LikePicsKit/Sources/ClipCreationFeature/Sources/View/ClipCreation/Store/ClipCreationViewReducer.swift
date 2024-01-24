@@ -82,6 +82,7 @@ struct ClipCreationViewReducer: Reducer {
             return Self.loadImages(nextState, dependency)
 
         case .saveImages:
+            guard nextState.isDoneItemEnabled else { return (nextState, .none) }
             return Self.saveImages(nextState, dependency)
 
         case let .editedUrl(url):

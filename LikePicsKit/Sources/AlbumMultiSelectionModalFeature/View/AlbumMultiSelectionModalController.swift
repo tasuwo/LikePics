@@ -62,6 +62,7 @@ public class AlbumMultiSelectionModalController: UIViewController {
         configureSearchBar()
         configureNavigationBar()
         configureEmptyMessageView()
+        configureKeybinding()
 
         bind(to: store)
 
@@ -244,6 +245,17 @@ extension AlbumMultiSelectionModalController {
         emptyMessageView.message = L10n.albumListViewEmptyMessage
         emptyMessageView.actionButtonTitle = L10n.albumListViewEmptyActionTitle
         emptyMessageView.delegate = self
+    }
+
+    private func configureKeybinding() {
+        addKeyCommand(UIKeyCommand(input: "\r", modifierFlags: .command, action: #selector(handle(key:))))
+    }
+
+    @objc func handle(key: UIKeyCommand?) {
+        switch key?.input {
+        case "\r": store.execute(.saveButtonTapped)
+        default: break
+        }
     }
 }
 

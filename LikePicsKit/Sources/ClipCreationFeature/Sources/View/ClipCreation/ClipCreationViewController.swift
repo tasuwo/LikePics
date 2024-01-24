@@ -80,6 +80,8 @@ public class ClipCreationViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override public var canBecomeFirstResponder: Bool { true }
+
     // MARK: - View Life-Cycle Methods
 
     override public func viewDidLoad() {
@@ -87,6 +89,10 @@ public class ClipCreationViewController: UIViewController {
 
         configureViewHierarchy()
         configureDataSource()
+        configureKeybinding()
+
+        // HACK: キーバインドについて、WKWebViewにフォーカスがいってしまうのを防ぐ
+        becomeFirstResponder()
 
         bind(to: store)
 
@@ -375,6 +381,17 @@ extension ClipCreationViewController {
         self.dataSource = dataSource
         proxy.delegate = self
         self.proxy = proxy
+    }
+
+    private func configureKeybinding() {
+        addKeyCommand(UIKeyCommand(input: "\r", modifierFlags: .command, action: #selector(handle(key:))))
+    }
+
+    @objc func handle(key: UIKeyCommand?) {
+        switch key?.input {
+        case "\r": store.execute(.saveImages)
+        default: break
+        }
     }
 }
 

@@ -81,6 +81,7 @@ public class TagSelectionModalController: UIViewController {
         configureSearchBar()
         configureNavigationBar()
         configureEmptyMessageView()
+        configureKeybinding()
 
         bind(to: store)
 
@@ -260,6 +261,17 @@ extension TagSelectionModalController {
         emptyMessageView.message = L10n.tagListViewEmptyMessage
         emptyMessageView.actionButtonTitle = L10n.tagListViewEmptyActionTitle
         emptyMessageView.delegate = self
+    }
+
+    private func configureKeybinding() {
+        addKeyCommand(UIKeyCommand(input: "\r", modifierFlags: .command, action: #selector(handle(key:))))
+    }
+
+    @objc func handle(key: UIKeyCommand?) {
+        switch key?.input {
+        case "\r": store.execute(.saveButtonTapped)
+        default: break
+        }
     }
 }
 
