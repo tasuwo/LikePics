@@ -54,8 +54,8 @@ struct ClipCreationViewReducer: Reducer {
 
         // MARK: State Observation
 
-        case let .imagesLoaded(sources):
-            nextState.ImageSources = .init(sources, selectAll: state.source.fromLocal)
+        case let .imageSourcesLoaded(sources):
+            nextState.imageSources = .init(sources, selectAll: state.source.fromLocal)
             nextState.displayState = .loaded
             return (nextState, .none)
 
@@ -75,6 +75,17 @@ struct ClipCreationViewReducer: Reducer {
 
         case let .settingsUpdated(isSomeItemsHidden: isSomeItemsHidden):
             return (Self.performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
+
+        case let .imageLoaded(imageSourceId, size):
+            guard let size else {
+                nextState.imageSources = state.imageSources.removed(imageSourceId)
+                return (nextState, .none)
+            }
+            guard size.width > 10 && size.height > 10 else {
+                nextState.imageSources = state.imageSources.removed(imageSourceId)
+                return (nextState, .none)
+            }
+            return (nextState, .none)
 
         // MARK: Control
 
@@ -114,13 +125,13 @@ struct ClipCreationViewReducer: Reducer {
             return (nextState, .none)
 
         case let .selected(id):
-            guard !state.ImageSources.selections.contains(id) else { return (nextState, .none) }
-            nextState.ImageSources = state.ImageSources.selected(id)
+            guard !state.imageSources.selections.contains(id) else { return (nextState, .none) }
+            nextState.imageSources = state.imageSources.selected(id)
             return (nextState, .none)
 
         case let .deselected(id):
-            guard state.ImageSources.selections.contains(id) else { return (nextState, .none) }
-            nextState.ImageSources = state.ImageSources.deselected(id)
+            guard state.imageSources.selections.contains(id) else { return (nextState, .none) }
+            nextState.imageSources = state.imageSources.deselected(id)
             return (nextState, .none)
 
         // MARK: Modal Completion
@@ -184,10 +195,9 @@ extension ClipCreationViewReducer {
         nextState.displayState = .loading
 
         let stream = Deferred { dependency.imageSourceProvider.resolveSources() }
-            .map { sources in sources.filter { $0.isValid } }
             .tryMap { sources -> Action? in
                 guard !sources.isEmpty else { throw ImageSourceResolverError.notFound }
-                return Action.imagesLoaded(sources)
+                return Action.imageSourcesLoaded(sources)
             }
             .catch { error -> AnyPublisher<Action?, Never> in
                 let error = (error as? ImageSourceResolverError) ?? ImageSourceResolverError.internalError
@@ -300,8 +310,8 @@ extension ClipCreationViewReducer {
 
         nextState.displayState = .saving
 
-        let selections = state.ImageSources.selections
-            .compactMap { state.ImageSources.ImageSourceById[$0] }
+        let selections = state.imageSources.selections
+            .compactMap { state.imageSources.imageSourceById[$0] }
             .enumerated()
             .reduce(into: [(Int, ImageSource)]()) { $0.append(($1.offset, $1.element)) }
 

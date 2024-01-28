@@ -14,11 +14,12 @@ enum ClipCreationViewAction: Action {
 
     // MARK: State Observer
 
-    case imagesLoaded([ClipCreationFeatureCore.ImageSource])
+    case imageSourcesLoaded([ClipCreationFeatureCore.ImageSource])
     case imagesSaved
     case failedToLoadImages(ImageSourceResolverError)
     case failedToSaveImages(ClipCreationViewReducer.DownloadError)
     case settingsUpdated(isSomeItemsHidden: Bool)
+    case imageLoaded(UUID, CGSize?)
 
     // MARK: Control
 

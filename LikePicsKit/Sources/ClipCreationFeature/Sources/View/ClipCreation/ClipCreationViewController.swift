@@ -171,8 +171,20 @@ extension ClipCreationViewController {
             .store(in: &subscriptions)
 
         store.state
-            .removeDuplicates(by: \.ImageSources.selections)
+            .removeDuplicates(by: \.imageSources.selections)
             .sink { [weak self] state in self?.applySelection(state) }
+            .store(in: &subscriptions)
+
+        store.state
+            .map(\.imageSources)
+            .removeDuplicates()
+            .sink { [weak self] sources in
+                guard let self else { return }
+                var snapshot = self.dataSource.snapshot()
+                snapshot.deleteSections([.image])
+                snapshot.appendSections([.image])
+                snapshot.appendItems(sources.order.map({ Layout.Item.image($0) }))
+            }
             .store(in: &subscriptions)
 
         store.state
@@ -298,7 +310,7 @@ extension ClipCreationViewController {
         ])
 
         snapshot.appendSections([.image])
-        snapshot.appendItems(state.ImageSources.order.map({ Layout.Item.image($0) }))
+        snapshot.appendItems(state.imageSources.order.map({ Layout.Item.image($0) }))
 
         return snapshot
     }
@@ -306,7 +318,7 @@ extension ClipCreationViewController {
     // MARK: Selection
 
     private func applySelection(_ state: ClipCreationViewState) {
-        zip(state.ImageSources.selections.indices, state.ImageSources.selections)
+        zip(state.imageSources.selections.indices, state.imageSources.selections)
             .forEach { index, id in
                 guard let indexPath = dataSource.indexPath(for: .image(id)) else { return }
                 collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
@@ -377,7 +389,8 @@ extension ClipCreationViewController {
                                                              cellDataSource: self,
                                                              thumbnailProcessingQueue: thumbnailProcessingQueue,
                                                              imageLoader: imageLoader,
-                                                             albumEditHandler: { [weak self] in self?.store.execute(.tapAlbumAdditionButton) })
+                                                             albumEditHandler: { [weak self] in self?.store.execute(.tapAlbumAdditionButton) },
+                                                             onLoadImage: { [weak self] in self?.store.execute(.imageLoaded($0, $1)) })
         self.dataSource = dataSource
         proxy.delegate = self
         self.proxy = proxy
@@ -398,10 +411,10 @@ extension ClipCreationViewController {
 extension ClipCreationViewController: ClipSelectionCollectionViewCellDataSource {
     // MARK: ClipSelectionCollectionViewCellDataSource
 
-    public var imageSources: [UUID: ClipCreationFeatureCore.ImageSource] { store.stateValue.ImageSources.ImageSourceById }
+    public var imageSources: [UUID: ClipCreationFeatureCore.ImageSource] { store.stateValue.imageSources.imageSourceById }
 
     public func selectionOrder(of id: UUID) -> Int? {
-        return store.stateValue.ImageSources.selections.firstIndex(of: id)
+        return store.stateValue.imageSources.selections.firstIndex(of: id)
     }
 
     public func shouldSaveAsClip() -> Bool {

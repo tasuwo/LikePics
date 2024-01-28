@@ -4,6 +4,7 @@
 
 import ClipCreationFeatureCore
 import Combine
+import Common
 import Domain
 import LikePicsUIKit
 import Smoothie
@@ -159,7 +160,8 @@ extension ClipCreationViewLayout {
                                     cellDataSource: ClipSelectionCollectionViewCellDataSource,
                                     thumbnailProcessingQueue: ImageProcessingQueue,
                                     imageLoader: ImageLoadable,
-                                    albumEditHandler: @escaping () -> Void) -> (Proxy, DataSource)
+                                    albumEditHandler: @escaping () -> Void,
+                                    onLoadImage: @escaping (UUID, CGSize?) -> Void) -> (Proxy, DataSource)
     {
         let proxy = Proxy()
 
@@ -169,7 +171,8 @@ extension ClipCreationViewLayout {
         let metaCellRegistration = self.configureMetaCell(proxy: proxy)
         let imageCellRegistration = self.configureImageCell(dataSource: cellDataSource,
                                                             thumbnailProcessingQueue: thumbnailProcessingQueue,
-                                                            imageLoader: imageLoader)
+                                                            imageLoader: imageLoader,
+                                                            onLoadImage: onLoadImage)
 
         let dataSource: DataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
             switch item {
@@ -305,7 +308,8 @@ extension ClipCreationViewLayout {
     @MainActor
     private static func configureImageCell(dataSource: ClipSelectionCollectionViewCellDataSource,
                                            thumbnailProcessingQueue: ImageProcessingQueue,
-                                           imageLoader: ImageLoadable) -> UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, UUID>
+                                           imageLoader: ImageLoadable,
+                                           onLoadImage: @escaping (UUID, CGSize?) -> Void) -> UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, UUID>
     {
         return .init(cellNib: ClipSelectionCollectionViewCell.nib) { [weak dataSource, weak thumbnailProcessingQueue, weak imageLoader] cell, _, imageSourceId in
             guard let dataSource = dataSource,
@@ -331,7 +335,17 @@ extension ClipCreationViewLayout {
             let scale = cell.traitCollection.displayScale
             let size = cell.calcThumbnailPointSize(originalPixelSize: nil)
             let request = ImageRequest(resize: .init(size: size, scale: scale), cacheKey: "clip-creation-\(imageSourceId.uuidString)") { [imageLoader, imageSource] in
-                return await imageLoader.data(for: imageSource)
+                let data = await imageLoader.data(for: imageSource)
+                if let data {
+                    if let size = ImageUtility.resolveSize(for: data) {
+                        onLoadImage(imageSourceId, size)
+                    } else {
+                        // サイズ解決に失敗した場合は残す
+                    }
+                } else {
+                    onLoadImage(imageSourceId, nil)
+                }
+                return data
             }
             loadImage(request, with: processingQueue, on: cell)
         }

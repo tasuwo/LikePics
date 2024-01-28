@@ -14,12 +14,6 @@ public enum ImageUtility {}
 public extension ImageUtility {
     // MARK: - Resolve Size
 
-    static func resolveSize(for url: URL) -> CGSize? {
-        let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
-        guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, imageSourceOptions) else { return nil }
-        return self.resolveSize(for: imageSource)
-    }
-
     static func resolveSize(for data: Data) -> CGSize? {
         let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
         guard let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions) else { return nil }

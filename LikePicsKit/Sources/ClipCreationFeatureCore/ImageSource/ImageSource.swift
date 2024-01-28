@@ -33,22 +33,6 @@ public struct ImageSource: Hashable {
         self.identifier = UUID()
         self.value = .data(data)
     }
-
-    // MARK: - Methods
-
-    public var isValid: Bool {
-        switch value {
-        case let .webURL(urlSet):
-            guard let size = ImageUtility.resolveSize(for: urlSet.url) else { return false }
-            return size.height != 0
-                && size.width != 0
-                && size.height > 10
-                && size.width > 10
-
-        default:
-            return true
-        }
-    }
 }
 
 public extension ImageSource {
