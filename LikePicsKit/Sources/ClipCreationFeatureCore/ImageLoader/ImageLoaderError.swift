@@ -3,6 +3,7 @@
 //
 
 public enum ImageLoaderError: Error {
-    case networkError(Error)
+    case tooManyRequest
+    case invalidStatusCode
     case internalError
 }

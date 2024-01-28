@@ -27,31 +27,46 @@ public class ImageLoader {
             request = URLRequest(url: url)
         }
 
+        return try await image(for: request)
+    }
+
+    private static func image(for request: URLRequest, delaySeconds: TimeInterval? = nil, retryCount: Int = 0) async throws -> LoadedImage {
+        if let delaySeconds {
+            try await Task.sleep(nanoseconds: UInt64(1000000000 * delaySeconds))
+        }
+
         let (data, response) = try await URLSession.shared.data(for: request)
-        let fileName = resolveFileName(mimeType: response.mimeType, url: url)
-        return LoadedImage(usedUrl: url,
+
+        guard let response = response as? HTTPURLResponse else {
+            throw ImageLoaderError.internalError
+        }
+
+        guard 200 ..< 300 ~= response.statusCode else {
+            if response.statusCode == 429 || 500 ..< 600 ~= response.statusCode {
+                guard retryCount < 5 else {
+                    throw ImageLoaderError.tooManyRequest
+                }
+
+                let nextRetryCount: Int = retryCount + 1
+                let delaySeconds: Double
+
+                if let retryAfter = response.value(forHTTPHeaderField: "Retry-After").flatMap({ TimeInterval($0) }) {
+                    delaySeconds = retryAfter
+                } else {
+                    delaySeconds = pow(2, TimeInterval(nextRetryCount)) + (TimeInterval.random(in: 0 ..< 1000) / 1000)
+                }
+
+                return try await image(for: request, delaySeconds: delaySeconds, retryCount: nextRetryCount)
+            } else {
+                throw ImageLoaderError.invalidStatusCode
+            }
+        }
+
+        let fileName = resolveFileName(mimeType: response.mimeType, url: request.url!)
+        return LoadedImage(usedUrl: request.url!,
                            mimeType: response.mimeType,
                            fileName: fileName,
                            data: data)
-    }
-
-    private static func fetchImage(for url: URL) -> AnyPublisher<LoadedImage, ImageLoaderError> {
-        let request: URLRequest
-        if let provider = WebImageProviderPreset.resolveProvider(by: url),
-           provider.shouldModifyRequest(for: url)
-        {
-            request = provider.modifyRequest(URLRequest(url: url))
-        } else {
-            request = URLRequest(url: url)
-        }
-
-        return URLSession.shared.dataTaskPublisher(for: request)
-            .map { data, response in
-                let fileName = resolveFileName(mimeType: response.mimeType, url: url)
-                return LoadedImage(usedUrl: url, mimeType: response.mimeType, fileName: fileName, data: data)
-            }
-            .mapError { ImageLoaderError.networkError($0) }
-            .eraseToAnyPublisher()
     }
 
     private static func resolveFileName(mimeType: String?, url: URL) -> String? {
@@ -81,10 +96,10 @@ extension ImageLoader: ImageLoadable {
             return try? Data(contentsOf: url)
 
         case let .webURL(urlSet):
-            if let alternativeUrl = urlSet.alternativeUrl, let (data, _) = try? await URLSession.shared.data(from: alternativeUrl) {
+            if let alternativeUrl = urlSet.alternativeUrl, let data = try? await Self.image(for: URLRequest(url: alternativeUrl)).data {
                 return data
             }
-            return (try? await URLSession.shared.data(from: urlSet.url))?.0
+            return try? await Self.image(for: URLRequest(url: urlSet.url)).data
         }
     }
 
@@ -110,12 +125,10 @@ extension ImageLoader: ImageLoadable {
                          data: data)
 
         case let .webURL(urlSet):
-            if let url = urlSet.alternativeUrl,
-               let result = try? await Self.image(from: url)
-            {
-                return result
+            if let alternativeUrl = urlSet.alternativeUrl, let image = try? await Self.image(for: URLRequest(url: alternativeUrl)) {
+                return image
             }
-            return try await Self.image(from: urlSet.url)
+            return try await Self.image(for: URLRequest(url: urlSet.url))
         }
     }
 
@@ -147,44 +160,17 @@ extension ImageLoader: ImageLoadable {
             }
 
         case let .webURL(urlSet):
-            return Future { [weak self] promise in
-                guard let self = self else {
-                    promise(.failure(.internalError))
-                    return
-                }
-
-                if let alternativeUrl = urlSet.alternativeUrl {
-                    Self.fetchImage(for: alternativeUrl)
-                        .catch { _ in
-                            return Self.fetchImage(for: urlSet.url)
-                                .eraseToAnyPublisher()
+            return Future { promise in
+                Task {
+                    do {
+                        if let alternativeUrl = urlSet.alternativeUrl, let image = try? await Self.image(for: URLRequest(url: alternativeUrl)) {
+                            promise(.success(image))
                         }
-                        .sink { completion in
-                            switch completion {
-                            case let .failure(error):
-                                promise(.failure(error))
-
-                            default:
-                                break
-                            }
-                        } receiveValue: { result in
-                            promise(.success(result))
-                        }
-                        .store(in: &self.subscriptions)
-                } else {
-                    Self.fetchImage(for: urlSet.url)
-                        .sink { completion in
-                            switch completion {
-                            case let .failure(error):
-                                promise(.failure(error))
-
-                            default:
-                                break
-                            }
-                        } receiveValue: { result in
-                            promise(.success(result))
-                        }
-                        .store(in: &self.subscriptions)
+                        let image = try await Self.image(for: URLRequest(url: urlSet.url))
+                        promise(.success(image))
+                    } catch {
+                        promise(.failure(.internalError))
+                    }
                 }
             }
         }
