@@ -81,6 +81,9 @@ extension ImageLoader: ImageLoadable {
             return try? Data(contentsOf: url)
 
         case let .webURL(urlSet):
+            if let alternativeUrl = urlSet.alternativeUrl, let (data, _) = try? await URLSession.shared.data(from: alternativeUrl) {
+                return data
+            }
             return (try? await URLSession.shared.data(from: urlSet.url))?.0
         }
     }
