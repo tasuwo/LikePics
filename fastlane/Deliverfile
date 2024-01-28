@@ -1,6 +1,5 @@
 # vim: syntax=ruby
 
-app_version("2.21")
 force(true)
 submit_for_review(false)
 automatic_release(false)
