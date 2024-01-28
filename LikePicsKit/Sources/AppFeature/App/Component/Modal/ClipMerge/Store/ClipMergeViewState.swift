@@ -21,6 +21,8 @@ struct ClipMergeViewState: Equatable {
 
     var alert: Alert?
     var modal: Modal?
+    var overwriteSiteUrl: URL?
+    var shouldSaveAsHiddenItem: Bool
 
     var isDismissed: Bool
 
@@ -34,6 +36,9 @@ extension ClipMergeViewState {
         tags = []
 
         alert = nil
+
+        overwriteSiteUrl = nil
+        shouldSaveAsHiddenItem = clips.contains(where: { $0.isHidden })
 
         isDismissed = false
 

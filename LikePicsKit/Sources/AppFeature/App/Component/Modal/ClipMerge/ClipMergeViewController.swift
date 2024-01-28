@@ -21,6 +21,16 @@ class ClipMergeViewController: UIViewController {
 
     // MARK: View
 
+    private lazy var addUrlAlertContainer = TextEditAlert(
+        configuration: .init(title: L10n.clipMergeViewAlertForAddUrlTitle,
+                             message: L10n.clipMergeViewAlertForAddUrlMessage,
+                             placeholder: L10n.clipMergeViewAlertForUrlPlaceholder)
+    )
+    private lazy var editUrlAlertContainer = TextEditAlert(
+        configuration: .init(title: L10n.clipMergeViewAlertForEditUrlTitle,
+                             message: L10n.clipMergeViewAlertForEditUrlMessage,
+                             placeholder: L10n.clipMergeViewAlertForUrlPlaceholder)
+    )
     private var collectionView: UICollectionView!
     private var dataSource: Layout.DataSource!
     private var proxy: Layout.Proxy!
@@ -85,10 +95,12 @@ class ClipMergeViewController: UIViewController {
 extension ClipMergeViewController {
     private func bind(to store: Store) {
         store.state
+            .throttle(for: 0.5, scheduler: RunLoop.main, latest: true)
             .receive(on: collectionUpdateQueue)
-            .removeDuplicates(by: { $0.tags == $1.tags && $0.items == $1.items })
             .sink { [weak self] state in
-                self?.dataSource.apply(Layout.createSnapshot(tags: state.tags, items: state.items))
+                self?.dataSource.apply(Layout.createSnapshot(tags: state.tags,
+                                                             items: state.items,
+                                                             state: state))
             }
             .store(in: &subscriptions)
 
@@ -217,6 +229,38 @@ extension ClipMergeViewController {
 extension ClipMergeViewController: ClipMergeViewDelegate {
     // MARK: - ClipMergeViewDelegate
 
+    func didTapButton(_ cell: UICollectionViewCell, at indexPath: IndexPath) {
+        if let url = store.stateValue.overwriteSiteUrl {
+            self.editUrlAlertContainer.present(
+                withText: url.absoluteString,
+                on: self,
+                validator: { text in
+                    guard let text = text else { return true }
+                    return text.isEmpty || URL(string: text) != nil
+                }, completion: { [weak self] action in
+                    guard case let .saved(text: text) = action else { return }
+                    self?.store.execute(.editedOverwriteSiteUrl(URL(string: text)))
+                }
+            )
+        } else {
+            self.addUrlAlertContainer.present(
+                withText: nil,
+                on: self,
+                validator: { text in
+                    guard let text = text else { return true }
+                    return text.isEmpty || URL(string: text) != nil
+                }, completion: { [weak self] action in
+                    guard case let .saved(text: text) = action else { return }
+                    self?.store.execute(.editedOverwriteSiteUrl(URL(string: text)))
+                }
+            )
+        }
+    }
+
+    func didSwitch(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool) {
+        store.execute(.shouldSaveAsHiddenItem(isOn))
+    }
+
     func didTapTagAdditionButton(_ cell: UICollectionViewCell) {
         store.execute(.tagAdditionButtonTapped)
     }
@@ -238,8 +282,8 @@ extension ClipMergeViewController: UICollectionViewDragDelegate {
     // MARK: - UICollectionViewDragDelegate
 
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-        guard let item = self.dataSource.itemIdentifier(for: indexPath) else { return [] }
-        let provider = NSItemProvider(object: item.identifier as NSString)
+        guard let id = self.dataSource.itemIdentifier(for: indexPath)?.dragIdentifier else { return [] }
+        let provider = NSItemProvider(object: id as NSString)
         let dragItem = UIDragItem(itemProvider: provider)
         dragItem.localObject = indexPath
         return [dragItem]

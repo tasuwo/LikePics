@@ -209,8 +209,30 @@ enum L10n {
     static let clipItemCellNoTitle = L10n.tr("Localizable", "clip_item_cell_no_title")
     /// タグを追加する
     static let clipMergeViewAddTagTitle = L10n.tr("Localizable", "clip_merge_view_add_tag_title")
+    /// 保存する画像の取得元となるサイトURLを上書きできます
+    /// サイトURLは全ての画像に適用されます
+    static let clipMergeViewAlertForAddUrlMessage = L10n.tr("Localizable", "clip_merge_view_alert_for_add_url_message")
+    /// サイトURLを上書き
+    static let clipMergeViewAlertForAddUrlTitle = L10n.tr("Localizable", "clip_merge_view_alert_for_add_url_title")
+    /// 保存する画像の取得元となるサイトURLを編集します
+    /// サイトURLは全ての画像に適用されます
+    static let clipMergeViewAlertForEditUrlMessage = L10n.tr("Localizable", "clip_merge_view_alert_for_edit_url_message")
+    /// サイトURLを編集
+    static let clipMergeViewAlertForEditUrlTitle = L10n.tr("Localizable", "clip_merge_view_alert_for_edit_url_title")
+    /// https://...
+    static let clipMergeViewAlertForUrlPlaceholder = L10n.tr("Localizable", "clip_merge_view_alert_for_url_placeholder")
     /// 保存に失敗しました
     static let clipMergeViewErrorAtMerge = L10n.tr("Localizable", "clip_merge_view_error_at_merge")
+    /// 保存した画像を隠す
+    static let clipMergeViewMetaShouldHides = L10n.tr("Localizable", "clip_merge_view_meta_should_hides")
+    /// 編集
+    static let clipMergeViewMetaUrlEdit = L10n.tr("Localizable", "clip_merge_view_meta_url_edit")
+    /// サイトURLの上書きなし
+    static let clipMergeViewMetaUrlNo = L10n.tr("Localizable", "clip_merge_view_meta_url_no")
+    /// 上書き
+    static let clipMergeViewMetaUrlOverwrite = L10n.tr("Localizable", "clip_merge_view_meta_url_overwrite")
+    /// サイトURL
+    static let clipMergeViewMetaUrlTitle = L10n.tr("Localizable", "clip_merge_view_meta_url_title")
     /// 画像をクリップにまとめる
     static let clipMergeViewTitle = L10n.tr("Localizable", "clip_merge_view_title")
     /// 画像の読み込みに失敗しました

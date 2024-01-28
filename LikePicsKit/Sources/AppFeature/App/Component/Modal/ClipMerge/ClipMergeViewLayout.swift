@@ -8,6 +8,8 @@ import Smoothie
 import UIKit
 
 protocol ClipMergeViewDelegate: AnyObject {
+    func didTapButton(_ cell: UICollectionViewCell, at indexPath: IndexPath)
+    func didSwitch(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool)
     func didTapTagAdditionButton(_ cell: UICollectionViewCell)
     func didTapTagDeletionButton(_ cell: UICollectionViewCell)
     func didTapSiteUrl(_ sender: UIView, url: URL?)
@@ -19,26 +21,33 @@ enum ClipMergeViewLayout {
 
     enum Section: Int {
         case tag
+        case meta
         case clip
     }
 
     enum Item: Hashable {
         case tagAddition
         case tag(Tag)
+        case meta(Info)
         case item(ClipItem)
 
-        var identifier: String {
+        var dragIdentifier: String? {
             switch self {
-            case .tagAddition:
-                return "tag-addition"
-
-            case let .tag(tag):
-                return tag.id.uuidString
-
-            case let .item(clipItem):
-                return clipItem.id.uuidString
+            case let .item(item): item.id.uuidString
+            default: nil
             }
         }
+    }
+
+    public struct Info: Equatable, Hashable {
+        enum Accessory: Equatable, Hashable {
+            case button(title: String)
+            case `switch`(isOn: Bool)
+        }
+
+        let title: String
+        let secondaryTitle: String?
+        let accessory: Accessory
     }
 }
 
@@ -50,6 +59,11 @@ extension ClipMergeViewLayout {
             switch Section(rawValue: sectionIndex) {
             case .tag:
                 return self.createTagsLayoutSection()
+
+            case .meta:
+                var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+                configuration.backgroundColor = Asset.Color.background.color
+                return NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
 
             case .clip:
                 var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
@@ -89,10 +103,23 @@ extension ClipMergeViewLayout {
         weak var interactionDelegate: UIContextMenuInteractionDelegate?
     }
 
-    static func createSnapshot(tags: [Tag], items: [ClipItem]) -> Snapshot {
+    static func createSnapshot(tags: [Tag], items: [ClipItem], state: ClipMergeViewState) -> Snapshot {
         var snapshot = Snapshot()
         snapshot.appendSections([.tag])
         snapshot.appendItems([Item.tagAddition] + tags.map({ Item.tag($0) }))
+
+        snapshot.appendSections([.meta])
+        snapshot.appendItems([
+            .meta(.init(title: L10n.clipMergeViewMetaUrlTitle,
+                        secondaryTitle: state.overwriteSiteUrl?.absoluteString ?? L10n.clipMergeViewMetaUrlNo,
+                        accessory: (state.overwriteSiteUrl.flatMap({ $0.absoluteString.isEmpty }) ?? true)
+                            ? .button(title: L10n.clipMergeViewMetaUrlOverwrite)
+                            : .button(title: L10n.clipMergeViewMetaUrlEdit))),
+            .meta(.init(title: L10n.clipMergeViewMetaShouldHides,
+                        secondaryTitle: nil,
+                        accessory: .switch(isOn: state.shouldSaveAsHiddenItem)))
+        ])
+
         snapshot.appendSections([.clip])
         snapshot.appendItems(items.map({ Item.item($0) }))
         return snapshot
@@ -113,6 +140,7 @@ extension ClipMergeViewLayout {
 
         let tagAdditionCellRegistration = self.configureTagAdditionCell(delegate: proxy)
         let tagCellRegistration = self.configureTagCell(delegate: proxy)
+        let metaCellRegistration = self.configureMetaCell(proxy: proxy)
         let itemCellRegistration = self.configureItemCell(proxy: proxy,
                                                           thumbnailProcessingQueue: thumbnailProcessingQueue,
                                                           imageQueryService: imageQueryService)
@@ -124,6 +152,9 @@ extension ClipMergeViewLayout {
 
             case let .tag(tag):
                 return collectionView.dequeueConfiguredReusableCell(using: tagCellRegistration, for: indexPath, item: tag)
+
+            case let .meta(info):
+                return collectionView.dequeueConfiguredReusableCell(using: metaCellRegistration, for: indexPath, item: info)
 
             case let .item(item):
                 return collectionView.dequeueConfiguredReusableCell(using: itemCellRegistration, for: indexPath, item: item)
@@ -148,6 +179,46 @@ extension ClipMergeViewLayout {
             cell.visibleDeleteButton = true
             cell.delegate = delegate
             cell.isHiddenTag = tag.isHidden
+        }
+    }
+
+    private static func configureMetaCell(proxy: Proxy) -> UICollectionView.CellRegistration<UICollectionViewListCell, Info> {
+        return UICollectionView.CellRegistration<UICollectionViewListCell, Info> { cell, indexPath, info in
+            var contentConfiguration = UIListContentConfiguration.valueCell()
+            contentConfiguration.text = info.title
+            contentConfiguration.secondaryText = info.secondaryTitle
+            contentConfiguration.secondaryTextProperties.font = .preferredFont(forTextStyle: .caption1)
+            cell.contentConfiguration = contentConfiguration
+
+            switch info.accessory {
+            case let .button(title: title):
+                let button = UIButton(type: .system)
+                button.isPointerInteractionEnabled = true
+                button.setTitle(title, for: .normal)
+                button.addAction(.init(handler: { [weak proxy] _ in
+                    proxy?.delegate?.didTapButton(cell, at: indexPath)
+                }), for: .touchUpInside)
+                let configuration = UICellAccessory.CustomViewConfiguration(customView: button,
+                                                                            placement: .trailing(displayed: .always))
+                cell.accessories = [.customView(configuration: configuration)]
+
+            case let .switch(isOn: isOn):
+                // swiftlint:disable:next identifier_name
+                let sw = UISwitch()
+                sw.isOn = isOn
+                sw.addAction(.init(handler: { [weak proxy] action in
+                    // swiftlint:disable:next identifier_name
+                    guard let sw = action.sender as? UISwitch else { return }
+                    proxy?.delegate?.didSwitch(cell, at: indexPath, isOn: sw.isOn)
+                }), for: .touchUpInside)
+                let configuration = UICellAccessory.CustomViewConfiguration(customView: sw,
+                                                                            placement: .trailing(displayed: .always))
+                cell.accessories = [.customView(configuration: configuration)]
+            }
+
+            var backgroundConfiguration = UIBackgroundConfiguration.listGroupedCell()
+            backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackground.color
+            cell.backgroundConfiguration = backgroundConfiguration
         }
     }
 

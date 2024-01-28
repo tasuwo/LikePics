@@ -33,7 +33,12 @@ struct ClipMergeViewReducer: Reducer {
         case .saveButtonTapped:
             let itemIds = state.items.map({ $0.id })
             let tagIds = state.tags.map({ $0.id })
-            switch dependency.clipCommandService.mergeClipItems(itemIds: itemIds, tagIds: tagIds, inClipsHaving: Array(state.sourceClipIds)) {
+            switch dependency.clipCommandService.mergeClipItems(itemIds: itemIds,
+                                                                tagIds: tagIds,
+                                                                siteUrl: state.overwriteSiteUrl,
+                                                                isHidden: state.shouldSaveAsHiddenItem,
+                                                                inClipsHaving: Array(state.sourceClipIds))
+            {
             case .success:
                 return Self.dismiss(isCompleted: true, state: state, dependency: dependency)
 
@@ -53,6 +58,14 @@ struct ClipMergeViewReducer: Reducer {
 
         case let .tagDeleteButtonTapped(tagId):
             nextState.tags = state.tags.filter({ $0.id != tagId })
+            return (nextState, .none)
+
+        case let .editedOverwriteSiteUrl(url):
+            nextState.overwriteSiteUrl = url
+            return (nextState, .none)
+
+        case let .shouldSaveAsHiddenItem(isHidden):
+            nextState.shouldSaveAsHiddenItem = isHidden
             return (nextState, .none)
 
         case let .siteUrlButtonTapped(url):

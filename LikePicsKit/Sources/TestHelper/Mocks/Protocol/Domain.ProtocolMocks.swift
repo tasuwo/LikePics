@@ -877,11 +877,11 @@ public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
     }
 
     public private(set) var mergeClipItemsCallCount = 0
-    public var mergeClipItemsHandler: (([ClipItem.Identity], [Tag.Identity], [Clip.Identity]) -> (Result<Void, ClipStorageError>))?
-    public func mergeClipItems(itemIds: [ClipItem.Identity], tagIds: [Tag.Identity], inClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
+    public var mergeClipItemsHandler: (([ClipItem.Identity], [Tag.Identity], URL?, Bool, [Clip.Identity]) -> (Result<Void, ClipStorageError>))?
+    public func mergeClipItems(itemIds: [ClipItem.Identity], tagIds: [Tag.Identity], siteUrl: URL?, isHidden: Bool, inClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
         mergeClipItemsCallCount += 1
         if let mergeClipItemsHandler = mergeClipItemsHandler {
-            return mergeClipItemsHandler(itemIds, tagIds, clipIds)
+            return mergeClipItemsHandler(itemIds, tagIds, siteUrl, isHidden, clipIds)
         }
         fatalError("mergeClipItemsHandler returns can't have a default value thus its handler must be set")
     }

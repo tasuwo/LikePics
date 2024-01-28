@@ -20,6 +20,8 @@ enum ClipMergeViewAction: Action {
 
     case tagAdditionButtonTapped
     case tagDeleteButtonTapped(Tag.Identity)
+    case editedOverwriteSiteUrl(URL?)
+    case shouldSaveAsHiddenItem(Bool)
     case siteUrlButtonTapped(URL)
 
     // MARK: CollectionView

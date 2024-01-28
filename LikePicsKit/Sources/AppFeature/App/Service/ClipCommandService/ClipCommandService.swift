@@ -640,7 +640,14 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         }
     }
 
-    public func mergeClipItems(itemIds: [ClipItem.Identity], tagIds: [Tag.Identity], inClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
+    public func mergeClipItems(itemIds: [ClipItem.Identity],
+                               tagIds: [Tag.Identity],
+                               siteUrl: URL?,
+                               isHidden: Bool,
+                               inClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError>
+    {
+        let siteUrl = (siteUrl.flatMap({ $0.absoluteString.isEmpty }) ?? true) ? nil : siteUrl
+
         lock.lock(); defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
@@ -657,7 +664,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 let clipId = UUID()
                 let newItems = items.enumerated().map { index, item in
                     return ClipItemRecipe(id: UUID(),
-                                          url: item.url,
+                                          url: siteUrl ?? item.url,
                                           clipId: clipId,
                                           clipIndex: index + 1,
                                           imageId: item.imageId,
@@ -676,7 +683,7 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                                         items: newItems,
                                         tagIds: tagIds,
                                         albumIds: Set(albumIds),
-                                        isHidden: false,
+                                        isHidden: isHidden,
                                         dataSize: dataSize,
                                         registeredDate: Date(),
                                         updatedDate: Date())
