@@ -557,6 +557,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.21;
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox;
 				PRODUCT_NAME = LikePics;
 				PROVISIONING_PROFILE_SPECIFIER = "match Development net.tasuwo.TBox";
@@ -582,6 +583,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.21;
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox;
 				PRODUCT_NAME = LikePics;
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore net.tasuwo.TBox";
@@ -989,6 +991,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.21;
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.dev;
 				PRODUCT_NAME = LikePics;
 				PROVISIONING_PROFILE_SPECIFIER = "match Development net.tasuwo.TBox.dev";
@@ -1014,6 +1017,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.21;
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.dev;
 				PRODUCT_NAME = LikePics;
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore net.tasuwo.TBox.dev";

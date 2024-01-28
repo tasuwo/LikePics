@@ -1,13 +1,13 @@
 # vim: syntax=ruby
 
-app_version("2.20")
+app_version("2.21")
 force(true)
 submit_for_review(false)
 automatic_release(false)
 
 skip_binary_upload(true)
 skip_metadata(false)
-skip_screenshots(false)
+skip_screenshots(true)
 skip_app_version_update(false)
 
 overwrite_screenshots(true)
