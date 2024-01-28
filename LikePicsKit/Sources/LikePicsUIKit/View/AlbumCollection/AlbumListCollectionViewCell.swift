@@ -172,7 +172,7 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         CATransaction.begin()
         CATransaction.setAnimationDuration(0.2)
 
-        UIView.animate(withDuration: 0.2) {
+        UIView.likepics_animate(withDuration: 0.2) {
             self.titleButton.isEnabled = isEditing
             self.titleEditButtonContainer.isHidden = !isEditing
             self.titleEditButtonContainer.layoutIfNeeded()
@@ -182,12 +182,12 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
         if displayRemover {
             self.removerContainer.alpha = 0
             self.removerContainer.isHidden = false
-            UIView.animate(withDuration: 0.2) {
+            UIView.likepics_animate(withDuration: 0.2) {
                 self.removerContainer.alpha = 1
             }
         } else {
             self.removerContainer.alpha = 1
-            UIView.animate(withDuration: 0.2) {
+            UIView.likepics_animate(withDuration: 0.2) {
                 self.removerContainer.alpha = 0
             } completion: { _ in
                 self.removerContainer.isHidden = true

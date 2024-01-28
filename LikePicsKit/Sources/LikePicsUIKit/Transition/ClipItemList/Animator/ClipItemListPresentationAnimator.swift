@@ -84,7 +84,7 @@ extension ClipItemListPresentationAnimator: UIViewControllerAnimatedTransitionin
             from.view.backgroundColor = fromViewBackgroundView.backgroundColor
             fromImageView.isHidden = false
 
-            UIView.animate(withDuration: 0.15, animations: {
+            UIView.likepics_animate(withDuration: 0.15, animations: {
                 toCell.isHidden = false
             }, completion: { _ in
                 animatingImageView.alpha = 0
@@ -111,7 +111,7 @@ extension ClipItemListPresentationAnimator: UIViewControllerAnimatedTransitionin
         animatingImageView.layer.cornerRadius = to.animatingCellCornerRadius(self)
         animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
 
-        UIView.animate(
+        UIView.likepics_animate(
             withDuration: self.transitionDuration(using: transitionContext),
             delay: 0,
             options: [.curveEaseIn]

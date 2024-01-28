@@ -3,6 +3,7 @@
 //
 
 import Combine
+import Common
 import CompositeKit
 import Domain
 import LikePicsUIKit
@@ -34,7 +35,7 @@ class ClipItemListViewController: UIViewController {
         didSet {
             toolBarBottomConstraint.isActive = !isToolBarHidden
             toolBarTopConstraint.isActive = isToolBarHidden
-            UIView.animate(withDuration: 0.2) {
+            UIView.likepics_animate(withDuration: 0.2) {
                 self.collectionView.contentInset.bottom = self.isToolBarHidden ? 16 : 44 + 16
                 self.view.layoutIfNeeded()
             }

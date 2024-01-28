@@ -3,6 +3,7 @@
 //
 
 import Combine
+import Common
 import CompositeKit
 import Domain
 import LikePicsUIKit
@@ -151,7 +152,7 @@ extension ClipPreviewPageBarController {
     // MARK: Appearance
 
     private func updateBackground(isFullscreen: Bool) {
-        UIView.animate(withDuration: 0.2) {
+        UIView.likepics_animate(withDuration: 0.2) {
             self.barHostingViewController?.parent?.view.backgroundColor = isFullscreen ? .black : Asset.Color.background.color
         }
     }

@@ -3,6 +3,7 @@
 //
 
 import Combine
+import Common
 import CompositeKit
 import Domain
 import Environment
@@ -259,7 +260,7 @@ extension ClipCollectionViewController {
             .compactMap { $0 as? ClipCollectionViewCell }
             .map { $0.setThumbnailTypeWithAnimationBlocks(toSingle: layout.isSingleThumbnail) }
 
-        UIView.animate(withDuration: 0.25) {
+        UIView.likepics_animate(withDuration: 0.25) {
             self.collectionView.setCollectionViewLayout(nextLayout, animated: true)
             animationBlocks.forEach { $0() }
         } completion: { _ in
@@ -267,7 +268,7 @@ extension ClipCollectionViewController {
                 .compactMap { $0 as? ClipCollectionViewCell }
                 .filter { $0.isSingleThumbnail != layout.isSingleThumbnail }
                 .map { $0.setThumbnailTypeWithAnimationBlocks(toSingle: layout.isSingleThumbnail) }
-            UIView.animate(withDuration: 0.25) {
+            UIView.likepics_animate(withDuration: 0.25) {
                 blocks.forEach { $0() }
             }
         }

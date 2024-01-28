@@ -145,11 +145,11 @@ extension ClipItemListDismissalAnimator: UIViewControllerAnimatedTransitioning {
         animatingImageView.layer.cornerRadius = 0
         animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
 
-        UIView.animate(withDuration: 0.2) {
+        UIView.likepics_animate(withDuration: 0.2) {
             selectedCell.alpha = 0
         }
 
-        UIView.animate(
+        UIView.likepics_animate(
             withDuration: self.transitionDuration(using: transitionContext),
             delay: 0,
             options: [.curveEaseInOut]
@@ -160,7 +160,7 @@ extension ClipItemListDismissalAnimator: UIViewControllerAnimatedTransitioning {
             toViewBackgroundView.alpha = 1.0
         }
 
-        UIView.animate(
+        UIView.likepics_animate(
             withDuration: self.transitionDuration(using: transitionContext) / 3,
             delay: (self.transitionDuration(using: transitionContext) / 3) * 2,
             options: [.curveEaseIn]

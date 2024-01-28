@@ -155,7 +155,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
         hiddenIconTrailingToThumbnailConstraint.isActive = !toSingle
 
         return {
-            UIView.animate(withDuration: 0.25) {
+            UIView.likepics_animate(withDuration: 0.25) {
                 animatingImageView.frame = toSingle ? self.singleThumbnailView.frame : self.primaryThumbnailView.frame
                 self.secondaryThumbnailView.alpha = toSingle ? 0 : 1
                 self.tertiaryThumbnailView.alpha = toSingle ? 0 : 1
@@ -167,7 +167,7 @@ public class ClipCollectionViewCell: UICollectionViewCell {
                 animatingImageView.removeFromSuperview()
             }
 
-            UIView.animate(withDuration: 0.15, delay: 0.25, options: [], animations: {
+            UIView.likepics_animate(withDuration: 0.15, delay: 0.25, options: [], animations: {
                 self.hiddenIcon.alpha = 1
             }, completion: nil)
         }

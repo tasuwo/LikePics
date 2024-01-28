@@ -43,7 +43,7 @@ extension FadeTransitionAnimator: FadeTransitionAnimatorProtocol {
 
         containerView.insertSubview(to.view, belowSubview: from.view)
 
-        UIView.animate(
+        UIView.likepics_animate(
             withDuration: duration,
             animations: {
                 from.view.alpha = 0

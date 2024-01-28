@@ -205,8 +205,9 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         params.innerContext.animatingImageView.layer.cornerRadius = 0
         params.innerContext.animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
 
-        UIView.animate(
+        UIView.likepics_animate(
             withDuration: Self.cancelAnimateDuration,
+            bounce: 0.2,
             delay: 0,
             options: [.curveEaseOut],
             animations: {
@@ -244,8 +245,9 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
         params.innerContext.animatingImageView.layer.cornerRadius = params.finalCornerRadius
         params.innerContext.animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
 
-        UIView.animate(
+        UIView.likepics_animate(
             withDuration: Self.endAnimateDuration,
+            bounce: 0.2,
             delay: 0,
             options: [.curveEaseIn],
             animations: {
@@ -361,7 +363,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
             from.view.backgroundColor = fromViewBackgroundView.backgroundColor
             fromImageView.isHidden = false
 
-            UIView.animate(withDuration: 0.15, animations: {
+            UIView.likepics_animate(withDuration: 0.15, animations: {
                 // CollectionViewの再描画により元のセルのインスタンスが破棄されている可能性があるため、
                 // 最新のセルのインスタンスを取得し直す
                 to.animatingCell(self, id: previewingClipItem.cellIdentity, needsScroll: true)?.alpha = 1

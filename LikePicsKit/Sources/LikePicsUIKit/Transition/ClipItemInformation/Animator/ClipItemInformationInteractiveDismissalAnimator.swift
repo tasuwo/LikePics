@@ -163,11 +163,9 @@ class ClipItemInformationInteractiveDismissalAnimator: NSObject {
             self.logger.debug("Finish cancel animation for ClipItemInformationView dismissal")
         }
 
-        UIView.animate(
+        UIView.likepics_animate(
             withDuration: Self.cancelAnimateDuration,
             delay: 0,
-            usingSpringWithDamping: 0.9,
-            initialSpringVelocity: 0,
             options: [.curveEaseInOut],
             animations: {
                 params.innerContext.animatingImageView.frame = params.innerContext.initialImageFrame
@@ -175,7 +173,7 @@ class ClipItemInformationInteractiveDismissalAnimator: NSObject {
             }
         )
 
-        UIView.animate(
+        UIView.likepics_animate(
             withDuration: Self.cancelAnimateDuration / 3,
             delay: 0,
             options: [.curveEaseIn]
@@ -204,7 +202,7 @@ class ClipItemInformationInteractiveDismissalAnimator: NSObject {
             self.logger.debug("Finish end animation for ClipItemInformationView dismissal")
         }
 
-        UIView.animate(
+        UIView.likepics_animate(
             withDuration: Self.endAnimateDuration,
             delay: 0,
             options: [.curveEaseInOut],
@@ -215,7 +213,7 @@ class ClipItemInformationInteractiveDismissalAnimator: NSObject {
             }
         )
 
-        UIView.animate(
+        UIView.likepics_animate(
             withDuration: Self.endAnimateDuration / 3,
             delay: 0,
             options: [.curveEaseIn]

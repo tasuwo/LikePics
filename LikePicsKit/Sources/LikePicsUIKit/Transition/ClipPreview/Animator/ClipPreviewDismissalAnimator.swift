@@ -79,7 +79,7 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
             from.view.backgroundColor = fromViewBackgroundView.backgroundColor
             fromImageView.isHidden = false
 
-            UIView.animate(withDuration: 0.15, animations: {
+            UIView.likepics_animate(withDuration: 0.15, animations: {
                 toCell.alpha = 1
             }, completion: { _ in
                 animatingImageView.alpha = 0
@@ -106,8 +106,9 @@ extension ClipPreviewDismissalAnimator: UIViewControllerAnimatedTransitioning {
         animatingImageView.layer.cornerRadius = to.animatingCellCornerRadius(self)
         animatingImageView.layer.add(cornerAnimation, forKey: #keyPath(CALayer.cornerRadius))
 
-        UIView.animate(
+        UIView.likepics_animate(
             withDuration: self.transitionDuration(using: transitionContext),
+            bounce: 0.2,
             delay: 0,
             options: [.curveEaseIn]
         ) {

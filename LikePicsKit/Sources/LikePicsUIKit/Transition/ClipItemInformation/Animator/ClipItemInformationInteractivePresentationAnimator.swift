@@ -162,7 +162,7 @@ class ClipItemInformationInteractivePresentationAnimator: NSObject {
             self.logger.debug("Finish cancel animation for ClipItemInformationView presentation")
         }
 
-        UIView.animate(
+        UIView.likepics_animate(
             withDuration: Self.cancelAnimateDuration,
             delay: 0,
             options: [.curveEaseInOut]
@@ -170,7 +170,7 @@ class ClipItemInformationInteractivePresentationAnimator: NSObject {
             params.innerContext.animatingImageView.frame = params.innerContext.initialImageFrame
         }
 
-        UIView.animate(
+        UIView.likepics_animate(
             withDuration: Self.cancelAnimateDuration / 3,
             delay: 0,
             options: [.curveEaseIn]
@@ -199,7 +199,7 @@ class ClipItemInformationInteractivePresentationAnimator: NSObject {
             self.logger.debug("Finish end animation for ClipItemInformationView presentation")
         }
 
-        UIView.animate(
+        UIView.likepics_animate(
             withDuration: Self.endAnimateDuration,
             delay: 0,
             options: [.curveEaseOut]
@@ -208,7 +208,7 @@ class ClipItemInformationInteractivePresentationAnimator: NSObject {
             params.innerContext.animatingImageView.frame = params.to.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
         }
 
-        UIView.animate(
+        UIView.likepics_animate(
             withDuration: Self.endAnimateDuration / 3,
             delay: 0,
             options: [.curveEaseIn]

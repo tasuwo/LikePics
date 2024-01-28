@@ -2,6 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import UIKit
 
 @IBDesignable
@@ -26,7 +27,7 @@ class HiddenIconView: UIView {
         if animated {
             if isHidden {
                 self.alpha = 1
-                UIView.animate(withDuration: 0.2) {
+                UIView.likepics_animate(withDuration: 0.2) {
                     self.alpha = 0
                 } completion: { _ in
                     self.isHidden = true
@@ -35,7 +36,7 @@ class HiddenIconView: UIView {
             } else {
                 self.alpha = 0
                 self.isHidden = false
-                UIView.animate(withDuration: 0.2) {
+                UIView.likepics_animate(withDuration: 0.2) {
                     self.alpha = 1
                 }
             }

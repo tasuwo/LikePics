@@ -2,6 +2,7 @@
 //  Copyright © 2020 Tasuku Tozawa. All rights reserved.
 //
 
+import Common
 import UIKit
 
 class ClipItemInformationDismissalAnimator: NSObject {
@@ -77,7 +78,7 @@ extension ClipItemInformationDismissalAnimator: UIViewControllerAnimatedTransiti
             transitionContext.completeTransition(true)
         }
 
-        UIView.animate(
+        UIView.likepics_animate(
             withDuration: self.transitionDuration(using: transitionContext),
             delay: 0,
             options: [.curveEaseInOut]

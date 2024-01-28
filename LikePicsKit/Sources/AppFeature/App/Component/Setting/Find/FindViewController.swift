@@ -135,7 +135,7 @@ extension FindViewController {
                     self.progressBar.isHidden = self.store.stateValue.isProgressBarHidden
                 } else {
                     self.progressBar.setProgress(Float($0), animated: true)
-                    UIView.animate(withDuration: 0.2) {
+                    UIView.likepics_animate(withDuration: 0.2) {
                         self.progressBar.layoutIfNeeded()
                     } completion: { _ in
                         self.progressBar.isHidden = self.store.stateValue.isProgressBarHidden

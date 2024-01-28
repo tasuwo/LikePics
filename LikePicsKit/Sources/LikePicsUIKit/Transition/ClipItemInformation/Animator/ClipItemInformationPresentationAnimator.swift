@@ -118,7 +118,7 @@ extension ClipItemInformationPresentationAnimator: UIViewControllerAnimatedTrans
             transitionContext.completeTransition(true)
         }
 
-        UIView.animate(
+        UIView.likepics_animate(
             withDuration: self.transitionDuration(using: transitionContext),
             delay: 0,
             options: [.curveEaseInOut]
@@ -126,7 +126,7 @@ extension ClipItemInformationPresentationAnimator: UIViewControllerAnimatedTrans
             animatingImageView.frame = to.clipInformationAnimator(self, imageFrameOnContainerView: containerView)
         }
 
-        UIView.animate(
+        UIView.likepics_animate(
             withDuration: self.transitionDuration(using: transitionContext) / 3,
             delay: 0,
             options: [.curveEaseIn]
