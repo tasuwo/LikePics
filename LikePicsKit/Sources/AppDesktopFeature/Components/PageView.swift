@@ -25,7 +25,7 @@ struct PageView<Data: Identifiable & Hashable, Content: View>: View {
         private var lastTransitionRequestedDate: Date?
 
         @MainActor
-        func onRequestTranstition(to direction: Direction) {
+        func onRequestTransition(to direction: Direction) {
             let requestedDate = Date()
 
             if let lastTransitionRequestedDate {
@@ -125,7 +125,7 @@ struct PageView<Data: Identifiable & Hashable, Content: View>: View {
                     .overlay {
                         if isLeftHovered {
                             Button {
-                                coordinator.onRequestTranstition(to: .backward)
+                                coordinator.onRequestTransition(to: .backward)
                             } label: {
                                 pagingButton(for: .backward)
                             }
@@ -133,7 +133,7 @@ struct PageView<Data: Identifiable & Hashable, Content: View>: View {
                         }
                     }
                     .keyboardShortcut(.leftArrow, modifiers: []) {
-                        coordinator.onRequestTranstition(to: .backward)
+                        coordinator.onRequestTransition(to: .backward)
                     }
                     .onHover { hovering in
                         withAnimation(.linear(duration: 0.1)) {
@@ -148,7 +148,7 @@ struct PageView<Data: Identifiable & Hashable, Content: View>: View {
                     .overlay {
                         if isRightHovered {
                             Button {
-                                coordinator.onRequestTranstition(to: .forward)
+                                coordinator.onRequestTransition(to: .forward)
                             } label: {
                                 pagingButton(for: .forward)
                             }
@@ -156,7 +156,7 @@ struct PageView<Data: Identifiable & Hashable, Content: View>: View {
                         }
                     }
                     .keyboardShortcut(.rightArrow, modifiers: []) {
-                        coordinator.onRequestTranstition(to: .forward)
+                        coordinator.onRequestTransition(to: .forward)
                     }
                     .onHover { hovering in
                         withAnimation(.linear(duration: 0.1)) {
