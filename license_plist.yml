@@ -1,3 +1,16 @@
+options:
+  outputPath: App/iOS/Resources/Settings.bundle
+  xcworkspacePath: LikePics.xcworkspace
+  addVersionNumbers: false
+github:
+  - owner: realm
+    name: realm-swift
+    version: v10.50.1
+  - owner: realm
+    name: realm-core
+    version: 14.6.2
 exclude:
-  - name: swift
-  - name: swift-argument-parser
+  - swift
+  - swift-argument-parser
+  - Sourcery
+  - SwiftGen

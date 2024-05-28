@@ -457,7 +457,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ -f \"/opt/homebrew/bin/license-plist\" ]]; then\n    /opt/homebrew/bin/license-plist \\\n        --output-path ${SRCROOT}/iOS/Resources/Settings.bundle \\\n        --xcworkspace-path ${SRCROOT}/../LikePics.xcworkspace \\\n        --config-path ${SRCROOT}/../license_plist.yml\nelse\n  echo \"warning: LicensePlist is not installed. Run 'brew install license-plist' to install it.\"\nfi\n";
+			shellScript = "if [[ -f \"/opt/homebrew/bin/license-plist\" ]]; then\n    cd ${SRCROOT}/..\n    /opt/homebrew/bin/license-plist\nelse\n  echo \"warning: LicensePlist is not installed. Run 'brew install license-plist' to install it.\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
