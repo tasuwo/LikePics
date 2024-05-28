@@ -16,6 +16,7 @@ public extension UIViewController {
     func dismissAllModals(completion: (() -> Void)?) {
         var topViewController = self
         while let presentedViewController = topViewController.presentedViewController {
+            guard !presentedViewController.isBeingDismissed else { break }
             topViewController = presentedViewController
         }
 
