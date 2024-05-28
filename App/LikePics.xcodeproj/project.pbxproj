@@ -561,7 +561,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.21;
+				MARKETING_VERSION = 2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox;
 				PRODUCT_NAME = LikePics;
 				PROVISIONING_PROFILE_SPECIFIER = "match Development net.tasuwo.TBox";
@@ -587,7 +587,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.21;
+				MARKETING_VERSION = 2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox;
 				PRODUCT_NAME = LikePics;
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore net.tasuwo.TBox";
@@ -964,7 +964,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				I_CLOUD_CONTAINER = iCloud.net.tasuwo.TBox;
-				MARKETING_VERSION = 2.20;
+				MARKETING_VERSION = 2.22;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -995,7 +995,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.21;
+				MARKETING_VERSION = 2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.dev;
 				PRODUCT_NAME = LikePics;
 				PROVISIONING_PROFILE_SPECIFIER = "match Development net.tasuwo.TBox.dev";
@@ -1021,7 +1021,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.21;
+				MARKETING_VERSION = 2.22;
 				PRODUCT_BUNDLE_IDENTIFIER = net.tasuwo.TBox.dev;
 				PRODUCT_NAME = LikePics;
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore net.tasuwo.TBox.dev";
@@ -1090,7 +1090,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				I_CLOUD_CONTAINER = iCloud.net.tasuwo.TBox.dev;
-				MARKETING_VERSION = 2.20;
+				MARKETING_VERSION = 2.22;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1161,7 +1161,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				I_CLOUD_CONTAINER = iCloud.net.tasuwo.TBox.dev;
-				MARKETING_VERSION = 2.20;
+				MARKETING_VERSION = 2.22;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = NO;
@@ -1252,7 +1252,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				I_CLOUD_CONTAINER = iCloud.net.tasuwo.TBox;
-				MARKETING_VERSION = 2.20;
+				MARKETING_VERSION = 2.22;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = NO;
