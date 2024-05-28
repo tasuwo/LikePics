@@ -125,12 +125,6 @@ extension ClipMergeViewLayout {
         return snapshot
     }
 
-    static func createItems(tags: [Tag], items: [ClipItem]) -> [Item] {
-        return [Item.tagAddition]
-            + tags.map({ Item.tag($0) })
-            + items.map({ Item.item($0) })
-    }
-
     @MainActor
     static func createDataSource(_ collectionView: UICollectionView,
                                  _ thumbnailProcessingQueue: ImageProcessingQueue,

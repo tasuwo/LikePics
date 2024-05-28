@@ -200,19 +200,11 @@ extension ClipMergeViewController {
         collectionView.dragInteractionEnabled = true
         dataSource.reorderingHandlers.canReorderItem = { $0.isClipItem }
         dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
-            guard let self = self else { return }
-            let result = self.createItems(for: self.store.stateValue)
-                .applying(transaction.difference)?
-                .compactMap { $0.clipItem }
-            guard let reorderedItems = result else { return }
-            self.store.execute(.itemReordered(reorderedItems))
+            let itemIds = transaction.finalSnapshot.itemIdentifiers.compactMap { $0.clipItem }
+            self?.store.execute(.itemReordered(itemIds))
         }
         collectionView.dragDelegate = self
         collectionView.dropDelegate = self
-    }
-
-    private func createItems(for state: ClipMergeViewState) -> [Layout.Item] {
-        return Layout.createItems(tags: state.tags, items: state.items)
     }
 
     private func configureNavigationBar() {
