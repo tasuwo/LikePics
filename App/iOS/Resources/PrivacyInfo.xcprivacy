@@ -7,7 +7,7 @@
 		<dict>
 			<key>NSPrivacyAccessedAPITypeReasons</key>
 			<array>
-				<string>1C8F.1 Read and write information from the apps, app extensions that are members of the same App Group.</string>
+				<string>1C8F.1</string>
 			</array>
 			<key>NSPrivacyAccessedAPIType</key>
 			<string>NSPrivacyAccessedAPICategoryUserDefaults</string>
