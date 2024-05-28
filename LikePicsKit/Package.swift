@@ -1,4 +1,4 @@
-// swift-tools-version:5.9
+// swift-tools-version:5.10
 import PackageDescription
 
 let package = Package(
@@ -31,7 +31,6 @@ let package = Package(
         .library(name: "TestHelper", targets: ["TestHelper"])
     ],
     dependencies: [
-        .package(url: "https://github.com/realm/realm-cocoa", .upToNextMinor(from: "10.44.0")),
         .package(url: "https://github.com/phimage/Erik", .upToNextMajor(from: "5.1.0")),
         .package(url: "https://github.com/tasuwo/PersistentStack", .upToNextMajor(from: "0.8.1")),
         .package(url: "https://github.com/tasuwo/swift", .upToNextMajor(from: "0.9.0")),
@@ -255,8 +254,8 @@ let package = Package(
             dependencies: [
                 "Common",
                 "Domain",
-                .product(name: "Realm", package: "realm-cocoa"),
-                .product(name: "RealmSwift", package: "realm-cocoa")
+                "Realm",
+                "RealmSwift"
             ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
@@ -323,6 +322,17 @@ let package = Package(
                 "ClipCreationFeature",
                 "LikePicsUIKit"
             ]
-        )
+        ),
+
+        .binaryTarget(
+            name: "Realm",
+            url: "https://github.com/realm/realm-swift/releases/download/v10.50.1/Realm.spm.zip",
+            checksum: "942fc39917f4d572d5a2aae6a115c9f50a0954e61351aed3553c84d63ad3f2dc"
+        ),
+        .binaryTarget(
+            name: "RealmSwift",
+            url: "https://github.com/realm/realm-swift/releases/download/v10.50.1/RealmSwift@15.4.spm.zip",
+            checksum: "208755d16d189372065e43901e5406e050197f98207142bc788487068f1a0843"
+        ),
     ]
 )

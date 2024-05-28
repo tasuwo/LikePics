@@ -1,4 +1,5 @@
 {
+  "originHash" : "4296d72da3ae5eb8dd95db0c2afaca40b6caabec6da273fa612bbd1c596e54af",
   "pins" : [
     {
       "identity" : "brightfutures",
@@ -55,24 +56,6 @@
       }
     },
     {
-      "identity" : "realm-cocoa",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/realm/realm-cocoa",
-      "state" : {
-        "revision" : "fd199ce07edb4db69e862f74151b95602aad3b43",
-        "version" : "10.44.0"
-      }
-    },
-    {
-      "identity" : "realm-core",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/realm/realm-core",
-      "state" : {
-        "revision" : "c569bec4d04da84030d94f376437bc4efda3686b",
-        "version" : "13.23.1"
-      }
-    },
-    {
       "identity" : "swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tasuwo/swift",
@@ -109,5 +92,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

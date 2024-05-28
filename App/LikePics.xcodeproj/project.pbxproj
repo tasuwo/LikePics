@@ -21,6 +21,7 @@
 		2CA08F532B42BDE6002CB890 /* ShareExtensionMobileFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 2CA08F522B42BDE6002CB890 /* ShareExtensionMobileFeature */; };
 		2CAAF8E12B39C5C900479411 /* LikePicsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CAAF8E02B39C5C900479411 /* LikePicsApp.swift */; };
 		2CAAF8E52B39C5CB00479411 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CAAF8E42B39C5CB00479411 /* Assets.xcassets */; };
+		2CBBCCD22C05EF1F006B6E73 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 2CBBCCD12C05EF1F006B6E73 /* PrivacyInfo.xcprivacy */; };
 		953320B06B0B1D6AF7D75B8F /* ShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3244CDEF6543830E6F56EDB0 /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CBC0890201886D3367DEA9FA /* ShareNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27ABC8239271CCDAABD4CC4 /* ShareNavigationController.swift */; };
 		CDA61B3939F06F9C0081E6D3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 313B82C59D48077CA373AC41 /* InfoPlist.strings */; };
@@ -84,6 +85,7 @@
 		2CAAF8E02B39C5C900479411 /* LikePicsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikePicsApp.swift; sourceTree = "<group>"; };
 		2CAAF8E42B39C5CB00479411 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2CAAF8E92B39C5CB00479411 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
+		2CBBCCD12C05EF1F006B6E73 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		3244CDEF6543830E6F56EDB0 /* ShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		3684FED84FD8B94672573DF7 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4B2AB01D75A41E3263AE08BB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 				B0FBB3FC4A66892C9388F907 /* Info.plist */,
 				313B82C59D48077CA373AC41 /* InfoPlist.strings */,
 				8E6E74C896B79B098BCF232F /* Settings.bundle */,
+				2CBBCCD12C05EF1F006B6E73 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -402,6 +405,7 @@
 				D63256AF1AF1B810615CDF21 /* Assets.xcassets in Resources */,
 				CDA61B3939F06F9C0081E6D3 /* InfoPlist.strings in Resources */,
 				02FD877B2E884AB2626B49D9 /* LaunchScreen.storyboard in Resources */,
+				2CBBCCD22C05EF1F006B6E73 /* PrivacyInfo.xcprivacy in Resources */,
 				0A157FFF68CCF861B43DBB09 /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
