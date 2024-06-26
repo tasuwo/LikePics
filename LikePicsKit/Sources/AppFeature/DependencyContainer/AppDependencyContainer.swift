@@ -45,7 +45,7 @@ public typealias AppDependencyContaining = HasAlbumCommandService
 public class AppDependencyContainer {
     final class CloudSyncAvailabilityService: CloudAvailabilityServiceProtocol {
         let cloudSyncAvailability = CurrentValueSubject<Domain.CloudAvailability?, Never>(nil)
-        public var availability: AnyPublisher<Domain.CloudAvailability?, Never> { cloudSyncAvailability.eraseToAnyPublisher() }
+        var availability: AnyPublisher<Domain.CloudAvailability?, Never> { cloudSyncAvailability.eraseToAnyPublisher() }
     }
 
     // MARK: - Properties
@@ -419,7 +419,7 @@ extension AppDependencyContainer: HasClipPreviewPlayConfigurationStorage {
 
 extension AppDependencyContainer: HasPreviewPrefetcher {}
 
-extension UserSettingsStorage: CloudKitSyncSettingStorage {
+extension UserSettingsStorage: @retroactive CloudKitSyncSettingStorage {
     public var isCloudKitSyncEnabled: AsyncStream<Bool> {
         AsyncStream { continuation in
             let cancellables = self.enabledICloudSync

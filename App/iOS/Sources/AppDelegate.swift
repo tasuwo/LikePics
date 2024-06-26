@@ -11,10 +11,10 @@ import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    public private(set) var appDependencyContainer: AppDependencyContaining!
+    private(set) var appDependencyContainer: AppDependencyContaining!
     private var clipsIntegrityValidator: ClipsIntegrityValidator!
 
-    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // swiftlint:disable:next force_try
         self.appDependencyContainer = try! AppDependencyContainer(appBundle: Bundle.main)
         self.clipsIntegrityValidator = ClipsIntegrityValidator(dependency: appDependencyContainer)
@@ -33,4 +33,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-extension AppDelegate: HasAppDependencyContainer {}
+extension AppDelegate: @preconcurrency HasAppDependencyContainer {}

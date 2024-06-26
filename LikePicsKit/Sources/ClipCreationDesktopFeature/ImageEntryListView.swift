@@ -32,13 +32,13 @@ struct ImageEntryListView: View {
     }
 }
 
-extension ClipCreationFeatureCore.ImageSource: Identifiable {
+extension ClipCreationFeatureCore.ImageSource: @retroactive Identifiable {
     public var id: UUID { identifier }
 }
 
 #Preview {
-    @State var selectedIds: [UUID] = .init()
-    @State var useIndex = false
+    @Previewable @State var selectedIds: [UUID] = .init()
+    @Previewable @State var useIndex = false
 
     return ImageEntryListView(images: (0 ... 10).map({ _ in .init(fileURL: URL(string: "https://localhost")!) }),
                               displayOrder: false,
