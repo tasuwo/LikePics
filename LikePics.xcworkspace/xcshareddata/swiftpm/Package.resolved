@@ -1,5 +1,5 @@
 {
-  "originHash" : "4296d72da3ae5eb8dd95db0c2afaca40b6caabec6da273fa612bbd1c596e54af",
+  "originHash" : "ad4fbf3ff34a90dbed9387b1bf5e8af5d2ed590c4c67b875cf3917d748b22b00",
   "pins" : [
     {
       "identity" : "brightfutures",
@@ -53,6 +53,24 @@
       "state" : {
         "revision" : "d99ab3c995787db84c6ae8f44f3f26381662a26c",
         "version" : "0.8.1"
+      }
+    },
+    {
+      "identity" : "realm-core",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/realm/realm-core",
+      "state" : {
+        "revision" : "058ecce712b4be8b2a2384ed893bf83d56a49fc0",
+        "version" : "14.10.1"
+      }
+    },
+    {
+      "identity" : "realm-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/realm/realm-swift.git",
+      "state" : {
+        "revision" : "fb903a9c901cb7863953fdcb5182b05ca2275b27",
+        "version" : "10.52.0"
       }
     },
     {
