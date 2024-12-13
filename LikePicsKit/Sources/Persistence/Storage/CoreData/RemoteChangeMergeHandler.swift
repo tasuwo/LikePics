@@ -7,6 +7,7 @@ import CoreData
 import Domain
 import os.log
 
+@MainActor
 public let RemoteChangeMergeHandler: (NSPersistentContainer, [NSPersistentHistoryTransaction], RemoteChangeMergeHandlerDelegate) -> Void = { _, transactions, cloudStackObserver in
     var insertedTagObjectIDs = [NSManagedObjectID]()
     var updatedTagObjectIDs = [NSManagedObjectID]()

@@ -2,7 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-public struct ClipSearchHistory {
+public struct ClipSearchHistory: Sendable {
     public let title: String
     public let sortName: String
     public let displaySettingName: String

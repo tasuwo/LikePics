@@ -6,7 +6,7 @@ import Domain
 import Foundation
 
 public class TemporaryImageStorage {
-    public struct Configuration {
+    public struct Configuration: Sendable {
         let targetUrl: URL
     }
 

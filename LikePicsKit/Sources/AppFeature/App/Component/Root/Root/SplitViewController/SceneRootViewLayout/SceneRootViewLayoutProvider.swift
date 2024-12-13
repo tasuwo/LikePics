@@ -30,6 +30,7 @@ class SceneRootViewLayoutProvider {
 // MARK: - Methods
 
 extension SceneRootViewLayoutProvider {
+    @MainActor
     func apply(horizontalSizeClass: UIUserInterfaceSizeClass) {
         guard let nextLayout = _layout.value.applying(horizontalSizeClass: horizontalSizeClass, factory: factory) else { return }
         _layout.send(nextLayout)

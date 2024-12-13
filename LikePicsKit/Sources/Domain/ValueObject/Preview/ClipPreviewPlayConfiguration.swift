@@ -4,14 +4,14 @@
 
 import Foundation
 
-public struct ClipPreviewPlayConfiguration: Equatable {
+public struct ClipPreviewPlayConfiguration: Equatable, Sendable {
     public static let `default`: Self = .init(animation: .default,
                                               order: .default,
                                               range: .default,
                                               loopEnabled: false,
                                               interval: 5)
 
-    public enum Animation: String {
+    public enum Animation: String, Sendable {
         public static let `default`: Self = .forward
 
         case forward
@@ -19,7 +19,7 @@ public struct ClipPreviewPlayConfiguration: Equatable {
         case off
     }
 
-    public enum Order: String {
+    public enum Order: String, Sendable {
         public static let `default`: Self = .forward
 
         case forward
@@ -27,7 +27,7 @@ public struct ClipPreviewPlayConfiguration: Equatable {
         case random
     }
 
-    public enum Range: String {
+    public enum Range: String, Sendable {
         public static let `default`: Self = .overall
 
         case overall

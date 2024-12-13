@@ -1,4 +1,4 @@
-// swift-tools-version:5.10
+// swift-tools-version:6.0
 import PackageDescription
 
 let package = Package(
@@ -60,6 +60,9 @@ let package = Package(
                 "MobileTransition",
                 .product(name: "PersistentStack", package: "PersistentStack")
             ],
+            swiftSettings: [
+                .swiftLanguageMode(.v5)
+            ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
             ]
@@ -90,6 +93,9 @@ let package = Package(
                 "Smoothie",
                 "ShareExtensionFeatureCore"
             ],
+            swiftSettings: [
+                .swiftLanguageMode(.v5)
+            ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
             ]
@@ -103,12 +109,18 @@ let package = Package(
                 "ClipCreationDesktopFeature",
                 "ClipCreationFeatureCore",
                 .product(name: "PersistentStack", package: "PersistentStack")
+            ],
+            swiftSettings: [
+                .swiftLanguageMode(.v5)
             ]
         ),
         .target(
             name: "ShareExtensionFeatureCore",
             dependencies: [
                 "ClipCreationFeatureCore",
+            ],
+            swiftSettings: [
+                .swiftLanguageMode(.v5)
             ]
         ),
 
@@ -124,6 +136,9 @@ let package = Package(
                 "Common",
                 "CompositeKit"
             ],
+            swiftSettings: [
+                .swiftLanguageMode(.v5)
+            ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
             ]
@@ -138,6 +153,9 @@ let package = Package(
                 "Common",
                 "CompositeKit"
             ],
+            swiftSettings: [
+                .swiftLanguageMode(.v5)
+            ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
             ]
@@ -151,6 +169,9 @@ let package = Package(
                 "Environment",
                 "Common",
                 "CompositeKit"
+            ],
+            swiftSettings: [
+                .swiftLanguageMode(.v5)
             ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
@@ -168,6 +189,9 @@ let package = Package(
                 "ClipCreationFeatureCore",
                 .product(name: "Erik", package: "Erik")
             ],
+            swiftSettings: [
+                .swiftLanguageMode(.v5)
+            ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
             ]
@@ -180,6 +204,9 @@ let package = Package(
                 "ClipCreationFeatureCore",
                 .product(name: "MasonryGrid", package: "MasonryGrid")
             ],
+            swiftSettings: [
+                .swiftLanguageMode(.v5)
+            ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
             ]
@@ -190,6 +217,9 @@ let package = Package(
                 "Domain",
                 "Common",
                 .product(name: "Erik", package: "Erik")
+            ],
+            swiftSettings: [
+                .swiftLanguageMode(.v5)
             ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
@@ -203,6 +233,9 @@ let package = Package(
                 "Environment",
                 "Common",
                 "CompositeKit"
+            ],
+            swiftSettings: [
+                .swiftLanguageMode(.v5)
             ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
@@ -283,6 +316,9 @@ let package = Package(
                 "CompositeKit",
                 "MobileTransition"
             ],
+            swiftSettings: [
+                .swiftLanguageMode(.v5)
+            ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
             ]
@@ -292,6 +328,9 @@ let package = Package(
 
         .target(
             name: "CompositeKit",
+            swiftSettings: [
+                .swiftLanguageMode(.v5)
+            ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")
             ]
@@ -300,6 +339,9 @@ let package = Package(
             name: "Smoothie",
             dependencies: [
                 .product(name: "AsyncAlgorithms", package: "swift-async-algorithms")
+            ],
+            swiftSettings: [
+                .swiftLanguageMode(.v5)
             ],
             plugins: [
                 .plugin(name: "LintSwift", package: "swift")

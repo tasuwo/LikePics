@@ -36,6 +36,7 @@ struct SplitViewHierarchy {
 // MARK: - Methods
 
 extension SplitViewHierarchy {
+    @MainActor
     static func build(from viewHierarchy: TabBarViewHierarchy, by factory: ViewControllerFactory) -> Self {
         let viewControllers = SceneRoot.TabBarItem.allCases.reduce(into: [SceneRoot.SideBarItem: RestorableViewController]()) { dict, item in
             let sideBarItem = item.map(to: SceneRoot.SideBarItem.self)

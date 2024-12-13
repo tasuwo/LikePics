@@ -15,7 +15,7 @@ public class ImageSourceForWebPageUrlResolver {
     private static let incrementalDelayMs = 1000
 
     private let url: URL
-    private let scraper = WebImageUrlScraper()
+    private let scraper: WebImageUrlScraper
 
     private var urlFinderDelayMs: Int = 1000
     private var subscriptions = Set<AnyCancellable>()
@@ -29,8 +29,10 @@ public class ImageSourceForWebPageUrlResolver {
 
     // MARK: - Lifecycle
 
+    @MainActor
     public init(url: URL) {
         self.url = url
+        self.scraper = WebImageUrlScraper()
 
         self.bind()
     }

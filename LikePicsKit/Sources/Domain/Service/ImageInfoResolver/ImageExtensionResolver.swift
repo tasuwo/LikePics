@@ -6,7 +6,7 @@ import Foundation
 import UniformTypeIdentifiers
 
 public enum ImageExtensionResolver {
-    public enum Extension: String {
+    public enum Extension: String, Sendable {
         case bmp
         case gif
         case jpeg

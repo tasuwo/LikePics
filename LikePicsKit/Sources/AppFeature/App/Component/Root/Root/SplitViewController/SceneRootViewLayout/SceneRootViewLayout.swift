@@ -64,6 +64,7 @@ extension SceneRootViewLayout {
 // MARK: - Methods
 
 extension SceneRootViewLayout {
+    @MainActor
     func applying(horizontalSizeClass: UIUserInterfaceSizeClass, factory: ViewControllerFactory) -> Self? {
         switch (self, horizontalSizeClass) {
         case let (.split(viewHierarchy), .compact):

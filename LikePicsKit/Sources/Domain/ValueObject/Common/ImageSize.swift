@@ -5,7 +5,7 @@
 import CoreGraphics
 
 // sourcery: AutoDefaultValue, AutoDefaultValueUsePublic
-public struct ImageSize: Codable, Equatable, Hashable {
+public struct ImageSize: Codable, Equatable, Hashable, Sendable {
     public static let zero = ImageSize(height: 0, width: 0)
 
     public let height: Double

@@ -2,7 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-public enum ClipItemInformationTransitionType {
+public enum ClipItemInformationTransitionType: Sendable {
     case custom(interactive: Bool)
     case `default`
 

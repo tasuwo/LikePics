@@ -15,6 +15,7 @@ import Smoothie
 import TagSelectionModalFeature
 import UIKit
 
+@MainActor
 public protocol ViewControllerFactory {
     func makeShareNavigationRootViewController() -> UIViewController
     func makeClipTargetCollectionViewController(id: UUID, webUrl: URL) -> UIViewController

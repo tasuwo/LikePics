@@ -4,12 +4,12 @@
 
 import Foundation
 
-public struct ModalNotification {
-    public struct Name: Equatable {
+public struct ModalNotification: @unchecked Sendable {
+    public struct Name: Equatable, Sendable {
         let rawValue: String
     }
 
-    public struct UserInfoKey: Equatable, Hashable {
+    public struct UserInfoKey: Equatable, Hashable, Sendable {
         let rawValue: String
     }
 

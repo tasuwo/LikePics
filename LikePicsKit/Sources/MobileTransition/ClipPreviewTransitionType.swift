@@ -2,7 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-public enum ClipPreviewTransitionType {
+public enum ClipPreviewTransitionType: Sendable {
     case custom(interactive: Bool)
     case `default`
 

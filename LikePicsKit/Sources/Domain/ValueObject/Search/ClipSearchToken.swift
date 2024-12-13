@@ -4,8 +4,8 @@
 
 import Foundation
 
-public struct ClipSearchToken: Equatable, Hashable, Codable {
-    public enum Kind: String, Codable {
+public struct ClipSearchToken: Equatable, Hashable, Codable, Sendable {
+    public enum Kind: String, Codable, Sendable {
         case tag
         case album
     }

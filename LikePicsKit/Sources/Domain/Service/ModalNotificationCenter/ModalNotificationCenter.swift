@@ -5,7 +5,7 @@
 import Combine
 import Foundation
 
-public class ModalNotificationCenter {
+public final class ModalNotificationCenter: Sendable {
     public static let `default` = ModalNotificationCenter(notificationCenter: .default)
     private static let modalId = "net.tasuwo.TBox.ModalNotificationCenter.userInfoKey.id"
 

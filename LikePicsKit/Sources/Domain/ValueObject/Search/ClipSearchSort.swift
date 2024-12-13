@@ -2,10 +2,10 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-public struct ClipSearchSort: Equatable, Hashable, Codable {
+public struct ClipSearchSort: Equatable, Hashable, Codable, Sendable {
     public static let `default`: Self = .init(kind: .createdDate, order: .descent)
 
-    public enum Order: String, Codable {
+    public enum Order: String, Codable, Sendable {
         case ascend
         case descent
 
@@ -14,7 +14,7 @@ public struct ClipSearchSort: Equatable, Hashable, Codable {
         }
     }
 
-    public enum Kind: String, Codable {
+    public enum Kind: String, Codable, Sendable {
         case createdDate = "created_date"
         case updatedDate = "updated_date"
         case size = "size"

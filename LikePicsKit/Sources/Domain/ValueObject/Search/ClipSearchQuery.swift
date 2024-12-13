@@ -4,7 +4,7 @@
 
 import Foundation
 
-public struct ClipSearchQuery: Equatable, Hashable, Codable {
+public struct ClipSearchQuery: Equatable, Hashable, Codable, Sendable {
     public let text: String
     public let tokens: [ClipSearchToken]
     public let setting: ClipSearchSetting

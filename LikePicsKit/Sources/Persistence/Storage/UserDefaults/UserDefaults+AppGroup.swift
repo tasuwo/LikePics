@@ -5,10 +5,10 @@
 import Foundation
 
 public extension UserDefaults {
-    static var appGroup: UserDefaults = UserDefaultsPlaceholder()
+    static let appGroup: UserDefaults = UserDefaultsPlaceholder()
 }
 
-private class UserDefaultsPlaceholder: UserDefaults {
+private class UserDefaultsPlaceholder: UserDefaults, @unchecked Sendable {
     override func object(forKey defaultName: String) -> Any? { fatalError("UserDefaults for appGroup is not set.") }
     override func url(forKey defaultName: String) -> URL? { fatalError("UserDefaults for appGroup is not set.") }
     override func array(forKey defaultName: String) -> [Any]? { fatalError("UserDefaults for appGroup is not set.") }
@@ -30,3 +30,5 @@ private class UserDefaultsPlaceholder: UserDefaults {
     override func removeObject(forKey defaultName: String) { fatalError("UserDefaults for appGroup is not set.") }
     override func register(defaults registrationDictionary: [String: Any]) { fatalError("UserDefaults for appGroup is not set.") }
 }
+
+extension UserDefaults: @unchecked @retroactive Sendable {}

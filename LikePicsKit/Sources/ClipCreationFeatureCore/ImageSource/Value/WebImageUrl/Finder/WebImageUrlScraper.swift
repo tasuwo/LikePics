@@ -22,11 +22,13 @@ class WebImageUrlScraper {
 
     // MARK: - Lifecycle
 
+    @MainActor
     init(browserSize: CGSize) {
         self.webView = WKWebView(frame: .init(origin: .zero, size: browserSize))
         self.browser = Erik(webView: self.webView)
     }
 
+    @MainActor
     convenience init() {
         self.init(browserSize: .init(width: 500, height: 1000))
     }
@@ -132,5 +134,15 @@ extension WebImageUrlScraper: WebImageUrlScraperProtocol {
                 completion(.success(imageUrls))
             })
             .store(in: &self.subscriptions)
+    }
+}
+
+func onMainThread<T>(execute: @escaping () -> T) -> T {
+    if Thread.isMainThread {
+        return execute()
+    } else {
+        return DispatchQueue.main.sync {
+            return execute()
+        }
     }
 }

@@ -4,7 +4,7 @@
 
 import Foundation
 
-public struct ClipSearchHistory: Equatable, Hashable, Codable {
+public struct ClipSearchHistory: Equatable, Hashable, Codable, Sendable {
     public let id: UUID
     public let query: ClipSearchQuery
     public let date: Date

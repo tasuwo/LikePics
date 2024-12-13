@@ -43,6 +43,7 @@ extension TabBarViewHierarchy {
 // MARK: - Methods
 
 extension TabBarViewHierarchy {
+    @MainActor
     static func build(from viewHierarchy: SplitViewHierarchy, by factory: ViewControllerFactory) -> Self {
         let viewControllers: [RestorableViewController] = SceneRoot.TabBarItem.allCases.map {
             let sideBarItem = $0.map(to: SceneRoot.SideBarItem.self)
