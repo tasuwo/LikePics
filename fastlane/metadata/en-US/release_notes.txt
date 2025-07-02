@@ -1,3 +1,0 @@
-- Fixed an issue where using key bindings while using the "Find" function would unintentionally close the "Find" function.
-- Fixed an issue where sorting could not be performed on the Clip merge view.
-

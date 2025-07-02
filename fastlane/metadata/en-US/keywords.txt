@@ -1,1 +1,0 @@
-image,photo,search,album,tag,tagging,manage,manager,cloud,sync
