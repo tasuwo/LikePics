@@ -1,15 +1,3 @@
-name: realm-core, nameSpecified: , owner: realm, version: 14.6.2, source: https://github.com/realm/realm-core
-
-name: realm-core, nameSpecified: , owner: realm, version: 14.6.2, source: https://github.com/realm/realm-core
-
-name: realm-swift, nameSpecified: , owner: realm, version: v10.50.1, source: https://github.com/realm/realm-swift
-
-name: realm-swift, nameSpecified: , owner: realm, version: v10.50.1, source: https://github.com/realm/realm-swift
-
-name: realm-swift, nameSpecified: , owner: realm, version: v10.50.1, source: https://github.com/realm/realm-swift
-
-name: realm-core, nameSpecified: , owner: realm, version: 14.6.2, source: https://github.com/realm/realm-core
-
 name: BrightFutures, nameSpecified: BrightFutures, owner: Thomvis, version: 8.2.0, source: https://github.com/Thomvis/BrightFutures
 
 name: Erik, nameSpecified: Erik, owner: phimage, version: 5.1.0, source: https://github.com/phimage/Erik
