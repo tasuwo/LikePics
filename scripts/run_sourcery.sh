@@ -17,4 +17,7 @@ if [[ ! -f "./templates/AutoDefaultValue.extension.swift" ]]; then
         "https://raw.githubusercontent.com/tasuwo/SwiftTemplates/${VERSION}/Templates/AutoDefaultValue/AutoDefaultValue.extension.swift"
 fi
 
-./Pods/Sourcery/bin/sourcery
+if ! command -v sourcery >/dev/null 2>&1; then
+    brew install sourcery
+fi
+sourcery

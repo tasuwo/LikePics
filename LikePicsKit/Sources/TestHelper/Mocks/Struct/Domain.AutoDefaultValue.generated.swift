@@ -1,10 +1,10 @@
-// Generated using Sourcery 1.8.1 — https://github.com/krzysztofzablocki/Sourcery
+// Generated using Sourcery 2.2.7 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
 
 @testable import Domain
 
-extension Album {
-    public static func makeDefault(
+public extension Album {
+    static func makeDefault(
         id: UUID = UUID(),
         title: String = "",
         clips: [Clip] = [],
@@ -12,7 +12,7 @@ extension Album {
         registeredDate: Date = Date(timeIntervalSince1970: 0),
         updatedDate: Date = Date(timeIntervalSince1970: 0)
     ) -> Self {
-        return .init(
+        return  .init(
             id: id,
             title: title,
             clips: clips,
@@ -23,8 +23,8 @@ extension Album {
     }
 }
 
-extension Clip {
-    public static func makeDefault(
+public extension Clip {
+    static func makeDefault(
         id: UUID = UUID(),
         description: String? = nil,
         items: [ClipItem] = [],
@@ -33,7 +33,7 @@ extension Clip {
         registeredDate: Date = Date(timeIntervalSince1970: 0),
         updatedDate: Date = Date(timeIntervalSince1970: 0)
     ) -> Self {
-        return .init(
+        return  .init(
             id: id,
             description: description,
             items: items,
@@ -45,8 +45,8 @@ extension Clip {
     }
 }
 
-extension ClipItem {
-    public static func makeDefault(
+public extension ClipItem {
+    static func makeDefault(
         id: UUID = UUID(),
         url: URL? = nil,
         clipId: UUID = UUID(),
@@ -59,7 +59,7 @@ extension ClipItem {
         registeredDate: Date = Date(timeIntervalSince1970: 0),
         updatedDate: Date = Date(timeIntervalSince1970: 0)
     ) -> Self {
-        return .init(
+        return  .init(
             id: id,
             url: url,
             clipId: clipId,
@@ -75,8 +75,8 @@ extension ClipItem {
     }
 }
 
-extension ClipItemRecipe {
-    public static func makeDefault(
+public extension ClipItemRecipe {
+    static func makeDefault(
         id: UUID = UUID(),
         url: URL? = nil,
         clipId: UUID = UUID(),
@@ -89,7 +89,7 @@ extension ClipItemRecipe {
         registeredDate: Date = Date(timeIntervalSince1970: 0),
         updatedDate: Date = Date(timeIntervalSince1970: 0)
     ) -> Self {
-        return .init(
+        return  .init(
             id: id,
             url: url,
             clipId: clipId,
@@ -105,8 +105,8 @@ extension ClipItemRecipe {
     }
 }
 
-extension ClipRecipe {
-    public static func makeDefault(
+public extension ClipRecipe {
+    static func makeDefault(
         id: UUID = UUID(),
         description: String? = nil,
         items: [ClipItemRecipe] = [],
@@ -117,7 +117,7 @@ extension ClipRecipe {
         registeredDate: Date = Date(timeIntervalSince1970: 0),
         updatedDate: Date = Date(timeIntervalSince1970: 0)
     ) -> Self {
-        return .init(
+        return  .init(
             id: id,
             description: description,
             items: items,
@@ -131,27 +131,27 @@ extension ClipRecipe {
     }
 }
 
-extension ImageSize {
-    public static func makeDefault(
+public extension ImageSize {
+    static func makeDefault(
         height: Double = 0,
         width: Double = 0
     ) -> Self {
-        return .init(
+        return  .init(
             height: height,
             width: width
         )
     }
 }
 
-extension ListingAlbumTitle {
-    public static func makeDefault(
+public extension ListingAlbumTitle {
+    static func makeDefault(
         id: UUID = UUID(),
         title: String = "",
         isHidden: Bool = false,
         registeredDate: Date = Date(timeIntervalSince1970: 0),
         updatedDate: Date = Date(timeIntervalSince1970: 0)
     ) -> Self {
-        return .init(
+        return  .init(
             id: id,
             title: title,
             isHidden: isHidden,
@@ -161,8 +161,8 @@ extension ListingAlbumTitle {
     }
 }
 
-extension ReferenceAlbum {
-    public static func makeDefault(
+public extension ReferenceAlbum {
+    static func makeDefault(
         id: UUID = UUID(),
         title: String = "",
         isHidden: Bool = false,
@@ -170,7 +170,7 @@ extension ReferenceAlbum {
         updatedDate: Date = Date(timeIntervalSince1970: 0),
         isDirty: Bool = false
     ) -> Self {
-        return .init(
+        return  .init(
             id: id,
             title: title,
             isHidden: isHidden,
@@ -181,15 +181,15 @@ extension ReferenceAlbum {
     }
 }
 
-extension ReferenceTag {
-    public static func makeDefault(
+public extension ReferenceTag {
+    static func makeDefault(
         id: UUID = UUID(),
         name: String = "",
         isHidden: Bool = false,
         clipCount: Int? = nil,
         isDirty: Bool = false
     ) -> Self {
-        return .init(
+        return  .init(
             id: id,
             name: name,
             isHidden: isHidden,
@@ -199,14 +199,14 @@ extension ReferenceTag {
     }
 }
 
-extension Tag {
-    public static func makeDefault(
+public extension Tag {
+    static func makeDefault(
         id: UUID = UUID(),
         name: String = "",
         isHidden: Bool = false,
         clipCount: Int? = nil
     ) -> Self {
-        return .init(
+        return  .init(
             id: id,
             name: name,
             isHidden: isHidden,
@@ -214,3 +214,4 @@ extension Tag {
         )
     }
 }
+

@@ -1,13 +1,5 @@
-.PHONY: install
-install: ## ライブラリ群をインストールする
-	bundle exec pod install
-
 .PHONY: generate
 generate: swiftgen_generate sourcery_generate mockolo_generate ## 各種コード自動生成を実行する
-
-.PHONY: swiftgen_generate
-swiftgen_generate: ## SwiftGenによるコード自動生成を実行する
-	./Pods/SwiftGen/bin/swiftgen
 
 .PHONY: sourcery_generate
 sourcery_generate: ## Sourceryによるモック自動生成を行う
