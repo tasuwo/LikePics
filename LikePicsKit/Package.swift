@@ -33,7 +33,6 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/phimage/Erik", .upToNextMajor(from: "5.1.0")),
         .package(url: "https://github.com/tasuwo/PersistentStack", .upToNextMajor(from: "0.8.1")),
-        .package(url: "https://github.com/tasuwo/swift", .upToNextMajor(from: "0.9.0")),
         .package(url: "https://github.com/tasuwo/MasonryGrid", .upToNextMajor(from: "0.0.1-alpha.6")),
         .package(url: "https://github.com/apple/swift-async-algorithms", .upToNextMajor(from: "1.0.0")),
         .package(url: "https://github.com/realm/realm-swift", .upToNextMajor(from: "10.54.5"))
@@ -62,9 +61,6 @@ let package = Package(
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
-            ],
-            plugins: [
-                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
         .target(
@@ -75,9 +71,6 @@ let package = Package(
                 .product(name: "MasonryGrid", package: "MasonryGrid"),
                 .product(name: "PersistentStack", package: "PersistentStack")
             ],
-            plugins: [
-                .plugin(name: "LintSwift", package: "swift")
-            ]
         ),
         .target(
             name: "ShareExtensionMobileFeature",
@@ -96,9 +89,6 @@ let package = Package(
             swiftSettings: [
                 .swiftLanguageMode(.v5)
             ],
-            plugins: [
-                .plugin(name: "LintSwift", package: "swift")
-            ]
         ),
         .target(
             name: "ShareExtensionDesktopFeature",
@@ -138,9 +128,6 @@ let package = Package(
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
-            ],
-            plugins: [
-                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
         .target(
@@ -155,9 +142,6 @@ let package = Package(
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
-            ],
-            plugins: [
-                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
         .target(
@@ -172,9 +156,6 @@ let package = Package(
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
-            ],
-            plugins: [
-                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
         .target(
@@ -191,9 +172,6 @@ let package = Package(
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
-            ],
-            plugins: [
-                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
         .target(
@@ -206,9 +184,6 @@ let package = Package(
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
-            ],
-            plugins: [
-                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
         .target(
@@ -220,9 +195,6 @@ let package = Package(
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
-            ],
-            plugins: [
-                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
         .target(
@@ -236,9 +208,6 @@ let package = Package(
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
-            ],
-            plugins: [
-                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
 
@@ -249,9 +218,6 @@ let package = Package(
             dependencies: [
                 "Common",
                 "Smoothie"
-            ],
-            plugins: [
-                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
         .testTarget(
@@ -268,17 +234,10 @@ let package = Package(
                 "Domain",
                 "Smoothie",
                 "MobileTransition"
-            ],
-            plugins: [
-                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
         .target(
-            name: "MobileTransition",
-            dependencies: [],
-            plugins: [
-                .plugin(name: "LintSwift", package: "swift")
-            ]
+            name: "MobileTransition"
         ),
 
         // MARK: - Persistence
@@ -289,9 +248,6 @@ let package = Package(
                 "Common",
                 "Domain",
                 .product(name: "RealmSwift", package: "realm-swift")
-            ],
-            plugins: [
-                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
         .testTarget(
@@ -318,9 +274,6 @@ let package = Package(
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
-            ],
-            plugins: [
-                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
 
@@ -330,9 +283,6 @@ let package = Package(
             name: "CompositeKit",
             swiftSettings: [
                 .swiftLanguageMode(.v5)
-            ],
-            plugins: [
-                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
         .target(
@@ -342,16 +292,10 @@ let package = Package(
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
-            ],
-            plugins: [
-                .plugin(name: "LintSwift", package: "swift")
             ]
         ),
         .target(
-            name: "Common",
-            plugins: [
-                .plugin(name: "LintSwift", package: "swift")
-            ]
+            name: "Common"
         ),
         .target(
             name: "TestHelper",

@@ -297,7 +297,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				2C157FDD2B1BF59F00B96EBB /* PBXTargetDependency */,
 				EC1B0E7A11722DAAE7A51ED0 /* PBXTargetDependency */,
 			);
 			name = "LikePics (iOS)";
@@ -319,7 +318,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				2C157FE42B1C003E00B96EBB /* PBXTargetDependency */,
 			);
 			name = "ShareExtension (iOS)";
 			packageProductDependencies = (
@@ -498,14 +496,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		2C157FDD2B1BF59F00B96EBB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = 2C157FDC2B1BF59F00B96EBB /* LintSwift */;
-		};
-		2C157FE42B1C003E00B96EBB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = 2C157FE32B1C003E00B96EBB /* LintSwift */;
-		};
 		2C56CBBB2B427C4A005F7EA8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2C56CBAE2B427C4A005F7EA8 /* ShareExtension (macOS) */;
@@ -1393,14 +1383,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		2C157FDB2B1BF52C00B96EBB /* XCRemoteSwiftPackageReference "swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/tasuwo/swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.6.1;
-			};
-		};
 		2C157FE22B1C002B00B96EBB /* XCRemoteSwiftPackageReference "swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/tasuwo/swift";
@@ -1412,16 +1394,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2C157FDC2B1BF59F00B96EBB /* LintSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2C157FDB2B1BF52C00B96EBB /* XCRemoteSwiftPackageReference "swift" */;
-			productName = "plugin:LintSwift";
-		};
-		2C157FE32B1C003E00B96EBB /* LintSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2C157FE22B1C002B00B96EBB /* XCRemoteSwiftPackageReference "swift" */;
-			productName = "plugin:LintSwift";
-		};
 		2C16355627E877EC006C2C24 /* AppFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AppFeature;
