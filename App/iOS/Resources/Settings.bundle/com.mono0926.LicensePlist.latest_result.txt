@@ -22,9 +22,9 @@ name: MasonryGrid, nameSpecified: MasonryGrid, owner: tasuwo, version: 0.0.1-alp
 
 name: PersistentStack, nameSpecified: PersistentStack, owner: tasuwo, version: 0.8.1, source: https://github.com/tasuwo/PersistentStack
 
-name: realm-core, nameSpecified: realm-core, owner: realm, version: 14.10.1, source: https://github.com/realm/realm-core
+name: realm-core, nameSpecified: realm-core, owner: realm, version: 14.14.0, source: https://github.com/realm/realm-core
 
-name: realm-swift, nameSpecified: realm-swift, owner: realm, version: 10.52.0, source: https://github.com/realm/realm-swift
+name: realm-swift, nameSpecified: realm-swift, owner: realm, version: 10.54.5, source: https://github.com/realm/realm-swift
 
 name: swift-async-algorithms, nameSpecified: swift-async-algorithms, owner: apple, version: 1.0.0, source: https://github.com/apple/swift-async-algorithms
 

@@ -36,7 +36,7 @@ let package = Package(
         .package(url: "https://github.com/tasuwo/swift", .upToNextMajor(from: "0.9.0")),
         .package(url: "https://github.com/tasuwo/MasonryGrid", .upToNextMajor(from: "0.0.1-alpha.6")),
         .package(url: "https://github.com/apple/swift-async-algorithms", .upToNextMajor(from: "1.0.0")),
-        .package(url: "https://github.com/realm/realm-swift", .upToNextMajor(from: "10.52.0"))
+        .package(url: "https://github.com/realm/realm-swift", .upToNextMajor(from: "10.54.5"))
     ],
     targets: [
         // MARK: - App
