@@ -15,9 +15,10 @@ public class TemporaryImageStorage {
 
     // MARK: - Lifecycle
 
-    public init(configuration: Configuration,
-                fileManager: FileManager = .default) throws
-    {
+    public init(
+        configuration: Configuration,
+        fileManager: FileManager = .default
+    ) throws {
         self.fileManager = fileManager
         self.baseUrl = configuration.targetUrl
 

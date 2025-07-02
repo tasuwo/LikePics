@@ -24,22 +24,30 @@ public class ClipCreationViewController: UIViewController {
     // MARK: View
 
     private lazy var addUrlAlertContainer = TextEditAlert(
-        configuration: .init(title: L10n.clipCreationViewAlertForAddUrlTitle,
-                             message: L10n.clipCreationViewAlertForAddUrlMessage,
-                             placeholder: L10n.clipCreationViewAlertForUrlPlaceholder)
+        configuration: .init(
+            title: L10n.clipCreationViewAlertForAddUrlTitle,
+            message: L10n.clipCreationViewAlertForAddUrlMessage,
+            placeholder: L10n.clipCreationViewAlertForUrlPlaceholder
+        )
     )
     private lazy var editUrlAlertContainer = TextEditAlert(
-        configuration: .init(title: L10n.clipCreationViewAlertForEditUrlTitle,
-                             message: L10n.clipCreationViewAlertForEditUrlMessage,
-                             placeholder: L10n.clipCreationViewAlertForUrlPlaceholder)
+        configuration: .init(
+            title: L10n.clipCreationViewAlertForEditUrlTitle,
+            message: L10n.clipCreationViewAlertForEditUrlMessage,
+            placeholder: L10n.clipCreationViewAlertForUrlPlaceholder
+        )
     )
-    private lazy var itemDone = UIBarButtonItem(barButtonSystemItem: .save,
-                                                target: self,
-                                                action: #selector(saveAction))
-    private lazy var itemReload = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"),
-                                                  style: .plain,
-                                                  target: self,
-                                                  action: #selector(reloadAction))
+    private lazy var itemDone = UIBarButtonItem(
+        barButtonSystemItem: .save,
+        target: self,
+        action: #selector(saveAction)
+    )
+    private lazy var itemReload = UIBarButtonItem(
+        image: UIImage(systemName: "arrow.clockwise"),
+        style: .plain,
+        target: self,
+        action: #selector(reloadAction)
+    )
     private let emptyMessageView = EmptyMessageView()
     private let overlayView = UIView()
     private let indicator = UIActivityIndicatorView()
@@ -62,12 +70,13 @@ public class ClipCreationViewController: UIViewController {
 
     // MARK: - Initializers
 
-    public init(state: ClipCreationViewState,
-                dependency: ClipCreationViewDependency,
-                thumbnailProcessingQueue: ImageProcessingQueue,
-                imageLoader: ImageLoadable,
-                modalRouter: ModalRouter)
-    {
+    public init(
+        state: ClipCreationViewState,
+        dependency: ClipCreationViewDependency,
+        thumbnailProcessingQueue: ImageProcessingQueue,
+        imageLoader: ImageLoadable,
+        modalRouter: ModalRouter
+    ) {
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipCreationViewReducer())
         self.thumbnailProcessingQueue = thumbnailProcessingQueue
         self.imageLoader = imageLoader
@@ -217,9 +226,11 @@ extension ClipCreationViewController {
 
     private func presentErrorMessageAlertIfNeeded(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        })
+        alert.addAction(
+            .init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
+                self?.store.execute(.alertDismissed)
+            }
+        )
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -298,15 +309,27 @@ extension ClipCreationViewController {
 
         snapshot.appendSections([.meta])
         snapshot.appendItems([
-            .meta(.init(title: L10n.clipCreationViewMetaUrlTitle,
-                        secondaryTitle: state.url?.absoluteString ?? L10n.clipCreationViewMetaUrlNo,
-                        accessory: .button(title: L10n.clipCreationViewMetaUrlEdit))),
-            .meta(.init(title: L10n.clipMetaShouldClip,
-                        secondaryTitle: L10n.clipMetaShouldClipDescription,
-                        accessory: .switch(isOn: state.shouldSaveAsClip))),
-            .meta(.init(title: L10n.clipMetaShouldHides,
-                        secondaryTitle: nil,
-                        accessory: .switch(isOn: state.shouldSaveAsHiddenItem)))
+            .meta(
+                .init(
+                    title: L10n.clipCreationViewMetaUrlTitle,
+                    secondaryTitle: state.url?.absoluteString ?? L10n.clipCreationViewMetaUrlNo,
+                    accessory: .button(title: L10n.clipCreationViewMetaUrlEdit)
+                )
+            ),
+            .meta(
+                .init(
+                    title: L10n.clipMetaShouldClip,
+                    secondaryTitle: L10n.clipMetaShouldClipDescription,
+                    accessory: .switch(isOn: state.shouldSaveAsClip)
+                )
+            ),
+            .meta(
+                .init(
+                    title: L10n.clipMetaShouldHides,
+                    secondaryTitle: nil,
+                    accessory: .switch(isOn: state.shouldSaveAsHiddenItem)
+                )
+            ),
         ])
 
         snapshot.appendSections([.image])
@@ -348,9 +371,13 @@ extension ClipCreationViewController {
         let layout = Layout.createLayout(albumTrailingSwipeActionProvider: { [weak self] indexPath in
             guard let self = self else { return nil }
             guard case let .album(album) = self.dataSource.itemIdentifier(for: indexPath) else { return nil }
-            let deleteAction = UIContextualAction(style: .destructive, title: L10n.AlbumSection.SwipeAction.delete, handler: { _, _, completion in
-                self.store.execute(.tapAlbumDeletionButton(album.id, completion: completion))
-            })
+            let deleteAction = UIContextualAction(
+                style: .destructive,
+                title: L10n.AlbumSection.SwipeAction.delete,
+                handler: { _, _, completion in
+                    self.store.execute(.tapAlbumDeletionButton(album.id, completion: completion))
+                }
+            )
             return UISwipeActionsConfiguration(actions: [deleteAction])
         })
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
@@ -380,17 +407,19 @@ extension ClipCreationViewController {
         overlayView.addSubview(indicator)
         NSLayoutConstraint.activate([
             indicator.centerXAnchor.constraint(equalTo: overlayView.centerXAnchor),
-            indicator.centerYAnchor.constraint(equalTo: overlayView.centerYAnchor)
+            indicator.centerYAnchor.constraint(equalTo: overlayView.centerYAnchor),
         ])
     }
 
     private func configureDataSource() {
-        let (proxy, dataSource) = Layout.configureDataSource(collectionView: collectionView,
-                                                             cellDataSource: self,
-                                                             thumbnailProcessingQueue: thumbnailProcessingQueue,
-                                                             imageLoader: imageLoader,
-                                                             albumEditHandler: { [weak self] in self?.store.execute(.tapAlbumAdditionButton) },
-                                                             onLoadImage: { [weak self] in self?.store.execute(.imageLoaded($0, $1)) })
+        let (proxy, dataSource) = Layout.configureDataSource(
+            collectionView: collectionView,
+            cellDataSource: self,
+            thumbnailProcessingQueue: thumbnailProcessingQueue,
+            imageLoader: imageLoader,
+            albumEditHandler: { [weak self] in self?.store.execute(.tapAlbumAdditionButton) },
+            onLoadImage: { [weak self] in self?.store.execute(.imageLoaded($0, $1)) }
+        )
         self.dataSource = dataSource
         proxy.delegate = self
         self.proxy = proxy
@@ -479,7 +508,8 @@ extension ClipCreationViewController: ClipCreationViewDelegate {
                 validator: { text in
                     guard let text = text else { return true }
                     return text.isEmpty || URL(string: text) != nil
-                }, completion: { [weak self] action in
+                },
+                completion: { [weak self] action in
                     guard case let .saved(text: text) = action else { return }
                     self?.store.execute(.editedUrl(URL(string: text)))
                 }
@@ -491,7 +521,8 @@ extension ClipCreationViewController: ClipCreationViewDelegate {
                 validator: { text in
                     guard let text = text else { return true }
                     return text.isEmpty || URL(string: text) != nil
-                }, completion: { [weak self] action in
+                },
+                completion: { [weak self] action in
                     guard case let .saved(text: text) = action else { return }
                     self?.store.execute(.editedUrl(URL(string: text)))
                 }
@@ -501,13 +532,14 @@ extension ClipCreationViewController: ClipCreationViewDelegate {
 
     public func didTapTagAdditionButton(_ cell: UICollectionViewCell) {
         guard let indexPath = collectionView.indexPath(for: cell),
-              case .tag = Layout.Section(rawValue: indexPath.section) else { return }
+            case .tag = Layout.Section(rawValue: indexPath.section)
+        else { return }
         store.execute(.tapTagAdditionButton)
     }
 
     public func didTapTagDeletionButton(_ cell: UICollectionViewCell) {
         guard let indexPath = self.collectionView.indexPath(for: cell),
-              case let .tag(tag) = self.dataSource.itemIdentifier(for: indexPath)
+            case let .tag(tag) = self.dataSource.itemIdentifier(for: indexPath)
         else {
             return
         }

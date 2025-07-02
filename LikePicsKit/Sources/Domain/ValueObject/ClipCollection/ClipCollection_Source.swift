@@ -4,8 +4,8 @@
 
 import Combine
 
-public extension ClipCollection {
-    enum Source: Equatable {
+extension ClipCollection {
+    public enum Source: Equatable {
         case all
         case album(Album.Identity)
         case tag(Tag)

@@ -45,15 +45,15 @@ public class ListSectionHeaderView: UICollectionReusableView {
 
 // MARK: - Methods
 
-public extension ListSectionHeaderView {
-    func setTitleTextStyle(_ style: UIFont.TextStyle) {
+extension ListSectionHeaderView {
+    public func setTitleTextStyle(_ style: UIFont.TextStyle) {
         let metrics = UIFontMetrics(forTextStyle: style)
         let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style)
         let font = UIFont.systemFont(ofSize: desc.pointSize, weight: .bold)
         label.font = metrics.scaledFont(for: font)
     }
 
-    func setRightItems(_ items: [ListSectionHeaderRightItem]) {
+    public func setRightItems(_ items: [ListSectionHeaderRightItem]) {
         let buttons: [UIButton] = items.map {
             let button = UIButton(type: .system, primaryAction: $0.action)
             button.setTitle($0.title, for: .normal)
@@ -101,7 +101,7 @@ extension ListSectionHeaderView {
             label.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
             rightItemsStackView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16),
             rightItemsStackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16),
-            rightItemsStackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0)
+            rightItemsStackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
         ])
     }
 }

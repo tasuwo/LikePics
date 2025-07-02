@@ -48,8 +48,8 @@ final class DragAndDropInteractionController<Store: ReorderableItemStore>: Obser
         dropExitTask = nil
 
         guard let draggingItemId,
-              let fromIndex = displayItems.firstIndex(where: { $0.id == draggingItemId }),
-              let toIndex = displayItems.firstIndex(where: { $0.id == id })
+            let fromIndex = displayItems.firstIndex(where: { $0.id == draggingItemId }),
+            let toIndex = displayItems.firstIndex(where: { $0.id == id })
         else {
             clearArranging()
             draggingItemId = nil

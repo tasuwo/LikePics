@@ -7,10 +7,11 @@ import CoreData
 import Foundation
 
 public class Album: NSManagedObject {
-    public static func fetch(beginsWith text: String,
-                             showHiddenItems: Bool,
-                             context: NSManagedObjectContext) throws -> [Album]
-    {
+    public static func fetch(
+        beginsWith text: String,
+        showHiddenItems: Bool,
+        context: NSManagedObjectContext
+    ) throws -> [Album] {
         let request: NSFetchRequest<Album> = Album.fetchRequest()
         var predicate: NSPredicate?
 
@@ -19,7 +20,7 @@ public class Album: NSManagedObject {
             if let transformed = text.applyingTransform(.hiraganaToKatakana, reverse: false), transformed != text {
                 predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
                     NSPredicate(format: "title BEGINSWITH[cd] %@", transformed as CVarArg),
-                    NSPredicate(format: "title BEGINSWITH[cd] %@", text as CVarArg)
+                    NSPredicate(format: "title BEGINSWITH[cd] %@", text as CVarArg),
                 ])
             } else {
                 predicate = NSPredicate(format: "title BEGINSWITH[cd] %@", text as CVarArg)
@@ -29,7 +30,7 @@ public class Album: NSManagedObject {
         if let _predicate = predicate {
             predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
                 _predicate,
-                NSPredicate(format: "isHidden == false")
+                NSPredicate(format: "isHidden == false"),
             ])
         } else {
             predicate = NSPredicate(format: "isHidden == false")
@@ -46,8 +47,8 @@ public enum AlbumUpdateError: Error {
     case notFound
 }
 
-public extension NSManagedObjectContext {
-    func createAlbum(withTitle title: String) throws -> UUID {
+extension NSManagedObjectContext {
+    public func createAlbum(withTitle title: String) throws -> UUID {
         let request: NSFetchRequest<Album> = Album.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Album.index, ascending: true)]
         let albums = try self.fetch(request)
@@ -74,7 +75,7 @@ public extension NSManagedObjectContext {
         return newId
     }
 
-    func updateAlbum(having id: UUID, isHidden: Bool) throws {
+    public func updateAlbum(having id: UUID, isHidden: Bool) throws {
         let request: NSFetchRequest<Album> = Album.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
 
@@ -87,7 +88,7 @@ public extension NSManagedObjectContext {
         try save()
     }
 
-    func updateAlbum(having id: UUID, title: String) throws {
+    public func updateAlbum(having id: UUID, title: String) throws {
         let request: NSFetchRequest<Album> = Album.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
 
@@ -100,7 +101,7 @@ public extension NSManagedObjectContext {
         try save()
     }
 
-    func deleteAlbum(having id: UUID) throws {
+    public func deleteAlbum(having id: UUID) throws {
         let request: NSFetchRequest<Album> = Album.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
 

@@ -77,9 +77,11 @@ struct SearchResultViewReducer: Reducer {
 
         case let .selectedResult(clip):
             guard let index = state.searchResults.firstIndex(of: clip) else { return (nextState, .none) }
-            dependency.router.showClipPreviewView(clips: state.searchResults,
-                                                  query: .searchResult(state.searchQuery),
-                                                  indexPath: .init(clipIndex: index, itemIndex: 0))
+            dependency.router.showClipPreviewView(
+                clips: state.searchResults,
+                query: .searchResult(state.searchQuery),
+                indexPath: .init(clipIndex: index, itemIndex: 0)
+            )
             return (nextState, nil)
 
         case .selectedSeeAllResultsButton:
@@ -128,8 +130,8 @@ extension SearchResultViewReducer {
     private static func resolveSearchEffects(nextState: inout State, prevState: State, dependency: Dependency, forced: Bool = false) -> [Effect<Action>] {
         var effects: [Effect<Action>] = []
 
-        if forced ||
-            (nextState.inputtedText != prevState.searchedTokenCandidates?.searchText
+        if forced
+            || (nextState.inputtedText != prevState.searchedTokenCandidates?.searchText
                 || !nextState.isSomeItemsHidden != prevState.searchedTokenCandidates?.includesHiddenItems)
         {
             let effect = searchCandidates(for: nextState.inputtedText, includesHiddenItems: !prevState.isSomeItemsHidden, dependency: dependency)
@@ -207,12 +209,12 @@ extension SearchResultViewReducer {
 
 // MARK: Extension
 
-private extension String {
-    var tokenCandidatesSource: String {
+extension String {
+    fileprivate var tokenCandidatesSource: String {
         return self.trimmingCharacters(in: .whitespacesAndNewlines).split(separator: " ").last.map { String($0) } ?? self
     }
 
-    func removingTokenCandidatesSource() -> String {
+    fileprivate func removingTokenCandidatesSource() -> String {
         return self.trimmingCharacters(in: .whitespacesAndNewlines).split(separator: " ").dropLast().joined(separator: " ")
     }
 }

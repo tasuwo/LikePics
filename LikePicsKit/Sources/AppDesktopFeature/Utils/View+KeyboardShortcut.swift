@@ -5,10 +5,11 @@
 import SwiftUI
 
 extension View {
-    func keyboardShortcut(_ key: KeyEquivalent,
-                          modifiers: EventModifiers = .command,
-                          action: @escaping () -> Void) -> some View
-    {
+    func keyboardShortcut(
+        _ key: KeyEquivalent,
+        modifiers: EventModifiers = .command,
+        action: @escaping () -> Void
+    ) -> some View {
         background(
             Button(action: action) {
                 Color.clear
@@ -21,11 +22,12 @@ extension View {
         )
     }
 
-    func keyboardShortcut(_ key: KeyEquivalent,
-                          modifiers: EventModifiers = .command,
-                          localization: KeyboardShortcut.Localization,
-                          action: @escaping () -> Void) -> some View
-    {
+    func keyboardShortcut(
+        _ key: KeyEquivalent,
+        modifiers: EventModifiers = .command,
+        localization: KeyboardShortcut.Localization,
+        action: @escaping () -> Void
+    ) -> some View {
         background(
             Button(action: action) {
                 Color.clear

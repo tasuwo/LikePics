@@ -1,0 +1,16 @@
+{
+    "version": 1,
+    "lineLength": 9999,
+    "indentation": {
+        "spaces": 4
+    },
+    "maximumBlankLines": 1,
+    "respectsExistingLineBreaks": true,
+    "lineBreakBeforeControlFlowKeywords": false,
+    "lineBreakBeforeEachArgument": true,
+    "lineBreakBeforeEachGenericRequirement": false,
+    "lineBreakBetweenDeclarationAttributes": false,
+    "prioritizeKeepingFunctionOutputTogether": false,
+    "lineBreakAroundMultilineExpressionChainComponents": false,
+    "indentConditionalCompilationBlocks" : false
+}

@@ -17,10 +17,11 @@ public struct ClipCollectionViewCellSizeDescription {
         tertiaryThumbnailSize != nil
     }
 
-    public init(primaryThumbnailSize: CGSize,
-                secondaryThumbnailSize: CGSize?,
-                tertiaryThumbnailSize: CGSize?)
-    {
+    public init(
+        primaryThumbnailSize: CGSize,
+        secondaryThumbnailSize: CGSize?,
+        tertiaryThumbnailSize: CGSize?
+    ) {
         self.primaryThumbnailSize = primaryThumbnailSize
         self.secondaryThumbnailSize = secondaryThumbnailSize
         self.tertiaryThumbnailSize = tertiaryThumbnailSize

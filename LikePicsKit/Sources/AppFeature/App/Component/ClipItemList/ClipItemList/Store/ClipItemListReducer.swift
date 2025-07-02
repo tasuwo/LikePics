@@ -75,7 +75,8 @@ struct ClipItemListReducer: Reducer {
                     }
                 }
             }
-            let newValues = itemIds
+            let newValues =
+                itemIds
                 .compactMap { state.items.entity(having: $0) }
             nextState.items = state.items.updated(entities: newValues)
             return (nextState, [Effect(stream)])
@@ -113,13 +114,15 @@ struct ClipItemListReducer: Reducer {
 
         case let .copyImageUrlMenuTapped(itemId):
             guard let item = state.items.entity(having: itemId),
-                  let imageUrl = item.imageUrl else { return (nextState, .none) }
+                let imageUrl = item.imageUrl
+            else { return (nextState, .none) }
             dependency.pasteboard.set(imageUrl.absoluteString)
             return (nextState, .none)
 
         case let .openImageUrlMenuTapped(itemId):
             guard let item = state.items.entity(having: itemId),
-                  let imageUrl = item.imageUrl else { return (nextState, .none) }
+                let imageUrl = item.imageUrl
+            else { return (nextState, .none) }
             dependency.router.open(imageUrl)
             return (nextState, .none)
 
@@ -127,7 +130,7 @@ struct ClipItemListReducer: Reducer {
 
         case .alertDeleteConfirmed:
             guard case let .deletion(storedItem) = state.alert,
-                  let item = state.items.entity(having: storedItem.id)
+                let item = state.items.entity(having: storedItem.id)
             else {
                 nextState.alert = nil
                 return (nextState, .none)
@@ -198,9 +201,11 @@ extension ClipItemListReducer {
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
-        let nextState = performFilter(tags: tagListQuery.tags.value,
-                                      isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
-                                      previousState: state)
+        let nextState = performFilter(
+            tags: tagListQuery.tags.value,
+            isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
+            previousState: state
+        )
 
         return (nextState, [clipEffect, itemListEffect, tagListEffect, settingsEffect])
     }
@@ -209,10 +214,11 @@ extension ClipItemListReducer {
 // MARK: NavigationBar Event
 
 extension ClipItemListReducer {
-    private static func execute(action: ClipItemListNavigationBarEvent,
-                                state: State,
-                                dependency: Dependency) -> (State, [Effect<Action>]?)
-    {
+    private static func execute(
+        action: ClipItemListNavigationBarEvent,
+        state: State,
+        dependency: Dependency
+    ) -> (State, [Effect<Action>]?) {
         var nextState = state
 
         switch action {
@@ -236,10 +242,11 @@ extension ClipItemListReducer {
 // MARK: ToolBar Event
 
 extension ClipItemListReducer {
-    private static func execute(action: ClipItemListToolBarEvent,
-                                state: State,
-                                dependency: Dependency) -> (State, [Effect<Action>]?)
-    {
+    private static func execute(
+        action: ClipItemListToolBarEvent,
+        state: State,
+        dependency: Dependency
+    ) -> (State, [Effect<Action>]?) {
         var nextState = state
         switch action {
         case let .share(succeeded):
@@ -287,27 +294,35 @@ extension ClipItemListReducer {
 // MARK: - Filter
 
 extension ClipItemListReducer {
-    private static func performFilter(tags: [Tag],
-                                      previousState: State) -> State
-    {
-        performFilter(tags: tags,
-                      isSomeItemsHidden: previousState.isSomeItemsHidden,
-                      previousState: previousState)
+    private static func performFilter(
+        tags: [Tag],
+        previousState: State
+    ) -> State {
+        performFilter(
+            tags: tags,
+            isSomeItemsHidden: previousState.isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
-    private static func performFilter(isSomeItemsHidden: Bool,
-                                      previousState: State) -> State
-    {
-        performFilter(tags: previousState.tags.orderedEntities(),
-                      isSomeItemsHidden: isSomeItemsHidden,
-                      previousState: previousState)
+    private static func performFilter(
+        isSomeItemsHidden: Bool,
+        previousState: State
+    ) -> State {
+        performFilter(
+            tags: previousState.tags.orderedEntities(),
+            isSomeItemsHidden: isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
-    private static func performFilter(tags: [Tag],
-                                      isSomeItemsHidden: Bool,
-                                      previousState: State) -> State
-    {
-        let newDisplayableTagIds = tags
+    private static func performFilter(
+        tags: [Tag],
+        isSomeItemsHidden: Bool,
+        previousState: State
+    ) -> State {
+        let newDisplayableTagIds =
+            tags
             .filter { isSomeItemsHidden ? !$0.isHidden : true }
             .map { $0.id }
         let newTags = previousState.tags
@@ -325,7 +340,8 @@ extension ClipItemListReducer {
 extension ClipItemListReducer {
     private static func performReorder(originals: [ClipItem.Identity], request: [ClipItem.Identity]) -> [ClipItem.Identity] {
         var index = 0
-        return originals
+        return
+            originals
             .map { original in
                 guard request.contains(original) else { return original }
                 index += 1
@@ -334,10 +350,12 @@ extension ClipItemListReducer {
     }
 }
 
-private extension Clip {
-    func map(to: ClipItemListState.EditingClip.Type) -> ClipItemListState.EditingClip {
-        return .init(id: id,
-                     dataSize: dataSize,
-                     isHidden: isHidden)
+extension Clip {
+    fileprivate func map(to: ClipItemListState.EditingClip.Type) -> ClipItemListState.EditingClip {
+        return .init(
+            id: id,
+            dataSize: dataSize,
+            isHidden: isHidden
+        )
     }
 }

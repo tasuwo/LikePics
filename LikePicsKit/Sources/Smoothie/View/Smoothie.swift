@@ -18,8 +18,8 @@ public struct Smoothie<Base> {
     }
 }
 
-public extension SmoothieCompatible {
-    static var smt: Smoothie<Self>.Type { Smoothie<Self>.self }
+extension SmoothieCompatible {
+    public static var smt: Smoothie<Self>.Type { Smoothie<Self>.self }
 
-    var smt: Smoothie<Self> { Smoothie(self) }
+    public var smt: Smoothie<Self> { Smoothie(self) }
 }

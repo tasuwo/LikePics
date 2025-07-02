@@ -96,8 +96,8 @@ extension DarwinNotificationCenter: DarwinNotificationCenterProtocol {
     }
 }
 
-private extension DarwinNotificationCenter.Subscription {
-    func startObserve() {
+extension DarwinNotificationCenter.Subscription {
+    fileprivate func startObserve() {
         guard let cfCenter = DarwinNotificationCenter.default.underlyingNotificationCenter else {
             fatalError("Invalid Darwin observation info.")
         }
@@ -112,7 +112,7 @@ private extension DarwinNotificationCenter.Subscription {
         CFNotificationCenterAddObserver(cfCenter, observer, callback, name.rawValue, nil, .coalesce)
     }
 
-    func endObserve() {
+    fileprivate func endObserve() {
         guard let cfCenter = DarwinNotificationCenter.default.underlyingNotificationCenter else {
             fatalError("Invalid Darwin observation info.")
         }

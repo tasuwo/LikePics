@@ -6,14 +6,15 @@
 
 import UIKit
 
-public extension UIView {
-    static func likepics_animate(withDuration duration: TimeInterval,
-                                 bounce: CGFloat = 0,
-                                 delay: TimeInterval = 0,
-                                 options: AnimationOptions = [],
-                                 animations: @escaping () -> Void,
-                                 completion: ((Bool) -> Void)? = nil)
-    {
+extension UIView {
+    public static func likepics_animate(
+        withDuration duration: TimeInterval,
+        bounce: CGFloat = 0,
+        delay: TimeInterval = 0,
+        options: AnimationOptions = [],
+        animations: @escaping () -> Void,
+        completion: ((Bool) -> Void)? = nil
+    ) {
         if #available(iOS 17.0, *) {
             var options = options
             options.remove(.curveEaseIn)

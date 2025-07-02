@@ -3,11 +3,12 @@
 ///
 
 import Combine
-@testable import Domain
 import Foundation
 
+@testable import Domain
+
 public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
-    public init() { }
+    public init() {}
 
     public private(set) var searchClipsCallCount = 0
     public var searchClipsHandler: ((ClipSearchQuery) -> (Result<[Clip], ClipStorageError>))?
@@ -201,7 +202,7 @@ public class ClipQueryServiceProtocolMock: ClipQueryServiceProtocol {
 }
 
 public class ClipReferencesIntegrityValidationServiceProtocolMock: ClipReferencesIntegrityValidationServiceProtocol {
-    public init() { }
+    public init() {}
 
     public private(set) var validateAndFixIntegrityIfNeededCallCount = 0
     public var validateAndFixIntegrityIfNeededHandler: (() -> Void)?
@@ -214,7 +215,7 @@ public class ClipReferencesIntegrityValidationServiceProtocolMock: ClipReference
 }
 
 public class PasteboardMock: Pasteboard {
-    public init() { }
+    public init() {}
 
     public private(set) var setCallCount = 0
     public var setHandler: ((String) -> Void)?
@@ -237,7 +238,7 @@ public class PasteboardMock: Pasteboard {
 }
 
 public class StorageCommandQueueMock: StorageCommandQueue {
-    public init() { }
+    public init() {}
 
     public private(set) var syncCallCount = 0
     public var syncHandler: ((@escaping () -> Any) -> (Any))?
@@ -270,7 +271,7 @@ public class StorageCommandQueueMock: StorageCommandQueue {
 }
 
 public class TemporariesPersistServiceObserverMock: TemporariesPersistServiceObserver {
-    public init() { }
+    public init() {}
 
     public private(set) var temporariesPersistServiceCallCount = 0
     public var temporariesPersistServiceHandler: ((TemporariesPersistService, Int, Int) -> Void)?
@@ -283,7 +284,7 @@ public class TemporariesPersistServiceObserverMock: TemporariesPersistServiceObs
 }
 
 public class TemporaryClipCommandServiceProtocolMock: TemporaryClipCommandServiceProtocol {
-    public init() { }
+    public init() {}
 
     public private(set) var createCallCount = 0
     public var createHandler: ((ClipRecipe, [ImageContainer], Bool) -> (Result<Clip.Identity, ClipStorageError>))?
@@ -297,7 +298,7 @@ public class TemporaryClipCommandServiceProtocolMock: TemporaryClipCommandServic
 }
 
 public class TemporaryClipStorageProtocolMock: TemporaryClipStorageProtocol {
-    public init() { }
+    public init() {}
     public init(isInTransaction: Bool = false) {
         self.isInTransaction = isInTransaction
     }
@@ -374,7 +375,7 @@ public class TemporaryClipStorageProtocolMock: TemporaryClipStorageProtocol {
 }
 
 public class AlbumListQueryMock: AlbumListQuery {
-    public init() { }
+    public init() {}
     public init(albums: CurrentValueSubject<[Album], Error>) {
         self._albums = albums
     }
@@ -388,7 +389,7 @@ public class AlbumListQueryMock: AlbumListQuery {
 }
 
 public class AlbumQueryMock: AlbumQuery {
-    public init() { }
+    public init() {}
     public init(album: CurrentValueSubject<Album, Error>) {
         self._album = album
     }
@@ -402,7 +403,7 @@ public class AlbumQueryMock: AlbumQuery {
 }
 
 public class ClipItemListQueryMock: ClipItemListQuery {
-    public init() { }
+    public init() {}
     public init(items: CurrentValueSubject<[ClipItem], Error>) {
         self._items = items
     }
@@ -416,7 +417,7 @@ public class ClipItemListQueryMock: ClipItemListQuery {
 }
 
 public class ClipItemQueryMock: ClipItemQuery {
-    public init() { }
+    public init() {}
     public init(clipItem: CurrentValueSubject<ClipItem, Error>) {
         self._clipItem = clipItem
     }
@@ -430,7 +431,7 @@ public class ClipItemQueryMock: ClipItemQuery {
 }
 
 public class ClipListQueryMock: ClipListQuery {
-    public init() { }
+    public init() {}
     public init(clips: CurrentValueSubject<[Clip], Error>) {
         self._clips = clips
     }
@@ -444,7 +445,7 @@ public class ClipListQueryMock: ClipListQuery {
 }
 
 public class ClipQueryMock: ClipQuery {
-    public init() { }
+    public init() {}
     public init(clip: CurrentValueSubject<Clip, Error>) {
         self._clip = clip
     }
@@ -458,7 +459,7 @@ public class ClipQueryMock: ClipQuery {
 }
 
 public class ClipSearchSettingServiceMock: ClipSearchSettingService {
-    public init() { }
+    public init() {}
 
     public private(set) var saveCallCount = 0
     public var saveHandler: ((ClipSearchSetting) -> Void)?
@@ -491,7 +492,7 @@ public class ClipSearchSettingServiceMock: ClipSearchSettingService {
 }
 
 public class CloudAvailabilityServiceProtocolMock: CloudAvailabilityServiceProtocol {
-    public init() { }
+    public init() {}
     public init(availability: AnyPublisher<CloudAvailability?, Never>) {
         self._availability = availability
     }
@@ -505,7 +506,7 @@ public class CloudAvailabilityServiceProtocolMock: CloudAvailabilityServiceProto
 }
 
 public class CloudUsageContextStorageProtocolMock: CloudUsageContextStorageProtocol {
-    public init() { }
+    public init() {}
     public init(lastLoggedInCloudAccountId: String? = nil) {
         self.lastLoggedInCloudAccountId = lastLoggedInCloudAccountId
     }
@@ -524,7 +525,7 @@ public class CloudUsageContextStorageProtocolMock: CloudUsageContextStorageProto
 }
 
 public class ListingAlbumTitleListQueryMock: ListingAlbumTitleListQuery {
-    public init() { }
+    public init() {}
     public init(albums: CurrentValueSubject<[ListingAlbumTitle], Error>) {
         self._albums = albums
     }
@@ -538,7 +539,7 @@ public class ListingAlbumTitleListQueryMock: ListingAlbumTitleListQuery {
 }
 
 public class ListingClipListQueryMock: ListingClipListQuery {
-    public init() { }
+    public init() {}
     public init(clips: CurrentValueSubject<[ListingClip], Error>) {
         self._clips = clips
     }
@@ -552,7 +553,7 @@ public class ListingClipListQueryMock: ListingClipListQuery {
 }
 
 public class TagListQueryMock: TagListQuery {
-    public init() { }
+    public init() {}
     public init(tags: CurrentValueSubject<[Domain.Tag], Error>) {
         self._tags = tags
     }
@@ -566,7 +567,7 @@ public class TagListQueryMock: TagListQuery {
 }
 
 public class TagQueryMock: TagQuery {
-    public init() { }
+    public init() {}
     public init(tag: CurrentValueSubject<Tag, Error>) {
         self._tag = tag
     }
@@ -580,7 +581,7 @@ public class TagQueryMock: TagQuery {
 }
 
 public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
-    public init() { }
+    public init() {}
     public init(userInterfaceStyle: AnyPublisher<UserInterfaceStyle, Never>, showHiddenItems: AnyPublisher<Bool, Never>, enabledICloudSync: AnyPublisher<Bool, Never>, ignoreCloudUnavailableAlert: AnyPublisher<Bool, Never>) {
         self._userInterfaceStyle = userInterfaceStyle
         self._showHiddenItems = showHiddenItems
@@ -694,7 +695,7 @@ public class UserSettingsStorageProtocolMock: UserSettingsStorageProtocol {
 }
 
 public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
-    public init() { }
+    public init() {}
 
     public private(set) var createCallCount = 0
     public var createHandler: ((ClipRecipe, [ImageContainer], Bool) -> (Result<Clip.Identity, ClipStorageError>))?
@@ -937,7 +938,7 @@ public class ClipCommandServiceProtocolMock: ClipCommandServiceProtocol {
 }
 
 public class ClipStorageProtocolMock: ClipStorageProtocol {
-    public init() { }
+    public init() {}
     public init(isInTransaction: Bool = false) {
         self.isInTransaction = isInTransaction
     }
@@ -1342,7 +1343,7 @@ public class ClipStorageProtocolMock: ClipStorageProtocol {
 }
 
 public class ImageQueryServiceProtocolMock: ImageQueryServiceProtocol {
-    public init() { }
+    public init() {}
 
     public private(set) var readCallCount = 0
     public var readHandler: ((ImageContainer.Identity) throws -> (Data?))?
@@ -1356,7 +1357,7 @@ public class ImageQueryServiceProtocolMock: ImageQueryServiceProtocol {
 }
 
 public class ImageStorageProtocolMock: ImageStorageProtocol {
-    public init() { }
+    public init() {}
     public init(isInTransaction: Bool = false) {
         self.isInTransaction = isInTransaction
     }
@@ -1421,7 +1422,7 @@ public class ImageStorageProtocolMock: ImageStorageProtocol {
 }
 
 public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
-    public init() { }
+    public init() {}
     public init(isInTransaction: Bool = false) {
         self.isInTransaction = isInTransaction
     }
@@ -1648,7 +1649,7 @@ public class ReferenceClipStorageProtocolMock: ReferenceClipStorageProtocol {
 }
 
 public class TemporaryImageStorageProtocolMock: TemporaryImageStorageProtocol {
-    public init() { }
+    public init() {}
 
     public private(set) var imageFileExistsCallCount = 0
     public var imageFileExistsHandler: ((String, Clip.Identity) -> (Bool))?
@@ -1708,7 +1709,7 @@ public class TemporaryImageStorageProtocolMock: TemporaryImageStorageProtocol {
 }
 
 public class ClipSearchHistoryServiceMock: ClipSearchHistoryService {
-    public init() { }
+    public init() {}
 
     public private(set) var appendCallCount = 0
     public var appendHandler: ((ClipSearchHistory) -> Void)?
@@ -1759,7 +1760,7 @@ public class ClipSearchHistoryServiceMock: ClipSearchHistoryService {
 }
 
 public class PreviewPrefetchableMock: PreviewPrefetchable {
-    public init() { }
+    public init() {}
 
     public private(set) var prefetchPreviewCallCount = 0
     public var prefetchPreviewHandler: ((ClipItem) -> (PreviewPrefetchCancellable))?
@@ -1782,7 +1783,7 @@ public class PreviewPrefetchableMock: PreviewPrefetchable {
 }
 
 public class TagCommandServiceProtocolMock: TagCommandServiceProtocol {
-    public init() { }
+    public init() {}
 
     public private(set) var createCallCount = 0
     public var createHandler: ((String) -> (Result<Tag.Identity, TagCommandServiceError>))?
@@ -1796,7 +1797,7 @@ public class TagCommandServiceProtocolMock: TagCommandServiceProtocol {
 }
 
 public class ClipPreviewPlayConfigurationStorageProtocolMock: ClipPreviewPlayConfigurationStorageProtocol {
-    public init() { }
+    public init() {}
     public init(animation: AnyPublisher<ClipPreviewPlayConfiguration.Animation, Never>, order: AnyPublisher<ClipPreviewPlayConfiguration.Order, Never>, range: AnyPublisher<ClipPreviewPlayConfiguration.Range, Never>, loopEnabled: AnyPublisher<Bool, Never>, interval: AnyPublisher<Int, Never>, customIntervals: AnyPublisher<[Int], Never>, clipPreviewPlayConfiguration: AnyPublisher<ClipPreviewPlayConfiguration, Never>) {
         self._animation = animation
         self._order = order
@@ -1993,7 +1994,7 @@ public class ClipPreviewPlayConfigurationStorageProtocolMock: ClipPreviewPlayCon
 }
 
 public class TemporariesPersistServiceProtocolMock: TemporariesPersistServiceProtocol {
-    public init() { }
+    public init() {}
 
     public private(set) var setCallCount = 0
     public var setHandler: ((TemporariesPersistServiceObserver) -> Void)?
@@ -2016,7 +2017,7 @@ public class TemporariesPersistServiceProtocolMock: TemporariesPersistServicePro
 }
 
 public class AlbumCommandServiceProtocolMock: AlbumCommandServiceProtocol {
-    public init() { }
+    public init() {}
 
     public private(set) var createCallCount = 0
     public var createHandler: ((String) -> (Result<Album.Identity, AlbumCommandServiceError>))?

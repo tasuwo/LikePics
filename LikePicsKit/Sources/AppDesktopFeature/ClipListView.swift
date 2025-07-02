@@ -21,11 +21,12 @@ struct ClipListView: View {
             EmptyView()
         } else {
             ScrollView {
-                VMasonryGrid(clips,
-                             numberOfColumns: layout.numberOfColumns,
-                             columnSpacing: layout.spacing,
-                             contentSpacing: layout.spacing)
-                { clip in
+                VMasonryGrid(
+                    clips,
+                    numberOfColumns: layout.numberOfColumns,
+                    columnSpacing: layout.spacing,
+                    contentSpacing: layout.spacing
+                ) { clip in
                     ClipView(clip: clip)
                         .matchedGeometryEffect(id: clip.id, in: animation)
                         .onTapGesture {
@@ -86,29 +87,35 @@ struct ClipListView: View {
     }
 
     func makeClip(size: ImageSize) -> Domain.Clip {
-        return .init(id: UUID(),
-                     description: "",
-                     items: [
-                         .init(id: UUID(),
-                               url: nil,
-                               clipId: UUID(),
-                               clipIndex: 0,
-                               imageId: UUID(),
-                               imageFileName: "",
-                               imageUrl: nil,
-                               imageSize: size,
-                               imageDataSize: 0,
-                               registeredDate: Date(),
-                               updatedDate: Date())
-                     ],
-                     isHidden: false,
-                     dataSize: 0,
-                     registeredDate: Date(),
-                     updatedDate: Date())
+        return .init(
+            id: UUID(),
+            description: "",
+            items: [
+                .init(
+                    id: UUID(),
+                    url: nil,
+                    clipId: UUID(),
+                    clipIndex: 0,
+                    imageId: UUID(),
+                    imageFileName: "",
+                    imageUrl: nil,
+                    imageSize: size,
+                    imageDataSize: 0,
+                    registeredDate: Date(),
+                    updatedDate: Date()
+                )
+            ],
+            isHidden: false,
+            dataSize: 0,
+            registeredDate: Date(),
+            updatedDate: Date()
+        )
     }
 
-    return ClipListView(clips: (0 ... 100).map { _ in
-        makeClip(size: .init(height: CGFloat((100 ... 150).randomElement()!), width: 100))
-    })
+    return ClipListView(
+        clips: (0...100).map { _ in
+            makeClip(size: .init(height: CGFloat((100...150).randomElement()!), width: 100))
+        }
+    )
     .environment(\.imageQueryService, _ImageQueryService())
 }

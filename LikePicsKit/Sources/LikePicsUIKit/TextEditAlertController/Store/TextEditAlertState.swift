@@ -17,8 +17,8 @@ public struct TextEditAlertState: Equatable {
     let isPresenting: Bool
 }
 
-public extension TextEditAlertState {
-    init(title: String?, message: String?, placeholder: String, keyboardType: UIKeyboardType? = nil) {
+extension TextEditAlertState {
+    public init(title: String?, message: String?, placeholder: String, keyboardType: UIKeyboardType? = nil) {
         id = UUID()
 
         self.title = title
@@ -34,35 +34,41 @@ public extension TextEditAlertState {
 
 extension TextEditAlertState {
     func updating(text: String) -> Self {
-        return .init(id: id,
-                     title: title,
-                     message: message,
-                     placeholder: placeholder,
-                     text: text,
-                     shouldReturn: shouldReturn,
-                     keyboardType: keyboardType,
-                     isPresenting: isPresenting)
+        return .init(
+            id: id,
+            title: title,
+            message: message,
+            placeholder: placeholder,
+            text: text,
+            shouldReturn: shouldReturn,
+            keyboardType: keyboardType,
+            isPresenting: isPresenting
+        )
     }
 
     func updating(shouldReturn: Bool) -> Self {
-        return .init(id: id,
-                     title: title,
-                     message: message,
-                     placeholder: placeholder,
-                     text: text,
-                     shouldReturn: shouldReturn,
-                     keyboardType: keyboardType,
-                     isPresenting: isPresenting)
+        return .init(
+            id: id,
+            title: title,
+            message: message,
+            placeholder: placeholder,
+            text: text,
+            shouldReturn: shouldReturn,
+            keyboardType: keyboardType,
+            isPresenting: isPresenting
+        )
     }
 
     func updating(isPresenting: Bool) -> Self {
-        return .init(id: id,
-                     title: title,
-                     message: message,
-                     placeholder: placeholder,
-                     text: text,
-                     shouldReturn: shouldReturn,
-                     keyboardType: keyboardType,
-                     isPresenting: isPresenting)
+        return .init(
+            id: id,
+            title: title,
+            message: message,
+            placeholder: placeholder,
+            text: text,
+            shouldReturn: shouldReturn,
+            keyboardType: keyboardType,
+            isPresenting: isPresenting
+        )
     }
 }

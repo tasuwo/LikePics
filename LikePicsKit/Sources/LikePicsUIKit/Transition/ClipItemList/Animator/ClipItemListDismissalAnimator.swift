@@ -52,9 +52,9 @@ extension ClipItemListDismissalAnimator: UIViewControllerAnimatedTransitioning {
         /*
          アニメーション時、画像を Tab/Navigation Bar の裏側に回り込ませることで、自然なアニメーションを実現する
          このために、以下のような構成を取る
-
+        
          ポイントは下記
-
+        
          - アニメーション中 toView の背景色は clear にし、裏の View が見えるようにしておく
          - toView の背景色を徐々に表示するための ToViewBackgroundView を準備しておく
          - 最終的に toView に表示することになる画像Viewは ToViewBackgroundView の手前に配置する
@@ -63,7 +63,7 @@ extension ClipItemListDismissalAnimator: UIViewControllerAnimatedTransitioning {
              - ToViewBackgroundView を fadeIn
              - toView を fadeIn
              - Components over base views を fadeOut
-
+        
          +-+       +-+       +-+  +-+
          | |       | |       | |  | |
          +-+       +-+       | |  | |
@@ -96,9 +96,11 @@ extension ClipItemListDismissalAnimator: UIViewControllerAnimatedTransitioning {
         // HACK: Set new frame for updating the view to current orientation.
         to.view.frame = from.view.frame
 
-        targetPreviewView.viewWillStartTransition(frame: from.view.frame,
-                                                  thumbnail: selectedImage,
-                                                  originalImageSize: previewingClipItem.imageSize.cgSize)
+        targetPreviewView.viewWillStartTransition(
+            frame: from.view.frame,
+            thumbnail: selectedImage,
+            originalImageSize: previewingClipItem.imageSize.cgSize
+        )
 
         targetPreviewView.isHidden = true
         selectedImageView.isHidden = true

@@ -19,7 +19,8 @@ public class ClipPreviewView: UIView {
             imageView.originalSize = source.originalSize
             imageView.image = source.uiImage
             imageView.invalidateIntrinsicContentSize()
-            imageView.backgroundColor = source.uiImage == nil
+            imageView.backgroundColor =
+                source.uiImage == nil
                 ? Asset.Color.secondaryBackground.color
                 : .clear
 
@@ -73,11 +74,17 @@ public class ClipPreviewView: UIView {
     public var initialImageFrame: CGRect {
         guard let source = source else { return .zero }
         let scale = source.originalSizeInPixel.scale(fittingIn: bounds.size)
-        let initialImageSize = CGSize(width: source.originalSizeInPixel.width * scale,
-                                      height: source.originalSizeInPixel.height * scale)
-        return CGRect(origin: CGPoint(x: (bounds.width - initialImageSize.width) / 2,
-                                      y: (bounds.height - initialImageSize.height) / 2),
-                      size: initialImageSize)
+        let initialImageSize = CGSize(
+            width: source.originalSizeInPixel.width * scale,
+            height: source.originalSizeInPixel.height * scale
+        )
+        return CGRect(
+            origin: CGPoint(
+                x: (bounds.width - initialImageSize.width) / 2,
+                y: (bounds.height - initialImageSize.height) / 2
+            ),
+            size: initialImageSize
+        )
     }
 
     public var zoomGestureRecognizer: UITapGestureRecognizer {
@@ -120,8 +127,10 @@ public class ClipPreviewView: UIView {
         let currentMaximumZoomScale = scrollView.maximumZoomScale
 
         updateZoomScaleLimits()
-        adjustZoomScale(previousMinimumZoomScale: currentMinimumZoomScale,
-                        previousMaximumZoomScale: currentMaximumZoomScale)
+        adjustZoomScale(
+            previousMinimumZoomScale: currentMinimumZoomScale,
+            previousMaximumZoomScale: currentMaximumZoomScale
+        )
         updateInitialZoomScaleFlag()
 
         updateInsetsForCurrentScale()
@@ -134,7 +143,7 @@ public class ClipPreviewView: UIView {
         let point = sender.location(in: imageView)
 
         guard imageView.bounds.contains(point),
-              let image = imageView.image
+            let image = imageView.image
         else {
             return
         }
@@ -151,8 +160,10 @@ public class ClipPreviewView: UIView {
         let currentVerticalInset = max((bounds.height - image.size.height * scrollView.zoomScale) / 2, 0)
         let width = scrollView.bounds.width / nextScale
         let height = scrollView.bounds.height / nextScale
-        let nextPoint = CGPoint(x: point.x - (width / 2.0) - currentHorizontalInset,
-                                y: point.y - (height / 2.0) - currentVerticalInset)
+        let nextPoint = CGPoint(
+            x: point.x - (width / 2.0) - currentHorizontalInset,
+            y: point.y - (height / 2.0) - currentVerticalInset
+        )
         let nextRect = CGRect(origin: nextPoint, size: .init(width: width, height: height))
 
         scrollView.zoom(to: nextRect, animated: true)
@@ -161,8 +172,8 @@ public class ClipPreviewView: UIView {
 
 // MARK: - View Life-Cycle Methods
 
-public extension ClipPreviewView {
-    func viewWillStartTransition(frame: CGRect, thumbnail: UIImage, originalImageSize: CGSize) {
+extension ClipPreviewView {
+    public func viewWillStartTransition(frame: CGRect, thumbnail: UIImage, originalImageSize: CGSize) {
         self.frame = frame
 
         if source == nil {
@@ -232,9 +243,10 @@ extension ClipPreviewView {
      *   - previousMinimumZoomScale: 元々のzoomScaleの最小値
      *   - previousMaximumZoomScale: 元々のzoomScaleの最大値
      */
-    private func adjustZoomScale(previousMinimumZoomScale: CGFloat,
-                                 previousMaximumZoomScale: CGFloat)
-    {
+    private func adjustZoomScale(
+        previousMinimumZoomScale: CGFloat,
+        previousMaximumZoomScale: CGFloat
+    ) {
         if scrollView.zoomScale == previousMinimumZoomScale {
             scrollView.zoomScale = scrollView.minimumZoomScale
             return
@@ -266,8 +278,10 @@ extension ClipPreviewView {
         rightInsetConstraint.constant = horizontalInset
 
         layoutIfNeeded()
-        scrollView.contentSize = .init(width: imageView.frame.width + horizontalInset * 2,
-                                       height: imageView.frame.height + verticalInset * 2)
+        scrollView.contentSize = .init(
+            width: imageView.frame.width + horizontalInset * 2,
+            height: imageView.frame.height + verticalInset * 2
+        )
     }
 
     /**

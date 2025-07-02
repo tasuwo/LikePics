@@ -167,9 +167,15 @@ public class ClipCollectionViewCell: UICollectionViewCell {
                 animatingImageView.removeFromSuperview()
             }
 
-            UIView.likepics_animate(withDuration: 0.15, delay: 0.25, options: [], animations: {
-                self.hiddenIcon.alpha = 1
-            }, completion: nil)
+            UIView.likepics_animate(
+                withDuration: 0.15,
+                delay: 0.25,
+                options: [],
+                animations: {
+                    self.hiddenIcon.alpha = 1
+                },
+                completion: nil
+            )
         }
     }
 

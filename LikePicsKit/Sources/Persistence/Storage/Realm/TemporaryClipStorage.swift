@@ -130,7 +130,8 @@ extension TemporaryClipStorage: TemporaryClipStorageProtocol {
         let removeTargets = clipObjects.map { Domain.Clip.make(by: $0) }
 
         // NOTE: Delete only found objects.
-        let clipItems = clipObjects
+        let clipItems =
+            clipObjects
             .flatMap { $0.items }
             .compactMap { realm.object(ofType: ClipItemObject.self, forPrimaryKey: $0.id) }
 

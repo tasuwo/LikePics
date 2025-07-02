@@ -35,16 +35,16 @@ public struct ImageSource: Hashable {
     }
 }
 
-public extension ImageSource {
+extension ImageSource {
     // MARK: - Equatable
 
-    static func == (lhs: ImageSource, rhs: ImageSource) -> Bool {
+    public static func == (lhs: ImageSource, rhs: ImageSource) -> Bool {
         return lhs.identifier == rhs.identifier
     }
 
     // MARK: - Hashable
 
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(identifier)
     }
 }

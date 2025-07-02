@@ -45,8 +45,8 @@ extension StoreProxy: Storing {
     }
 }
 
-public extension Store {
-    func proxy<
+extension Store {
+    public func proxy<
         ChildState: Equatable,
         ChildAction: CompositeKit.Action,
         ChildDependency
@@ -61,8 +61,10 @@ public extension Store {
         Action,
         Dependency
     > {
-        return .init(store: self,
-                     stateMapping: stateMapping,
-                     actionMapping: actionMapping)
+        return .init(
+            store: self,
+            stateMapping: stateMapping,
+            actionMapping: actionMapping
+        )
     }
 }

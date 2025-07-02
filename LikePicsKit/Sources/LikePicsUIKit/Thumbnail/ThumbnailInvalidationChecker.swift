@@ -6,13 +6,14 @@ import CoreGraphics
 import UIKit
 
 public enum ThumbnailInvalidationChecker {
-    public static func shouldInvalidate(originalImageSizeInPoint: CGSize,
-                                        thumbnailSizeInPoint: CGSize,
-                                        diskCacheSizeInPixel: CGSize,
-                                        displayScale: CGFloat) -> Bool
-    {
+    public static func shouldInvalidate(
+        originalImageSizeInPoint: CGSize,
+        thumbnailSizeInPoint: CGSize,
+        diskCacheSizeInPixel: CGSize,
+        displayScale: CGFloat
+    ) -> Bool {
         if originalImageSizeInPoint.width <= thumbnailSizeInPoint.width,
-           originalImageSizeInPoint.height <= thumbnailSizeInPoint.height
+            originalImageSizeInPoint.height <= thumbnailSizeInPoint.height
         {
             return false
         }

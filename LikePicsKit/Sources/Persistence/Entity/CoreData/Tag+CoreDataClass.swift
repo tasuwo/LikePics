@@ -14,8 +14,8 @@ public enum TagError: Error {
 public class Tag: NSManagedObject {
 }
 
-public extension Tag {
-    static func create(withName name: String, in context: NSManagedObjectContext) throws -> UUID {
+extension Tag {
+    public static func create(withName name: String, in context: NSManagedObjectContext) throws -> UUID {
         let request: NSFetchRequest<Tag> = Tag.fetchRequest()
         request.predicate = NSPredicate(format: "name == %@", name)
         guard try context.fetch(request).count <= 0 else {
@@ -34,10 +34,11 @@ public extension Tag {
         return newId
     }
 
-    static func fetch(beginsWith text: String,
-                      showHiddenItems: Bool,
-                      context: NSManagedObjectContext) throws -> [Tag]
-    {
+    public static func fetch(
+        beginsWith text: String,
+        showHiddenItems: Bool,
+        context: NSManagedObjectContext
+    ) throws -> [Tag] {
         let request: NSFetchRequest<Tag> = Tag.fetchRequest()
         var predicate: NSPredicate?
 
@@ -46,7 +47,7 @@ public extension Tag {
             if let transformed = text.applyingTransform(.hiraganaToKatakana, reverse: false), transformed != text {
                 predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
                     NSPredicate(format: "name BEGINSWITH[cd] %@", transformed as CVarArg),
-                    NSPredicate(format: "name BEGINSWITH[cd] %@", text as CVarArg)
+                    NSPredicate(format: "name BEGINSWITH[cd] %@", text as CVarArg),
                 ])
             } else {
                 predicate = NSPredicate(format: "name BEGINSWITH[cd] %@", text as CVarArg)
@@ -56,7 +57,7 @@ public extension Tag {
         if let _predicate = predicate {
             predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
                 _predicate,
-                NSPredicate(format: "isHidden == false")
+                NSPredicate(format: "isHidden == false"),
             ])
         } else {
             predicate = NSPredicate(format: "isHidden == false")
@@ -69,8 +70,8 @@ public extension Tag {
     }
 }
 
-public extension NSManagedObjectContext {
-    func updateTag(having id: UUID, isHidden: Bool) throws {
+extension NSManagedObjectContext {
+    public func updateTag(having id: UUID, isHidden: Bool) throws {
         let request: NSFetchRequest<Tag> = Tag.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
 
@@ -83,7 +84,7 @@ public extension NSManagedObjectContext {
         try save()
     }
 
-    func deleteTag(having id: UUID) throws {
+    public func deleteTag(having id: UUID) throws {
         let request: NSFetchRequest<Tag> = Tag.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
 

@@ -11,10 +11,10 @@ import AppKit
 
 public enum ImageUtility {}
 
-public extension ImageUtility {
+extension ImageUtility {
     // MARK: - Resolve Size
 
-    static func resolveSize(for data: Data) -> CGSize? {
+    public static func resolveSize(for data: Data) -> CGSize? {
         let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
         guard let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions) else { return nil }
         return self.resolveSize(for: imageSource)
@@ -42,7 +42,7 @@ public extension ImageUtility {
     }
 }
 
-public extension ImageUtility {
+extension ImageUtility {
     // MARK: - Downsampling
 
     #if canImport(UIKit)
@@ -60,12 +60,13 @@ public extension ImageUtility {
 
     private static func downsampling(_ imageSource: CGImageSource, to pointSize: CGSize, scale: CGFloat) -> UIImage? {
         let maxDimensionInPixels = max(pointSize.width, pointSize.height) * scale
-        let options = [
-            kCGImageSourceCreateThumbnailFromImageAlways: true,
-            kCGImageSourceShouldCacheImmediately: true,
-            kCGImageSourceCreateThumbnailWithTransform: true,
-            kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels
-        ] as CFDictionary
+        let options =
+            [
+                kCGImageSourceCreateThumbnailFromImageAlways: true,
+                kCGImageSourceShouldCacheImmediately: true,
+                kCGImageSourceCreateThumbnailWithTransform: true,
+                kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels,
+            ] as CFDictionary
         guard let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, options) else { return nil }
         return UIImage(cgImage: downsampledImage)
     }
@@ -85,12 +86,13 @@ public extension ImageUtility {
 
     private static func downsampling(_ imageSource: CGImageSource, to pointSize: CGSize, scale: CGFloat) -> NSImage? {
         let maxDimensionInPixels = max(pointSize.width, pointSize.height) * scale
-        let options = [
-            kCGImageSourceCreateThumbnailFromImageAlways: true,
-            kCGImageSourceShouldCacheImmediately: true,
-            kCGImageSourceCreateThumbnailWithTransform: true,
-            kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels
-        ] as CFDictionary
+        let options =
+            [
+                kCGImageSourceCreateThumbnailFromImageAlways: true,
+                kCGImageSourceShouldCacheImmediately: true,
+                kCGImageSourceCreateThumbnailWithTransform: true,
+                kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels,
+            ] as CFDictionary
         guard let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, options) else { return nil }
         return NSImage(cgImage: downsampledImage, size: .init(width: downsampledImage.width, height: downsampledImage.height))
     }

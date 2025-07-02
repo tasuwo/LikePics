@@ -9,8 +9,8 @@ private struct AlbumThumbnailProcessingQueueKey: EnvironmentKey {
     static let defaultValue = ImageProcessingQueue()
 }
 
-public extension EnvironmentValues {
-    var albumThumbnailProcessingQueue: ImageProcessingQueue {
+extension EnvironmentValues {
+    public var albumThumbnailProcessingQueue: ImageProcessingQueue {
         get { self[AlbumThumbnailProcessingQueueKey.self] }
         set { self[AlbumThumbnailProcessingQueueKey.self] = newValue }
     }

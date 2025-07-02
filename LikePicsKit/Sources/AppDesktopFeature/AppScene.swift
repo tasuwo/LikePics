@@ -33,8 +33,8 @@ public struct AppScene: Scene {
     }
 }
 
-private extension UserInterfaceStyle {
-    var colorScheme: ColorScheme? {
+extension UserInterfaceStyle {
+    fileprivate var colorScheme: ColorScheme? {
         switch self {
         case .dark:
             return .dark

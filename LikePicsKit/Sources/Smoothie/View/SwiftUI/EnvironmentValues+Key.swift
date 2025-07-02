@@ -8,8 +8,8 @@ private struct ImageProcessingQueueKey: EnvironmentKey {
     static let defaultValue = ImageProcessingQueue()
 }
 
-public extension EnvironmentValues {
-    var imageProcessingQueue: ImageProcessingQueue {
+extension EnvironmentValues {
+    public var imageProcessingQueue: ImageProcessingQueue {
         get { self[ImageProcessingQueueKey.self] }
         set { self[ImageProcessingQueueKey.self] = newValue }
     }

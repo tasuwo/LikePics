@@ -3,8 +3,9 @@
 //
 
 import ClipCreationFeatureCore
-import struct Smoothie.LazyImage
 import SwiftUI
+
+import struct Smoothie.LazyImage
 
 struct ImageEntryView: View {
     let image: ImageSource

@@ -68,19 +68,28 @@ extension ClipItemListNavigationBarController {
 extension ClipItemListNavigationBarController {
     private func configureBarButtons() {
         cancelButton.title = L10n.confirmAlertCancel
-        cancelButton.addAction(.init(handler: { [weak self] _ in
-            self?.store.execute(.didTapCancel)
-        }), for: .touchUpInside)
+        cancelButton.addAction(
+            .init(handler: { [weak self] _ in
+                self?.store.execute(.didTapCancel)
+            }),
+            for: .touchUpInside
+        )
 
         selectButton.title = L10n.barItemForSelectTitle
-        selectButton.addAction(.init(handler: { [weak self] _ in
-            self?.store.execute(.didTapSelect)
-        }), for: .touchUpInside)
+        selectButton.addAction(
+            .init(handler: { [weak self] _ in
+                self?.store.execute(.didTapSelect)
+            }),
+            for: .touchUpInside
+        )
 
         resumeButton.title = L10n.barItemForResume
-        resumeButton.addAction(.init(handler: { [weak self] _ in
-            self?.store.execute(.didTapResume)
-        }), for: .touchUpInside)
+        resumeButton.addAction(
+            .init(handler: { [weak self] _ in
+                self?.store.execute(.didTapResume)
+            }),
+            for: .touchUpInside
+        )
     }
 }
 

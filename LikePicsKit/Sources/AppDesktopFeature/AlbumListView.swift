@@ -15,9 +15,11 @@ struct AlbumListView: View {
     @EnvironmentObject private var router: Router
 
     init(showHiddenItems: Bool) {
-        _albums = .init(sortDescriptors: [.init(keyPath: \Persistence.Album.index, ascending: true)],
-                        predicate: showHiddenItems ? nil : NSPredicate(format: "isHidden == false"),
-                        animation: .default)
+        _albums = .init(
+            sortDescriptors: [.init(keyPath: \Persistence.Album.index, ascending: true)],
+            predicate: showHiddenItems ? nil : NSPredicate(format: "isHidden == false"),
+            animation: .default
+        )
     }
 
     var body: some View {
@@ -72,7 +74,7 @@ struct AlbumListView: View {
 
         container.loadPersistentStores { _, _ in }
 
-        (0 ... 6).forEach { index in
+        (0...6).forEach { index in
             let album = Persistence.Album(context: container.viewContext)
             album.id = UUID()
             album.title = randomAlbumName()
@@ -88,7 +90,7 @@ struct AlbumListView: View {
 
     func randomAlbumName() -> String {
         let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        return String((0 ..< Int.random(in: 8 ... 15)).map { _ in letters.randomElement()! })
+        return String((0..<Int.random(in: 8...15)).map { _ in letters.randomElement()! })
     }
 
     return AlbumListView(showHiddenItems: true)

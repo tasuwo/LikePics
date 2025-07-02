@@ -37,16 +37,20 @@ struct ClipItemView: View {
         func read(having id: Domain.ImageContainer.Identity) throws -> Data? { nil }
     }
 
-    return ClipItemView(item: .init(id: UUID(),
-                                    url: nil,
-                                    clipId: UUID(),
-                                    clipIndex: 0,
-                                    imageId: UUID(),
-                                    imageFileName: "",
-                                    imageUrl: nil,
-                                    imageSize: .init(height: 150, width: 100),
-                                    imageDataSize: 0,
-                                    registeredDate: Date(),
-                                    updatedDate: Date()))
-        .environment(\.imageQueryService, _ImageQueryService())
+    return ClipItemView(
+        item: .init(
+            id: UUID(),
+            url: nil,
+            clipId: UUID(),
+            clipIndex: 0,
+            imageId: UUID(),
+            imageFileName: "",
+            imageUrl: nil,
+            imageSize: .init(height: 150, width: 100),
+            imageDataSize: 0,
+            registeredDate: Date(),
+            updatedDate: Date()
+        )
+    )
+    .environment(\.imageQueryService, _ImageQueryService())
 }

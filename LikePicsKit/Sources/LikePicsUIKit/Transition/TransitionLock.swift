@@ -10,7 +10,8 @@ public class TransitionLock {
     var transitionId: UUID?
 
     public var isFree: Bool {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return transitionId == nil
     }
 
@@ -18,7 +19,8 @@ public class TransitionLock {
 
     @discardableResult
     func takeLock(_ id: UUID) -> Bool {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         guard transitionId == nil else { return false }
         transitionId = id
         return true
@@ -26,12 +28,14 @@ public class TransitionLock {
 
     @discardableResult
     func isLocked(by id: UUID) -> Bool {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return transitionId == id
     }
 
     func releaseLock() {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         transitionId = nil
     }
 }

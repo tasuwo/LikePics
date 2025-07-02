@@ -38,10 +38,11 @@ class SearchResultViewController: UIViewController {
 
     // MARK: - Initializers
 
-    init(store: Store,
-         thumbnailProcessingQueue: ImageProcessingQueue,
-         imageQueryService: ImageQueryServiceProtocol)
-    {
+    init(
+        store: Store,
+        thumbnailProcessingQueue: ImageProcessingQueue,
+        imageQueryService: ImageQueryServiceProtocol
+    ) {
         self.store = store
         self.thumbnailProcessingQueue = thumbnailProcessingQueue
         self.imageQueryService = imageQueryService
@@ -265,8 +266,12 @@ extension SearchResultViewController: UISearchResultsUpdating {
 
 extension SearchResultViewController {
     func executeSearchBarChangeEvent(_ searchBar: UISearchBar) {
-        store.execute(.searchBarChanged(text: searchBar.text ?? "",
-                                        tokens: searchBar.searchTextField.tokens.compactMap { $0.underlyingToken }))
+        store.execute(
+            .searchBarChanged(
+                text: searchBar.text ?? "",
+                tokens: searchBar.searchTextField.tokens.compactMap { $0.underlyingToken }
+            )
+        )
     }
 }
 
@@ -283,7 +288,8 @@ extension SearchResultViewController: ClipPreviewPresentingViewController {
 
     func previewingCell(id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool) -> ClipPreviewPresentableCell? {
         guard let clip = store.stateValue.searchedClips?.results.first(where: { $0.id == id.clipId }),
-              let indexPath = dataSource.indexPath(for: .result(clip)) else { return nil }
+            let indexPath = dataSource.indexPath(for: .result(clip))
+        else { return nil }
 
         if needsScroll {
             // セルが画面外だとインスタンスを取り出せないので、表示する
@@ -295,7 +301,8 @@ extension SearchResultViewController: ClipPreviewPresentingViewController {
 
     func displayPreviewingCell(id: ClipPreviewPresentableCellIdentifier) {
         guard let clip = store.stateValue.searchedClips?.results.first(where: { $0.id == id.clipId }),
-              let indexPath = dataSource.indexPath(for: .result(clip)) else { return }
+            let indexPath = dataSource.indexPath(for: .result(clip))
+        else { return }
 
         // collectionViewのみでなくviewも再描画しないとセルの座標系がおかしくなる
         // また、scrollToItem呼び出し前に一度再描画しておかないと、正常にスクロールができないケースがある

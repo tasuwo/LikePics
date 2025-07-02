@@ -21,8 +21,10 @@ extension ClipItemEditListCell: ThumbnailPresentable {
     public func calcThumbnailPointSize(originalPixelSize: CGSize?) -> CGSize {
         if let originalSize = originalPixelSize {
             // See: ClipItemEditContentView
-            return .init(width: 100,
-                         height: 100 * originalSize.height / originalSize.width)
+            return .init(
+                width: 100,
+                height: 100 * originalSize.height / originalSize.width
+            )
         } else {
             return .init(width: 100, height: 100)
         }

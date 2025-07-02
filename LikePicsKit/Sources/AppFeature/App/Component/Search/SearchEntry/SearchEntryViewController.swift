@@ -41,22 +41,27 @@ class SearchEntryViewController: UIViewController {
 
     // MARK: - Initializers
 
-    init(state: SearchViewRootState,
-         dependency: SearchViewRootDependency,
-         thumbnailProcessingQueue: ImageProcessingQueue,
-         imageQueryService: ImageQueryServiceProtocol,
-         appBundle: Bundle)
-    {
+    init(
+        state: SearchViewRootState,
+        dependency: SearchViewRootDependency,
+        thumbnailProcessingQueue: ImageProcessingQueue,
+        imageQueryService: ImageQueryServiceProtocol,
+        appBundle: Bundle
+    ) {
         rootStore = CompositeKit.Store(initialState: state, dependency: dependency, reducer: searchViewRootReducer)
-        store = rootStore
+        store =
+            rootStore
             .proxy(SearchViewRootState.entryMapping, SearchViewRootAction.entryMapping)
             .eraseToAnyStoring()
-        let resultStore: SearchResultViewController.Store = rootStore
+        let resultStore: SearchResultViewController.Store =
+            rootStore
             .proxy(SearchViewRootState.resultMapping, SearchViewRootAction.resultMapping)
             .eraseToAnyStoring()
-        resultsController = SearchResultViewController(store: resultStore,
-                                                       thumbnailProcessingQueue: thumbnailProcessingQueue,
-                                                       imageQueryService: imageQueryService)
+        resultsController = SearchResultViewController(
+            store: resultStore,
+            thumbnailProcessingQueue: thumbnailProcessingQueue,
+            imageQueryService: imageQueryService
+        )
         self.appBundle = appBundle
 
         super.init(nibName: nil, bundle: nil)
@@ -154,7 +159,8 @@ extension SearchEntryViewController {
         if searchHistories.isEmpty {
             snapshot.appendItems([.empty], toSection: .main)
         } else {
-            let histories = searchHistories
+            let histories =
+                searchHistories
                 .map { Layout.Item.history(.init(isSomeItemsHidden: isSomeItemsHidden, original: $0)) }
             snapshot.appendItems(histories, toSection: .main)
         }
@@ -176,12 +182,24 @@ extension SearchEntryViewController {
 
     private func presentRemoveAllConfirmationAlert() {
         let alert = UIAlertController(title: "", message: L10n.searchHistoryRemoveAllConfirmationMessage, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.searchHistoryRemoveAllConfirmationAction, style: .destructive, handler: { [weak self] _ in
-            self?.store.execute(.alertDeleteConfirmed)
-        }))
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        }))
+        alert.addAction(
+            .init(
+                title: L10n.searchHistoryRemoveAllConfirmationAction,
+                style: .destructive,
+                handler: { [weak self] _ in
+                    self?.store.execute(.alertDeleteConfirmed)
+                }
+            )
+        )
+        alert.addAction(
+            .init(
+                title: L10n.confirmAlertCancel,
+                style: .cancel,
+                handler: { [weak self] _ in
+                    self?.store.execute(.alertDismissed)
+                }
+            )
+        )
         presentingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
@@ -211,19 +229,23 @@ extension SearchEntryViewController {
 
     private func configureDataSource() {
         // swiftlint:disable identifier_name
-        let _dataSource = Layout.createDataSource(collectionView: collectionView,
-                                                  removeAllHistoriesHandler: { [weak self] in
-                                                      self?.store.execute(.removeAllHistories)
-                                                  })
+        let _dataSource = Layout.createDataSource(
+            collectionView: collectionView,
+            removeAllHistoriesHandler: { [weak self] in
+                self?.store.execute(.removeAllHistories)
+            }
+        )
         dataSource = _dataSource
         collectionView.delegate = self
     }
 
     private func configureSearchController() {
-        let filterButtonItem = UIBarButtonItem(image: UIImage(systemName: "slider.horizontal.3"),
-                                               style: .plain,
-                                               target: nil,
-                                               action: nil)
+        let filterButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "slider.horizontal.3"),
+            style: .plain,
+            target: nil,
+            action: nil
+        )
         navigationItem.rightBarButtonItem = filterButtonItem
         resultsController.filterButtonItem = filterButtonItem
 
@@ -263,10 +285,12 @@ extension SearchEntryViewController: Restorable {
 
     func restore() -> RestorableViewController {
         presentingAlert?.dismiss(animated: false, completion: nil)
-        return SearchEntryViewController(state: rootStore.stateValue,
-                                         dependency: rootStore.dependency,
-                                         thumbnailProcessingQueue: resultsController.thumbnailProcessingQueue,
-                                         imageQueryService: resultsController.imageQueryService,
-                                         appBundle: appBundle)
+        return SearchEntryViewController(
+            state: rootStore.stateValue,
+            dependency: rootStore.dependency,
+            thumbnailProcessingQueue: resultsController.thumbnailProcessingQueue,
+            imageQueryService: resultsController.imageQueryService,
+            appBundle: appBundle
+        )
     }
 }

@@ -78,9 +78,10 @@ extension UserInterfaceStyleSelectionViewLayout {
 }
 
 extension UserInterfaceStyleSelectionViewLayout {
-    static func configureDataSource(collectionView: UICollectionView,
-                                    userSettingsStorage: UserSettingsStorageProtocol) -> DataSource
-    {
+    static func configureDataSource(
+        collectionView: UICollectionView,
+        userSettingsStorage: UserSettingsStorageProtocol
+    ) -> DataSource {
         let cellRegistration = configureCell(userSettingsStorage: userSettingsStorage)
 
         let dataSource = DataSource(collectionView: collectionView) { collectionView, indexPath, item in

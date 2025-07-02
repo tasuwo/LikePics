@@ -17,10 +17,11 @@ public final class SuggestTextFieldCoordinator<Item: SuggestionItem>: NSObject, 
     private var windowController: SuggestionListWindowController<Item>?
     private var skipNextCompletion = false
 
-    init(suggestions: @escaping (String) -> [Item],
-         fallback: @escaping (String) -> String,
-         onSelect: @escaping (SuggestionListSelection<Item>) -> Void)
-    {
+    init(
+        suggestions: @escaping (String) -> [Item],
+        fallback: @escaping (String) -> String,
+        onSelect: @escaping (SuggestionListSelection<Item>) -> Void
+    ) {
         self.model = .init(items: suggestions(""))
         self.suggestions = suggestions
         self.fallbackItemTitle = fallback
@@ -122,14 +123,15 @@ public final class SuggestTextFieldCoordinator<Item: SuggestionItem>: NSObject, 
 
         let items = suggestions(text)
 
-        if !text.isEmpty && (
-            // 候補がなければ、フォールバックを表示
-            items.isEmpty
+        if !text.isEmpty
+            && (
+                // 候補がなければ、フォールバックを表示
+                items.isEmpty
                 // 補完を停止中、かつ候補に合致するものがなければ、フォールバックを表示
                 || (skipNextCompletion && items.first?.title != text)
                 // caseの違いなどにより候補の先頭とprefixが不一致だった場合、フォールバックを表示
-                || items.first?.title.hasPrefix(text) == false
-        ) {
+                || items.first?.title.hasPrefix(text) == false)
+        {
             model.fallbackItem = text
             model.selection = .fallback
         } else {
@@ -153,11 +155,12 @@ public struct SuggestTextField<Item: SuggestionItem>: NSViewRepresentable {
     let fallbackItemTitle: (String) -> String
     let onSelect: (SuggestionListSelection<Item>) -> Void
 
-    public init(placeholder: String? = nil,
-                suggestions: @escaping (String) -> [Item],
-                fallbackItemTitle: @escaping (String) -> String,
-                onSelect: @escaping (SuggestionListSelection<Item>) -> Void)
-    {
+    public init(
+        placeholder: String? = nil,
+        suggestions: @escaping (String) -> [Item],
+        fallbackItemTitle: @escaping (String) -> String,
+        onSelect: @escaping (SuggestionListSelection<Item>) -> Void
+    ) {
         self.placeholder = placeholder
         self.suggestions = suggestions
         self.fallbackItemTitle = fallbackItemTitle
@@ -213,7 +216,8 @@ public struct Sugg<Item: SuggestionItem> {
             return store
         }
 
-        return store
+        return
+            store
             .filter({ $0.title.hasPrefix(text) })
     } fallbackItemTitle: { text in
         "\(text)を新たに作成"

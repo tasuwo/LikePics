@@ -61,15 +61,21 @@ extension AlbumSelectionCell: ThumbnailPresentable {
     public func calcThumbnailPointSize(originalPixelSize: CGSize?) -> CGSize {
         if let originalSize = originalPixelSize {
             if originalSize.width < originalSize.height {
-                return .init(width: thumbnailWidthConstraint.constant,
-                             height: thumbnailWidthConstraint.constant * (originalSize.height / originalSize.width))
+                return .init(
+                    width: thumbnailWidthConstraint.constant,
+                    height: thumbnailWidthConstraint.constant * (originalSize.height / originalSize.width)
+                )
             } else {
-                return .init(width: thumbnailWidthConstraint.constant * (originalSize.width / originalSize.height),
-                             height: thumbnailWidthConstraint.constant)
+                return .init(
+                    width: thumbnailWidthConstraint.constant * (originalSize.width / originalSize.height),
+                    height: thumbnailWidthConstraint.constant
+                )
             }
         } else {
-            return .init(width: thumbnailWidthConstraint.constant,
-                         height: thumbnailWidthConstraint.constant)
+            return .init(
+                width: thumbnailWidthConstraint.constant,
+                height: thumbnailWidthConstraint.constant
+            )
         }
     }
 }

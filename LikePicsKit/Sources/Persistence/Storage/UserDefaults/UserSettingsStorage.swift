@@ -36,7 +36,7 @@ public class UserSettingsStorage {
             Self.Key.userInterfaceStyle.rawValue: UserInterfaceStyle.unspecified.rawValue,
             Self.Key.showHiddenItems.rawValue: false,
             Self.Key.enabledICloudSync.rawValue: true,
-            Self.Key.ignoreCloudUnavailableAlert.rawValue: false
+            Self.Key.ignoreCloudUnavailableAlert.rawValue: false,
         ])
     }
 
@@ -101,26 +101,30 @@ extension UserSettingsStorage: UserSettingsStorageProtocol {
     // MARK: - UserSettingsStorageProtocol
 
     public var userInterfaceStyle: AnyPublisher<UserInterfaceStyle, Never> {
-        return userDefaults
+        return
+            userDefaults
             .publisher(for: \.userSettingsUserInterfaceStyle)
             .map { UserInterfaceStyle(rawValue: $0) ?? .unspecified }
             .eraseToAnyPublisher()
     }
 
     public var showHiddenItems: AnyPublisher<Bool, Never> {
-        return userDefaults
+        return
+            userDefaults
             .publisher(for: \.userSettingsShowHiddenItems)
             .eraseToAnyPublisher()
     }
 
     public var enabledICloudSync: AnyPublisher<Bool, Never> {
-        return userDefaults
+        return
+            userDefaults
             .publisher(for: \.userSettingsEnabledICloudSync)
             .eraseToAnyPublisher()
     }
 
     public var ignoreCloudUnavailableAlert: AnyPublisher<Bool, Never> {
-        return userDefaults
+        return
+            userDefaults
             .publisher(for: \.userSettingsIgnoreCloudUnavailableAlert)
             .eraseToAnyPublisher()
     }

@@ -32,8 +32,8 @@ public struct AlbumMultiSelectionModalState: Equatable {
     var isDismissed: Bool
 }
 
-public extension AlbumMultiSelectionModalState {
-    init(id: UUID, selections: Set<Album.Identity>, isSomeItemsHidden: Bool) {
+extension AlbumMultiSelectionModalState {
+    public init(id: UUID, selections: Set<Album.Identity>, isSomeItemsHidden: Bool) {
         self.id = id
         initialSelections = selections
 
@@ -55,7 +55,8 @@ public extension AlbumMultiSelectionModalState {
 
 extension AlbumMultiSelectionModalState {
     var filteredOrderedAlbums: Set<Ordered<ListingAlbumTitle>> {
-        let albums = albums
+        let albums =
+            albums
             .filteredOrderedEntities()
         return Set(albums)
     }

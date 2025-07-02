@@ -16,11 +16,12 @@ public struct Tag: Codable, Equatable, Hashable {
     // MARK: - Lifecycle
 
     // sourcery: AutoDefaultValueUseThisInitializer
-    public init(id: UUID,
-                name: String,
-                isHidden: Bool,
-                clipCount: Int? = nil)
-    {
+    public init(
+        id: UUID,
+        name: String,
+        isHidden: Bool,
+        clipCount: Int? = nil
+    ) {
         self.id = id
         self.name = name
         self.isHidden = isHidden

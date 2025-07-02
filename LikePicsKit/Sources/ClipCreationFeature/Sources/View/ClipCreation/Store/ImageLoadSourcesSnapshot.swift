@@ -27,15 +27,19 @@ struct ImageSourcesSnapshot: Equatable {
     // MARK: - Methods
 
     func selected(_ id: UUID) -> Self {
-        return .init(order: order,
-                     selections: selections + [id],
-                     imageSourceById: imageSourceById)
+        return .init(
+            order: order,
+            selections: selections + [id],
+            imageSourceById: imageSourceById
+        )
     }
 
     func deselected(_ id: UUID) -> Self {
-        return .init(order: order,
-                     selections: selections.filter { $0 != id },
-                     imageSourceById: imageSourceById)
+        return .init(
+            order: order,
+            selections: selections.filter { $0 != id },
+            imageSourceById: imageSourceById
+        )
     }
 
     func removed(_ id: UUID) -> Self {

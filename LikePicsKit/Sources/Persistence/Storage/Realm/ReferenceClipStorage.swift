@@ -186,7 +186,8 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
     public func updateTags(having ids: [ReferenceTag.Identity], toDirty isDirty: Bool) -> Result<Void, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
-        let tags = ids
+        let tags =
+            ids
             .map { realm.object(ofType: ReferenceTagObject.self, forPrimaryKey: $0) }
         tags.forEach { $0?.isDirty = isDirty }
 
@@ -245,7 +246,8 @@ extension ReferenceClipStorage: ReferenceClipStorageProtocol {
     public func updateAlbums(having ids: [ReferenceAlbum.Identity], toDirty isDirty: Bool) -> Result<Void, ClipStorageError> {
         guard let realm = self.realm, realm.isInWriteTransaction else { return .failure(.internalError) }
 
-        let albums = ids
+        let albums =
+            ids
             .map { realm.object(ofType: ReferenceAlbumObject.self, forPrimaryKey: $0) }
         albums.forEach { $0?.isDirty = isDirty }
 

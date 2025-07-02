@@ -54,8 +54,8 @@ extension ImageSourceOnWebViewResolver: ImageSourceResolver {
     }
 }
 
-private extension HTMLDocument {
-    func webImageUrls() -> [WebImageUrlSet] {
+extension HTMLDocument {
+    fileprivate func webImageUrls() -> [WebImageUrlSet] {
         return css("img", namespaces: nil)
             .compactMap { $0["src"] }
             .compactMap { URL(string: $0) }
@@ -68,14 +68,14 @@ private extension HTMLDocument {
     }
 }
 
-private extension WKWebView {
-    enum ParseError: Error {
+extension WKWebView {
+    fileprivate enum ParseError: Error {
         case noContent
         case webViewError(Error)
         case failedToParse(Error)
     }
 
-    func currentContent(_ completion: @escaping (Result<HTMLDocument, ParseError>) -> Void) {
+    fileprivate func currentContent(_ completion: @escaping (Result<HTMLDocument, ParseError>) -> Void) {
         DispatchQueue.main.async {
             self.evaluateJavaScript("document.documentElement.outerHTML.toString()") { obj, error in
                 guard let html = obj as? String else {

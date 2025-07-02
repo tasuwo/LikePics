@@ -64,10 +64,11 @@ extension ClipItemInformationTransitioningController: AnimatorDelegate {
 extension ClipItemInformationTransitioningController: UIViewControllerTransitioningDelegate {
     // MARK: - UIViewControllerTransitioningDelegate
 
-    public func animationController(forPresented presented: UIViewController,
-                                    presenting: UIViewController,
-                                    source: UIViewController) -> UIViewControllerAnimatedTransitioning?
-    {
+    public func animationController(
+        forPresented presented: UIViewController,
+        presenting: UIViewController,
+        source: UIViewController
+    ) -> UIViewControllerAnimatedTransitioning? {
         switch self.transitionMode {
         case .custom:
             let fallback = FadeTransitionAnimator()

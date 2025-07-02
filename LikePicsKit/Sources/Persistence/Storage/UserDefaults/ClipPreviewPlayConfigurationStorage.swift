@@ -28,7 +28,7 @@ public class ClipPreviewPlayConfigurationStorage {
             Self.Key.range.rawValue: ClipPreviewPlayConfiguration.Range.default.rawValue,
             Self.Key.loopEnabled.rawValue: ClipPreviewPlayConfiguration.default.loopEnabled,
             Self.Key.interval.rawValue: ClipPreviewPlayConfiguration.default.interval,
-            Self.Key.customIntervals.rawValue: []
+            Self.Key.customIntervals.rawValue: [],
         ])
     }
 }
@@ -63,40 +63,46 @@ extension ClipPreviewPlayConfigurationStorage: ClipPreviewPlayConfigurationStora
     // MARK: - UserSettingsStorageProtocol
 
     public var animation: AnyPublisher<Domain.ClipPreviewPlayConfiguration.Animation, Never> {
-        return userDefaults
+        return
+            userDefaults
             .publisher(for: \.clipPreviewPlayConfigurationAnimation)
             .map { ClipPreviewPlayConfiguration.Animation(rawValue: $0) ?? ClipPreviewPlayConfiguration.Animation.default }
             .eraseToAnyPublisher()
     }
 
     public var order: AnyPublisher<Domain.ClipPreviewPlayConfiguration.Order, Never> {
-        return userDefaults
+        return
+            userDefaults
             .publisher(for: \.clipPreviewPlayConfigurationOrder)
             .map { ClipPreviewPlayConfiguration.Order(rawValue: $0) ?? ClipPreviewPlayConfiguration.Order.default }
             .eraseToAnyPublisher()
     }
 
     public var range: AnyPublisher<Domain.ClipPreviewPlayConfiguration.Range, Never> {
-        return userDefaults
+        return
+            userDefaults
             .publisher(for: \.clipPreviewPlayConfigurationRange)
             .map { ClipPreviewPlayConfiguration.Range(rawValue: $0) ?? ClipPreviewPlayConfiguration.Range.default }
             .eraseToAnyPublisher()
     }
 
     public var loopEnabled: AnyPublisher<Bool, Never> {
-        return userDefaults
+        return
+            userDefaults
             .publisher(for: \.clipPreviewPlayConfigurationLoopEnabled)
             .eraseToAnyPublisher()
     }
 
     public var interval: AnyPublisher<Int, Never> {
-        return userDefaults
+        return
+            userDefaults
             .publisher(for: \.clipPreviewPlayConfigurationInterval)
             .eraseToAnyPublisher()
     }
 
     public var customIntervals: AnyPublisher<[Int], Never> {
-        return userDefaults
+        return
+            userDefaults
             .publisher(for: \.clipPreviewPlayConfigurationCustomIntervals)
             .eraseToAnyPublisher()
     }
@@ -106,11 +112,13 @@ extension ClipPreviewPlayConfigurationStorage: ClipPreviewPlayConfigurationStora
             .CombineLatest4(animation, order, range, loopEnabled)
             .combineLatest(interval)
             .map { args, interval in
-                return ClipPreviewPlayConfiguration(animation: args.0,
-                                                    order: args.1,
-                                                    range: args.2,
-                                                    loopEnabled: args.3,
-                                                    interval: interval)
+                return ClipPreviewPlayConfiguration(
+                    animation: args.0,
+                    order: args.1,
+                    range: args.2,
+                    loopEnabled: args.3,
+                    interval: interval
+                )
             }
             .eraseToAnyPublisher()
     }
@@ -136,11 +144,13 @@ extension ClipPreviewPlayConfigurationStorage: ClipPreviewPlayConfigurationStora
     }
 
     public func fetchClipPreviewPlayConfiguration() -> Domain.ClipPreviewPlayConfiguration {
-        return ClipPreviewPlayConfiguration(animation: fetchAnimation(),
-                                            order: fetchOrder(),
-                                            range: fetchRange(),
-                                            loopEnabled: fetchLoopEnabled(),
-                                            interval: fetchInterval())
+        return ClipPreviewPlayConfiguration(
+            animation: fetchAnimation(),
+            order: fetchOrder(),
+            range: fetchRange(),
+            loopEnabled: fetchLoopEnabled(),
+            interval: fetchInterval()
+        )
     }
 
     public func fetchCustomIntervals() -> [Int] {
@@ -178,7 +188,8 @@ extension ClipPreviewPlayConfigurationStorage: ClipPreviewPlayConfigurationStora
     public func removeCustomInterval(_ interval: Int) -> Bool {
         var customIntervals = userDefaults.clipPreviewPlayConfigurationCustomIntervals
         guard let index = customIntervals.firstIndex(of: interval),
-              interval <= ClipPreviewPlayConfigurationCustomIntervalMax else { return false }
+            interval <= ClipPreviewPlayConfigurationCustomIntervalMax
+        else { return false }
         customIntervals.remove(at: index)
         userDefaults.set(customIntervals, forKey: Key.customIntervals.rawValue)
         return true

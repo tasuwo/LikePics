@@ -3,17 +3,19 @@
 //
 
 import Foundation
+
 @testable import Persistence
 
 extension ClipObject {
-    static func makeDefault(id: UUID,
-                            description: String = "hoge",
-                            items: [ClipItemObject] = [],
-                            tagIds: [TagIdObject] = [],
-                            isHidden: Bool = false,
-                            registeredAt: Date = Date(timeIntervalSince1970: 0),
-                            updatedAt: Date = Date(timeIntervalSince1970: 1000)) -> ClipObject
-    {
+    static func makeDefault(
+        id: UUID,
+        description: String = "hoge",
+        items: [ClipItemObject] = [],
+        tagIds: [TagIdObject] = [],
+        isHidden: Bool = false,
+        registeredAt: Date = Date(timeIntervalSince1970: 0),
+        updatedAt: Date = Date(timeIntervalSince1970: 1000)
+    ) -> ClipObject {
         let obj = ClipObject()
         obj.id = id
         obj.descriptionText = description
@@ -31,16 +33,17 @@ extension ClipObject {
 }
 
 extension ClipItemObject {
-    static func makeDefault(id: UUID = UUID(),
-                            url: URL? = nil,
-                            clipId: UUID = UUID(),
-                            clipIndex: Int = 0,
-                            imageId: UUID = UUID(),
-                            imageFileName: String = "",
-                            imageUrl: URL? = nil,
-                            registeredAt: Date = Date(timeIntervalSince1970: 0),
-                            updatedAt: Date = Date(timeIntervalSince1970: 0)) -> ClipItemObject
-    {
+    static func makeDefault(
+        id: UUID = UUID(),
+        url: URL? = nil,
+        clipId: UUID = UUID(),
+        clipIndex: Int = 0,
+        imageId: UUID = UUID(),
+        imageFileName: String = "",
+        imageUrl: URL? = nil,
+        registeredAt: Date = Date(timeIntervalSince1970: 0),
+        updatedAt: Date = Date(timeIntervalSince1970: 0)
+    ) -> ClipItemObject {
         let obj = ClipItemObject()
         obj.id = id
         obj.url = url
@@ -64,10 +67,11 @@ extension TagIdObject {
 }
 
 extension ReferenceTagObject {
-    static func makeDefault(id: UUID = UUID(),
-                            name: String = "",
-                            isDirty: Bool = false) -> ReferenceTagObject
-    {
+    static func makeDefault(
+        id: UUID = UUID(),
+        name: String = "",
+        isDirty: Bool = false
+    ) -> ReferenceTagObject {
         let obj = ReferenceTagObject()
         obj.id = id
         obj.name = name

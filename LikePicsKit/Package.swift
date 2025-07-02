@@ -5,7 +5,7 @@ let package = Package(
     name: "LikePicsKit",
     defaultLocalization: "ja",
     platforms: [
-        .iOS(.v15), .macOS("15")
+        .iOS(.v15), .macOS("15"),
     ],
     products: [
         .library(name: "AppFeature", targets: ["AppFeature"]),
@@ -28,14 +28,14 @@ let package = Package(
         .library(name: "Smoothie", targets: ["Smoothie"]),
         .library(name: "Common", targets: ["Common"]),
         .library(name: "Environment", targets: ["Environment"]),
-        .library(name: "TestHelper", targets: ["TestHelper"])
+        .library(name: "TestHelper", targets: ["TestHelper"]),
     ],
     dependencies: [
         .package(url: "https://github.com/phimage/Erik", .upToNextMajor(from: "5.1.0")),
         .package(url: "https://github.com/tasuwo/PersistentStack", .upToNextMajor(from: "0.8.1")),
         .package(url: "https://github.com/tasuwo/MasonryGrid", .upToNextMajor(from: "0.0.1-alpha.6")),
         .package(url: "https://github.com/apple/swift-async-algorithms", .upToNextMajor(from: "1.0.0")),
-        .package(url: "https://github.com/realm/realm-swift", .upToNextMajor(from: "10.54.5"))
+        .package(url: "https://github.com/realm/realm-swift", .upToNextMajor(from: "10.54.5")),
     ],
     targets: [
         // MARK: - App
@@ -57,7 +57,7 @@ let package = Package(
                 "Persistence",
                 "Smoothie",
                 "MobileTransition",
-                .product(name: "PersistentStack", package: "PersistentStack")
+                .product(name: "PersistentStack", package: "PersistentStack"),
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
@@ -69,7 +69,7 @@ let package = Package(
                 "Domain",
                 "Persistence",
                 .product(name: "MasonryGrid", package: "MasonryGrid"),
-                .product(name: "PersistentStack", package: "PersistentStack")
+                .product(name: "PersistentStack", package: "PersistentStack"),
             ],
         ),
         .target(
@@ -84,7 +84,7 @@ let package = Package(
                 "LikePicsUIKit",
                 "Persistence",
                 "Smoothie",
-                "ShareExtensionFeatureCore"
+                "ShareExtensionFeatureCore",
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
@@ -98,7 +98,7 @@ let package = Package(
                 "ShareExtensionFeatureCore",
                 "ClipCreationDesktopFeature",
                 "ClipCreationFeatureCore",
-                .product(name: "PersistentStack", package: "PersistentStack")
+                .product(name: "PersistentStack", package: "PersistentStack"),
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
@@ -107,7 +107,7 @@ let package = Package(
         .target(
             name: "ShareExtensionFeatureCore",
             dependencies: [
-                "ClipCreationFeatureCore",
+                "ClipCreationFeatureCore"
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
@@ -124,7 +124,7 @@ let package = Package(
                 "Domain",
                 "Environment",
                 "Common",
-                "CompositeKit"
+                "CompositeKit",
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
@@ -138,7 +138,7 @@ let package = Package(
                 "Domain",
                 "Environment",
                 "Common",
-                "CompositeKit"
+                "CompositeKit",
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
@@ -152,7 +152,7 @@ let package = Package(
                 "Domain",
                 "Environment",
                 "Common",
-                "CompositeKit"
+                "CompositeKit",
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
@@ -168,7 +168,7 @@ let package = Package(
                 "Common",
                 "CompositeKit",
                 "ClipCreationFeatureCore",
-                .product(name: "Erik", package: "Erik")
+                .product(name: "Erik", package: "Erik"),
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
@@ -180,7 +180,7 @@ let package = Package(
                 "Persistence",
                 "Smoothie",
                 "ClipCreationFeatureCore",
-                .product(name: "MasonryGrid", package: "MasonryGrid")
+                .product(name: "MasonryGrid", package: "MasonryGrid"),
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
@@ -191,7 +191,7 @@ let package = Package(
             dependencies: [
                 "Domain",
                 "Common",
-                .product(name: "Erik", package: "Erik")
+                .product(name: "Erik", package: "Erik"),
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
@@ -204,7 +204,7 @@ let package = Package(
                 "Domain",
                 "Environment",
                 "Common",
-                "CompositeKit"
+                "CompositeKit",
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
@@ -217,14 +217,14 @@ let package = Package(
             name: "Domain",
             dependencies: [
                 "Common",
-                "Smoothie"
+                "Smoothie",
             ]
         ),
         .testTarget(
             name: "DomainTests",
             dependencies: [
                 "Domain",
-                "TestHelper"
+                "TestHelper",
             ]
         ),
         .target(
@@ -233,7 +233,7 @@ let package = Package(
                 "Common",
                 "Domain",
                 "Smoothie",
-                "MobileTransition"
+                "MobileTransition",
             ]
         ),
         .target(
@@ -247,14 +247,14 @@ let package = Package(
             dependencies: [
                 "Common",
                 "Domain",
-                .product(name: "RealmSwift", package: "realm-swift")
+                .product(name: "RealmSwift", package: "realm-swift"),
             ]
         ),
         .testTarget(
             name: "PersistenceTests",
             dependencies: [
                 "Persistence",
-                "TestHelper"
+                "TestHelper",
             ],
             resources: [
                 .process("Resources/")
@@ -270,7 +270,7 @@ let package = Package(
                 "Domain",
                 "Common",
                 "CompositeKit",
-                "MobileTransition"
+                "MobileTransition",
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v5)
@@ -306,7 +306,7 @@ let package = Package(
                 "Persistence",
                 "Smoothie",
                 "ClipCreationFeature",
-                "LikePicsUIKit"
+                "LikePicsUIKit",
             ]
         ),
     ]

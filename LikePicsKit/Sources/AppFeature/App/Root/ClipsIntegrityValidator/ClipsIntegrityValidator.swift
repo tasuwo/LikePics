@@ -17,9 +17,11 @@ public class ClipsIntegrityValidator {
     // MARK: - Initializers
 
     public init(dependency: ClipsIntegrityValidatorDependency) {
-        self.store = .init(initialState: ClipsIntegrityValidatorState(),
-                           dependency: dependency,
-                           reducer: ClipsIntegrityValidatorReducer())
+        self.store = .init(
+            initialState: ClipsIntegrityValidatorState(),
+            dependency: dependency,
+            reducer: ClipsIntegrityValidatorReducer()
+        )
 
         DarwinNotificationCenter.default.addObserver(self, for: .shareExtensionDidCompleteRequest) { [weak self] _ in
             self?.store.execute(.shareExtensionDidCompleteRequest)

@@ -3,9 +3,10 @@
 //
 
 import Common
+import XCTest
+
 @testable import Domain
 @testable import TestHelper
-import XCTest
 
 class TemporariesPersistServiceTests: XCTestCase {
     enum TestError: Error { case dummy }
@@ -34,13 +35,15 @@ class TemporariesPersistServiceTests: XCTestCase {
         queue.syncHandler = { $0() }
         queue.syncBlockHandler = { try $0() }
 
-        service = .init(temporaryClipStorage: temporaryClipStorage,
-                        temporaryImageStorage: temporaryImageStorage,
-                        clipStorage: clipStorage,
-                        referenceClipStorage: referenceClipStorage,
-                        imageStorage: imageStorage,
-                        commandQueue: queue,
-                        lock: .init())
+        service = .init(
+            temporaryClipStorage: temporaryClipStorage,
+            temporaryImageStorage: temporaryImageStorage,
+            clipStorage: clipStorage,
+            referenceClipStorage: referenceClipStorage,
+            imageStorage: imageStorage,
+            commandQueue: queue,
+            lock: .init()
+        )
         service.set(observer: observer)
     }
 
@@ -59,18 +62,24 @@ class TemporariesPersistServiceTests: XCTestCase {
     private func setUp_一時保存したタグを読み込める() {
         referenceClipStorage.readAllDirtyTagsHandler = {
             .success([
-                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                             name: "hoge",
-                             isHidden: true,
-                             isDirty: true),
-                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
-                             name: "fuga",
-                             isHidden: false,
-                             isDirty: true),
-                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
-                             name: "piyo",
-                             isHidden: true,
-                             isDirty: true),
+                .makeDefault(
+                    id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                    name: "hoge",
+                    isHidden: true,
+                    isDirty: true
+                ),
+                .makeDefault(
+                    id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+                    name: "fuga",
+                    isHidden: false,
+                    isDirty: true
+                ),
+                .makeDefault(
+                    id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
+                    name: "piyo",
+                    isHidden: true,
+                    isDirty: true
+                ),
             ])
         }
     }
@@ -78,20 +87,26 @@ class TemporariesPersistServiceTests: XCTestCase {
     private func setUp_一時保存したクリップを読み込める() {
         temporaryClipStorage.readAllClipsHandler = {
             return .success([
-                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                             items: [
-                                 .makeDefault(imageId: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E61")!, imageFileName: "1-1"),
-                                 .makeDefault(imageId: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E62")!, imageFileName: "1-2"),
-                             ]),
-                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
-                             items: [
-                                 .makeDefault(imageId: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E71")!, imageFileName: "2-1"),
-                             ]),
-                .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
-                             items: [
-                                 .makeDefault(imageId: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E81")!, imageFileName: "3-1"),
-                                 .makeDefault(imageId: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E82")!, imageFileName: "3-2"),
-                             ]),
+                .makeDefault(
+                    id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                    items: [
+                        .makeDefault(imageId: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E61")!, imageFileName: "1-1"),
+                        .makeDefault(imageId: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E62")!, imageFileName: "1-2"),
+                    ]
+                ),
+                .makeDefault(
+                    id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+                    items: [
+                        .makeDefault(imageId: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E71")!, imageFileName: "2-1")
+                    ]
+                ),
+                .makeDefault(
+                    id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
+                    items: [
+                        .makeDefault(imageId: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E81")!, imageFileName: "3-1"),
+                        .makeDefault(imageId: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E82")!, imageFileName: "3-2"),
+                    ]
+                ),
             ])
         }
     }
@@ -106,25 +121,37 @@ class TemporariesPersistServiceTests: XCTestCase {
                 XCTAssertEqual(tag.id, UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!)
                 XCTAssertEqual(tag.name, "hoge")
                 XCTAssertTrue(tag.isHidden)
-                return .success(.makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                             name: "hoge",
-                                             isHidden: true))
+                return .success(
+                    .makeDefault(
+                        id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                        name: "hoge",
+                        isHidden: true
+                    )
+                )
 
             case 1:
                 XCTAssertEqual(tag.id, UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!)
                 XCTAssertEqual(tag.name, "fuga")
                 XCTAssertFalse(tag.isHidden)
-                return .success(.makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
-                                             name: "fuga",
-                                             isHidden: false))
+                return .success(
+                    .makeDefault(
+                        id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+                        name: "fuga",
+                        isHidden: false
+                    )
+                )
 
             case 2:
                 XCTAssertEqual(tag.id, UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!)
                 XCTAssertEqual(tag.name, "piyo")
                 XCTAssertTrue(tag.isHidden)
-                return .success(.makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
-                                             name: "piyo",
-                                             isHidden: true))
+                return .success(
+                    .makeDefault(
+                        id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
+                        name: "piyo",
+                        isHidden: true
+                    )
+                )
 
             default:
                 XCTFail("予期しないタグが永続化された")
@@ -149,9 +176,13 @@ class TemporariesPersistServiceTests: XCTestCase {
                 XCTAssertEqual(tag.id, UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!)
                 XCTAssertEqual(tag.name, "fuga")
                 XCTAssertFalse(tag.isHidden)
-                return .success(.makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
-                                             name: "fuga",
-                                             isHidden: false))
+                return .success(
+                    .makeDefault(
+                        id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+                        name: "fuga",
+                        isHidden: false
+                    )
+                )
 
             case 2:
                 XCTAssertEqual(tag.id, UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!)
@@ -193,11 +224,14 @@ class TemporariesPersistServiceTests: XCTestCase {
 
     private func setUp_一時保存タグを全て更新できる() {
         referenceClipStorage.updateTagsHandler = { ids, toDirty in
-            XCTAssertEqual(ids, [
-                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
-                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!
-            ])
+            XCTAssertEqual(
+                ids,
+                [
+                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
+                ]
+            )
             XCTAssertFalse(toDirty)
             return .success(())
         }
@@ -213,10 +247,13 @@ class TemporariesPersistServiceTests: XCTestCase {
 
     private func setUp_一時保存タグを重複した分のみ削除できる() {
         referenceClipStorage.deleteTagsHandler = { ids in
-            XCTAssertEqual(ids, [
-                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!
-            ])
+            XCTAssertEqual(
+                ids,
+                [
+                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
+                ]
+            )
             return .success(())
         }
     }

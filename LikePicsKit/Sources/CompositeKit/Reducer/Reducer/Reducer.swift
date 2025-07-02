@@ -10,8 +10,8 @@ public protocol Reducer {
     func execute(action: Action, state: State, dependency: Dependency) -> (State, [Effect<Action>]?)
 }
 
-public extension Reducer {
-    func eraseToAnyReducer() -> AnyReducer<Action, State, Dependency> {
+extension Reducer {
+    public func eraseToAnyReducer() -> AnyReducer<Action, State, Dependency> {
         return .init(self)
     }
 }

@@ -48,15 +48,16 @@ class AlbumListViewController: UIViewController {
 
     // MARK: - Initializers
 
-    init(state: AlbumListViewState,
-         albumAdditionAlertState: TextEditAlertState,
-         albumEditAlertState: TextEditAlertState,
-         dependency: AlbumListViewDependency,
-         thumbnailProcessingQueue: ImageProcessingQueue,
-         imageQueryService: ImageQueryServiceProtocol,
-         menuBuilder: AlbumListMenuBuildable.Type,
-         appBundle: Bundle)
-    {
+    init(
+        state: AlbumListViewState,
+        albumAdditionAlertState: TextEditAlertState,
+        albumEditAlertState: TextEditAlertState,
+        dependency: AlbumListViewDependency,
+        thumbnailProcessingQueue: ImageProcessingQueue,
+        imageQueryService: ImageQueryServiceProtocol,
+        menuBuilder: AlbumListMenuBuildable.Type,
+        appBundle: Bundle
+    ) {
         self.store = Store(initialState: state, dependency: dependency, reducer: AlbumListViewReducer())
         self.albumAdditionAlert = .init(state: albumAdditionAlertState)
         self.albumEditAlert = .init(state: albumEditAlertState)
@@ -197,25 +198,29 @@ extension AlbumListViewController {
 
     private func presentErrorMessageAlertIfNeeded(message: String?) {
         let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        })
+        alert.addAction(
+            .init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
+                self?.store.execute(.alertDismissed)
+            }
+        )
         presentingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
 
     private func presentDeleteConfirmationAlert(for albumId: Album.Identity, title: String, state: AlbumListViewState) {
         guard let album = state.albums.entity(having: albumId),
-              let indexPath = dataSource.indexPath(for: .init(album: album, isEditing: state.isEditing)),
-              let cell = collectionView.cellForItem(at: indexPath)
+            let indexPath = dataSource.indexPath(for: .init(album: album, isEditing: state.isEditing)),
+            let cell = collectionView.cellForItem(at: indexPath)
         else {
             store.execute(.alertDismissed)
             return
         }
 
-        let alert = UIAlertController(title: L10n.albumListViewAlertForDeleteTitle(title),
-                                      message: L10n.albumListViewAlertForDeleteMessage(title),
-                                      preferredStyle: .actionSheet)
+        let alert = UIAlertController(
+            title: L10n.albumListViewAlertForDeleteTitle(title),
+            message: L10n.albumListViewAlertForDeleteMessage(title),
+            preferredStyle: .actionSheet
+        )
 
         let confirmAction = UIAlertAction(title: L10n.albumListViewAlertForDeleteAction, style: .destructive) { [weak self] _ in
             self?.store.execute(.alertDeleteConfirmed)
@@ -271,10 +276,12 @@ extension AlbumListViewController {
 
     private func configureDataSource() {
         collectionView.delegate = self
-        dataSource = Layout.configureDataSource(collectionView: collectionView,
-                                                thumbnailProcessingQueue: thumbnailProcessingQueue,
-                                                queryService: imageQueryService,
-                                                delegate: self)
+        dataSource = Layout.configureDataSource(
+            collectionView: collectionView,
+            thumbnailProcessingQueue: thumbnailProcessingQueue,
+            queryService: imageQueryService,
+            delegate: self
+        )
     }
 
     private func configureReorder() {
@@ -291,9 +298,12 @@ extension AlbumListViewController {
     private func configureNavigationBar() {
         navigationItem.title = L10n.albumListViewTitle
 
-        let addItem = UIBarButtonItem(systemItem: .add, primaryAction: UIAction { [weak self] _ in
-            self?.store.execute(.addButtonTapped)
-        })
+        let addItem = UIBarButtonItem(
+            systemItem: .add,
+            primaryAction: UIAction { [weak self] _ in
+                self?.store.execute(.addButtonTapped)
+            }
+        )
 
         navigationItem.leftBarButtonItem = addItem
         navigationItem.rightBarButtonItem = editButtonItem
@@ -344,9 +354,11 @@ extension AlbumListViewController {
         guard let item = self.dataSource.itemIdentifier(for: indexPath), self.isEditing == false else {
             return nil
         }
-        return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath,
-                                          previewProvider: nil,
-                                          actionProvider: self.makeActionProvider(for: item.album, at: indexPath))
+        return UIContextMenuConfiguration(
+            identifier: indexPath as NSIndexPath,
+            previewProvider: nil,
+            actionProvider: self.makeActionProvider(for: item.album, at: indexPath)
+        )
     }
 
     func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
@@ -378,31 +390,35 @@ extension AlbumListViewController {
     private func makeAction(from item: AlbumListMenuItem, for album: Album, at indexPath: IndexPath) -> UIAction {
         switch item {
         case .hide:
-            return UIAction(title: L10n.albumListViewContextMenuActionHide,
-                            image: UIImage(systemName: "eye.slash.fill"))
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.albumListViewContextMenuActionHide,
+                image: UIImage(systemName: "eye.slash.fill")
+            ) { [weak self] _ in
                 self?.store.execute(.hideMenuTapped(album.id))
             }
 
         case .reveal:
-            return UIAction(title: L10n.albumListViewContextMenuActionReveal,
-                            image: UIImage(systemName: "eye.fill"))
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.albumListViewContextMenuActionReveal,
+                image: UIImage(systemName: "eye.fill")
+            ) { [weak self] _ in
                 self?.store.execute(.revealMenuTapped(album.id))
             }
 
         case .rename:
-            return UIAction(title: L10n.albumListViewContextMenuActionUpdate,
-                            image: UIImage(systemName: "text.cursor"))
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.albumListViewContextMenuActionUpdate,
+                image: UIImage(systemName: "text.cursor")
+            ) { [weak self] _ in
                 self?.store.execute(.renameMenuTapped(album.id))
             }
 
         case .delete:
-            return UIAction(title: L10n.albumListViewContextMenuActionDelete,
-                            image: UIImage(systemName: "trash.fill"),
-                            attributes: .destructive)
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.albumListViewContextMenuActionDelete,
+                image: UIImage(systemName: "trash.fill"),
+                attributes: .destructive
+            ) { [weak self] _ in
                 self?.store.execute(.deleteMenuTapped(album.id))
             }
         }
@@ -563,13 +579,15 @@ extension AlbumListViewController: Restorable {
         albumAdditionAlert.dismiss(animated: false, completion: nil)
         albumEditAlert.dismiss(animated: false, completion: nil)
 
-        return AlbumListViewController(state: nextState,
-                                       albumAdditionAlertState: albumAdditionAlert.store.stateValue,
-                                       albumEditAlertState: albumEditAlert.store.stateValue,
-                                       dependency: store.dependency,
-                                       thumbnailProcessingQueue: thumbnailProcessingQueue,
-                                       imageQueryService: imageQueryService,
-                                       menuBuilder: menuBuilder,
-                                       appBundle: appBundle)
+        return AlbumListViewController(
+            state: nextState,
+            albumAdditionAlertState: albumAdditionAlert.store.stateValue,
+            albumEditAlertState: albumEditAlert.store.stateValue,
+            dependency: store.dependency,
+            thumbnailProcessingQueue: thumbnailProcessingQueue,
+            imageQueryService: imageQueryService,
+            menuBuilder: menuBuilder,
+            appBundle: appBundle
+        )
     }
 }

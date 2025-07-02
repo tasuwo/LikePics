@@ -3,8 +3,8 @@
 //
 
 import Common
-import os.log
 import UIKit
+import os.log
 
 class ClipItemInformationInteractiveDismissalAnimator: NSObject {
     struct InnerContext {
@@ -231,7 +231,8 @@ extension ClipItemInformationInteractiveDismissalAnimator: UIViewControllerInter
     // MARK: - UIViewControllerInteractiveTransitioning
 
     func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning) {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
 
         logger.debug("Start transition for ClipItemInformationView dismissal")
 
@@ -252,7 +253,7 @@ extension ClipItemInformationInteractiveDismissalAnimator: UIViewControllerInter
         }
 
         guard let infoViewingClipItem = from.clipItem(self),
-              to.isPreviewing(self, clipItem: infoViewingClipItem) == true
+            to.isPreviewing(self, clipItem: infoViewingClipItem) == true
         else {
             logger.debug("Start fallback transition for ClipItemInformationView dismissal")
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.fallbackAnimateDuration, isInteractive: true)

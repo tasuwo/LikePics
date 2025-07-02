@@ -69,8 +69,8 @@ public struct ClipCreationViewState: Equatable {
     var alert: Alert?
 }
 
-public extension ClipCreationViewState {
-    init(id: UUID, source: Source, url: URL?, isSomeItemsHidden: Bool) {
+extension ClipCreationViewState {
+    public init(id: UUID, source: Source, url: URL?, isSomeItemsHidden: Bool) {
         self.id = id
         self.source = source
         self.url = url

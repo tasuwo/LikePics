@@ -3,8 +3,8 @@
 //
 
 import Common
-import os.log
 import UIKit
+import os.log
 
 class ClipPreviewInteractiveDismissalAnimator: NSObject {
     struct InnerContext {
@@ -127,8 +127,10 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
 
         animatingImageView.transform = CGAffineTransform(scaleX: scale, y: scale)
         let initialAnchorPoint = CGPoint(x: initialImageFrame.midX, y: initialImageFrame.midY)
-        let nextAnchorPoint = CGPoint(x: initialAnchorPoint.x + translation.x,
-                                      y: initialAnchorPoint.y + translation.y - ((1 - scale) * initialImageFrame.height / 2))
+        let nextAnchorPoint = CGPoint(
+            x: initialAnchorPoint.x + translation.x,
+            y: initialAnchorPoint.y + translation.y - ((1 - scale) * initialImageFrame.height / 2)
+        )
         animatingImageView.center = nextAnchorPoint
         animatingImageView.layer.cornerRadius = cornerRadius
         animatingImageView.layer.cornerCurve = .continuous
@@ -151,12 +153,14 @@ class ClipPreviewInteractiveDismissalAnimator: NSObject {
                     dismissalType = .stickToThumbnail(thumbnailFrame: to.thumbnailFrame(self, id: previewingClipItem.cellIdentity, needsScroll: false, on: containerView))
                 }
             }
-            let params = FinishAnimationParameters(dismissalType: dismissalType,
-                                                   currentCornerRadius: cornerRadius,
-                                                   finalCornerRadius: to.animatingCellCornerRadius(self),
-                                                   from: from,
-                                                   to: to,
-                                                   innerContext: innerContext)
+            let params = FinishAnimationParameters(
+                dismissalType: dismissalType,
+                currentCornerRadius: cornerRadius,
+                finalCornerRadius: to.animatingCellCornerRadius(self),
+                from: from,
+                to: to,
+                innerContext: innerContext
+            )
 
             let velocity = sender.velocity(in: from.view)
             let scrollToUp = velocity.y < 0
@@ -275,7 +279,8 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
     // MARK: - UIViewControllerAnimatedTransitioning
 
     func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning) {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
 
         logger.debug("Start transition for ClipPreviewPageView dismissal")
 
@@ -299,7 +304,7 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
         /*
          アニメーション時、画像を Tab/Navigation Bar の裏側に回り込ませることで、自然なアニメーションを実現する
          このために、以下のような構成を取る
-
+        
          +-+       +-+       +-+  +-+
          | |       | |       | |  | |
          +-+       +-+       | |  | |
@@ -363,16 +368,20 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
             from.view.backgroundColor = fromViewBackgroundView.backgroundColor
             fromImageView.isHidden = false
 
-            UIView.likepics_animate(withDuration: 0.15, animations: {
-                // CollectionViewの再描画により元のセルのインスタンスが破棄されている可能性があるため、
-                // 最新のセルのインスタンスを取得し直す
-                to.animatingCell(self, id: previewingClipItem.cellIdentity, needsScroll: true)?.alpha = 1
-            }, completion: { _ in
-                animatingImageView.alpha = 0
-                fromViewBackgroundView.removeFromSuperview()
-                animatingImageView.removeFromSuperview()
-                completion()
-            })
+            UIView.likepics_animate(
+                withDuration: 0.15,
+                animations: {
+                    // CollectionViewの再描画により元のセルのインスタンスが破棄されている可能性があるため、
+                    // 最新のセルのインスタンスを取得し直す
+                    to.animatingCell(self, id: previewingClipItem.cellIdentity, needsScroll: true)?.alpha = 1
+                },
+                completion: { _ in
+                    animatingImageView.alpha = 0
+                    fromViewBackgroundView.removeFromSuperview()
+                    animatingImageView.removeFromSuperview()
+                    completion()
+                }
+            )
         }
 
         let innerContext = InnerContext(
@@ -385,15 +394,18 @@ extension ClipPreviewInteractiveDismissalAnimator: UIViewControllerInteractiveTr
 
         if self.shouldEndImmediately {
             self.shouldEndImmediately = false
-            let dismissalType: FinishAnimationParameters.DismissalType = previewingClipItem.isItemPrimary
+            let dismissalType: FinishAnimationParameters.DismissalType =
+                previewingClipItem.isItemPrimary
                 ? .stickToThumbnail(thumbnailFrame: to.thumbnailFrame(self, id: previewingClipItem.cellIdentity, needsScroll: false, on: containerView))
                 : .fadeout(cellFrame: to.animatingCellFrame(self, id: previewingClipItem.cellIdentity, needsScroll: false, on: containerView))
-            let params = FinishAnimationParameters(dismissalType: dismissalType,
-                                                   currentCornerRadius: 0,
-                                                   finalCornerRadius: to.animatingCellCornerRadius(self),
-                                                   from: from,
-                                                   to: to,
-                                                   innerContext: innerContext)
+            let params = FinishAnimationParameters(
+                dismissalType: dismissalType,
+                currentCornerRadius: 0,
+                finalCornerRadius: to.animatingCellCornerRadius(self),
+                from: from,
+                to: to,
+                innerContext: innerContext
+            )
             lock.unlock()
             logger.debug("Immediately ended transition for ClipPreviewPageView dismissal")
             self.startEndAnimation(params: params)

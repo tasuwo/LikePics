@@ -57,20 +57,25 @@ public final class AppContainer: ObservableObject {
 
         // MARK: CoreData
 
-        var persistentStackConf = PersistentStack.Configuration(author: "app",
-                                                                persistentContainerName: "Model",
-                                                                managedObjectModelUrl: ManagedObjectModelUrl)
+        var persistentStackConf = PersistentStack.Configuration(
+            author: "app",
+            persistentContainerName: "Model",
+            managedObjectModelUrl: ManagedObjectModelUrl
+        )
         persistentStackConf.persistentContainerUrl = FileManager.default
             .containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier)!
             .appending(path: "likepics.sqlite", directoryHint: .notDirectory)
-        persistentStackConf.persistentHistoryTokenSaveDirectory = NSPersistentContainer
+        persistentStackConf.persistentHistoryTokenSaveDirectory =
+            NSPersistentContainer
             .defaultDirectoryURL()
             .appendingPathComponent("LikePics", isDirectory: true)
         persistentStackConf.persistentHistoryTokenFileName = "token.data"
         self.persistentStack = PersistentStack(configuration: persistentStackConf, isCloudKitSyncEnabled: isCloudSyncEnabled)
 
-        self.persistentStackLoader = PersistentStackLoader(persistentStack: persistentStack,
-                                                           settingStorage: CloudSyncSettingStorage())
+        self.persistentStackLoader = PersistentStackLoader(
+            persistentStack: persistentStack,
+            settingStorage: CloudSyncSettingStorage()
+        )
         self.persistentStackMonitor = PersistentStackMonitor()
 
         self.imageQueryContext = self.persistentStack.newBackgroundContext(on: self.imageQueryQueue)
@@ -81,17 +86,25 @@ public final class AppContainer: ObservableObject {
 
         // MARK: Image Loader
 
-        let memoryCache = MemoryCache(config: .init(costLimit: 2 * 1024 * 1024 * 1024,
-                                                    countLimit: Int.max))
+        let memoryCache = MemoryCache(
+            config: .init(
+                costLimit: 2 * 1024 * 1024 * 1024,
+                countLimit: Int.max
+            )
+        )
 
         // Clip
 
         var clipCacheConfig = ImageProcessingQueue.Configuration()
         let clipCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-thumbnails", appBundle: appBundle)
-        self.clipDiskCache = try DiskCache(path: clipCacheDirectory,
-                                           config: .init(sizeLimit: 1024 * 1024 * 1024,
-                                                         countLimit: Int.max,
-                                                         dateLimit: 30))
+        self.clipDiskCache = try DiskCache(
+            path: clipCacheDirectory,
+            config: .init(
+                sizeLimit: 1024 * 1024 * 1024,
+                countLimit: Int.max,
+                dateLimit: 30
+            )
+        )
         clipCacheConfig.diskCache = self.clipDiskCache
         clipCacheConfig.memoryCache = memoryCache
         self.clipThumbnailProcessingQueue = .init(config: clipCacheConfig)
@@ -100,10 +113,14 @@ public final class AppContainer: ObservableObject {
 
         var albumCacheConfig = ImageProcessingQueue.Configuration()
         let albumCacheDirectory = Self.resolveCacheDirectoryUrl(name: "album-thumbnails", appBundle: appBundle)
-        albumDiskCache = try DiskCache(path: albumCacheDirectory,
-                                       config: .init(sizeLimit: 1024 * 1024 * 512,
-                                                     countLimit: 1000,
-                                                     dateLimit: 30))
+        albumDiskCache = try DiskCache(
+            path: albumCacheDirectory,
+            config: .init(
+                sizeLimit: 1024 * 1024 * 512,
+                countLimit: 1000,
+                dateLimit: 30
+            )
+        )
         albumCacheConfig.diskCache = albumDiskCache
         albumCacheConfig.memoryCache = memoryCache
         self.albumThumbnailProcessingQueue = ImageProcessingQueue(config: albumCacheConfig)
@@ -147,7 +164,8 @@ public final class AppContainer: ObservableObject {
         let targetUrl: URL = {
             let directoryName: String = name
             if let directory = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) {
-                return directory
+                return
+                    directory
                     .appendingPathComponent(bundleIdentifier, isDirectory: true)
                     .appendingPathComponent(directoryName, isDirectory: true)
             } else {

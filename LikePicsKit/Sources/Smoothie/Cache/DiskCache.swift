@@ -16,7 +16,7 @@ public protocol DiskCaching: AnyObject {
 public final class DiskCache {
     public struct Configuration {
         public static let `default` = Configuration(
-            sizeLimit: 1024 * 1024 * 150, // 150MB
+            sizeLimit: 1024 * 1024 * 150,  // 150MB
             countLimit: 1000,
             dateLimit: 60,
             fileNameResolver: { $0.sha256() }
@@ -96,19 +96,23 @@ extension DiskCache {
     func contents() -> [Content] {
         let keys: [URLResourceKey] = [.totalFileAllocatedSizeKey, .contentAccessDateKey]
         guard let contents = try? FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: keys, options: .skipsHiddenFiles) else { return [] }
-        return contents
+        return
+            contents
             .compactMap { content in
                 guard let values = try? content.resourceValues(forKeys: Set(keys)) else { return nil }
-                return Content(url: content,
-                               fileSize: values.fileAllocatedSize ?? 0,
-                               accessDate: values.contentAccessDate ?? Date.distantPast)
+                return Content(
+                    url: content,
+                    fileSize: values.fileAllocatedSize ?? 0,
+                    accessDate: values.contentAccessDate ?? Date.distantPast
+                )
             }
     }
 }
 
 extension Array where Element == DiskCache.Content {
     var totalSize: Int {
-        return self
+        return
+            self
             .map { $0.fileSize }
             .reduce(0, +)
     }
@@ -239,20 +243,26 @@ extension DiskCache: DiskCaching {
     // MARK: - DiskCaching
 
     public func store(_ data: Data?, forKey key: String) {
-        guard let data = data else { remove(forKey: key); return }
-        stagingLock.lock(); defer { stagingLock.unlock() }
+        guard let data = data else {
+            remove(forKey: key)
+            return
+        }
+        stagingLock.lock()
+        defer { stagingLock.unlock() }
         staging.add(data, for: key)
         scheduleFlushNonAtomically()
     }
 
     public func remove(forKey key: String) {
-        stagingLock.lock(); defer { stagingLock.unlock() }
+        stagingLock.lock()
+        defer { stagingLock.unlock() }
         staging.remove(key: key)
         scheduleFlushNonAtomically()
     }
 
     public func removeAll() {
-        stagingLock.lock(); defer { stagingLock.unlock() }
+        stagingLock.lock()
+        defer { stagingLock.unlock() }
         staging.removeAll()
         scheduleFlushNonAtomically()
     }

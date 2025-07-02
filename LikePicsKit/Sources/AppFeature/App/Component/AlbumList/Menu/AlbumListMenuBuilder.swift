@@ -15,7 +15,7 @@ enum AlbumListMenuBuilder: AlbumListMenuBuildable {
         return [
             .rename,
             album.isHidden ? .reveal : .hide,
-            .delete
+            .delete,
         ]
     }
 }

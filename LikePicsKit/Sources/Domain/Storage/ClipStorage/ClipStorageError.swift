@@ -13,7 +13,7 @@ extension ClipStorageError: ErrorCodeSource {
     public var factors: [ErrorCodeFactor] {
         return [
             .string("CSE"),
-            .number(self.rawValue)
+            .number(self.rawValue),
         ]
     }
 }

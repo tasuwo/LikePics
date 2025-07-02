@@ -185,10 +185,12 @@ extension TagCollectionViewReducer {
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
-        let nextState = performFilter(tags: query.tags.value,
-                                      searchQuery: state.searchQuery,
-                                      isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
-                                      previousState: state)
+        let nextState = performFilter(
+            tags: query.tags.value,
+            searchQuery: state.searchQuery,
+            isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
+            previousState: state
+        )
 
         return (nextState, [tagsEffect, settingsEffect])
     }
@@ -198,31 +200,38 @@ extension TagCollectionViewReducer {
 
 extension TagCollectionViewReducer {
     private static func performFilter(by tags: [Tag], previousState: State) -> State {
-        return performFilter(tags: tags,
-                             searchQuery: previousState.searchQuery,
-                             isSomeItemsHidden: previousState.isSomeItemsHidden,
-                             previousState: previousState)
+        return performFilter(
+            tags: tags,
+            searchQuery: previousState.searchQuery,
+            isSomeItemsHidden: previousState.isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
     private static func performFilter(bySearchQuery searchQuery: String, previousState: State) -> State {
-        return performFilter(tags: previousState.tags.orderedEntities(),
-                             searchQuery: searchQuery,
-                             isSomeItemsHidden: previousState.isSomeItemsHidden,
-                             previousState: previousState)
+        return performFilter(
+            tags: previousState.tags.orderedEntities(),
+            searchQuery: searchQuery,
+            isSomeItemsHidden: previousState.isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
     private static func performFilter(byItemsVisibility isSomeItemsHidden: Bool, previousState: State) -> State {
-        return performFilter(tags: previousState.tags.orderedEntities(),
-                             searchQuery: previousState.searchQuery,
-                             isSomeItemsHidden: isSomeItemsHidden,
-                             previousState: previousState)
+        return performFilter(
+            tags: previousState.tags.orderedEntities(),
+            searchQuery: previousState.searchQuery,
+            isSomeItemsHidden: isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
-    private static func performFilter(tags: [Tag],
-                                      searchQuery: String,
-                                      isSomeItemsHidden: Bool,
-                                      previousState: State) -> State
-    {
+    private static func performFilter(
+        tags: [Tag],
+        searchQuery: String,
+        isSomeItemsHidden: Bool,
+        previousState: State
+    ) -> State {
         var nextState = previousState
         var searchStorage = previousState.searchStorage
 

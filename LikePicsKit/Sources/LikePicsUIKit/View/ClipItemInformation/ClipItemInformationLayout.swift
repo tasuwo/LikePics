@@ -92,12 +92,16 @@ extension ClipItemInformationLayout {
     }
 
     private static func createTagsLayoutSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(36),
-                                              heightDimension: .estimated(32))
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .estimated(36),
+            heightDimension: .estimated(32)
+        )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(32))
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .estimated(32)
+        )
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         group.interItemSpacing = .fixed(8)
         group.contentInsets = .init(top: 0, leading: 8, bottom: 0, trailing: 8)
@@ -106,8 +110,10 @@ extension ClipItemInformationLayout {
         section.interGroupSpacing = CGFloat(12)
         section.contentInsets = .init(top: 16, leading: 0, bottom: 0, trailing: 0)
 
-        let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(44))
+        let titleSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .estimated(44)
+        )
         section.boundarySupplementaryItems = [
             .init(layoutSize: titleSize, elementKind: ElementKind.header.rawValue, alignment: .top)
         ]
@@ -115,16 +121,19 @@ extension ClipItemInformationLayout {
         return section
     }
 
-    private static func createAlbumLayoutSection(trailingSwipeActionProvider: @escaping (IndexPath) -> UISwipeActionsConfiguration?,
-                                                 environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection
-    {
+    private static func createAlbumLayoutSection(
+        trailingSwipeActionProvider: @escaping (IndexPath) -> UISwipeActionsConfiguration?,
+        environment: NSCollectionLayoutEnvironment
+    ) -> NSCollectionLayoutSection {
         var configuration = UICollectionLayoutListConfiguration(appearance: .grouped)
         configuration.backgroundColor = .clear
         configuration.trailingSwipeActionsConfigurationProvider = trailingSwipeActionProvider
         let section = NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
 
-        let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(44))
+        let titleSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .estimated(44)
+        )
         section.boundarySupplementaryItems = [
             .init(layoutSize: titleSize, elementKind: ElementKind.header.rawValue, alignment: .top)
         ]
@@ -137,8 +146,10 @@ extension ClipItemInformationLayout {
         configuration.backgroundColor = .clear
         let section = NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
 
-        let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(44))
+        let titleSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .estimated(44)
+        )
         section.boundarySupplementaryItems = [
             .init(layoutSize: titleSize, elementKind: ElementKind.header.rawValue, alignment: .top)
         ]
@@ -171,35 +182,65 @@ extension ClipItemInformationLayout {
     private static func createCells(for clipItem: ClipItem?) -> [Item] {
         var items: [Item] = []
 
-        items.append(.url(.init(title: L10n.clipInformationViewLabelClipItemImageUrl,
-                                url: clipItem?.imageUrl,
-                                isEditable: false)))
-        items.append(.url(.init(title: L10n.clipInformationViewLabelClipItemUrl,
-                                url: clipItem?.url,
-                                isEditable: true)))
+        items.append(
+            .url(
+                .init(
+                    title: L10n.clipInformationViewLabelClipItemImageUrl,
+                    url: clipItem?.imageUrl,
+                    isEditable: false
+                )
+            )
+        )
+        items.append(
+            .url(
+                .init(
+                    title: L10n.clipInformationViewLabelClipItemUrl,
+                    url: clipItem?.url,
+                    isEditable: true
+                )
+            )
+        )
 
         let size: String = {
             guard let dataSize = clipItem?.imageDataSize else { return "-" }
             return ByteCountFormatter.string(fromByteCount: Int64(dataSize), countStyle: .binary)
         }()
-        items.append(.meta(.init(parent: .item,
-                                 title: L10n.clipInformationViewLabelClipItemSize,
-                                 accessory: .label(title: size))))
+        items.append(
+            .meta(
+                .init(
+                    parent: .item,
+                    title: L10n.clipInformationViewLabelClipItemSize,
+                    accessory: .label(title: size)
+                )
+            )
+        )
 
         let registeredDate: String = {
             guard let date = clipItem?.registeredDate else { return "-" }
             return self.format(date)
         }()
-        items.append(.meta(.init(parent: .item,
-                                 title: L10n.clipInformationViewLabelClipItemRegisteredDate,
-                                 accessory: .label(title: registeredDate))))
+        items.append(
+            .meta(
+                .init(
+                    parent: .item,
+                    title: L10n.clipInformationViewLabelClipItemRegisteredDate,
+                    accessory: .label(title: registeredDate)
+                )
+            )
+        )
         let updatedDate: String = {
             guard let date = clipItem?.updatedDate else { return "-" }
             return self.format(date)
         }()
-        items.append(.meta(.init(parent: .item,
-                                 title: L10n.clipInformationViewLabelClipItemUpdatedDate,
-                                 accessory: .label(title: updatedDate))))
+        items.append(
+            .meta(
+                .init(
+                    parent: .item,
+                    title: L10n.clipInformationViewLabelClipItemUpdatedDate,
+                    accessory: .label(title: updatedDate)
+                )
+            )
+        )
 
         return items
     }
@@ -207,32 +248,56 @@ extension ClipItemInformationLayout {
     private static func createCells(for clip: Clip?) -> [Item] {
         var items: [Item] = []
 
-        items.append(.meta(.init(parent: .clip,
-                                 title: L10n.clipInformationViewLabelClipHide,
-                                 accessory: .switch(isOn: clip?.isHidden ?? false))))
+        items.append(
+            .meta(
+                .init(
+                    parent: .clip,
+                    title: L10n.clipInformationViewLabelClipHide,
+                    accessory: .switch(isOn: clip?.isHidden ?? false)
+                )
+            )
+        )
 
         let size: String = {
             guard let dataSize = clip?.dataSize else { return "-" }
             return ByteCountFormatter.string(fromByteCount: Int64(dataSize), countStyle: .binary)
         }()
-        items.append(.meta(.init(parent: .clip,
-                                 title: L10n.clipInformationViewLabelClipSize,
-                                 accessory: .label(title: size))))
+        items.append(
+            .meta(
+                .init(
+                    parent: .clip,
+                    title: L10n.clipInformationViewLabelClipSize,
+                    accessory: .label(title: size)
+                )
+            )
+        )
 
         let registeredDate: String = {
             guard let date = clip?.registeredDate else { return "-" }
             return self.format(date)
         }()
-        items.append(.meta(.init(parent: .clip,
-                                 title: L10n.clipInformationViewLabelClipRegisteredDate,
-                                 accessory: .label(title: registeredDate))))
+        items.append(
+            .meta(
+                .init(
+                    parent: .clip,
+                    title: L10n.clipInformationViewLabelClipRegisteredDate,
+                    accessory: .label(title: registeredDate)
+                )
+            )
+        )
         let updatedDate: String = {
             guard let date = clip?.updatedDate else { return "-" }
             return self.format(date)
         }()
-        items.append(.meta(.init(parent: .clip,
-                                 title: L10n.clipInformationViewLabelClipUpdatedDate,
-                                 accessory: .label(title: updatedDate))))
+        items.append(
+            .meta(
+                .init(
+                    parent: .clip,
+                    title: L10n.clipInformationViewLabelClipUpdatedDate,
+                    accessory: .label(title: updatedDate)
+                )
+            )
+        )
 
         return items
     }
@@ -256,10 +321,11 @@ extension ClipItemInformationLayout {
 
     static var font = UIFont.preferredFont(forTextStyle: .callout)
 
-    static func makeDataSource(for collectionView: UICollectionView,
-                               tagAdditionHandler: @escaping () -> Void,
-                               albumAdditionHandler: @escaping () -> Void) -> (DataSource, Proxy)
-    {
+    static func makeDataSource(
+        for collectionView: UICollectionView,
+        tagAdditionHandler: @escaping () -> Void,
+        albumAdditionHandler: @escaping () -> Void
+    ) -> (DataSource, Proxy) {
         let proxy = Proxy()
 
         let tagCellRegistration = self.configureTagCell(delegate: proxy)
@@ -283,8 +349,10 @@ extension ClipItemInformationLayout {
             }
         }
 
-        let headerRegistration = configureHeader(tagAdditionHandler: tagAdditionHandler,
-                                                 albumAdditionHandler: albumAdditionHandler)
+        let headerRegistration = configureHeader(
+            tagAdditionHandler: tagAdditionHandler,
+            albumAdditionHandler: albumAdditionHandler
+        )
         dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in
             switch ElementKind(rawValue: elementKind) {
             case .header:
@@ -298,9 +366,10 @@ extension ClipItemInformationLayout {
         return (dataSource, proxy)
     }
 
-    private static func configureHeader(tagAdditionHandler: @escaping () -> Void,
-                                        albumAdditionHandler: @escaping () -> Void) -> UICollectionView.SupplementaryRegistration<ListSectionHeaderView>
-    {
+    private static func configureHeader(
+        tagAdditionHandler: @escaping () -> Void,
+        albumAdditionHandler: @escaping () -> Void
+    ) -> UICollectionView.SupplementaryRegistration<ListSectionHeaderView> {
         return .init(elementKind: ElementKind.header.rawValue) { view, _, indexPath in
             let title: String = {
                 switch Section(rawValue: indexPath.section) {
@@ -326,16 +395,20 @@ extension ClipItemInformationLayout {
             switch Section(rawValue: indexPath.section) {
             case .tags:
                 view.setRightItems([
-                    .init(title: L10n.clipInformationViewLabelTagAddition,
-                          action: UIAction(handler: { _ in tagAdditionHandler() }),
-                          font: Self.font)
+                    .init(
+                        title: L10n.clipInformationViewLabelTagAddition,
+                        action: UIAction(handler: { _ in tagAdditionHandler() }),
+                        font: Self.font
+                    )
                 ])
 
             case .albums:
                 view.setRightItems([
-                    .init(title: L10n.clipInformationViewLabelAlbumAddition,
-                          action: UIAction(handler: { _ in albumAdditionHandler() }),
-                          font: Self.font)
+                    .init(
+                        title: L10n.clipInformationViewLabelAlbumAddition,
+                        action: UIAction(handler: { _ in albumAdditionHandler() }),
+                        font: Self.font
+                    )
                 ])
 
             default:
@@ -384,11 +457,14 @@ extension ClipItemInformationLayout {
                 // swiftlint:disable:next identifier_name
                 let sw = UISwitch()
                 sw.isOn = isOn
-                sw.addAction(.init(handler: { [weak proxy] action in
-                    // swiftlint:disable:next identifier_name
-                    guard let sw = action.sender as? UISwitch else { return }
-                    proxy?.delegate?.didSwitchHiding(cell, at: indexPath, isOn: sw.isOn)
-                }), for: .touchUpInside)
+                sw.addAction(
+                    .init(handler: { [weak proxy] action in
+                        // swiftlint:disable:next identifier_name
+                        guard let sw = action.sender as? UISwitch else { return }
+                        proxy?.delegate?.didSwitchHiding(cell, at: indexPath, isOn: sw.isOn)
+                    }),
+                    for: .touchUpInside
+                )
                 let configuration = UICellAccessory.CustomViewConfiguration(customView: sw, placement: .trailing(displayed: .always))
                 cell.accessories = [.customView(configuration: configuration)]
             }

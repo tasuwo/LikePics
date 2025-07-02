@@ -3,9 +3,10 @@
 //
 
 import Domain
-@testable import Persistence
 import UIKit
 import XCTest
+
+@testable import Persistence
 
 class TemporaryImageStorageTest: XCTestCase {
     static let testDirectory = FileManager.default.temporaryDirectory
@@ -60,7 +61,8 @@ class TemporaryImageStorageTest: XCTestCase {
         try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClipHaving: sampleClipId)
 
         XCTAssertTrue(FileManager.default.fileExists(atPath: expectedClipDirectoryUrl.path))
-        let imagePath = expectedClipDirectoryUrl
+        let imagePath =
+            expectedClipDirectoryUrl
             .appendingPathComponent("hogehoge.png", isDirectory: false)
             .path
         XCTAssertTrue(FileManager.default.fileExists(atPath: imagePath))
@@ -74,10 +76,12 @@ class TemporaryImageStorageTest: XCTestCase {
         try! storage.save(sampleImage.pngData()!, asName: "fugafuga.png", inClipHaving: sampleClipId)
 
         XCTAssertTrue(FileManager.default.fileExists(atPath: expectedClipDirectoryUrl.path))
-        let firstImagePath = expectedClipDirectoryUrl
+        let firstImagePath =
+            expectedClipDirectoryUrl
             .appendingPathComponent("hogehoge.png", isDirectory: false)
             .path
-        let secondImagePath = expectedClipDirectoryUrl
+        let secondImagePath =
+            expectedClipDirectoryUrl
             .appendingPathComponent("hogehoge.png", isDirectory: false)
             .path
         XCTAssertTrue(FileManager.default.fileExists(atPath: firstImagePath))
@@ -92,7 +96,8 @@ class TemporaryImageStorageTest: XCTestCase {
         try! storage.save(sampleImage.pngData()!, asName: "hogehoge.png", inClipHaving: sampleClipId)
 
         XCTAssertTrue(FileManager.default.fileExists(atPath: expectedClipDirectoryUrl.path))
-        let imagePath = expectedClipDirectoryUrl
+        let imagePath =
+            expectedClipDirectoryUrl
             .appendingPathComponent("hogehoge.png", isDirectory: false)
             .path
         XCTAssertTrue(FileManager.default.fileExists(atPath: imagePath))
@@ -108,10 +113,12 @@ class TemporaryImageStorageTest: XCTestCase {
         try! storage.delete(fileName: "hogehoge.png", inClipHaving: sampleClipId)
 
         XCTAssertTrue(FileManager.default.fileExists(atPath: expectedClipDirectoryUrl.path))
-        let firstImagePath = expectedClipDirectoryUrl
+        let firstImagePath =
+            expectedClipDirectoryUrl
             .appendingPathComponent("hogehoge.png", isDirectory: false)
             .path
-        let secondImagePath = expectedClipDirectoryUrl
+        let secondImagePath =
+            expectedClipDirectoryUrl
             .appendingPathComponent("fugafuga.png", isDirectory: false)
             .path
         XCTAssertFalse(FileManager.default.fileExists(atPath: firstImagePath))

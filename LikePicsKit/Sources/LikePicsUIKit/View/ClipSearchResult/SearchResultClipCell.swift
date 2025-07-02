@@ -42,11 +42,13 @@ extension SearchResultClipCell: ImageDisplayable {
         }
 
         self.backgroundColor = .clear
-        UIView.transition(with: self.imageView,
-                          duration: 0.25,
-                          options: .transitionCrossDissolve,
-                          animations: { [weak self] in self?.imageView.image = image },
-                          completion: nil)
+        UIView.transition(
+            with: self.imageView,
+            duration: 0.25,
+            options: .transitionCrossDissolve,
+            animations: { [weak self] in self?.imageView.image = image },
+            completion: nil
+        )
     }
 }
 
@@ -62,11 +64,15 @@ extension SearchResultClipCell: ThumbnailPresentable {
     public func calcThumbnailPointSize(originalPixelSize: CGSize?) -> CGSize {
         if let originalSize = originalPixelSize {
             if originalSize.width < originalSize.height {
-                return .init(width: frame.width,
-                             height: frame.width * (originalSize.height / originalSize.width))
+                return .init(
+                    width: frame.width,
+                    height: frame.width * (originalSize.height / originalSize.width)
+                )
             } else {
-                return .init(width: frame.height * (originalSize.width / originalSize.height),
-                             height: frame.height)
+                return .init(
+                    width: frame.height * (originalSize.width / originalSize.height),
+                    height: frame.height
+                )
             }
         } else {
             return frame.size

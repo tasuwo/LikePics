@@ -70,28 +70,43 @@ extension ClipCollectionNavigationBarController {
 extension ClipCollectionNavigationBarController {
     private func configureBarButtons() {
         cancelButton.title = L10n.confirmAlertCancel
-        cancelButton.addAction(.init(handler: { [weak self] _ in
-            self?.store.execute(.didTapCancel)
-        }), for: .touchUpInside)
+        cancelButton.addAction(
+            .init(handler: { [weak self] _ in
+                self?.store.execute(.didTapCancel)
+            }),
+            for: .touchUpInside
+        )
 
         selectAllButton.title = L10n.barItemForSelectAllTitle
-        selectAllButton.addAction(.init(handler: { [weak self] _ in
-            self?.store.execute(.didTapSelectAll)
-        }), for: .touchUpInside)
+        selectAllButton.addAction(
+            .init(handler: { [weak self] _ in
+                self?.store.execute(.didTapSelectAll)
+            }),
+            for: .touchUpInside
+        )
 
         deselectAllButton.title = L10n.barItemForDeselectAllTitle
-        deselectAllButton.addAction(.init(handler: { [weak self] _ in
-            self?.store.execute(.didTapDeselectAll)
-        }), for: .touchUpInside)
+        deselectAllButton.addAction(
+            .init(handler: { [weak self] _ in
+                self?.store.execute(.didTapDeselectAll)
+            }),
+            for: .touchUpInside
+        )
 
         selectButton.title = L10n.barItemForSelectTitle
-        selectButton.addAction(.init(handler: { [weak self] _ in
-            self?.store.execute(.didTapSelect)
-        }), for: .touchUpInside)
+        selectButton.addAction(
+            .init(handler: { [weak self] _ in
+                self?.store.execute(.didTapSelect)
+            }),
+            for: .touchUpInside
+        )
 
-        layoutButton.addAction(.init(handler: { [weak self] _ in
-            self?.store.execute(.didTapLayout)
-        }), for: .touchUpInside)
+        layoutButton.addAction(
+            .init(handler: { [weak self] _ in
+                self?.store.execute(.didTapLayout)
+            }),
+            for: .touchUpInside
+        )
     }
 }
 
@@ -126,8 +141,8 @@ extension ClipCollectionNavigationBarController {
     }
 }
 
-private extension ClipCollectionNavigationBarState.Item.Kind.Layout {
-    var toSingleIcon: SingleIconButton.Icon {
+extension ClipCollectionNavigationBarState.Item.Kind.Layout {
+    fileprivate var toSingleIcon: SingleIconButton.Icon {
         switch self {
         case .grid:
             return .grid

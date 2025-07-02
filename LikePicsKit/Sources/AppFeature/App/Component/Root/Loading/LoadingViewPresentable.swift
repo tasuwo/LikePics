@@ -29,7 +29,7 @@ extension LoadingViewPresentable where Self: UIViewController {
             loadingView.topAnchor.constraint(equalTo: view.topAnchor),
             loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            loadingView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            loadingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
 
         let indicatorView = UIActivityIndicatorView(style: .large)
@@ -38,7 +38,7 @@ extension LoadingViewPresentable where Self: UIViewController {
         loadingView.addSubview(indicatorView)
         NSLayoutConstraint.activate([
             indicatorView.centerXAnchor.constraint(equalTo: loadingView.centerXAnchor),
-            indicatorView.centerYAnchor.constraint(equalTo: loadingView.centerYAnchor)
+            indicatorView.centerYAnchor.constraint(equalTo: loadingView.centerYAnchor),
         ])
 
         let label = UILabel()
@@ -52,7 +52,7 @@ extension LoadingViewPresentable where Self: UIViewController {
         loadingView.addSubview(label)
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: indicatorView.bottomAnchor, constant: 12),
-            label.centerXAnchor.constraint(equalTo: loadingView.centerXAnchor)
+            label.centerXAnchor.constraint(equalTo: loadingView.centerXAnchor),
         ])
         self.loadingLabel = label
 

@@ -43,8 +43,10 @@ enum AlbumListViewLayout {
 extension AlbumListViewLayout {
     static func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { section, environment -> NSCollectionLayoutSection? in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                  heightDimension: .estimated(100))
+            let itemSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .estimated(100)
+            )
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
             let count: Int = {
@@ -59,8 +61,10 @@ extension AlbumListViewLayout {
                     return 4
                 }
             }()
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                   heightDimension: .estimated(100))
+            let groupSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .estimated(100)
+            )
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: count)
             group.interItemSpacing = .fixed(16)
 
@@ -98,10 +102,11 @@ extension AlbumListViewLayout {
     }
 
     @MainActor
-    static func configureAlbumCell(thumbnailProcessingQueue: ImageProcessingQueue,
-                                   queryService: ImageQueryServiceProtocol,
-                                   delegate: AlbumListCollectionViewCellDelegate) -> UICollectionView.CellRegistration<AlbumListCollectionViewCell, Item>
-    {
+    static func configureAlbumCell(
+        thumbnailProcessingQueue: ImageProcessingQueue,
+        queryService: ImageQueryServiceProtocol,
+        delegate: AlbumListCollectionViewCellDelegate
+    ) -> UICollectionView.CellRegistration<AlbumListCollectionViewCell, Item> {
         return .init(cellNib: AlbumListCollectionViewCell.nib) { [weak thumbnailProcessingQueue, weak queryService, weak delegate] cell, _, item in
             cell.albumId = item.album.id
             cell.title = item.album.title
@@ -114,7 +119,8 @@ extension AlbumListViewLayout {
             cell.setAlbumHiding(item.album.isHidden, animated: false)
 
             guard let processingQueue = thumbnailProcessingQueue,
-                  let imageQueryService = queryService else { return }
+                let imageQueryService = queryService
+            else { return }
 
             if let item = item.album.clips.first?.primaryItem {
                 let scale = cell.traitCollection.displayScale
@@ -124,10 +130,12 @@ extension AlbumListViewLayout {
                 }
                 loadImage(request, with: processingQueue, on: cell) { [weak processingQueue] response in
                     guard let response = response, let diskCacheSize = response.diskCacheImageSize else { return }
-                    let shouldInvalidate = ThumbnailInvalidationChecker.shouldInvalidate(originalImageSizeInPoint: item.imageSize.cgSize,
-                                                                                         thumbnailSizeInPoint: size,
-                                                                                         diskCacheSizeInPixel: diskCacheSize,
-                                                                                         displayScale: scale)
+                    let shouldInvalidate = ThumbnailInvalidationChecker.shouldInvalidate(
+                        originalImageSizeInPoint: item.imageSize.cgSize,
+                        thumbnailSizeInPoint: size,
+                        diskCacheSizeInPixel: diskCacheSize,
+                        displayScale: scale
+                    )
                     guard shouldInvalidate else { return }
                     processingQueue?.config.diskCache?.remove(forKey: request.cacheKey)
                     processingQueue?.config.memoryCache.remove(forKey: request.cacheKey)
@@ -139,14 +147,17 @@ extension AlbumListViewLayout {
     }
 
     @MainActor
-    static func configureDataSource(collectionView: UICollectionView,
-                                    thumbnailProcessingQueue: ImageProcessingQueue,
-                                    queryService: ImageQueryServiceProtocol,
-                                    delegate: AlbumListCollectionViewCellDelegate) -> DataSource
-    {
-        let albumCellRegistration = self.configureAlbumCell(thumbnailProcessingQueue: thumbnailProcessingQueue,
-                                                            queryService: queryService,
-                                                            delegate: delegate)
+    static func configureDataSource(
+        collectionView: UICollectionView,
+        thumbnailProcessingQueue: ImageProcessingQueue,
+        queryService: ImageQueryServiceProtocol,
+        delegate: AlbumListCollectionViewCellDelegate
+    ) -> DataSource {
+        let albumCellRegistration = self.configureAlbumCell(
+            thumbnailProcessingQueue: thumbnailProcessingQueue,
+            queryService: queryService,
+            delegate: delegate
+        )
 
         return .init(collectionView: collectionView) { collectionView, indexPath, item in
             return collectionView.dequeueConfiguredReusableCell(using: albumCellRegistration, for: indexPath, item: item)

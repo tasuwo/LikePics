@@ -22,14 +22,18 @@ class ClipMergeViewController: UIViewController {
     // MARK: View
 
     private lazy var addUrlAlertContainer = TextEditAlert(
-        configuration: .init(title: L10n.clipMergeViewAlertForAddUrlTitle,
-                             message: L10n.clipMergeViewAlertForAddUrlMessage,
-                             placeholder: L10n.clipMergeViewAlertForUrlPlaceholder)
+        configuration: .init(
+            title: L10n.clipMergeViewAlertForAddUrlTitle,
+            message: L10n.clipMergeViewAlertForAddUrlMessage,
+            placeholder: L10n.clipMergeViewAlertForUrlPlaceholder
+        )
     )
     private lazy var editUrlAlertContainer = TextEditAlert(
-        configuration: .init(title: L10n.clipMergeViewAlertForEditUrlTitle,
-                             message: L10n.clipMergeViewAlertForEditUrlMessage,
-                             placeholder: L10n.clipMergeViewAlertForUrlPlaceholder)
+        configuration: .init(
+            title: L10n.clipMergeViewAlertForEditUrlTitle,
+            message: L10n.clipMergeViewAlertForEditUrlMessage,
+            placeholder: L10n.clipMergeViewAlertForUrlPlaceholder
+        )
     )
     private var collectionView: UICollectionView!
     private var dataSource: Layout.DataSource!
@@ -55,12 +59,13 @@ class ClipMergeViewController: UIViewController {
 
     // MARK: - Initializers
 
-    init(state: ClipMergeViewState,
-         dependency: ClipMergeViewDependency,
-         thumbnailProcessingQueue: ImageProcessingQueue,
-         imageQueryService: ImageQueryServiceProtocol,
-         modalRouter: ModalRouter)
-    {
+    init(
+        state: ClipMergeViewState,
+        dependency: ClipMergeViewDependency,
+        thumbnailProcessingQueue: ImageProcessingQueue,
+        imageQueryService: ImageQueryServiceProtocol,
+        modalRouter: ModalRouter
+    ) {
         self.store = .init(initialState: state, dependency: dependency, reducer: ClipMergeViewReducer())
         self.modalRouter = modalRouter
         self.thumbnailProcessingQueue = thumbnailProcessingQueue
@@ -98,9 +103,13 @@ extension ClipMergeViewController {
             .throttle(for: 0.5, scheduler: RunLoop.main, latest: true)
             .receive(on: collectionUpdateQueue)
             .sink { [weak self] state in
-                self?.dataSource.apply(Layout.createSnapshot(tags: state.tags,
-                                                             items: state.items,
-                                                             state: state))
+                self?.dataSource.apply(
+                    Layout.createSnapshot(
+                        tags: state.tags,
+                        items: state.items,
+                        state: state
+                    )
+                )
             }
             .store(in: &subscriptions)
 
@@ -132,9 +141,11 @@ extension ClipMergeViewController {
 
     private func presentErrorMessageAlertIfNeeded(message: String?) {
         let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        })
+        alert.addAction(
+            .init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
+                self?.store.execute(.alertDismissed)
+            }
+        )
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -209,12 +220,20 @@ extension ClipMergeViewController {
 
     private func configureNavigationBar() {
         navigationItem.title = L10n.clipMergeViewTitle
-        navigationItem.leftBarButtonItem = .init(systemItem: .cancel, primaryAction: UIAction(handler: { [weak self] _ in
-            self?.store.execute(.cancelButtonTapped)
-        }), menu: nil)
-        navigationItem.rightBarButtonItem = .init(systemItem: .save, primaryAction: UIAction(handler: { [weak self] _ in
-            self?.store.execute(.saveButtonTapped)
-        }), menu: nil)
+        navigationItem.leftBarButtonItem = .init(
+            systemItem: .cancel,
+            primaryAction: UIAction(handler: { [weak self] _ in
+                self?.store.execute(.cancelButtonTapped)
+            }),
+            menu: nil
+        )
+        navigationItem.rightBarButtonItem = .init(
+            systemItem: .save,
+            primaryAction: UIAction(handler: { [weak self] _ in
+                self?.store.execute(.saveButtonTapped)
+            }),
+            menu: nil
+        )
     }
 }
 
@@ -229,7 +248,8 @@ extension ClipMergeViewController: ClipMergeViewDelegate {
                 validator: { text in
                     guard let text = text else { return true }
                     return text.isEmpty || URL(string: text) != nil
-                }, completion: { [weak self] action in
+                },
+                completion: { [weak self] action in
                     guard case let .saved(text: text) = action else { return }
                     self?.store.execute(.editedOverwriteSiteUrl(URL(string: text)))
                 }
@@ -241,7 +261,8 @@ extension ClipMergeViewController: ClipMergeViewDelegate {
                 validator: { text in
                     guard let text = text else { return true }
                     return text.isEmpty || URL(string: text) != nil
-                }, completion: { [weak self] action in
+                },
+                completion: { [weak self] action in
                     guard case let .saved(text: text) = action else { return }
                     self?.store.execute(.editedOverwriteSiteUrl(URL(string: text)))
                 }
@@ -259,8 +280,9 @@ extension ClipMergeViewController: ClipMergeViewDelegate {
 
     func didTapTagDeletionButton(_ cell: UICollectionViewCell) {
         guard let indexPath = self.collectionView.indexPath(for: cell),
-              let item = self.dataSource.itemIdentifier(for: indexPath),
-              case let .tag(tag) = item else { return }
+            let item = self.dataSource.itemIdentifier(for: indexPath),
+            case let .tag(tag) = item
+        else { return }
         store.execute(.tagDeleteButtonTapped(tag.id))
     }
 
@@ -297,8 +319,8 @@ extension ClipMergeViewController: UICollectionViewDropDelegate {
 
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
         guard let sectionValue = destinationIndexPath?.section,
-              let section = ClipMergeViewLayout.Section(rawValue: sectionValue),
-              section == .clip
+            let section = ClipMergeViewLayout.Section(rawValue: sectionValue),
+            section == .clip
         else {
             return UICollectionViewDropProposal(operation: .forbidden)
         }

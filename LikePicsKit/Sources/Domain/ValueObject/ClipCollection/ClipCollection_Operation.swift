@@ -2,8 +2,8 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-public extension ClipCollection {
-    enum Operation: String, Codable, Equatable {
+extension ClipCollection {
+    public enum Operation: String, Codable, Equatable {
         case none
         case selecting
 

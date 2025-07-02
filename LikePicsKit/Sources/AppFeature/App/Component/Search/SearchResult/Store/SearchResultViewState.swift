@@ -64,15 +64,19 @@ extension SearchResultViewState {
     var isResultsEmpty: Bool { searchResults.isEmpty && tokenCandidates.isEmpty }
 
     var searchQuery: ClipSearchQuery {
-        return .init(text: inputtedText,
-                     tokens: inputtedTokens,
-                     isHidden: isSomeItemsHidden ? false : searchOnlyHiddenItems,
-                     sort: selectedSort)
+        return .init(
+            text: inputtedText,
+            tokens: inputtedTokens,
+            isHidden: isSomeItemsHidden ? false : searchOnlyHiddenItems,
+            sort: selectedSort
+        )
     }
 
     var menuState: SearchMenuState {
-        return .init(shouldSearchOnlyHiddenClip: searchOnlyHiddenItems,
-                     sort: selectedSort)
+        return .init(
+            shouldSearchOnlyHiddenClip: searchOnlyHiddenItems,
+            sort: selectedSort
+        )
     }
 }
 

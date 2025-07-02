@@ -72,9 +72,11 @@ public class SceneRootSplitViewController: UISplitViewController {
 
 extension SceneRootSplitViewController {
     private func configureViewHierarchy() {
-        layoutProvider = SceneRootViewLayoutProvider(horizontalSizeClass: traitCollection.horizontalSizeClass,
-                                                     intent: intent,
-                                                     factory: factory)
+        layoutProvider = SceneRootViewLayoutProvider(
+            horizontalSizeClass: traitCollection.horizontalSizeClass,
+            intent: intent,
+            factory: factory
+        )
 
         let sideBarItem = layoutProvider.layout
             .map { $0.sideBarItem }

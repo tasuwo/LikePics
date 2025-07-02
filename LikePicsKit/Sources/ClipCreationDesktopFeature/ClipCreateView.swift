@@ -32,13 +32,14 @@ public struct ClipCreateView: View {
     @Environment(\.managedObjectContext) var context
     @AppStorage(\.showHiddenItems, store: .appGroup) var showHiddenItems
 
-    public init(images: [ImageSource],
-                url: String? = nil,
-                tags: Set<TagPreview> = .init(),
-                albums: Set<AlbumPreview> = .init(),
-                onSave: @escaping () -> Void,
-                onCancel: @escaping () -> Void)
-    {
+    public init(
+        images: [ImageSource],
+        url: String? = nil,
+        tags: Set<TagPreview> = .init(),
+        albums: Set<AlbumPreview> = .init(),
+        onSave: @escaping () -> Void,
+        onCancel: @escaping () -> Void
+    ) {
         self.images = images
         self.url = url ?? ""
         self.tags = tags
@@ -218,9 +219,10 @@ public struct ClipCreateView: View {
                 } message: { name in
                     Text("Album \"\(name)\" could not be created because an error occurred.", bundle: .module, comment: "Alert description")
                 }
-                .alert(Text("Failed to Create Clip", bundle: .module, comment: "Alert title"),
-                       isPresented: $isClipCreateErrorAlertPresenting)
-                {
+                .alert(
+                    Text("Failed to Create Clip", bundle: .module, comment: "Alert title"),
+                    isPresented: $isClipCreateErrorAlertPresenting
+                ) {
                     Button {
                         creatingAlbumName = nil
                         isClipCreateErrorAlertPresenting = false
@@ -327,7 +329,8 @@ public struct ClipCreateView: View {
 
         enum Error: Swift.Error { case failedToSizeCalculation }
 
-        let orderedImageAndIndex = selectedImageIds
+        let orderedImageAndIndex =
+            selectedImageIds
             .compactMap({ id in images.first(where: { $0.id == id }) })
             .enumerated()
 
@@ -344,11 +347,13 @@ public struct ClipCreateView: View {
                     // 空文字だと画像の保存に失敗するので、適当なファイル名を付与する
                     let fileName = result.fileName ?? "IMG_\(timestamp)_\(imageAndIndex.offset)"
 
-                    return ClipItemEntry(index: imageAndIndex.offset,
-                                         width: size.width,
-                                         height: size.height,
-                                         fileName: fileName,
-                                         data: result.data)
+                    return ClipItemEntry(
+                        index: imageAndIndex.offset,
+                        width: size.width,
+                        height: size.height,
+                        fileName: fileName,
+                        data: result.data
+                    )
                 }
             }
 
@@ -412,7 +417,8 @@ public struct ClipCreateView: View {
 
                 let albumItems = album.mutableSetValue(forKey: "items")
 
-                let maxIndex = albumItems
+                let maxIndex =
+                    albumItems
                     .compactMap { $0 as? AlbumItem }
                     .max(by: { $0.index < $1.index })?
                     .index ?? 0
@@ -445,14 +451,14 @@ public struct ClipCreateView: View {
 
         container.loadPersistentStores { _, _ in }
 
-        (0 ... 1000).forEach { index in
+        (0...1000).forEach { index in
             let tag = Persistence.Tag(context: container.viewContext)
             tag.id = UUID()
             tag.name = randomTagName()
             tag.isHidden = index % 2 == 0
         }
 
-        (0 ... 1000).forEach { index in
+        (0...1000).forEach { index in
             let album = Persistence.Album(context: container.viewContext)
             album.id = UUID()
             album.title = randomAlbumName()
@@ -470,12 +476,12 @@ public struct ClipCreateView: View {
 
     func randomTagName() -> String {
         let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        return String((0 ..< Int.random(in: 3 ... 15)).map { _ in letters.randomElement()! })
+        return String((0..<Int.random(in: 3...15)).map { _ in letters.randomElement()! })
     }
 
     func randomAlbumName() -> String {
         let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        return String((0 ..< Int.random(in: 8 ... 15)).map { _ in letters.randomElement()! })
+        return String((0..<Int.random(in: 8...15)).map { _ in letters.randomElement()! })
     }
 
     return ClipCreateView(

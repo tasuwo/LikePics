@@ -50,14 +50,22 @@ public class ClipItemContentView: UIView {
     // MARK: - Methods
 
     public func calcImageFrame(size: CGSize) -> CGRect {
-        let imageArea = CGSize(width: bounds.size.width,
-                               height: bounds.size.width)
+        let imageArea = CGSize(
+            width: bounds.size.width,
+            height: bounds.size.width
+        )
         let scale = size.scale(fittingIn: imageArea)
-        let imageSize = CGSize(width: size.width * scale,
-                               height: size.height * scale)
-        return CGRect(origin: CGPoint(x: (imageArea.width - imageSize.width) / 2,
-                                      y: (imageArea.height - imageSize.height) / 2),
-                      size: imageSize)
+        let imageSize = CGSize(
+            width: size.width * scale,
+            height: size.height * scale
+        )
+        return CGRect(
+            origin: CGPoint(
+                x: (imageArea.width - imageSize.width) / 2,
+                y: (imageArea.height - imageSize.height) / 2
+            ),
+            size: imageSize
+        )
     }
 }
 
@@ -121,8 +129,10 @@ extension ClipItemContentView {
                 thumbnailWidthConstraint.isActive = true
             }
 
-            thumbnailImageAspectConstraint = thumbnailImageView.heightAnchor.constraint(equalTo: thumbnailImageView.widthAnchor,
-                                                                                        multiplier: ratio)
+            thumbnailImageAspectConstraint = thumbnailImageView.heightAnchor.constraint(
+                equalTo: thumbnailImageView.widthAnchor,
+                multiplier: ratio
+            )
         }
 
         pageNumberLabel.text = "\(configuration.page)/\(configuration.numberOfPage)"

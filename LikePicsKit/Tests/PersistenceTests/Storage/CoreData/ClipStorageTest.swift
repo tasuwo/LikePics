@@ -5,9 +5,10 @@
 import Common
 import CoreData
 import Domain
+import XCTest
+
 @testable import Persistence
 @testable import TestHelper
-import XCTest
 
 class ClipStorageTest: XCTestCase {
     var container: NSPersistentContainer!
@@ -61,8 +62,12 @@ class ClipStorageTest: XCTestCase {
         tag.name = "hoge"
         try! managedContext.save()
 
-        _ = service.create(clip: .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                              tagIds: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!]))
+        _ = service.create(
+            clip: .makeDefault(
+                id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                tagIds: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!]
+            )
+        )
 
         let request1: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
         request1.predicate = NSPredicate(format: "id == %@", UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
@@ -83,8 +88,12 @@ class ClipStorageTest: XCTestCase {
         tag.name = "hoge"
         try! managedContext.save()
 
-        _ = service.create(clip: .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                              tagIds: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!]))
+        _ = service.create(
+            clip: .makeDefault(
+                id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                tagIds: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!]
+            )
+        )
 
         let request1: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
         request1.predicate = NSPredicate(format: "id == %@", UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
@@ -103,8 +112,12 @@ class ClipStorageTest: XCTestCase {
         tag.name = "fuga"
         try! managedContext.save()
 
-        _ = service.create(clip: .makeDefault(id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                              tagIds: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!]))
+        _ = service.create(
+            clip: .makeDefault(
+                id: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                tagIds: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!]
+            )
+        )
 
         let request1: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
         request1.predicate = NSPredicate(format: "id == %@", UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
@@ -130,16 +143,20 @@ class ClipStorageTest: XCTestCase {
         clip.updatedDate = Date(timeIntervalSince1970: 0)
         try! managedContext.save()
 
-        _ = service.updateClips(having: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!],
-                                byAddingTagsHaving: [
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!
-                                ])
+        _ = service.updateClips(
+            having: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!],
+            byAddingTagsHaving: [
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+            ]
+        )
         try! managedContext.save()
 
         let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@",
-                                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
+        request.predicate = NSPredicate(
+            format: "id == %@",
+            UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg
+        )
         let fetchedClip = try! managedContext.fetch(request).first!
         let fetchedTags = fetchedClip.tags?
             .allObjects
@@ -164,16 +181,20 @@ class ClipStorageTest: XCTestCase {
         clip.updatedDate = Date(timeIntervalSince1970: 0)
         try! managedContext.save()
 
-        _ = service.updateClips(having: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!],
-                                byAddingTagsHaving: [
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!
-                                ])
+        _ = service.updateClips(
+            having: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!],
+            byAddingTagsHaving: [
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+            ]
+        )
         try! managedContext.save()
 
         let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@",
-                                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
+        request.predicate = NSPredicate(
+            format: "id == %@",
+            UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg
+        )
         let fetchedClip = try! managedContext.fetch(request).first!
         let fetchedTags = fetchedClip.tags?
             .allObjects
@@ -198,16 +219,20 @@ class ClipStorageTest: XCTestCase {
         clip.updatedDate = Date(timeIntervalSince1970: 0)
         try! managedContext.save()
 
-        _ = service.updateClips(having: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!],
-                                byAddingTagsHaving: [
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!
-                                ])
+        _ = service.updateClips(
+            having: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!],
+            byAddingTagsHaving: [
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+            ]
+        )
         try! managedContext.save()
 
         let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@",
-                                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
+        request.predicate = NSPredicate(
+            format: "id == %@",
+            UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg
+        )
         let fetchedClip = try! managedContext.fetch(request).first!
         let fetchedTags = fetchedClip.tags?
             .allObjects
@@ -232,16 +257,20 @@ class ClipStorageTest: XCTestCase {
         clip.updatedDate = Date(timeIntervalSince1970: 0)
         try! managedContext.save()
 
-        _ = service.updateClips(having: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!],
-                                byDeletingTagsHaving: [
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!
-                                ])
+        _ = service.updateClips(
+            having: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!],
+            byDeletingTagsHaving: [
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+            ]
+        )
         try! managedContext.save()
 
         let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@",
-                                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
+        request.predicate = NSPredicate(
+            format: "id == %@",
+            UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg
+        )
         let fetchedClip = try! managedContext.fetch(request).first!
         let fetchedTags = fetchedClip.tags?
             .allObjects
@@ -264,16 +293,20 @@ class ClipStorageTest: XCTestCase {
         clip.updatedDate = Date(timeIntervalSince1970: 0)
         try! managedContext.save()
 
-        _ = service.updateClips(having: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!],
-                                byDeletingTagsHaving: [
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!
-                                ])
+        _ = service.updateClips(
+            having: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!],
+            byDeletingTagsHaving: [
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+            ]
+        )
         try! managedContext.save()
 
         let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@",
-                                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
+        request.predicate = NSPredicate(
+            format: "id == %@",
+            UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg
+        )
         let fetchedClip = try! managedContext.fetch(request).first!
         let fetchedTags = fetchedClip.tags?
             .allObjects
@@ -295,16 +328,20 @@ class ClipStorageTest: XCTestCase {
         clip.updatedDate = Date(timeIntervalSince1970: 0)
         try! managedContext.save()
 
-        _ = service.updateClips(having: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!],
-                                byDeletingTagsHaving: [
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!
-                                ])
+        _ = service.updateClips(
+            having: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!],
+            byDeletingTagsHaving: [
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+            ]
+        )
         try! managedContext.save()
 
         let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@",
-                                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
+        request.predicate = NSPredicate(
+            format: "id == %@",
+            UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg
+        )
         let fetchedClip = try! managedContext.fetch(request).first!
         let fetchedTags = fetchedClip.tags?
             .allObjects
@@ -327,16 +364,20 @@ class ClipStorageTest: XCTestCase {
         clip.updatedDate = Date(timeIntervalSince1970: 0)
         try! managedContext.save()
 
-        _ = service.updateClips(having: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!],
-                                byReplacingTagsHaving: [
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!
-                                ])
+        _ = service.updateClips(
+            having: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!],
+            byReplacingTagsHaving: [
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+            ]
+        )
         try! managedContext.save()
 
         let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@",
-                                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
+        request.predicate = NSPredicate(
+            format: "id == %@",
+            UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg
+        )
         let fetchedClip = try! managedContext.fetch(request).first!
         let fetchedTags = fetchedClip.tags?
             .allObjects
@@ -360,16 +401,20 @@ class ClipStorageTest: XCTestCase {
         clip.updatedDate = Date(timeIntervalSince1970: 0)
         try! managedContext.save()
 
-        _ = service.updateClips(having: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!],
-                                byReplacingTagsHaving: [
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!
-                                ])
+        _ = service.updateClips(
+            having: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!],
+            byReplacingTagsHaving: [
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+            ]
+        )
         try! managedContext.save()
 
         let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@",
-                                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
+        request.predicate = NSPredicate(
+            format: "id == %@",
+            UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg
+        )
         let fetchedClip = try! managedContext.fetch(request).first!
         let fetchedTags = fetchedClip.tags?
             .allObjects
@@ -392,16 +437,20 @@ class ClipStorageTest: XCTestCase {
         clip.updatedDate = Date(timeIntervalSince1970: 0)
         try! managedContext.save()
 
-        _ = service.updateClips(having: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!],
-                                byReplacingTagsHaving: [
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!
-                                ])
+        _ = service.updateClips(
+            having: [UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!],
+            byReplacingTagsHaving: [
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+            ]
+        )
         try! managedContext.save()
 
         let request: NSFetchRequest<Persistence.Clip> = Clip.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@",
-                                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
+        request.predicate = NSPredicate(
+            format: "id == %@",
+            UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg
+        )
         let fetchedClip = try! managedContext.fetch(request).first!
         let fetchedTags = fetchedClip.tags?
             .allObjects
@@ -430,12 +479,14 @@ class ClipStorageTest: XCTestCase {
 
         try! managedContext.save()
 
-        let result = service.updateAlbum(having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                         byAddingClipsHaving: [
-                                             UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                             UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!
-                                         ],
-                                         at: currentDate)
+        let result = service.updateAlbum(
+            having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+            byAddingClipsHaving: [
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+            ],
+            at: currentDate
+        )
         try! managedContext.save()
 
         XCTAssertEqual(result.failureValue, .duplicated)
@@ -457,34 +508,40 @@ class ClipStorageTest: XCTestCase {
 
         try! managedContext.save()
 
-        _ = service.updateAlbum(having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                byAddingClipsHaving: [
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!
-                                ],
-                                at: currentDate)
+        _ = service.updateAlbum(
+            having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+            byAddingClipsHaving: [
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+            ],
+            at: currentDate
+        )
         try! managedContext.save()
 
         let request: NSFetchRequest<Persistence.Album> = Album.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@",
-                                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
+        request.predicate = NSPredicate(
+            format: "id == %@",
+            UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg
+        )
         let fetchedAlbum = try! managedContext.fetch(request).first!
         XCTAssertEqual(fetchedAlbum.items?.allObjects.count, 2)
 
-        guard let item1 = fetchedAlbum.items?
-            .allObjects
-            .compactMap({ $0 as? AlbumItem })
-            .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! })
+        guard
+            let item1 = fetchedAlbum.items?
+                .allObjects
+                .compactMap({ $0 as? AlbumItem })
+                .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! })
         else {
             XCTFail()
             return
         }
         XCTAssertEqual(item1.index, 1)
 
-        guard let item2 = fetchedAlbum.items?
-            .allObjects
-            .compactMap({ $0 as? AlbumItem })
-            .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")! })
+        guard
+            let item2 = fetchedAlbum.items?
+                .allObjects
+                .compactMap({ $0 as? AlbumItem })
+                .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")! })
         else {
             XCTFail()
             return
@@ -503,34 +560,40 @@ class ClipStorageTest: XCTestCase {
 
         try! managedContext.save()
 
-        _ = service.updateAlbum(having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                byAddingClipsHaving: [
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!
-                                ],
-                                at: currentDate)
+        _ = service.updateAlbum(
+            having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+            byAddingClipsHaving: [
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+            ],
+            at: currentDate
+        )
         try! managedContext.save()
 
         let request: NSFetchRequest<Persistence.Album> = Album.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@",
-                                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
+        request.predicate = NSPredicate(
+            format: "id == %@",
+            UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg
+        )
         let fetchedAlbum = try! managedContext.fetch(request).first!
         XCTAssertEqual(fetchedAlbum.items?.allObjects.count, 2)
 
-        guard let item1 = fetchedAlbum.items?
-            .allObjects
-            .compactMap({ $0 as? AlbumItem })
-            .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! })
+        guard
+            let item1 = fetchedAlbum.items?
+                .allObjects
+                .compactMap({ $0 as? AlbumItem })
+                .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! })
         else {
             XCTFail()
             return
         }
         XCTAssertEqual(item1.index, 1)
 
-        guard let item2 = fetchedAlbum.items?
-            .allObjects
-            .compactMap({ $0 as? AlbumItem })
-            .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")! })
+        guard
+            let item2 = fetchedAlbum.items?
+                .allObjects
+                .compactMap({ $0 as? AlbumItem })
+                .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")! })
         else {
             XCTFail()
             return
@@ -561,34 +624,40 @@ class ClipStorageTest: XCTestCase {
 
         try! managedContext.save()
 
-        _ = service.updateAlbum(having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                byAddingClipsHaving: [
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!,
-                                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!
-                                ],
-                                at: currentDate)
+        _ = service.updateAlbum(
+            having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+            byAddingClipsHaving: [
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
+            ],
+            at: currentDate
+        )
         try! managedContext.save()
 
         let request: NSFetchRequest<Persistence.Album> = Album.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@",
-                                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
+        request.predicate = NSPredicate(
+            format: "id == %@",
+            UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg
+        )
         let fetchedAlbum = try! managedContext.fetch(request).first!
         XCTAssertEqual(fetchedAlbum.items?.allObjects.count, 4)
 
-        guard let item3 = fetchedAlbum.items?
-            .allObjects
-            .compactMap({ $0 as? AlbumItem })
-            .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")! })
+        guard
+            let item3 = fetchedAlbum.items?
+                .allObjects
+                .compactMap({ $0 as? AlbumItem })
+                .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")! })
         else {
             XCTFail()
             return
         }
         XCTAssertEqual(item3.index, 3)
 
-        guard let item4 = fetchedAlbum.items?
-            .allObjects
-            .compactMap({ $0 as? AlbumItem })
-            .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")! })
+        guard
+            let item4 = fetchedAlbum.items?
+                .allObjects
+                .compactMap({ $0 as? AlbumItem })
+                .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")! })
         else {
             XCTFail()
             return
@@ -625,12 +694,14 @@ class ClipStorageTest: XCTestCase {
 
         try! managedContext.save()
 
-        let result = service.updateAlbum(having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                         byDeletingClipsHaving: [
-                                             UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                             UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!
-                                         ],
-                                         at: currentDate)
+        let result = service.updateAlbum(
+            having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+            byDeletingClipsHaving: [
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
+            ],
+            at: currentDate
+        )
         try! managedContext.save()
 
         XCTAssertEqual(result.failureValue, .notFound)
@@ -665,12 +736,14 @@ class ClipStorageTest: XCTestCase {
 
         try! managedContext.save()
 
-        let result = service.updateAlbum(having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                         byDeletingClipsHaving: [
-                                             UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                             UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!
-                                         ],
-                                         at: currentDate)
+        let result = service.updateAlbum(
+            having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+            byDeletingClipsHaving: [
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
+            ],
+            at: currentDate
+        )
         try! managedContext.save()
 
         guard case .success = result else {
@@ -678,25 +751,29 @@ class ClipStorageTest: XCTestCase {
             return
         }
         let request: NSFetchRequest<Persistence.Album> = Album.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@",
-                                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
+        request.predicate = NSPredicate(
+            format: "id == %@",
+            UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg
+        )
         let fetchedAlbum = try! managedContext.fetch(request).first!
         XCTAssertEqual(fetchedAlbum.items?.allObjects.count, 2)
 
-        guard let fetchedItem2 = fetchedAlbum.items?
-            .allObjects
-            .compactMap({ $0 as? AlbumItem })
-            .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")! })
+        guard
+            let fetchedItem2 = fetchedAlbum.items?
+                .allObjects
+                .compactMap({ $0 as? AlbumItem })
+                .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")! })
         else {
             XCTFail()
             return
         }
         XCTAssertEqual(fetchedItem2.index, 1)
 
-        guard let fetchedItem4 = fetchedAlbum.items?
-            .allObjects
-            .compactMap({ $0 as? AlbumItem })
-            .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")! })
+        guard
+            let fetchedItem4 = fetchedAlbum.items?
+                .allObjects
+                .compactMap({ $0 as? AlbumItem })
+                .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")! })
         else {
             XCTFail()
             return
@@ -741,13 +818,15 @@ class ClipStorageTest: XCTestCase {
 
         try! managedContext.save()
 
-        let result = service.updateAlbum(having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                         byReorderingClipsHaving: [
-                                             UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                             UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
-                                             UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!,
-                                         ],
-                                         at: currentDate)
+        let result = service.updateAlbum(
+            having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+            byReorderingClipsHaving: [
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!,
+            ],
+            at: currentDate
+        )
         try! managedContext.save()
 
         XCTAssertEqual(result.failureValue, .invalidParameter)
@@ -782,14 +861,16 @@ class ClipStorageTest: XCTestCase {
 
         try! managedContext.save()
 
-        let result = service.updateAlbum(having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                         byReorderingClipsHaving: [
-                                             UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                             UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
-                                             UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
-                                             UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!,
-                                         ],
-                                         at: currentDate)
+        let result = service.updateAlbum(
+            having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+            byReorderingClipsHaving: [
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!,
+            ],
+            at: currentDate
+        )
         try! managedContext.save()
 
         XCTAssertEqual(result.failureValue, .invalidParameter)
@@ -824,14 +905,16 @@ class ClipStorageTest: XCTestCase {
 
         try! managedContext.save()
 
-        let result = service.updateAlbum(having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                         byReorderingClipsHaving: [
-                                             UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
-                                             UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
-                                             UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
-                                             UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!,
-                                         ],
-                                         at: currentDate)
+        let result = service.updateAlbum(
+            having: UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+            byReorderingClipsHaving: [
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!,
+            ],
+            at: currentDate
+        )
         try! managedContext.save()
 
         guard case .success = result else {
@@ -839,45 +922,51 @@ class ClipStorageTest: XCTestCase {
             return
         }
         let request: NSFetchRequest<Persistence.Album> = Album.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@",
-                                        UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg)
+        request.predicate = NSPredicate(
+            format: "id == %@",
+            UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! as CVarArg
+        )
         let fetchedAlbum = try! managedContext.fetch(request).first!
         XCTAssertEqual(fetchedAlbum.items?.allObjects.count, 4)
 
-        guard let fetchedItem1 = fetchedAlbum.items?
-            .allObjects
-            .compactMap({ $0 as? AlbumItem })
-            .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! })
+        guard
+            let fetchedItem1 = fetchedAlbum.items?
+                .allObjects
+                .compactMap({ $0 as? AlbumItem })
+                .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E51")! })
         else {
             XCTFail()
             return
         }
         XCTAssertEqual(fetchedItem1.index, 1)
 
-        guard let fetchedItem2 = fetchedAlbum.items?
-            .allObjects
-            .compactMap({ $0 as? AlbumItem })
-            .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")! })
+        guard
+            let fetchedItem2 = fetchedAlbum.items?
+                .allObjects
+                .compactMap({ $0 as? AlbumItem })
+                .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")! })
         else {
             XCTFail()
             return
         }
         XCTAssertEqual(fetchedItem2.index, 3)
 
-        guard let fetchedItem3 = fetchedAlbum.items?
-            .allObjects
-            .compactMap({ $0 as? AlbumItem })
-            .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")! })
+        guard
+            let fetchedItem3 = fetchedAlbum.items?
+                .allObjects
+                .compactMap({ $0 as? AlbumItem })
+                .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")! })
         else {
             XCTFail()
             return
         }
         XCTAssertEqual(fetchedItem3.index, 2)
 
-        guard let item4 = album.items?
-            .allObjects
-            .compactMap({ $0 as? AlbumItem })
-            .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")! })
+        guard
+            let item4 = album.items?
+                .allObjects
+                .compactMap({ $0 as? AlbumItem })
+                .first(where: { $0.clip?.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")! })
         else {
             XCTFail()
             return
@@ -988,20 +1077,22 @@ class ClipStorageTest: XCTestCase {
         XCTAssertEqual(fetchedClip.imagesSize, 34 + 78)
         XCTAssertEqual(fetchedClip.clipItems?.allObjects.count, 2)
 
-        guard let fetchedItem2 = fetchedClip.clipItems?
-            .allObjects
-            .compactMap({ $0 as? Item })
-            .first(where: { $0.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")! })
+        guard
+            let fetchedItem2 = fetchedClip.clipItems?
+                .allObjects
+                .compactMap({ $0 as? Item })
+                .first(where: { $0.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")! })
         else {
             XCTFail()
             return
         }
         XCTAssertEqual(fetchedItem2.index, 1)
 
-        guard let fetchedItem4 = fetchedClip.clipItems?
-            .allObjects
-            .compactMap({ $0 as? Item })
-            .first(where: { $0.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")! })
+        guard
+            let fetchedItem4 = fetchedClip.clipItems?
+                .allObjects
+                .compactMap({ $0 as? Item })
+                .first(where: { $0.id == UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")! })
         else {
             XCTFail()
             return
@@ -1112,10 +1203,13 @@ class ClipStorageTest: XCTestCase {
         let results = service.deduplicateTag(for: tag1.objectID)
         try! managedContext.save()
 
-        XCTAssertEqual(results, [
-            UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
-            UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E55")!
-        ])
+        XCTAssertEqual(
+            results,
+            [
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E53")!,
+                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E55")!,
+            ]
+        )
 
         let request1: NSFetchRequest<Persistence.Tag> = Tag.fetchRequest()
         let fetchedTags = (try! managedContext.fetch(request1))

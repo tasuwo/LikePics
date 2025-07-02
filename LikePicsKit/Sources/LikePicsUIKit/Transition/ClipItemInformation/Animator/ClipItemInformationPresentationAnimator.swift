@@ -46,12 +46,12 @@ extension ClipItemInformationPresentationAnimator: UIViewControllerAnimatedTrans
         /*
          アニメーション時、画像を Tab/Navigation Bar の裏側に回り込ませることで、自然なアニメーションを実現する
          このために、以下のような構成を取る
-
+        
          ポイントは以下
          - ToViewはFromViewの裏に配置する
          - ToViewが見えるよう、FromViewの背景色をclearに設定する
          - containerViewの背景色は、ToViewの背景色と合わせておく
-
+        
          +-+            +-+  +-+
          | |       +-+  | |  | |
          +-+       | |  | |  | |

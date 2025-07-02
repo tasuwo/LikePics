@@ -78,12 +78,16 @@ extension ClipMergeViewLayout {
     }
 
     private static func createTagsLayoutSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(36),
-                                              heightDimension: .estimated(32))
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .estimated(36),
+            heightDimension: .estimated(32)
+        )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(32))
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .estimated(32)
+        )
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         group.interItemSpacing = .fixed(8)
 
@@ -110,14 +114,22 @@ extension ClipMergeViewLayout {
 
         snapshot.appendSections([.meta])
         snapshot.appendItems([
-            .meta(.init(title: L10n.clipMergeViewMetaUrlTitle,
-                        secondaryTitle: state.overwriteSiteUrl?.absoluteString ?? L10n.clipMergeViewMetaUrlNo,
-                        accessory: (state.overwriteSiteUrl.flatMap({ $0.absoluteString.isEmpty }) ?? true)
-                            ? .button(title: L10n.clipMergeViewMetaUrlOverwrite)
-                            : .button(title: L10n.clipMergeViewMetaUrlEdit))),
-            .meta(.init(title: L10n.clipMergeViewMetaShouldHides,
-                        secondaryTitle: nil,
-                        accessory: .switch(isOn: state.shouldSaveAsHiddenItem)))
+            .meta(
+                .init(
+                    title: L10n.clipMergeViewMetaUrlTitle,
+                    secondaryTitle: state.overwriteSiteUrl?.absoluteString ?? L10n.clipMergeViewMetaUrlNo,
+                    accessory: (state.overwriteSiteUrl.flatMap({ $0.absoluteString.isEmpty }) ?? true)
+                        ? .button(title: L10n.clipMergeViewMetaUrlOverwrite)
+                        : .button(title: L10n.clipMergeViewMetaUrlEdit)
+                )
+            ),
+            .meta(
+                .init(
+                    title: L10n.clipMergeViewMetaShouldHides,
+                    secondaryTitle: nil,
+                    accessory: .switch(isOn: state.shouldSaveAsHiddenItem)
+                )
+            ),
         ])
 
         snapshot.appendSections([.clip])
@@ -126,18 +138,21 @@ extension ClipMergeViewLayout {
     }
 
     @MainActor
-    static func createDataSource(_ collectionView: UICollectionView,
-                                 _ thumbnailProcessingQueue: ImageProcessingQueue,
-                                 _ imageQueryService: ImageQueryServiceProtocol) -> (DataSource, Proxy)
-    {
+    static func createDataSource(
+        _ collectionView: UICollectionView,
+        _ thumbnailProcessingQueue: ImageProcessingQueue,
+        _ imageQueryService: ImageQueryServiceProtocol
+    ) -> (DataSource, Proxy) {
         let proxy = Proxy()
 
         let tagAdditionCellRegistration = self.configureTagAdditionCell(delegate: proxy)
         let tagCellRegistration = self.configureTagCell(delegate: proxy)
         let metaCellRegistration = self.configureMetaCell(proxy: proxy)
-        let itemCellRegistration = self.configureItemCell(proxy: proxy,
-                                                          thumbnailProcessingQueue: thumbnailProcessingQueue,
-                                                          imageQueryService: imageQueryService)
+        let itemCellRegistration = self.configureItemCell(
+            proxy: proxy,
+            thumbnailProcessingQueue: thumbnailProcessingQueue,
+            imageQueryService: imageQueryService
+        )
 
         let dataSource = DataSource(collectionView: collectionView) { collectionView, indexPath, item in
             switch item {
@@ -189,24 +204,34 @@ extension ClipMergeViewLayout {
                 let button = UIButton(type: .system)
                 button.isPointerInteractionEnabled = true
                 button.setTitle(title, for: .normal)
-                button.addAction(.init(handler: { [weak proxy] _ in
-                    proxy?.delegate?.didTapButton(cell, at: indexPath)
-                }), for: .touchUpInside)
-                let configuration = UICellAccessory.CustomViewConfiguration(customView: button,
-                                                                            placement: .trailing(displayed: .always))
+                button.addAction(
+                    .init(handler: { [weak proxy] _ in
+                        proxy?.delegate?.didTapButton(cell, at: indexPath)
+                    }),
+                    for: .touchUpInside
+                )
+                let configuration = UICellAccessory.CustomViewConfiguration(
+                    customView: button,
+                    placement: .trailing(displayed: .always)
+                )
                 cell.accessories = [.customView(configuration: configuration)]
 
             case let .switch(isOn: isOn):
                 // swiftlint:disable:next identifier_name
                 let sw = UISwitch()
                 sw.isOn = isOn
-                sw.addAction(.init(handler: { [weak proxy] action in
-                    // swiftlint:disable:next identifier_name
-                    guard let sw = action.sender as? UISwitch else { return }
-                    proxy?.delegate?.didSwitch(cell, at: indexPath, isOn: sw.isOn)
-                }), for: .touchUpInside)
-                let configuration = UICellAccessory.CustomViewConfiguration(customView: sw,
-                                                                            placement: .trailing(displayed: .always))
+                sw.addAction(
+                    .init(handler: { [weak proxy] action in
+                        // swiftlint:disable:next identifier_name
+                        guard let sw = action.sender as? UISwitch else { return }
+                        proxy?.delegate?.didSwitch(cell, at: indexPath, isOn: sw.isOn)
+                    }),
+                    for: .touchUpInside
+                )
+                let configuration = UICellAccessory.CustomViewConfiguration(
+                    customView: sw,
+                    placement: .trailing(displayed: .always)
+                )
                 cell.accessories = [.customView(configuration: configuration)]
             }
 
@@ -217,10 +242,11 @@ extension ClipMergeViewLayout {
     }
 
     @MainActor
-    private static func configureItemCell(proxy: Proxy,
-                                          thumbnailProcessingQueue: ImageProcessingQueue,
-                                          imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem>
-    {
+    private static func configureItemCell(
+        proxy: Proxy,
+        thumbnailProcessingQueue: ImageProcessingQueue,
+        imageQueryService: ImageQueryServiceProtocol
+    ) -> UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem> {
         return UICollectionView.CellRegistration<ClipItemEditListCell, ClipItem> { [weak proxy, weak thumbnailProcessingQueue, weak imageQueryService] cell, _, item in
             var contentConfiguration = ClipItemEditContentConfiguration()
             contentConfiguration.siteUrl = item.url
@@ -239,7 +265,8 @@ extension ClipMergeViewLayout {
             cell.accessories = [.reorder(displayed: .always)]
 
             guard let processingQueue = thumbnailProcessingQueue,
-                  let imageQueryService = imageQueryService else { return }
+                let imageQueryService = imageQueryService
+            else { return }
 
             let scale = cell.traitCollection.displayScale
             let size = cell.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)

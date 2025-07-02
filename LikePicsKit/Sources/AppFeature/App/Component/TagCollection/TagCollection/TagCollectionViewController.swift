@@ -50,13 +50,14 @@ class TagCollectionViewController: UIViewController {
 
     // MARK: - Initializers
 
-    init(state: TagCollectionViewState,
-         tagAdditionAlertState: TextEditAlertState,
-         tagEditAlertState: TextEditAlertState,
-         dependency: TagCollectionViewDependency,
-         menuBuilder: TagCollectionMenuBuildable,
-         appBundle: Bundle)
-    {
+    init(
+        state: TagCollectionViewState,
+        tagAdditionAlertState: TextEditAlertState,
+        tagEditAlertState: TextEditAlertState,
+        dependency: TagCollectionViewDependency,
+        menuBuilder: TagCollectionMenuBuildable,
+        appBundle: Bundle
+    ) {
         self.store = Store(initialState: state, dependency: dependency, reducer: TagCollectionViewReducer())
         self.tagAdditionAlert = .init(state: tagAdditionAlertState)
         self.tagEditAlert = .init(state: tagEditAlertState)
@@ -205,32 +206,48 @@ extension TagCollectionViewController {
 
     private func presentErrorMessageAlertIfNeeded(message: String?) {
         let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        })
+        alert.addAction(
+            .init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
+                self?.store.execute(.alertDismissed)
+            }
+        )
         presentingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
 
     private func presentDeleteConfirmationAlert(for tagId: Tag.Identity, tagName: String, state: TagCollectionViewState) {
         guard let tag = state.tags.entity(having: tagId),
-              let indexPath = dataSource.indexPath(for: .tag(.init(tag: tag, displayCount: !state.isSomeItemsHidden))),
-              let cell = collectionView.cellForItem(at: indexPath)
+            let indexPath = dataSource.indexPath(for: .tag(.init(tag: tag, displayCount: !state.isSomeItemsHidden))),
+            let cell = collectionView.cellForItem(at: indexPath)
         else {
             store.execute(.alertDismissed)
             return
         }
 
-        let alert = UIAlertController(title: nil,
-                                      message: L10n.tagListViewAlertForDeleteMessage(tagName),
-                                      preferredStyle: .actionSheet)
+        let alert = UIAlertController(
+            title: nil,
+            message: L10n.tagListViewAlertForDeleteMessage(tagName),
+            preferredStyle: .actionSheet
+        )
 
-        alert.addAction(.init(title: L10n.tagListViewAlertForDeleteAction, style: .destructive, handler: { [weak self] _ in
-            self?.store.execute(.alertDeleteConfirmTapped)
-        }))
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        }))
+        alert.addAction(
+            .init(
+                title: L10n.tagListViewAlertForDeleteAction,
+                style: .destructive,
+                handler: { [weak self] _ in
+                    self?.store.execute(.alertDeleteConfirmTapped)
+                }
+            )
+        )
+        alert.addAction(
+            .init(
+                title: L10n.confirmAlertCancel,
+                style: .cancel,
+                handler: { [weak self] _ in
+                    self?.store.execute(.alertDismissed)
+                }
+            )
+        )
 
         alert.popoverPresentationController?.sourceView = collectionView
         alert.popoverPresentationController?.sourceRect = cell.frame
@@ -274,14 +291,19 @@ extension TagCollectionViewController {
         collectionView.delegate = self
         collectionView.allowsSelection = true
         collectionView.allowsMultipleSelection = false
-        dataSource = Layout.configureDataSource(collectionView: collectionView,
-                                                uncategorizedCellDelegate: self)
+        dataSource = Layout.configureDataSource(
+            collectionView: collectionView,
+            uncategorizedCellDelegate: self
+        )
     }
 
     private func configureNavigationBar() {
-        let addItem = UIBarButtonItem(systemItem: .add, primaryAction: UIAction { [weak self] _ in
-            self?.store.execute(.tagAdditionButtonTapped)
-        })
+        let addItem = UIBarButtonItem(
+            systemItem: .add,
+            primaryAction: UIAction { [weak self] _ in
+                self?.store.execute(.tagAdditionButtonTapped)
+            }
+        )
         self.navigationItem.leftBarButtonItem = addItem
     }
 
@@ -321,7 +343,7 @@ extension TagCollectionViewController: UICollectionViewDelegate {
         case let .tag(listingTag):
             store.execute(.select(listingTag.tag))
 
-        default: () // NOP
+        default: ()  // NOP
         }
     }
 }
@@ -332,9 +354,11 @@ extension TagCollectionViewController {
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         switch self.dataSource.itemIdentifier(for: indexPath) {
         case let .tag(tag):
-            return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath,
-                                              previewProvider: nil,
-                                              actionProvider: self.makeActionProvider(for: tag.tag, at: indexPath))
+            return UIContextMenuConfiguration(
+                identifier: indexPath as NSIndexPath,
+                previewProvider: nil,
+                actionProvider: self.makeActionProvider(for: tag.tag, at: indexPath)
+            )
 
         default:
             return nil
@@ -361,38 +385,43 @@ extension TagCollectionViewController {
     private func makeAction(from item: TagCollection.MenuItem, for tag: Tag, at indexPath: IndexPath) -> UIAction {
         switch item {
         case .copy:
-            return UIAction(title: L10n.tagListViewContextMenuActionCopy,
-                            image: UIImage(systemName: "square.on.square.fill"))
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.tagListViewContextMenuActionCopy,
+                image: UIImage(systemName: "square.on.square.fill")
+            ) { [weak self] _ in
                 self?.store.execute(.copyMenuSelected(tag))
             }
 
         case .hide:
-            return UIAction(title: L10n.tagListViewContextMenuActionHide,
-                            image: UIImage(systemName: "eye.slash.fill"))
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.tagListViewContextMenuActionHide,
+                image: UIImage(systemName: "eye.slash.fill")
+            ) { [weak self] _ in
                 self?.store.execute(.hideMenuSelected(tag))
             }
 
         case .reveal:
-            return UIAction(title: L10n.tagListViewContextMenuActionReveal,
-                            image: UIImage(systemName: "eye.fill"))
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.tagListViewContextMenuActionReveal,
+                image: UIImage(systemName: "eye.fill")
+            ) { [weak self] _ in
                 self?.store.execute(.revealMenuSelected(tag))
             }
 
         case .delete:
-            return UIAction(title: L10n.tagListViewContextMenuActionDelete,
-                            image: UIImage(systemName: "trash.fill"),
-                            attributes: .destructive)
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.tagListViewContextMenuActionDelete,
+                image: UIImage(systemName: "trash.fill"),
+                attributes: .destructive
+            ) { [weak self] _ in
                 self?.store.execute(.deleteMenuSelected(tag))
             }
 
         case .rename:
-            return UIAction(title: L10n.tagListViewContextMenuActionUpdate,
-                            image: UIImage(systemName: "text.cursor"))
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.tagListViewContextMenuActionUpdate,
+                image: UIImage(systemName: "text.cursor")
+            ) { [weak self] _ in
                 self?.store.execute(.renameMenuSelected(tag))
             }
         }
@@ -483,11 +512,13 @@ extension TagCollectionViewController: NewTagCollectionBrickworkLayoutDelegate {
             return height
         }
 
-        let size = TagCollectionViewCell.preferredSize(title: "X", // 計算用に適当な文字を渡しておく
-                                                       clipCount: nil,
-                                                       isHidden: false,
-                                                       visibleCountIfPossible: false,
-                                                       visibleDeleteButton: false)
+        let size = TagCollectionViewCell.preferredSize(
+            title: "X",  // 計算用に適当な文字を渡しておく
+            clipCount: nil,
+            isHidden: false,
+            visibleCountIfPossible: false,
+            visibleDeleteButton: false
+        )
         cellHeightCache = size.height
         return size.height
     }
@@ -499,11 +530,13 @@ extension TagCollectionViewController: NewTagCollectionBrickworkLayoutDelegate {
             return width
         }
 
-        let size = TagCollectionViewCell.preferredSize(title: listingTag.tag.name,
-                                                       clipCount: listingTag.tag.clipCount,
-                                                       isHidden: listingTag.tag.isHidden,
-                                                       visibleCountIfPossible: listingTag.displayCount,
-                                                       visibleDeleteButton: false)
+        let size = TagCollectionViewCell.preferredSize(
+            title: listingTag.tag.name,
+            clipCount: listingTag.tag.clipCount,
+            isHidden: listingTag.tag.isHidden,
+            visibleCountIfPossible: listingTag.displayCount,
+            visibleDeleteButton: false
+        )
         cellWidthCaches[listingTag] = size.width
         return size.width
     }
@@ -523,11 +556,13 @@ extension TagCollectionViewController: Restorable {
         tagAdditionAlert.dismiss(animated: false, completion: nil)
         tagEditAlert.dismiss(animated: false, completion: nil)
 
-        return TagCollectionViewController(state: nextState,
-                                           tagAdditionAlertState: tagAdditionAlert.store.stateValue,
-                                           tagEditAlertState: tagEditAlert.store.stateValue,
-                                           dependency: store.dependency,
-                                           menuBuilder: menuBuilder,
-                                           appBundle: appBundle)
+        return TagCollectionViewController(
+            state: nextState,
+            tagAdditionAlertState: tagAdditionAlert.store.stateValue,
+            tagEditAlertState: tagEditAlert.store.stateValue,
+            dependency: store.dependency,
+            menuBuilder: menuBuilder,
+            appBundle: appBundle
+        )
     }
 }

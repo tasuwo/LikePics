@@ -26,8 +26,10 @@ public class AlbumSelectionTableView: UITableView {
     // MARK: - Methods
 
     private func registerCell() {
-        self.register(AlbumSelectionCell.nib,
-                      forCellReuseIdentifier: Self.cellIdentifier)
+        self.register(
+            AlbumSelectionCell.nib,
+            forCellReuseIdentifier: Self.cellIdentifier
+        )
     }
 
     private func setupAppearance() {

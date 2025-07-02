@@ -21,14 +21,16 @@ class ClipObject: Object {
 extension Domain.Clip {
     static func make(by managedObject: ClipObject) -> ClipRecipe {
         let items = Array(managedObject.items.map { ClipItemRecipe.make(by: $0) })
-        return .init(id: managedObject.id,
-                     description: managedObject.descriptionText,
-                     items: items,
-                     tagIds: managedObject.tagIds.compactMap({ $0.id }),
-                     albumIds: Set(managedObject.albumIds.compactMap({ $0.id })),
-                     isHidden: managedObject.isHidden,
-                     dataSize: managedObject.dataSize,
-                     registeredDate: managedObject.registeredAt,
-                     updatedDate: managedObject.updatedAt)
+        return .init(
+            id: managedObject.id,
+            description: managedObject.descriptionText,
+            items: items,
+            tagIds: managedObject.tagIds.compactMap({ $0.id }),
+            albumIds: Set(managedObject.albumIds.compactMap({ $0.id })),
+            isHidden: managedObject.isHidden,
+            dataSize: managedObject.dataSize,
+            registeredDate: managedObject.registeredAt,
+            updatedDate: managedObject.updatedAt
+        )
     }
 }

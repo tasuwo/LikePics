@@ -10,7 +10,7 @@ import TestHelper
 import UIKit
 
 enum SampleDataSetProvider {
-    static var clips: [Clip] = (1 ..< 30).map {
+    static var clips: [Clip] = (1..<30).map {
         let imageName = String(format: "%03d", $0)
         let imageData = UIImage(named: imageName)!.jpegData(compressionQuality: 1)!
         let size = SampleDataSetProvider.resolveSize(for: imageData)!
@@ -19,14 +19,16 @@ enum SampleDataSetProvider {
         return Clip.makeDefault(
             id: clipId,
             items: [
-                ClipItem.makeDefault(id: UUID(),
-                                     clipId: clipId,
-                                     imageId: UUID(),
-                                     imageFileName: imageName,
-                                     imageSize: ImageSize(height: size.height, width: size.width),
-                                     imageDataSize: 1024 * 15,
-                                     registeredDate: Date(),
-                                     updatedDate: Date())
+                ClipItem.makeDefault(
+                    id: UUID(),
+                    clipId: clipId,
+                    imageId: UUID(),
+                    imageFileName: imageName,
+                    imageSize: ImageSize(height: size.height, width: size.width),
+                    imageDataSize: 1024 * 15,
+                    registeredDate: Date(),
+                    updatedDate: Date()
+                )
             ]
         )
     }
@@ -38,25 +40,31 @@ enum SampleDataSetProvider {
             .makeDefault(name: NSLocalizedString("tag_03", comment: ""), clipCount: 2),
             .makeDefault(name: NSLocalizedString("tag_04", comment: ""), clipCount: 2),
             .makeDefault(name: NSLocalizedString("tag_05", comment: ""), clipCount: 3),
-            .makeDefault(name: NSLocalizedString("tag_06", comment: ""), clipCount: 5)
+            .makeDefault(name: NSLocalizedString("tag_06", comment: ""), clipCount: 5),
         ]
     }()
 
     static var albums: [Album] = {
         return [
-            .makeDefault(title: NSLocalizedString("album_01", comment: ""), clips: [
-                Self.clips[21],
-                Self.clips[21],
-                Self.clips[21],
-                Self.clips[21],
-                Self.clips[21],
-            ]),
-            .makeDefault(title: NSLocalizedString("album_02", comment: ""), clips: [
-                Self.clips[3],
-                Self.clips[3],
-                Self.clips[3],
-                Self.clips[3],
-            ]),
+            .makeDefault(
+                title: NSLocalizedString("album_01", comment: ""),
+                clips: [
+                    Self.clips[21],
+                    Self.clips[21],
+                    Self.clips[21],
+                    Self.clips[21],
+                    Self.clips[21],
+                ]
+            ),
+            .makeDefault(
+                title: NSLocalizedString("album_02", comment: ""),
+                clips: [
+                    Self.clips[3],
+                    Self.clips[3],
+                    Self.clips[3],
+                    Self.clips[3],
+                ]
+            ),
         ]
     }()
 

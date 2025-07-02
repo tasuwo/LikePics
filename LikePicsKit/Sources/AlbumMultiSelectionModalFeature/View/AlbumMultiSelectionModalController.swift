@@ -36,10 +36,11 @@ public class AlbumMultiSelectionModalController: UIViewController {
 
     // MARK: - Initializers
 
-    public init(state: AlbumMultiSelectionModalState,
-                albumAdditionAlertState: TextEditAlertState,
-                dependency: AlbumMultiSelectionModalDependency)
-    {
+    public init(
+        state: AlbumMultiSelectionModalState,
+        albumAdditionAlertState: TextEditAlertState,
+        dependency: AlbumMultiSelectionModalDependency
+    ) {
         self.store = .init(initialState: state, dependency: dependency, reducer: AlbumMultiSelectionModalReducer())
         self.albumAdditionAlert = .init(state: albumAdditionAlertState)
         super.init(nibName: nil, bundle: nil)
@@ -150,9 +151,11 @@ extension AlbumMultiSelectionModalController {
 
     private func presentErrorMessageAlertIfNeeded(message: String?) {
         let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        })
+        alert.addAction(
+            .init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
+                self?.store.execute(.alertDismissed)
+            }
+        )
         self.present(alert, animated: true, completion: nil)
     }
 }
@@ -170,7 +173,7 @@ extension AlbumMultiSelectionModalController {
         NSLayoutConstraint.activate([
             searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             searchBar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            searchBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+            searchBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
         ])
 
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: Layout.createLayout())
@@ -181,16 +184,18 @@ extension AlbumMultiSelectionModalController {
             collectionView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
 
         emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(emptyMessageView)
         NSLayoutConstraint.activate(emptyMessageView.constraints(fittingIn: view.safeAreaLayoutGuide))
 
-        let quickAddButton = UIButton(primaryAction: .init { [weak self] _ in
-            self?.store.execute(.quickAddButtonTapped)
-        })
+        let quickAddButton = UIButton(
+            primaryAction: .init { [weak self] _ in
+                self?.store.execute(.quickAddButtonTapped)
+            }
+        )
         var configuration = UIButton.Configuration.plain()
         configuration.title = ""
         quickAddButton.configuration = configuration
@@ -224,12 +229,20 @@ extension AlbumMultiSelectionModalController {
     private func configureNavigationBar() {
         navigationItem.title = L10n.albumSelectionViewTitle
 
-        let addItem = UIBarButtonItem(systemItem: .add, primaryAction: .init(handler: { [weak self] _ in
-            self?.store.execute(.addButtonTapped)
-        }), menu: nil)
-        let saveItem = UIBarButtonItem(systemItem: .save, primaryAction: .init(handler: { [weak self] _ in
-            self?.store.execute(.saveButtonTapped)
-        }), menu: nil)
+        let addItem = UIBarButtonItem(
+            systemItem: .add,
+            primaryAction: .init(handler: { [weak self] _ in
+                self?.store.execute(.addButtonTapped)
+            }),
+            menu: nil
+        )
+        let saveItem = UIBarButtonItem(
+            systemItem: .save,
+            primaryAction: .init(handler: { [weak self] _ in
+                self?.store.execute(.saveButtonTapped)
+            }),
+            menu: nil
+        )
         [addItem, saveItem].forEach {
             // HACK: ShareExtentionだと、tintColorがテキスト色にうまく反映されないケースがあるので、ここで反映する
             $0.setTitleTextAttributes([.foregroundColor: Asset.Color.likePicsRed.color], for: .normal)

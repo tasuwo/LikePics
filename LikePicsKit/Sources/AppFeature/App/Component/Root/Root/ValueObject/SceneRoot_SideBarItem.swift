@@ -64,9 +64,11 @@ extension SceneRoot {
 
                 if case let .clips(state, preview: indexPath) = intent {
                     if let indexPath = indexPath {
-                        let previewPageViewController = factory.makeClipPreviewPageViewController(clips: [],
-                                                                                                  query: .clips(state.clipCollectionState.source),
-                                                                                                  indexPath: indexPath)
+                        let previewPageViewController = factory.makeClipPreviewPageViewController(
+                            clips: [],
+                            query: .clips(state.clipCollectionState.source),
+                            indexPath: indexPath
+                        )
                         rootViewController.presentAfterLoad(previewPageViewController, animated: false, completion: nil)
                     }
                 }
@@ -94,9 +96,11 @@ extension SceneRoot {
                 viewController.show(clipCollectionViewController, sender: nil)
 
                 if let indexPath = indexPath {
-                    let previewPageViewController = factory.makeClipPreviewPageViewController(clips: [],
-                                                                                              query: .clips(state.clipCollectionState.source),
-                                                                                              indexPath: indexPath)
+                    let previewPageViewController = factory.makeClipPreviewPageViewController(
+                        clips: [],
+                        query: .clips(state.clipCollectionState.source),
+                        indexPath: indexPath
+                    )
                     clipCollectionViewController.presentAfterLoad(previewPageViewController, animated: false, completion: nil)
                 }
             }

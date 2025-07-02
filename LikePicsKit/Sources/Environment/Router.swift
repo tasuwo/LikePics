@@ -6,9 +6,7 @@ import Domain
 import Foundation
 import MobileTransition
 
-/**
- * - TODO: 個別のRouterに切り出し
- */
+/// - TODO: 個別のRouterに切り出し
 public protocol Router {
     @discardableResult
     func open(_ url: URL) -> Bool
@@ -26,14 +24,18 @@ public protocol Router {
     func showClipCollectionView(for albumId: Album.Identity) -> Bool
 
     @discardableResult
-    func showClipPreviewView(clips: [Clip],
-                             query: ClipPreviewPageQuery,
-                             indexPath: ClipCollection.IndexPath) -> Bool
+    func showClipPreviewView(
+        clips: [Clip],
+        query: ClipPreviewPageQuery,
+        indexPath: ClipCollection.IndexPath
+    ) -> Bool
 
     @discardableResult
-    func showClipInformationView(clipId: Clip.Identity,
-                                 itemId: ClipItem.Identity,
-                                 transitioningController: ClipItemInformationTransitioningControllable) -> Bool
+    func showClipInformationView(
+        clipId: Clip.Identity,
+        itemId: ClipItem.Identity,
+        transitioningController: ClipItemInformationTransitioningControllable
+    ) -> Bool
 
     @discardableResult
     func showFindView() -> Bool

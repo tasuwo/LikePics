@@ -12,8 +12,8 @@ public enum UserInterfaceStyle: String {
 
 import UIKit
 
-public extension UserInterfaceStyle {
-    var uiUserInterfaceStyle: UIUserInterfaceStyle {
+extension UserInterfaceStyle {
+    public var uiUserInterfaceStyle: UIUserInterfaceStyle {
         switch self {
         case .light:
             return .light

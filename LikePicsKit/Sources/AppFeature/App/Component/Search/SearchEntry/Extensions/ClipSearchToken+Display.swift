@@ -40,9 +40,11 @@ extension ClipSearchToken {
         let iconAttachmentString = NSAttributedString(attachment: iconAttachment)
         string.insert(iconAttachmentString, at: 0)
 
-        string.addAttribute(.foregroundColor,
-                            value: UIColor.label,
-                            range: NSRange(location: 0, length: iconAttachmentString.length))
+        string.addAttribute(
+            .foregroundColor,
+            value: UIColor.label,
+            range: NSRange(location: 0, length: iconAttachmentString.length)
+        )
 
         return string
     }

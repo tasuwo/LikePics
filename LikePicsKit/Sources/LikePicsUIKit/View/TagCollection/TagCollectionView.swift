@@ -41,12 +41,13 @@ public class TagCollectionView: UICollectionView {
             public let visibleCountIfPossible: Bool
             public weak var delegate: TagCollectionViewCellDelegate?
 
-            public init(tag: Domain.Tag,
-                        displayMode: TagCollectionViewCell.DisplayMode,
-                        visibleDeleteButton: Bool,
-                        visibleCountIfPossible: Bool,
-                        delegate: TagCollectionViewCellDelegate?)
-            {
+            public init(
+                tag: Domain.Tag,
+                displayMode: TagCollectionViewCell.DisplayMode,
+                visibleDeleteButton: Bool,
+                visibleCountIfPossible: Bool,
+                delegate: TagCollectionViewCellDelegate?
+            ) {
                 self.tag = tag
                 self.displayMode = displayMode
                 self.visibleDeleteButton = visibleDeleteButton
@@ -87,12 +88,15 @@ public class TagCollectionView: UICollectionView {
 
     // MARK: - Methods
 
-    public static func provideCell(collectionView: UICollectionView,
-                                   indexPath: IndexPath,
-                                   configuration: CellConfiguration) -> UICollectionViewCell?
-    {
-        let dequeuedCell = collectionView.dequeueReusableCell(withReuseIdentifier: configuration.type.identifier,
-                                                              for: indexPath)
+    public static func provideCell(
+        collectionView: UICollectionView,
+        indexPath: IndexPath,
+        configuration: CellConfiguration
+    ) -> UICollectionViewCell? {
+        let dequeuedCell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: configuration.type.identifier,
+            for: indexPath
+        )
 
         switch configuration {
         case let .addition(config):
@@ -120,20 +124,27 @@ public class TagCollectionView: UICollectionView {
         }
     }
 
-    public static func createLayoutSection(groupEdgeSpacing: NSCollectionLayoutEdgeSpacing? = nil,
-                                           groupContentInsets: NSDirectionalEdgeInsets? = nil) -> NSCollectionLayoutSection
-    {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(36),
-                                              heightDimension: .estimated(32))
+    public static func createLayoutSection(
+        groupEdgeSpacing: NSCollectionLayoutEdgeSpacing? = nil,
+        groupContentInsets: NSDirectionalEdgeInsets? = nil
+    ) -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .estimated(36),
+            heightDimension: .estimated(32)
+        )
 
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: .fixed(0),
-                                                         top: nil,
-                                                         trailing: .fixed(Self.interItemSpacing),
-                                                         bottom: nil)
+        item.edgeSpacing = NSCollectionLayoutEdgeSpacing(
+            leading: .fixed(0),
+            top: nil,
+            trailing: .fixed(Self.interItemSpacing),
+            bottom: nil
+        )
 
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(32))
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .estimated(32)
+        )
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
 
         if let edgeSpacing = groupEdgeSpacing {

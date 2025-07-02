@@ -27,20 +27,28 @@ extension ClipCollectionMenuBuilder: ClipCollectionMenuBuildable {
         return [
             source.isAlbum
                 ? .item(.addTag)
-                : .subMenu(.init(kind: .add,
-                                 isInline: false,
-                                 children: [.item(.addTag), .item(.addToAlbum)])),
+                : .subMenu(
+                    .init(
+                        kind: .add,
+                        isInline: false,
+                        children: [.item(.addTag), .item(.addToAlbum)]
+                    )
+                ),
             clip.isHidden
                 ? .item(.reveal)
                 : .item(.hide(immediately: storage.readShowHiddenItems())),
             .item(.share),
-            .subMenu(.init(kind: .others,
-                           isInline: true,
-                           children: [
-                               clip.items.count > 1 ? .item(.purge) : nil,
-                               source.isAlbum ? .item(.removeFromAlbum) : nil,
-                               .item(.delete)
-                           ].compactMap { $0 }))
+            .subMenu(
+                .init(
+                    kind: .others,
+                    isInline: true,
+                    children: [
+                        clip.items.count > 1 ? .item(.purge) : nil,
+                        source.isAlbum ? .item(.removeFromAlbum) : nil,
+                        .item(.delete),
+                    ].compactMap { $0 }
+                )
+            ),
         ].compactMap { $0 }
     }
 }

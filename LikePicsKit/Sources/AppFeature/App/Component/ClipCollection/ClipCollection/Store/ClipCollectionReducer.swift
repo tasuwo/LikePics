@@ -46,9 +46,11 @@ struct ClipCollectionReducer: Reducer {
             nextState.clips = state.clips.selected(clipId, allowsMultipleSelection: state.operation.isAllowedMultipleSelection)
 
             if !state.operation.isAllowedMultipleSelection {
-                dependency.router.showClipPreviewView(clips: state.clips.orderedEntities(),
-                                                      query: .clips(state.source),
-                                                      indexPath: ClipCollection.IndexPath(clipIndex: clip.index, itemIndex: 0))
+                dependency.router.showClipPreviewView(
+                    clips: state.clips.orderedEntities(),
+                    query: .clips(state.source),
+                    indexPath: ClipCollection.IndexPath(clipIndex: clip.index, itemIndex: 0)
+                )
             }
 
             return (nextState, .none)
@@ -69,7 +71,8 @@ struct ClipCollectionReducer: Reducer {
             let ids = Self.performReorder(originals: originals, request: clipIds)
             switch dependency.clipCommandService.updateAlbum(having: albumId, byReorderingClipsHaving: ids) {
             case .success:
-                let newClips = ids
+                let newClips =
+                    ids
                     .compactMap { state.clips.entity(having: $0) }
                 nextState.clips = nextState.clips.updated(entities: newClips)
 
@@ -194,7 +197,7 @@ struct ClipCollectionReducer: Reducer {
 
         case let .albumSelected(albumId):
             guard case let .albumSelection(id: _, clipIds: clipIds) = nextState.modal,
-                  let albumId = albumId
+                let albumId = albumId
             else {
                 nextState.modal = nil
                 return (nextState, .none)
@@ -238,7 +241,7 @@ struct ClipCollectionReducer: Reducer {
 
         case .alertRemoveFromAlbumConfirmed:
             guard case let .removeFromAlbum(clipId: clipId) = state.alert,
-                  case let .album(albumId) = state.source
+                case let .album(albumId) = state.source
             else {
                 nextState.alert = nil
                 return (nextState, .none)
@@ -321,9 +324,11 @@ extension ClipCollectionReducer {
             }
         }
 
-        var nextState = performFilter(clips: stream.clips,
-                                      isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
-                                      previousState: state)
+        var nextState = performFilter(
+            clips: stream.clips,
+            isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
+            previousState: state
+        )
         nextState.sourceDescription = stream.description
 
         return (nextState, [queryEffect, settingsEffect])
@@ -347,26 +352,33 @@ extension Array where Element == Clip {
 // MARK: - Filter
 
 extension ClipCollectionReducer {
-    private static func performFilter(clips: [Clip],
-                                      previousState: State) -> State
-    {
-        performFilter(clips: clips,
-                      isSomeItemsHidden: previousState.isSomeItemsHidden,
-                      previousState: previousState)
+    private static func performFilter(
+        clips: [Clip],
+        previousState: State
+    ) -> State {
+        performFilter(
+            clips: clips,
+            isSomeItemsHidden: previousState.isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
-    private static func performFilter(isSomeItemsHidden: Bool,
-                                      previousState: State) -> State
-    {
-        performFilter(clips: previousState.clips.orderedEntities(),
-                      isSomeItemsHidden: isSomeItemsHidden,
-                      previousState: previousState)
+    private static func performFilter(
+        isSomeItemsHidden: Bool,
+        previousState: State
+    ) -> State {
+        performFilter(
+            clips: previousState.clips.orderedEntities(),
+            isSomeItemsHidden: isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
-    private static func performFilter(clips: [Clip],
-                                      isSomeItemsHidden: Bool,
-                                      previousState: State) -> State
-    {
+    private static func performFilter(
+        clips: [Clip],
+        isSomeItemsHidden: Bool,
+        previousState: State
+    ) -> State {
         var nextState = previousState
 
         let filteredClips = clips.filter { isSomeItemsHidden ? $0.isHidden == false : true }
@@ -391,10 +403,11 @@ extension ClipCollectionReducer {
 // MARK: NavigationBar Event
 
 extension ClipCollectionReducer {
-    private static func execute(action: ClipCollectionNavigationBarEvent,
-                                state: State,
-                                dependency: Dependency) -> (State, [Effect<Action>]?)
-    {
+    private static func execute(
+        action: ClipCollectionNavigationBarEvent,
+        state: State,
+        dependency: Dependency
+    ) -> (State, [Effect<Action>]?) {
         var nextState = state
 
         switch action {
@@ -431,10 +444,11 @@ extension ClipCollectionReducer {
 // MARK: ToolBar Event
 
 extension ClipCollectionReducer {
-    private static func execute(action: ClipCollectionToolBarEvent,
-                                state: State,
-                                dependency: Dependency) -> (State, [Effect<Action>]?)
-    {
+    private static func execute(
+        action: ClipCollectionToolBarEvent,
+        state: State,
+        dependency: Dependency
+    ) -> (State, [Effect<Action>]?) {
         var nextState = state
         switch action {
         case .addToAlbum:
@@ -505,7 +519,8 @@ extension ClipCollectionReducer {
 extension ClipCollectionReducer {
     private static func performReorder(originals: [Clip.Identity], request: [Clip.Identity]) -> [Clip.Identity] {
         var index = 0
-        return originals
+        return
+            originals
             .map { original in
                 guard request.contains(original) else { return original }
                 index += 1
@@ -514,8 +529,8 @@ extension ClipCollectionReducer {
     }
 }
 
-private extension ClipCollectionState {
-    func editingEnded() -> Self {
+extension ClipCollectionState {
+    fileprivate func editingEnded() -> Self {
         var nextState = self
         nextState.clips = nextState.clips.deselectedAll()
         nextState.operation = .none

@@ -4,13 +4,13 @@
 
 import Foundation
 
-public extension TemporaryImageStorage.Configuration {
-    enum Kind {
+extension TemporaryImageStorage.Configuration {
+    public enum Kind {
         case document
         case group
     }
 
-    static func resolve(for bundle: Bundle, kind: Kind) -> Self {
+    public static func resolve(for bundle: Bundle, kind: Kind) -> Self {
         return .init(targetUrl: self.resolveUrl(for: bundle, kind: kind))
     }
 
@@ -24,7 +24,8 @@ public extension TemporaryImageStorage.Configuration {
         switch kind {
         case .document:
             if let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-                return directory
+                return
+                    directory
                     .appendingPathComponent(bundleIdentifier, isDirectory: true)
                     .appendingPathComponent(directoryName, isDirectory: true)
             } else {
@@ -35,7 +36,8 @@ public extension TemporaryImageStorage.Configuration {
             guard let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.\(bundleIdentifier)") else {
                 fatalError("Failed to resolve images containing directory url.")
             }
-            return directory
+            return
+                directory
                 .appendingPathComponent(bundleIdentifier, isDirectory: true)
                 .appendingPathComponent(directoryName, isDirectory: true)
         }

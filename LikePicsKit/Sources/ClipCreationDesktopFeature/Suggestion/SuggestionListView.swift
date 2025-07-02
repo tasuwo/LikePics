@@ -14,10 +14,11 @@ struct SuggestionListView<Item: SuggestionItem>: View {
     var onTap: (SuggestionListModel<Item>.Selection) -> Void
     var fallbackItemTitle: (String) -> String
 
-    init(_ model: SuggestionListModel<Item>,
-         onTap: @escaping (SuggestionListModel<Item>.Selection) -> Void,
-         fallbackItemTitle: @escaping (String) -> String)
-    {
+    init(
+        _ model: SuggestionListModel<Item>,
+        onTap: @escaping (SuggestionListModel<Item>.Selection) -> Void,
+        fallbackItemTitle: @escaping (String) -> String
+    ) {
         self.model = model
         self.onTap = onTap
         self.fallbackItemTitle = fallbackItemTitle
@@ -77,8 +78,12 @@ struct SuggestionListView<Item: SuggestionItem>: View {
             .listStyle(.plain)
             .padding(.vertical, 8)
             .background(Color.clear)
-            .frame(height: min(preferredHeight(forItemsCount: CGFloat(model.items.count) + (model.fallbackItem != nil ? 1 : 0)),
-                               preferredHeight(forItemsCount: 5.5)))
+            .frame(
+                height: min(
+                    preferredHeight(forItemsCount: CGFloat(model.items.count) + (model.fallbackItem != nil ? 1 : 0)),
+                    preferredHeight(forItemsCount: 5.5)
+                )
+            )
             .scrollContentBackground(.hidden)
             .onChange(of: model.selection, initial: true) { _, newValue in
                 switch newValue {
@@ -91,10 +96,12 @@ struct SuggestionListView<Item: SuggestionItem>: View {
     }
 
     private func preferredHeight(forItemsCount count: CGFloat) -> CGFloat {
-        let rect = "PLACEHOLDER".boundingRect(with: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude),
-                                              options: [.usesLineFragmentOrigin, .usesFontLeading],
-                                              attributes: [.font: NSFont.preferredFont(forTextStyle: .body)],
-                                              context: nil)
+        let rect = "PLACEHOLDER".boundingRect(
+            with: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude),
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            attributes: [.font: NSFont.preferredFont(forTextStyle: .body)],
+            context: nil
+        )
         return (rect.height + (4 + 2) * 2) * count + 8 * 2
     }
 }
@@ -115,7 +122,7 @@ struct SuggestionListView<Item: SuggestionItem>: View {
         PreviewSuggestion("piyo"),
         PreviewSuggestion("puyo"),
         PreviewSuggestion("poyo"),
-        PreviewSuggestion("poe")
+        PreviewSuggestion("poe"),
     ])
     model.fallbackItem = "Fallback"
 

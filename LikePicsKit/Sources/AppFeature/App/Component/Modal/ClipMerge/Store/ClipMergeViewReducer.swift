@@ -33,11 +33,13 @@ struct ClipMergeViewReducer: Reducer {
         case .saveButtonTapped:
             let itemIds = state.items.map({ $0.id })
             let tagIds = state.tags.map({ $0.id })
-            switch dependency.clipCommandService.mergeClipItems(itemIds: itemIds,
-                                                                tagIds: tagIds,
-                                                                siteUrl: state.overwriteSiteUrl,
-                                                                isHidden: state.shouldSaveAsHiddenItem,
-                                                                inClipsHaving: Array(state.sourceClipIds))
+            switch dependency.clipCommandService.mergeClipItems(
+                itemIds: itemIds,
+                tagIds: tagIds,
+                siteUrl: state.overwriteSiteUrl,
+                isHidden: state.shouldSaveAsHiddenItem,
+                inClipsHaving: Array(state.sourceClipIds)
+            )
             {
             case .success:
                 return Self.dismiss(isCompleted: true, state: state, dependency: dependency)

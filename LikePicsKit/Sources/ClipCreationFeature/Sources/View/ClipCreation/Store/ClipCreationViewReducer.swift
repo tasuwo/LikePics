@@ -211,8 +211,8 @@ extension ClipCreationViewReducer {
     }
 }
 
-private extension ImageSourceResolverError {
-    var displayTitle: String {
+extension ImageSourceResolverError {
+    fileprivate var displayTitle: String {
         switch self {
         case .notFound:
             return L10n.clipCreationViewLoadingErrorNotFoundTitle
@@ -228,7 +228,7 @@ private extension ImageSourceResolverError {
         }
     }
 
-    var displayMessage: String {
+    fileprivate var displayMessage: String {
         switch self {
         case .notFound:
             return L10n.clipCreationViewLoadingErrorNotFoundMessage
@@ -249,37 +249,46 @@ private extension ImageSourceResolverError {
 
 extension ClipCreationViewReducer {
     private static func performFilter(tags: [Tag], previousState: State) -> State {
-        performFilter(tags: tags,
-                      albums: previousState.albums.orderedEntities(),
-                      isSomeItemsHidden: previousState.isSomeItemsHidden,
-                      previousState: previousState)
+        performFilter(
+            tags: tags,
+            albums: previousState.albums.orderedEntities(),
+            isSomeItemsHidden: previousState.isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
     private static func performFilter(albums: [ListingAlbumTitle], previousState: State) -> State {
-        performFilter(tags: previousState.tags.orderedEntities(),
-                      albums: albums,
-                      isSomeItemsHidden: previousState.isSomeItemsHidden,
-                      previousState: previousState)
+        performFilter(
+            tags: previousState.tags.orderedEntities(),
+            albums: albums,
+            isSomeItemsHidden: previousState.isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
     private static func performFilter(isSomeItemsHidden: Bool, previousState: State) -> State {
-        performFilter(tags: previousState.tags.orderedEntities(),
-                      albums: previousState.albums.orderedEntities(),
-                      isSomeItemsHidden: isSomeItemsHidden,
-                      previousState: previousState)
+        performFilter(
+            tags: previousState.tags.orderedEntities(),
+            albums: previousState.albums.orderedEntities(),
+            isSomeItemsHidden: isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
-    private static func performFilter(tags: [Tag],
-                                      albums: [ListingAlbumTitle],
-                                      isSomeItemsHidden: Bool,
-                                      previousState: State) -> State
-    {
+    private static func performFilter(
+        tags: [Tag],
+        albums: [ListingAlbumTitle],
+        isSomeItemsHidden: Bool,
+        previousState: State
+    ) -> State {
         var nextState = previousState
 
-        let filteredTagIds = tags
+        let filteredTagIds =
+            tags
             .filter { isSomeItemsHidden ? $0.isHidden == false : true }
             .map { $0.id }
-        let filteredAlbumIds = albums
+        let filteredAlbumIds =
+            albums
             .filter { isSomeItemsHidden ? $0.isHidden == false : true }
             .map { $0.id }
 
@@ -317,15 +326,17 @@ extension ClipCreationViewReducer {
 
         let stream = self.fetchImages(for: selections, dependency: dependency)
             .flatMap { [dependency] partialRecipes -> AnyPublisher<Action?, DownloadError> in
-                return Self.save(url: state.url,
-                                 shouldSaveAsClip: state.shouldSaveAsClip,
-                                 shouldSaveAsHiddenItem: state.shouldSaveAsHiddenItem,
-                                 tagIds: Array(state.tags.ids),
-                                 albumIds: state.albums.ids,
-                                 partialRecipes: partialRecipes,
-                                 dependency: dependency)
-                    .publisher
-                    .eraseToAnyPublisher()
+                return Self.save(
+                    url: state.url,
+                    shouldSaveAsClip: state.shouldSaveAsClip,
+                    shouldSaveAsHiddenItem: state.shouldSaveAsHiddenItem,
+                    tagIds: Array(state.tags.ids),
+                    albumIds: state.albums.ids,
+                    partialRecipes: partialRecipes,
+                    dependency: dependency
+                )
+                .publisher
+                .eraseToAnyPublisher()
             }
             .catch { error -> AnyPublisher<Action?, Never> in
                 return Just(Action.failedToSaveImages(error))
@@ -338,7 +349,8 @@ extension ClipCreationViewReducer {
     }
 
     private static func fetchImages(for selections: [(index: Int, source: ImageSource)], dependency: Dependency) -> AnyPublisher<[ClipItemPartialRecipe], DownloadError> {
-        let publishers: [AnyPublisher<ClipItemPartialRecipe, DownloadError>] = selections
+        let publishers: [AnyPublisher<ClipItemPartialRecipe, DownloadError>] =
+            selections
             .map { [dependency] selection in
                 return dependency.imageLoader.load(from: selection.source)
                     .mapError { DownloadError.failedToDownloadImage($0) }
@@ -360,20 +372,23 @@ extension ClipCreationViewReducer {
     }
 
     // swiftlint:disable:next function_parameter_count
-    private static func save(url: URL?,
-                             shouldSaveAsClip: Bool,
-                             shouldSaveAsHiddenItem: Bool,
-                             tagIds: [Tag.Identity],
-                             albumIds: Set<Album.Identity>,
-                             partialRecipes: [ClipItemPartialRecipe],
-                             dependency: Dependency) -> Result<Action?, DownloadError>
-    {
+    private static func save(
+        url: URL?,
+        shouldSaveAsClip: Bool,
+        shouldSaveAsHiddenItem: Bool,
+        tagIds: [Tag.Identity],
+        albumIds: Set<Album.Identity>,
+        partialRecipes: [ClipItemPartialRecipe],
+        dependency: Dependency
+    ) -> Result<Action?, DownloadError> {
         if shouldSaveAsClip {
-            let result = dependency.clipRecipeFactory.make(url: url,
-                                                           hidesClip: shouldSaveAsHiddenItem,
-                                                           partialRecipes: partialRecipes,
-                                                           tagIds: tagIds,
-                                                           albumIds: albumIds)
+            let result = dependency.clipRecipeFactory.make(
+                url: url,
+                hidesClip: shouldSaveAsHiddenItem,
+                partialRecipes: partialRecipes,
+                tagIds: tagIds,
+                albumIds: albumIds
+            )
             switch dependency.clipStore.create(clip: result.0, withContainers: result.1, forced: false) {
             case .success:
                 return .success(.imagesSaved)
@@ -384,11 +399,13 @@ extension ClipCreationViewReducer {
         } else {
             var results: [Result<Clip.Identity, ClipStorageError>] = []
             for partialRecipe in partialRecipes {
-                let result = dependency.clipRecipeFactory.make(url: url,
-                                                               hidesClip: shouldSaveAsHiddenItem,
-                                                               partialRecipes: [partialRecipe],
-                                                               tagIds: tagIds,
-                                                               albumIds: albumIds)
+                let result = dependency.clipRecipeFactory.make(
+                    url: url,
+                    hidesClip: shouldSaveAsHiddenItem,
+                    partialRecipes: [partialRecipe],
+                    tagIds: tagIds,
+                    albumIds: albumIds
+                )
                 results.append(dependency.clipStore.create(clip: result.0, withContainers: result.1, forced: false))
             }
             if let firstError = results.compactMap({ $0.failureValue }).first {
@@ -400,8 +417,8 @@ extension ClipCreationViewReducer {
     }
 }
 
-private extension ClipCreationViewReducer.DownloadError {
-    var displayTitle: String {
+extension ClipCreationViewReducer.DownloadError {
+    fileprivate var displayTitle: String {
         switch self {
         case .failedToDownloadImage:
             return L10n.clipCreationViewDownloadErrorFailedToDownloadTitle
@@ -411,7 +428,7 @@ private extension ClipCreationViewReducer.DownloadError {
         }
     }
 
-    var displayMessage: String {
+    fileprivate var displayMessage: String {
         switch self {
         case .failedToDownloadImage:
             return L10n.clipCreationViewDownloadErrorFailedToDownloadBody

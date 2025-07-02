@@ -84,14 +84,18 @@ extension ClipItemListPresentationAnimator: UIViewControllerAnimatedTransitionin
             from.view.backgroundColor = fromViewBackgroundView.backgroundColor
             fromImageView.isHidden = false
 
-            UIView.likepics_animate(withDuration: 0.15, animations: {
-                toCell.isHidden = false
-            }, completion: { _ in
-                animatingImageView.alpha = 0
-                fromViewBackgroundView.removeFromSuperview()
-                animatingImageView.removeFromSuperview()
-                completion()
-            })
+            UIView.likepics_animate(
+                withDuration: 0.15,
+                animations: {
+                    toCell.isHidden = false
+                },
+                completion: { _ in
+                    animatingImageView.alpha = 0
+                    fromViewBackgroundView.removeFromSuperview()
+                    animatingImageView.removeFromSuperview()
+                    completion()
+                }
+            )
         }
 
         from.navigationController?.navigationBar.alpha = 1.0

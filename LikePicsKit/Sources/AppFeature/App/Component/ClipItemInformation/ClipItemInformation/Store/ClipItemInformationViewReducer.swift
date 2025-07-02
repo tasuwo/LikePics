@@ -58,10 +58,10 @@ struct ClipItemInformationViewReducer: Reducer {
             return (Self.performFilter(isSomeItemsHidden: isSomeItemsHidden, previousState: state), .none)
 
         case .failedToLoadClip,
-             .failedToLoadClipItem,
-             .failedToLoadTags,
-             .failedToLoadAlbums,
-             .failedToLoadSetting:
+            .failedToLoadClipItem,
+            .failedToLoadTags,
+            .failedToLoadAlbums,
+            .failedToLoadSetting:
             nextState.isDismissed = true
             return (nextState, .none)
 
@@ -240,12 +240,14 @@ extension ClipItemInformationViewReducer {
 
         // Prepare states
 
-        let nextState = performFilter(clip: clipQuery.clip.value,
-                                      item: clipItemQuery.clipItem.value,
-                                      tags: tagsQuery.tags.value,
-                                      albums: albumsQuery.albums.value,
-                                      isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
-                                      previousState: state)
+        let nextState = performFilter(
+            clip: clipQuery.clip.value,
+            item: clipItemQuery.clipItem.value,
+            tags: tagsQuery.tags.value,
+            albums: albumsQuery.albums.value,
+            isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
+            previousState: state
+        )
 
         return (nextState, [clipQueryEffect, clipItemQueryEffect, tagsQueryEffect, albumsQueryEffect, settingEffect])
     }
@@ -255,65 +257,78 @@ extension ClipItemInformationViewReducer {
 
 extension ClipItemInformationViewReducer {
     private static func performFilter(clip: Clip, previousState: State) -> State {
-        performFilter(clip: clip,
-                      item: previousState.item,
-                      tags: previousState.tags.orderedEntities(),
-                      albums: previousState.albums.orderedEntities(),
-                      isSomeItemsHidden: previousState.isSomeItemsHidden,
-                      previousState: previousState)
+        performFilter(
+            clip: clip,
+            item: previousState.item,
+            tags: previousState.tags.orderedEntities(),
+            albums: previousState.albums.orderedEntities(),
+            isSomeItemsHidden: previousState.isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
     private static func performFilter(item: ClipItem, previousState: State) -> State {
-        performFilter(clip: previousState.clip,
-                      item: item,
-                      tags: previousState.tags.orderedEntities(),
-                      albums: previousState.albums.orderedEntities(),
-                      isSomeItemsHidden: previousState.isSomeItemsHidden,
-                      previousState: previousState)
+        performFilter(
+            clip: previousState.clip,
+            item: item,
+            tags: previousState.tags.orderedEntities(),
+            albums: previousState.albums.orderedEntities(),
+            isSomeItemsHidden: previousState.isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
     private static func performFilter(tags: [Tag], previousState: State) -> State {
-        performFilter(clip: previousState.clip,
-                      item: previousState.item,
-                      tags: tags,
-                      albums: previousState.albums.orderedEntities(),
-                      isSomeItemsHidden: previousState.isSomeItemsHidden,
-                      previousState: previousState)
+        performFilter(
+            clip: previousState.clip,
+            item: previousState.item,
+            tags: tags,
+            albums: previousState.albums.orderedEntities(),
+            isSomeItemsHidden: previousState.isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
     private static func performFilter(albums: [ListingAlbumTitle], previousState: State) -> State {
-        performFilter(clip: previousState.clip,
-                      item: previousState.item,
-                      tags: previousState.tags.orderedEntities(),
-                      albums: albums,
-                      isSomeItemsHidden: previousState.isSomeItemsHidden,
-                      previousState: previousState)
+        performFilter(
+            clip: previousState.clip,
+            item: previousState.item,
+            tags: previousState.tags.orderedEntities(),
+            albums: albums,
+            isSomeItemsHidden: previousState.isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
     private static func performFilter(isSomeItemsHidden: Bool, previousState: State) -> State {
-        performFilter(clip: previousState.clip,
-                      item: previousState.item,
-                      tags: previousState.tags.orderedEntities(),
-                      albums: previousState.albums.orderedEntities(),
-                      isSomeItemsHidden: isSomeItemsHidden,
-                      previousState: previousState)
+        performFilter(
+            clip: previousState.clip,
+            item: previousState.item,
+            tags: previousState.tags.orderedEntities(),
+            albums: previousState.albums.orderedEntities(),
+            isSomeItemsHidden: isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
     // swiftlint:disable:next function_parameter_count
-    private static func performFilter(clip: Clip?,
-                                      item: ClipItem?,
-                                      tags: [Tag],
-                                      albums: [ListingAlbumTitle],
-                                      isSomeItemsHidden: Bool,
-                                      previousState: State) -> State
-    {
+    private static func performFilter(
+        clip: Clip?,
+        item: ClipItem?,
+        tags: [Tag],
+        albums: [ListingAlbumTitle],
+        isSomeItemsHidden: Bool,
+        previousState: State
+    ) -> State {
         var nextState = previousState
 
-        let filteredTagIds = tags
+        let filteredTagIds =
+            tags
             .filter { isSomeItemsHidden ? $0.isHidden == false : true }
             .map { $0.id }
 
-        let filteredAlbumIds = albums
+        let filteredAlbumIds =
+            albums
             .filter { isSomeItemsHidden ? $0.isHidden == false : true }
             .map { $0.id }
 

@@ -67,31 +67,37 @@ public let RemoteChangeMergeHandler: (NSPersistentContainer, [NSPersistentHistor
         }
     }
 
-    cloudStackObserver.didRemoteChangedTags(inserted: insertedTagObjectIDs,
-                                            updated: updatedTagObjectIDs,
-                                            deleted: deletedTagObjectIDs)
-    cloudStackObserver.didRemoteChangedAlbums(inserted: insertedAlbumObjectIDs,
-                                              updated: updatedAlbumObjectIDs,
-                                              deleted: deletedAlbumObjectIDs)
-    cloudStackObserver.didRemoteChangedAlbumItems(inserted: insertedAlbumItemObjectIDs,
-                                                  updated: updatedAlbumItemObjectIDs,
-                                                  deleted: deletedAlbumItemObjectIDs)
+    cloudStackObserver.didRemoteChangedTags(
+        inserted: insertedTagObjectIDs,
+        updated: updatedTagObjectIDs,
+        deleted: deletedTagObjectIDs
+    )
+    cloudStackObserver.didRemoteChangedAlbums(
+        inserted: insertedAlbumObjectIDs,
+        updated: updatedAlbumObjectIDs,
+        deleted: deletedAlbumObjectIDs
+    )
+    cloudStackObserver.didRemoteChangedAlbumItems(
+        inserted: insertedAlbumItemObjectIDs,
+        updated: updatedAlbumItemObjectIDs,
+        deleted: deletedAlbumItemObjectIDs
+    )
 }
 
-private extension NSPersistentHistoryChange {
-    var isTagChange: Bool {
+extension NSPersistentHistoryChange {
+    fileprivate var isTagChange: Bool {
         return self.changedObjectID.entity.name == Tag.entity().name
     }
 
-    var isAlbumChange: Bool {
+    fileprivate var isAlbumChange: Bool {
         return self.changedObjectID.entity.name == Album.entity().name
     }
 
-    var isAlbumItemChange: Bool {
+    fileprivate var isAlbumItemChange: Bool {
         return self.changedObjectID.entity.name == AlbumItem.entity().name
     }
 
-    var isInsertOrUpdate: Bool {
+    fileprivate var isInsertOrUpdate: Bool {
         return self.changeType == .insert || self.changeType == .update
     }
 }

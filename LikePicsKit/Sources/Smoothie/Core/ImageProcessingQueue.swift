@@ -4,6 +4,7 @@
 
 import Foundation
 import ImageIO
+
 #if canImport(UIKit)
 import UIKit
 #endif
@@ -51,8 +52,8 @@ public final class ImageProcessingQueue {
 
 // MARK: Preload
 
-public extension ImageProcessingQueue {
-    func loadImage(_ request: ImageRequest, completion: (() -> Void)? = nil) -> ImageLoadTaskCancellable {
+extension ImageProcessingQueue {
+    public func loadImage(_ request: ImageRequest, completion: (() -> Void)? = nil) -> ImageLoadTaskCancellable {
         return queue.sync {
             pool
                 .task(for: ImageRequestKey(request)) {
@@ -160,8 +161,10 @@ extension ImageProcessingQueue {
 
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Downsample Data")
-            let thumbnail = data.downsample(size: task.request.resize?.size,
-                                            scale: task.request.resize?.scale)
+            let thumbnail = data.downsample(
+                size: task.request.resize?.size,
+                scale: task.request.resize?.scale
+            )
             log.log(.end, name: "Downsample Data")
 
             self.queue.async {
@@ -263,8 +266,10 @@ extension ImageProcessingQueue {
 
             let log = Log(logger: self.logger)
             log.log(.begin, name: "Downsample Data")
-            let thumbnail = data.downsample(size: task.request.resize?.size,
-                                            scale: task.request.resize?.scale)
+            let thumbnail = data.downsample(
+                size: task.request.resize?.size,
+                scale: task.request.resize?.scale
+            )
             log.log(.end, name: "Downsample Data")
 
             self.queue.async {
@@ -288,16 +293,16 @@ extension ImageProcessingQueue {
 
 // MARK: Image Processing
 
-private extension Data {
-    func pixelSize() -> CGSize? {
+extension Data {
+    fileprivate func pixelSize() -> CGSize? {
         let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
         guard let imageSource = CGImageSourceCreateWithData(self as CFData, imageSourceOptions) else {
             return nil
         }
 
         guard let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as Dictionary?,
-              let pixelWidth = imageProperties[kCGImagePropertyPixelWidth] as? CGFloat,
-              let pixelHeight = imageProperties[kCGImagePropertyPixelHeight] as? CGFloat
+            let pixelWidth = imageProperties[kCGImagePropertyPixelWidth] as? CGFloat,
+            let pixelHeight = imageProperties[kCGImagePropertyPixelHeight] as? CGFloat
         else {
             return nil
         }
@@ -305,7 +310,7 @@ private extension Data {
         return CGSize(width: pixelWidth, height: pixelHeight)
     }
 
-    func downsample(size: CGSize? = nil, scale: CGFloat? = nil) -> CGImage? {
+    fileprivate func downsample(size: CGSize? = nil, scale: CGFloat? = nil) -> CGImage? {
         let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
         guard let imageSource = CGImageSourceCreateWithData(self as CFData, imageSourceOptions) else {
             return nil
@@ -314,7 +319,7 @@ private extension Data {
         var options: [AnyHashable: Any] = [
             kCGImageSourceCreateThumbnailFromImageAlways: true,
             kCGImageSourceShouldCacheImmediately: true,
-            kCGImageSourceCreateThumbnailWithTransform: true
+            kCGImageSourceCreateThumbnailWithTransform: true,
         ]
 
         if let size = size {
@@ -330,8 +335,8 @@ private extension Data {
     }
 }
 
-private extension CGImage {
-    func encode(compressionRatio: Float) -> Data? {
+extension CGImage {
+    fileprivate func encode(compressionRatio: Float) -> Data? {
         let type: ImageType = self.alphaInfo.hasAlphaChannel ? .png : .jpeg
 
         let mutableData = NSMutableData()
@@ -349,8 +354,8 @@ private extension CGImage {
     }
 }
 
-private extension CGImageAlphaInfo {
-    var hasAlphaChannel: Bool {
+extension CGImageAlphaInfo {
+    fileprivate var hasAlphaChannel: Bool {
         switch self {
         case .none, .noneSkipLast, .noneSkipFirst:
             return false

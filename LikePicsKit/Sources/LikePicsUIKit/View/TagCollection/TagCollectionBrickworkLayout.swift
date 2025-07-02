@@ -20,8 +20,8 @@ public class TagCollectionBrickworkLayout: UICollectionViewFlowLayout {
         guard let previousLayoutAttributes = layoutAttributesForPreviousAdjacentItem(at: indexPath) else { return nil }
 
         guard let layoutAttributes = super.layoutAttributesForItem(at: indexPath),
-              layoutAttributes.frame.minY >= previousLayoutAttributes.frame.minY,
-              layoutAttributes.frame.minY < previousLayoutAttributes.frame.maxY
+            layoutAttributes.frame.minY >= previousLayoutAttributes.frame.minY,
+            layoutAttributes.frame.minY < previousLayoutAttributes.frame.maxY
         else {
             return nil
         }

@@ -15,11 +15,12 @@ public class ClipReferencesIntegrityValidationService {
 
     // MARK: - Lifecycle
 
-    public init(clipStorage: ClipStorageProtocol,
-                referenceClipStorage: ReferenceClipStorageProtocol,
-                commandQueue: StorageCommandQueue,
-                lock: NSRecursiveLock)
-    {
+    public init(
+        clipStorage: ClipStorageProtocol,
+        referenceClipStorage: ReferenceClipStorageProtocol,
+        commandQueue: StorageCommandQueue,
+        lock: NSRecursiveLock
+    ) {
         self.clipStorage = clipStorage
         self.referenceClipStorage = referenceClipStorage
         self.commandQueue = commandQueue

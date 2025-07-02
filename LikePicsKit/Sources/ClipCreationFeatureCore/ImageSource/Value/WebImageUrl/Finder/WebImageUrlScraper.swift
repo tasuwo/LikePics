@@ -112,27 +112,31 @@ extension WebImageUrlScraper: WebImageUrlScraperProtocol {
             .flatMap { _ in
                 return self.checkCurrentContent(fulfilled: { !$0.querySelectorAll("img").isEmpty })
             }
-            .sink(receiveCompletion: { finish in
-                switch finish {
-                case let .failure(error):
-                    completion(.failure(error))
+            .sink(
+                receiveCompletion: { finish in
+                    switch finish {
+                    case let .failure(error):
+                        completion(.failure(error))
 
-                case .finished:
-                    break
-                }
-            }, receiveValue: { document in
-                let imageUrls: [WebImageUrlSet] = document
-                    .querySelectorAll("img")
-                    .compactMap { $0["src"] }
-                    .compactMap { URL(string: $0) }
-                    .map {
-                        guard let provider = WebImageProviderPreset.resolveProvider(by: $0) else {
-                            return WebImageUrlSet(url: $0, alternativeUrl: nil)
-                        }
-                        return WebImageUrlSet(url: $0, alternativeUrl: provider.resolveHighQualityImageUrl(of: $0))
+                    case .finished:
+                        break
                     }
-                completion(.success(imageUrls))
-            })
+                },
+                receiveValue: { document in
+                    let imageUrls: [WebImageUrlSet] =
+                        document
+                        .querySelectorAll("img")
+                        .compactMap { $0["src"] }
+                        .compactMap { URL(string: $0) }
+                        .map {
+                            guard let provider = WebImageProviderPreset.resolveProvider(by: $0) else {
+                                return WebImageUrlSet(url: $0, alternativeUrl: nil)
+                            }
+                            return WebImageUrlSet(url: $0, alternativeUrl: provider.resolveHighQualityImageUrl(of: $0))
+                        }
+                    completion(.success(imageUrls))
+                }
+            )
             .store(in: &self.subscriptions)
     }
 }

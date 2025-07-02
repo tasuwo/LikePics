@@ -9,8 +9,8 @@ private struct ClipThumbnailProcessingQueueKey: EnvironmentKey {
     static let defaultValue = ImageProcessingQueue()
 }
 
-public extension EnvironmentValues {
-    var clipThumbnailProcessingQueue: ImageProcessingQueue {
+extension EnvironmentValues {
+    public var clipThumbnailProcessingQueue: ImageProcessingQueue {
         get { self[ClipThumbnailProcessingQueueKey.self] }
         set { self[ClipThumbnailProcessingQueueKey.self] = newValue }
     }

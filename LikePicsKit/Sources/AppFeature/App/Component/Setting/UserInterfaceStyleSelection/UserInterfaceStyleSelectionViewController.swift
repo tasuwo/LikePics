@@ -63,7 +63,8 @@ extension UserInterfaceStyleSelectionViewController {
     private func apply(style: UserInterfaceStyle) {
         Layout.Item.allCases.forEach { item in
             guard let indexPath = dataSource.indexPath(for: item),
-                  let cell = collectionView.cellForItem(at: indexPath) as? UICollectionViewListCell else { return }
+                let cell = collectionView.cellForItem(at: indexPath) as? UICollectionViewListCell
+            else { return }
             if item.style == style {
                 cell.accessories = [.checkmark()]
             } else {
@@ -90,8 +91,10 @@ extension UserInterfaceStyleSelectionViewController {
     }
 
     private func configureDataSource() {
-        dataSource = Layout.configureDataSource(collectionView: collectionView,
-                                                userSettingsStorage: userSettingsStorage)
+        dataSource = Layout.configureDataSource(
+            collectionView: collectionView,
+            userSettingsStorage: userSettingsStorage
+        )
 
         var snapshot = Layout.Snapshot()
         snapshot.appendSections([.main])

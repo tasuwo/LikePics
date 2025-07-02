@@ -97,7 +97,7 @@ public class ListCell: UICollectionViewCell {
             self.rightAccessoryLabel,
             self.rightAccessoryButton.titleLabel,
             self.bottomAccessoryButton.titleLabel,
-            self.bottomAccessoryLabel
+            self.bottomAccessoryLabel,
         ].forEach {
             $0?.adjustsFontForContentSizeCategory = true
             $0?.font = font
@@ -110,7 +110,7 @@ public class ListCell: UICollectionViewCell {
             self.rightAccessoryLabel,
             self.rightAccessoryButton.titleLabel,
             self.bottomAccessoryButton.titleLabel,
-            self.bottomAccessoryLabel
+            self.bottomAccessoryLabel,
         ].forEach {
             $0?.adjustsFontForContentSizeCategory = true
             $0?.font = UIFont.preferredFont(forTextStyle: .body)

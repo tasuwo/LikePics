@@ -32,17 +32,17 @@ struct ClipCollectionNavigationBarReducer: Reducer {
         // MARK: - NavigationBar
 
         case .didTapCancel,
-             .didTapSelectAll,
-             .didTapDeselectAll,
-             .didTapSelect,
-             .didTapLayout:
+            .didTapSelectAll,
+            .didTapDeselectAll,
+            .didTapSelect,
+            .didTapLayout:
             return (state, .none)
         }
     }
 }
 
-private extension ClipCollectionNavigationBarState {
-    func updatingAppearance() -> Self {
+extension ClipCollectionNavigationBarState {
+    fileprivate func updatingAppearance() -> Self {
         var nextState = self
 
         let isSelectedAll = clipCount <= selectionCount
@@ -56,14 +56,14 @@ private extension ClipCollectionNavigationBarState {
         case .none:
             rightItems = [
                 .init(kind: .layout(nextLayout), isEnabled: clipCount > 0),
-                .init(kind: .select, isEnabled: isSelectable)
+                .init(kind: .select, isEnabled: isSelectable),
             ]
             leftItems = []
 
         case .selecting:
             rightItems = [
                 .init(kind: .layout(nextLayout), isEnabled: false),
-                .init(kind: .cancel, isEnabled: true)
+                .init(kind: .cancel, isEnabled: true),
             ]
             leftItems = [
                 isSelectedAll
@@ -79,8 +79,8 @@ private extension ClipCollectionNavigationBarState {
     }
 }
 
-private extension ClipCollection.Layout {
-    var toItemKind: ClipCollectionNavigationBarState.Item.Kind.Layout {
+extension ClipCollection.Layout {
+    fileprivate var toItemKind: ClipCollectionNavigationBarState.Item.Kind.Layout {
         switch self {
         case .grid:
             return .grid

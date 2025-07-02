@@ -6,9 +6,10 @@ public protocol Searchable: Identifiable, Equatable {
     var searchableText: String? { get }
 }
 
-public extension String {
-    func transformToSearchableText() -> String? {
-        return self
+extension String {
+    public func transformToSearchableText() -> String? {
+        return
+            self
             .applyingTransform(.fullwidthToHalfwidth, reverse: false)?
             .applyingTransform(.hiraganaToKatakana, reverse: false)?
             .lowercased()

@@ -62,14 +62,16 @@ class ClipItemListViewController: UIViewController {
 
     // MARK: - Initializers
 
-    init(state: ClipItemListRootState,
-         siteUrlEditAlertState: TextEditAlertState,
-         dependency: ClipItemListRootDependency,
-         thumbnailProcessingQueue: ImageProcessingQueue)
-    {
+    init(
+        state: ClipItemListRootState,
+        siteUrlEditAlertState: TextEditAlertState,
+        dependency: ClipItemListRootDependency,
+        thumbnailProcessingQueue: ImageProcessingQueue
+    ) {
         self.imageQueryService = dependency.imageQueryService
         self.rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipItemListRootReducer)
-        self.store = rootStore
+        self.store =
+            rootStore
             .proxy(RootState.mappingToList, RootAction.mappingToList)
             .eraseToAnyStoring()
         self.thumbnailProcessingQueue = thumbnailProcessingQueue
@@ -191,31 +193,47 @@ extension ClipItemListViewController {
 
     private func presentErrorMessageAlertIfNeeded(message: String?) {
         let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        })
+        alert.addAction(
+            .init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
+                self?.store.execute(.alertDismissed)
+            }
+        )
         self.present(alert, animated: true, completion: nil)
     }
 
     private func presentDeletionAlert(for item: ClipItem) {
-        guard let indexPath = dataSource.indexPath(for: .init(item, at: 0, of: 0)), // index は比較に利用されないので適当な値で埋める
-              let cell = collectionView.cellForItem(at: indexPath)
+        guard let indexPath = dataSource.indexPath(for: .init(item, at: 0, of: 0)),  // index は比較に利用されないので適当な値で埋める
+            let cell = collectionView.cellForItem(at: indexPath)
         else {
             store.execute(.alertDismissed)
             return
         }
 
-        let alert = UIAlertController(title: nil,
-                                      message: nil,
-                                      preferredStyle: .actionSheet)
+        let alert = UIAlertController(
+            title: nil,
+            message: nil,
+            preferredStyle: .actionSheet
+        )
 
         let title = L10n.clipInformationAlertForDeleteAction
-        alert.addAction(.init(title: title, style: .destructive, handler: { [weak self] _ in
-            self?.store.execute(.alertDeleteConfirmed)
-        }))
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        }))
+        alert.addAction(
+            .init(
+                title: title,
+                style: .destructive,
+                handler: { [weak self] _ in
+                    self?.store.execute(.alertDeleteConfirmed)
+                }
+            )
+        )
+        alert.addAction(
+            .init(
+                title: L10n.confirmAlertCancel,
+                style: .cancel,
+                handler: { [weak self] _ in
+                    self?.store.execute(.alertDismissed)
+                }
+            )
+        )
 
         alert.popoverPresentationController?.sourceView = collectionView
         alert.popoverPresentationController?.sourceRect = cell.frame
@@ -242,17 +260,21 @@ extension ClipItemListViewController {
 
 extension ClipItemListViewController {
     private func configureComponents(_ siteUrlEditAlertState: TextEditAlertState) {
-        let navigationBarStore: ClipItemListNavigationBarController.Store = rootStore
+        let navigationBarStore: ClipItemListNavigationBarController.Store =
+            rootStore
             .proxy(RootState.mappingToNavigationBar, RootAction.mappingToNavigationBar)
             .eraseToAnyStoring()
         navigationBarController = ClipItemListNavigationBarController(store: navigationBarStore)
 
-        let toolBarStore: ClipItemListToolBarController.Store = rootStore
+        let toolBarStore: ClipItemListToolBarController.Store =
+            rootStore
             .proxy(RootState.mappingToToolBar, RootAction.mappingToToolBar)
             .eraseToAnyStoring()
-        toolBarController = ClipItemListToolBarController(store: toolBarStore,
-                                                          siteUrlEditAlertState: siteUrlEditAlertState,
-                                                          imageQueryService: imageQueryService)
+        toolBarController = ClipItemListToolBarController(
+            store: toolBarStore,
+            siteUrlEditAlertState: siteUrlEditAlertState,
+            imageQueryService: imageQueryService
+        )
         toolBarController.alertHostingViewController = self
     }
 
@@ -286,7 +308,7 @@ extension ClipItemListViewController {
             navigationBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             navigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            navigationBar.heightAnchor.constraint(equalToConstant: 44)
+            navigationBar.heightAnchor.constraint(equalToConstant: 44),
         ])
 
         let toolBar = UIToolbar(frame: .init(x: 0, y: 0, width: view.bounds.width, height: 44))
@@ -297,7 +319,7 @@ extension ClipItemListViewController {
         self.toolBar = toolBar
 
         view.addSubview(toolBar)
-        toolBarTopConstraint = toolBar.topAnchor.constraint(equalTo: view.bottomAnchor, constant: 8) // borderがはみ出すため、やや下に配置する
+        toolBarTopConstraint = toolBar.topAnchor.constraint(equalTo: view.bottomAnchor, constant: 8)  // borderがはみ出すため、やや下に配置する
         toolBarBottomConstraint = toolBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         toolBarBottomConstraint.priority = .init(999)
         let heightConstraint = toolBar.heightAnchor.constraint(equalToConstant: 44)
@@ -306,16 +328,18 @@ extension ClipItemListViewController {
             toolBarTopConstraint,
             toolBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             toolBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            heightConstraint
+            heightConstraint,
         ])
     }
 
     private func configureDataSource() {
         collectionView.delegate = self
         dataSource = Layout.configureDataSource(collectionView, thumbnailProcessingQueue, imageQueryService)
-        selectionApplier = UICollectionViewSelectionLazyApplier(collectionView: collectionView,
-                                                                dataSource: dataSource,
-                                                                itemBuilder: { .init($0, at: 0, of: 0) })
+        selectionApplier = UICollectionViewSelectionLazyApplier(
+            collectionView: collectionView,
+            dataSource: dataSource,
+            itemBuilder: { .init($0, at: 0, of: 0) }
+        )
     }
 
     private func configureReorder() {
@@ -375,10 +399,13 @@ extension ClipItemListViewController {
 
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         guard let item = dataSource.itemIdentifier(for: indexPath),
-              let clipItem = store.stateValue.items.entity(having: item.itemId) else { return nil }
-        return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath,
-                                          previewProvider: nil,
-                                          actionProvider: makeActionProvider(for: clipItem, at: indexPath))
+            let clipItem = store.stateValue.items.entity(having: item.itemId)
+        else { return nil }
+        return UIContextMenuConfiguration(
+            identifier: indexPath as NSIndexPath,
+            previewProvider: nil,
+            actionProvider: makeActionProvider(for: clipItem, at: indexPath)
+        )
     }
 
     func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
@@ -410,26 +437,29 @@ extension ClipItemListViewController {
     private func makeElement(from item: ClipItemListMenuItem, for clipItem: ClipItem, at indexPath: IndexPath) -> UIMenuElement {
         switch item {
         case .delete:
-            return UIAction(title: L10n.clipInformationContextMenuDelete,
-                            image: UIImage(systemName: "trash.fill"),
-                            attributes: .destructive)
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.clipInformationContextMenuDelete,
+                image: UIImage(systemName: "trash.fill"),
+                attributes: .destructive
+            ) { [weak self] _ in
                 self?.store.execute(.deleteMenuTapped(clipItem.id))
             }
 
         case .copyImageUrl:
-            return UIAction(title: L10n.clipInformationContextMenuCopyImageUrl,
-                            image: UIImage(systemName: "doc.on.doc"),
-                            attributes: [])
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.clipInformationContextMenuCopyImageUrl,
+                image: UIImage(systemName: "doc.on.doc"),
+                attributes: []
+            ) { [weak self] _ in
                 self?.store.execute(.copyImageUrlMenuTapped(clipItem.id))
             }
 
         case .openImageUrl:
-            return UIAction(title: L10n.clipInformationContextMenuOpenImageUrl,
-                            image: UIImage(systemName: "globe"),
-                            attributes: [])
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.clipInformationContextMenuOpenImageUrl,
+                image: UIImage(systemName: "globe"),
+                attributes: []
+            ) { [weak self] _ in
                 self?.store.execute(.openImageUrlMenuTapped(clipItem.id))
             }
         }
@@ -480,7 +510,8 @@ extension ClipItemListViewController: ClipItemListPresenting {
 
     func animatingCell(_ animator: ClipItemListAnimator, id: ClipPreviewPresentableCellIdentifier) -> ClipItemListPresentingCell? {
         guard let item = store.stateValue.items.entity(having: id.itemId),
-              let indexPath = dataSource.indexPath(for: .init(item, at: 0, of: 0)) else { return nil }
+            let indexPath = dataSource.indexPath(for: .init(item, at: 0, of: 0))
+        else { return nil }
         return collectionView.cellForItem(at: indexPath) as? ClipItemCell
     }
 
@@ -495,7 +526,8 @@ extension ClipItemListViewController: ClipItemListPresenting {
 
     func displayAnimatingCell(_ animator: ClipItemListAnimator, id: ClipPreviewPresentableCellIdentifier, containerView: UIView) {
         guard let item = store.stateValue.items.entity(having: id.itemId),
-              let indexPath = dataSource.indexPath(for: .init(item, at: 0, of: 0)) else { return }
+            let indexPath = dataSource.indexPath(for: .init(item, at: 0, of: 0))
+        else { return }
 
         // HACK: SplitModeで不正なframeになってしまう問題を解消する
         //       frameだけ設定してもダメで、reloadDataもしないとcellのframeが更新されない

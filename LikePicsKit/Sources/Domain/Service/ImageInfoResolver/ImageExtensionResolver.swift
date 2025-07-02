@@ -38,7 +38,7 @@ public enum ImageExtensionResolver {
         "image/gif": .gif,
         "image/jpeg": .jpeg,
         "image/png": .png,
-        "image/tiff": .tiff
+        "image/tiff": .tiff,
     ]
 
     public static func resolveFileExtension(forMimeType mimeType: String) -> String? {
@@ -66,8 +66,8 @@ public enum ImageExtensionResolver {
     }
 }
 
-private extension Data {
-    func starts(with numbers: [UInt8?]) -> Bool {
+extension Data {
+    fileprivate func starts(with numbers: [UInt8?]) -> Bool {
         guard self.count >= numbers.count else { return false }
         return zip(numbers.indices, numbers).allSatisfy { index, number in
             guard let number = number else { return true }

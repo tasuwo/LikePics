@@ -3,19 +3,20 @@
 ///
 
 import Domain
-@testable import Environment
 import Foundation
 import MobileTransition
 import Smoothie
 import UIKit
 import WebKit
 
+@testable import Environment
+
 public class HasNopMock: HasNop {
-    public init() { }
+    public init() {}
 }
 
 public class HasRouterMock: HasRouter {
-    public init() { }
+    public init() {}
     public init(router: Router) {
         self._router = router
     }
@@ -29,7 +30,7 @@ public class HasRouterMock: HasRouter {
 }
 
 public class HasClipCommandServiceMock: HasClipCommandService {
-    public init() { }
+    public init() {}
     public init(clipCommandService: ClipCommandServiceProtocol) {
         self._clipCommandService = clipCommandService
     }
@@ -43,7 +44,7 @@ public class HasClipCommandServiceMock: HasClipCommandService {
 }
 
 public class HasClipQueryServiceMock: HasClipQueryService {
-    public init() { }
+    public init() {}
     public init(clipQueryService: ClipQueryServiceProtocol) {
         self._clipQueryService = clipQueryService
     }
@@ -57,7 +58,7 @@ public class HasClipQueryServiceMock: HasClipQueryService {
 }
 
 public class HasClipSearchHistoryServiceMock: HasClipSearchHistoryService {
-    public init() { }
+    public init() {}
     public init(clipSearchHistoryService: ClipSearchHistoryService) {
         self._clipSearchHistoryService = clipSearchHistoryService
     }
@@ -71,7 +72,7 @@ public class HasClipSearchHistoryServiceMock: HasClipSearchHistoryService {
 }
 
 public class HasClipSearchSettingServiceMock: HasClipSearchSettingService {
-    public init() { }
+    public init() {}
     public init(clipSearchSettingService: ClipSearchSettingService) {
         self._clipSearchSettingService = clipSearchSettingService
     }
@@ -85,7 +86,7 @@ public class HasClipSearchSettingServiceMock: HasClipSearchSettingService {
 }
 
 public class HasCloudAvailabilityServiceMock: HasCloudAvailabilityService {
-    public init() { }
+    public init() {}
     public init(cloudAvailabilityService: CloudAvailabilityServiceProtocol) {
         self._cloudAvailabilityService = cloudAvailabilityService
     }
@@ -99,7 +100,7 @@ public class HasCloudAvailabilityServiceMock: HasCloudAvailabilityService {
 }
 
 public class HasImageQueryServiceMock: HasImageQueryService {
-    public init() { }
+    public init() {}
     public init(imageQueryService: ImageQueryServiceProtocol) {
         self._imageQueryService = imageQueryService
     }
@@ -113,7 +114,7 @@ public class HasImageQueryServiceMock: HasImageQueryService {
 }
 
 public class HasIntegrityValidationServiceMock: HasIntegrityValidationService {
-    public init() { }
+    public init() {}
     public init(integrityValidationService: ClipReferencesIntegrityValidationServiceProtocol) {
         self._integrityValidationService = integrityValidationService
     }
@@ -127,7 +128,7 @@ public class HasIntegrityValidationServiceMock: HasIntegrityValidationService {
 }
 
 public class HasPasteboardMock: HasPasteboard {
-    public init() { }
+    public init() {}
     public init(pasteboard: Pasteboard) {
         self._pasteboard = pasteboard
     }
@@ -141,7 +142,7 @@ public class HasPasteboardMock: HasPasteboard {
 }
 
 public class HasTemporariesPersistServiceMock: HasTemporariesPersistService {
-    public init() { }
+    public init() {}
     public init(temporariesPersistService: TemporariesPersistServiceProtocol) {
         self._temporariesPersistService = temporariesPersistService
     }
@@ -155,7 +156,7 @@ public class HasTemporariesPersistServiceMock: HasTemporariesPersistService {
 }
 
 public class HasUserSettingStorageMock: HasUserSettingStorage {
-    public init() { }
+    public init() {}
     public init(userSettingStorage: UserSettingsStorageProtocol) {
         self._userSettingStorage = userSettingStorage
     }
@@ -169,7 +170,7 @@ public class HasUserSettingStorageMock: HasUserSettingStorage {
 }
 
 public class HasClipPreviewPlayConfigurationStorageMock: HasClipPreviewPlayConfigurationStorage {
-    public init() { }
+    public init() {}
     public init(clipPreviewPlayConfigurationStorage: ClipPreviewPlayConfigurationStorageProtocol) {
         self._clipPreviewPlayConfigurationStorage = clipPreviewPlayConfigurationStorage
     }
@@ -183,7 +184,7 @@ public class HasClipPreviewPlayConfigurationStorageMock: HasClipPreviewPlayConfi
 }
 
 public class HasTagCommandServiceMock: HasTagCommandService {
-    public init() { }
+    public init() {}
     public init(tagCommandService: TagCommandServiceProtocol) {
         self._tagCommandService = tagCommandService
     }
@@ -197,7 +198,7 @@ public class HasTagCommandServiceMock: HasTagCommandService {
 }
 
 public class HasDiskCachesMock: HasDiskCaches {
-    public init() { }
+    public init() {}
     public init(clipDiskCache: DiskCaching, albumDiskCache: DiskCaching, clipItemDiskCache: DiskCaching) {
         self._clipDiskCache = clipDiskCache
         self._albumDiskCache = albumDiskCache
@@ -227,7 +228,7 @@ public class HasDiskCachesMock: HasDiskCaches {
 }
 
 public class HasImageLoaderSettingsMock: HasImageLoaderSettings {
-    public init() { }
+    public init() {}
     public init(clipDiskCache: DiskCaching, clipThumbnailProcessingQueue: ImageProcessingQueue, albumThumbnailProcessingQueue: ImageProcessingQueue, clipItemThumbnailProcessingQueue: ImageProcessingQueue, temporaryThumbnailProcessingQueue: ImageProcessingQueue, previewProcessingQueue: ImageProcessingQueue, previewPrefetcher: PreviewPrefetchable) {
         self._clipDiskCache = clipDiskCache
         self._clipThumbnailProcessingQueue = clipThumbnailProcessingQueue

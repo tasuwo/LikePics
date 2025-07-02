@@ -59,7 +59,7 @@ extension ClipSearchHistoryContentView {
         titleLabel.text = history.title
         secondaryTitleLabel.text = [
             history.isDisplaySettingHidden ? nil : history.displaySettingName,
-            history.sortName
+            history.sortName,
         ].compactMap { $0 }.joined(separator: " / ")
     }
 }

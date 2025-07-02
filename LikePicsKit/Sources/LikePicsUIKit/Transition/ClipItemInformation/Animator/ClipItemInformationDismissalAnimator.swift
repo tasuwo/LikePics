@@ -44,7 +44,7 @@ extension ClipItemInformationDismissalAnimator: UIViewControllerAnimatedTransiti
         }
 
         guard let infoViewingClipItem = from.clipItem(self),
-              to.isPreviewing(self, clipItem: infoViewingClipItem) == true
+            to.isPreviewing(self, clipItem: infoViewingClipItem) == true
         else {
             self.fallbackAnimator.startTransition(transitionContext, withDuration: Self.transitionDuration, isInteractive: false)
             return

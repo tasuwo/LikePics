@@ -16,18 +16,19 @@ public class UICollectionViewSelectionLazyApplier<Section: Hashable, Item: Hasha
 
     // MARK: - Initializers
 
-    public init(collectionView: UICollectionView,
-                dataSource: UICollectionViewDiffableDataSource<Section, Item>,
-                itemBuilder: @escaping (Entity) -> Item)
-    {
+    public init(
+        collectionView: UICollectionView,
+        dataSource: UICollectionViewDiffableDataSource<Section, Item>,
+        itemBuilder: @escaping (Entity) -> Item
+    ) {
         self.collectionView = collectionView
         self.dataSource = dataSource
         self.itemBuilder = itemBuilder
     }
 }
 
-public extension UICollectionViewSelectionLazyApplier {
-    func didApplyDataSource(snapshot: EntityCollectionSnapshot<Entity>) {
+extension UICollectionViewSelectionLazyApplier {
+    public func didApplyDataSource(snapshot: EntityCollectionSnapshot<Entity>) {
         queue.async {
             let selections = self.suspendedSelections
             self.suspendedSelections = .init()
@@ -43,7 +44,7 @@ public extension UICollectionViewSelectionLazyApplier {
             DispatchQueue.main.sync {
                 selections.forEach { id in
                     guard let entity = snapshot.entity(having: id),
-                          let indexPath = self.dataSource.indexPath(for: self.itemBuilder(entity))
+                        let indexPath = self.dataSource.indexPath(for: self.itemBuilder(entity))
                     else {
                         nextSuspendedSelections.insert(id)
                         return
@@ -56,7 +57,7 @@ public extension UICollectionViewSelectionLazyApplier {
         }
     }
 
-    func applySelection(snapshot: EntityCollectionSnapshot<Entity>) {
+    public func applySelection(snapshot: EntityCollectionSnapshot<Entity>) {
         queue.async {
             defer {
                 self.previousSelections = snapshot.selectedIds
@@ -82,7 +83,7 @@ public extension UICollectionViewSelectionLazyApplier {
             DispatchQueue.main.sync {
                 selections.forEach { id in
                     guard let entity = snapshot.filteredEntity(having: id),
-                          let indexPath = self.dataSource.indexPath(for: self.itemBuilder(entity))
+                        let indexPath = self.dataSource.indexPath(for: self.itemBuilder(entity))
                     else {
                         nextSuspendedSelections.insert(id)
                         return
@@ -92,7 +93,7 @@ public extension UICollectionViewSelectionLazyApplier {
 
                 deselections.forEach { id in
                     guard let entity = snapshot.filteredEntity(having: id),
-                          let indexPath = self.dataSource.indexPath(for: self.itemBuilder(entity))
+                        let indexPath = self.dataSource.indexPath(for: self.itemBuilder(entity))
                     else {
                         return
                     }

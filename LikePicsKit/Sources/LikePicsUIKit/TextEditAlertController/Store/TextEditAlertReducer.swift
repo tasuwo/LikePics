@@ -21,7 +21,8 @@ struct TextEditAlertReducer: Reducer {
             return (state.updating(isPresenting: true), .none)
 
         case let .textChanged(text: text):
-            let newState = state
+            let newState =
+                state
                 .updating(text: text)
                 .updating(shouldReturn: dependency.textValidator(text))
             return (newState, .none)

@@ -2,8 +2,8 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-public extension ClipCollection {
-    enum Layout: String, Codable, Equatable {
+extension ClipCollection {
+    public enum Layout: String, Codable, Equatable {
         case waterfall
         case grid
 
@@ -11,8 +11,8 @@ public extension ClipCollection {
     }
 }
 
-public extension ClipCollection.Layout {
-    var nextLayout: Self {
+extension ClipCollection.Layout {
+    public var nextLayout: Self {
         switch self {
         case .grid:
             return .waterfall

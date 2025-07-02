@@ -58,9 +58,11 @@ extension SceneRootSideBarController {
     private func bind(to sideBarItem: AnyPublisher<Layout.Item, Never>) {
         sideBarItem
             .sink { [weak self] item in
-                self?.collectionView.selectItem(at: IndexPath(row: item.rawValue, section: 0),
-                                                animated: false,
-                                                scrollPosition: [])
+                self?.collectionView.selectItem(
+                    at: IndexPath(row: item.rawValue, section: 0),
+                    animated: false,
+                    scrollPosition: []
+                )
             }
             .store(in: &subscription)
     }

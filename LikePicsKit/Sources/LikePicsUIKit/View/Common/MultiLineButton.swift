@@ -15,10 +15,16 @@ class MultiLineButton: UIButton {
 
     override var intrinsicContentSize: CGSize {
         guard let titleLabel = titleLabel else { return .zero }
-        let labelSize = titleLabel.sizeThatFits(CGSize(width: frame.width - (titleEdgeInsets.left + titleEdgeInsets.right),
-                                                       height: .greatestFiniteMagnitude))
-        let desiredButtonSize = CGSize(width: labelSize.width + contentEdgeInsets.left + contentEdgeInsets.right,
-                                       height: labelSize.height + contentEdgeInsets.top + contentEdgeInsets.bottom)
+        let labelSize = titleLabel.sizeThatFits(
+            CGSize(
+                width: frame.width - (titleEdgeInsets.left + titleEdgeInsets.right),
+                height: .greatestFiniteMagnitude
+            )
+        )
+        let desiredButtonSize = CGSize(
+            width: labelSize.width + contentEdgeInsets.left + contentEdgeInsets.right,
+            height: labelSize.height + contentEdgeInsets.top + contentEdgeInsets.bottom
+        )
         return desiredButtonSize
     }
 

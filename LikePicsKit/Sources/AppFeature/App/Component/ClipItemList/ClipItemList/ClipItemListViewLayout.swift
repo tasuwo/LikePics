@@ -62,8 +62,10 @@ extension ClipItemListViewLayout.Item {
 extension ClipItemListViewLayout {
     static func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { section, environment -> NSCollectionLayoutSection? in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                  heightDimension: .estimated(100))
+            let itemSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .estimated(100)
+            )
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
             let count: Int = {
@@ -78,8 +80,10 @@ extension ClipItemListViewLayout {
                     return 4
                 }
             }()
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                   heightDimension: .estimated(100))
+            let groupSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .estimated(100)
+            )
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: count)
             group.interItemSpacing = .fixed(16)
 
@@ -98,13 +102,16 @@ extension ClipItemListViewLayout {
 
 extension ClipItemListViewLayout {
     @MainActor
-    static func configureDataSource(_ collectionView: UICollectionView,
-                                    _ thumbnailProcessingQueue: ImageProcessingQueue,
-                                    _ imageQueryService: ImageQueryServiceProtocol) -> DataSource
-    {
-        let cellRegistration = configureCell(collectionView: collectionView,
-                                             thumbnailProcessingQueue: thumbnailProcessingQueue,
-                                             imageQueryService: imageQueryService)
+    static func configureDataSource(
+        _ collectionView: UICollectionView,
+        _ thumbnailProcessingQueue: ImageProcessingQueue,
+        _ imageQueryService: ImageQueryServiceProtocol
+    ) -> DataSource {
+        let cellRegistration = configureCell(
+            collectionView: collectionView,
+            thumbnailProcessingQueue: thumbnailProcessingQueue,
+            imageQueryService: imageQueryService
+        )
 
         return .init(collectionView: collectionView) { collectionView, indexPath, item in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
@@ -112,10 +119,11 @@ extension ClipItemListViewLayout {
     }
 
     @MainActor
-    private static func configureCell(collectionView: UICollectionView,
-                                      thumbnailProcessingQueue: ImageProcessingQueue,
-                                      imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<ClipItemCell, Item>
-    {
+    private static func configureCell(
+        collectionView: UICollectionView,
+        thumbnailProcessingQueue: ImageProcessingQueue,
+        imageQueryService: ImageQueryServiceProtocol
+    ) -> UICollectionView.CellRegistration<ClipItemCell, Item> {
         return UICollectionView.CellRegistration<ClipItemCell, Item> { [weak thumbnailProcessingQueue, weak imageQueryService] cell, _, item in
             var configuration = ClipItemContentConfiguration()
             configuration.fileName = (item.imageFileName as NSString).deletingPathExtension
@@ -130,7 +138,7 @@ extension ClipItemListViewLayout {
             cell.backgroundConfiguration = backgroundConfiguration
 
             guard let processingQueue = thumbnailProcessingQueue,
-                  let imageQueryService = imageQueryService
+                let imageQueryService = imageQueryService
             else {
                 return
             }
@@ -142,10 +150,12 @@ extension ClipItemListViewLayout {
             }
             loadImage(request, with: processingQueue, on: cell) { [weak processingQueue] response in
                 guard let response = response, let diskCacheSize = response.diskCacheImageSize else { return }
-                let shouldInvalidate = ThumbnailInvalidationChecker.shouldInvalidate(originalImageSizeInPoint: item.imageSize,
-                                                                                     thumbnailSizeInPoint: size,
-                                                                                     diskCacheSizeInPixel: diskCacheSize,
-                                                                                     displayScale: scale)
+                let shouldInvalidate = ThumbnailInvalidationChecker.shouldInvalidate(
+                    originalImageSizeInPoint: item.imageSize,
+                    thumbnailSizeInPoint: size,
+                    diskCacheSizeInPixel: diskCacheSize,
+                    displayScale: scale
+                )
                 guard shouldInvalidate else { return }
                 processingQueue?.config.diskCache?.remove(forKey: request.cacheKey)
                 processingQueue?.config.memoryCache.remove(forKey: request.cacheKey)

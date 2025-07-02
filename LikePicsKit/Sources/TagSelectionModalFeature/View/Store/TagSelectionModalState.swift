@@ -32,8 +32,8 @@ public struct TagSelectionModalState: Equatable {
     var isDismissed: Bool
 }
 
-public extension TagSelectionModalState {
-    init(id: UUID, selections: Set<Tag.Identity>, isSomeItemsHidden: Bool) {
+extension TagSelectionModalState {
+    public init(id: UUID, selections: Set<Tag.Identity>, isSomeItemsHidden: Bool) {
         self.id = id
         initialSelections = selections
 

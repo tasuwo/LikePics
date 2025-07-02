@@ -104,7 +104,7 @@ public class SingleIconButton: UIControl {
             iconView.topAnchor.constraint(equalTo: topAnchor, constant: 4),
             iconView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
             iconView.leftAnchor.constraint(equalTo: leftAnchor, constant: 4),
-            iconView.rightAnchor.constraint(equalTo: rightAnchor, constant: -4)
+            iconView.rightAnchor.constraint(equalTo: rightAnchor, constant: -4),
         ])
 
         updateAppearance()
@@ -144,7 +144,9 @@ extension SingleIconButton: UIPointerInteractionDelegate {
     }
 
     public func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
-        return UIPointerStyle(effect: .highlight(UITargetedPreview(view: self)),
-                              shape: .roundedRect(frame, radius: bounds.size.width / 2))
+        return UIPointerStyle(
+            effect: .highlight(UITargetedPreview(view: self)),
+            shape: .roundedRect(frame, radius: bounds.size.width / 2)
+        )
     }
 }

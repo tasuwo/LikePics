@@ -129,18 +129,25 @@ public class AppDependencyContainer {
         self._userSettingStorage = userSettingsStorage
         self._clipPreviewPlayConfigurationStorage = ClipPreviewPlayConfigurationStorage()
 
-        var persistentStackConf = PersistentStack.Configuration(author: "app",
-                                                                persistentContainerName: "Model",
-                                                                managedObjectModelUrl: ManagedObjectModelUrl)
-        persistentStackConf.persistentHistoryTokenSaveDirectory = NSPersistentContainer
+        var persistentStackConf = PersistentStack.Configuration(
+            author: "app",
+            persistentContainerName: "Model",
+            managedObjectModelUrl: ManagedObjectModelUrl
+        )
+        persistentStackConf.persistentHistoryTokenSaveDirectory =
+            NSPersistentContainer
             .defaultDirectoryURL()
             .appendingPathComponent("TBox", isDirectory: true)
         persistentStackConf.persistentHistoryTokenFileName = "token.data"
         persistentStackConf.shouldLoadPersistentContainerAtInitialized = true
-        self.persistentStack = PersistentStack(configuration: persistentStackConf,
-                                               isCloudKitSyncEnabled: self._userSettingStorage.readEnabledICloudSync())
-        self.persistentStackLoader = PersistentStackLoader(persistentStack: persistentStack,
-                                                           settingStorage: userSettingsStorage)
+        self.persistentStack = PersistentStack(
+            configuration: persistentStackConf,
+            isCloudKitSyncEnabled: self._userSettingStorage.readEnabledICloudSync()
+        )
+        self.persistentStackLoader = PersistentStackLoader(
+            persistentStack: persistentStack,
+            settingStorage: userSettingsStorage
+        )
         self.persistentStackMonitor = PersistentStackMonitor()
 
         self.imageQueryContext = self.persistentStack.newBackgroundContext(on: self.imageQueryQueue)
@@ -165,10 +172,14 @@ public class AppDependencyContainer {
 
         var clipCacheConfig = ImageProcessingQueue.Configuration()
         let clipCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-thumbnails", appBundle: appBundle)
-        self._clipDiskCache = try DiskCache(path: clipCacheDirectory,
-                                            config: .init(sizeLimit: 1024 * 1024 * 1024,
-                                                          countLimit: Int.max,
-                                                          dateLimit: 30))
+        self._clipDiskCache = try DiskCache(
+            path: clipCacheDirectory,
+            config: .init(
+                sizeLimit: 1024 * 1024 * 1024,
+                countLimit: Int.max,
+                dateLimit: 30
+            )
+        )
         clipCacheConfig.diskCache = self._clipDiskCache
         clipCacheConfig.compressionRatio = 0.5
         clipCacheConfig.memoryCache = memoryCache
@@ -179,10 +190,14 @@ public class AppDependencyContainer {
         var albumCacheConfig = ImageProcessingQueue.Configuration()
         albumCacheConfig.compressionRatio = 0.5
         let albumCacheDirectory = Self.resolveCacheDirectoryUrl(name: "album-thumbnails", appBundle: appBundle)
-        _albumDiskCache = try DiskCache(path: albumCacheDirectory,
-                                        config: .init(sizeLimit: 1024 * 1024 * 512,
-                                                      countLimit: 1000,
-                                                      dateLimit: 30))
+        _albumDiskCache = try DiskCache(
+            path: albumCacheDirectory,
+            config: .init(
+                sizeLimit: 1024 * 1024 * 512,
+                countLimit: 1000,
+                dateLimit: 30
+            )
+        )
         albumCacheConfig.diskCache = _albumDiskCache
         albumCacheConfig.memoryCache = memoryCache
         self._albumThumbnailProcessingQueue = ImageProcessingQueue(config: albumCacheConfig)
@@ -191,10 +206,14 @@ public class AppDependencyContainer {
 
         var clipItemCacheConfig = ImageProcessingQueue.Configuration()
         let clipItemCacheDirectory = Self.resolveCacheDirectoryUrl(name: "clip-item-thumbnails", appBundle: appBundle)
-        _clipItemDiskCache = try DiskCache(path: clipItemCacheDirectory,
-                                           config: .init(sizeLimit: 1024 * 1024 * 512,
-                                                         countLimit: 100,
-                                                         dateLimit: 30))
+        _clipItemDiskCache = try DiskCache(
+            path: clipItemCacheDirectory,
+            config: .init(
+                sizeLimit: 1024 * 1024 * 512,
+                countLimit: 100,
+                dateLimit: 30
+            )
+        )
         clipItemCacheConfig.diskCache = _clipItemDiskCache
         clipItemCacheConfig.memoryCache = memoryCache
         self._clipItemThumbnailProcessingQueue = ImageProcessingQueue(config: clipItemCacheConfig)
@@ -216,31 +235,39 @@ public class AppDependencyContainer {
         previewCacheConfig.memoryCache = memoryCache
         self._previewProcessingQueue = ImageProcessingQueue(config: previewCacheConfig)
 
-        self._previewPrefetcher = PreviewPrefetcher(processingQueue: _previewProcessingQueue,
-                                                    imageQueryService: _imageQueryService)
+        self._previewPrefetcher = PreviewPrefetcher(
+            processingQueue: _previewProcessingQueue,
+            imageQueryService: _imageQueryService
+        )
 
         // MARK: Service
 
-        self._clipCommandService = ClipCommandService(clipStorage: clipStorage,
-                                                      referenceClipStorage: referenceClipStorage,
-                                                      imageStorage: imageStorage,
-                                                      diskCache: _clipDiskCache,
-                                                      // Note: ImageStorage, ClipStorage は同一 Context である前提
-                                                      commandQueue: clipStorage,
-                                                      lock: commandLock)
-        self._integrityValidationService = ClipReferencesIntegrityValidationService(clipStorage: clipStorage,
-                                                                                    referenceClipStorage: referenceClipStorage,
-                                                                                    // Note: ImageStorage, ClipStorage は同一 Context である前提
-                                                                                    commandQueue: clipStorage,
-                                                                                    lock: commandLock)
-        self._temporariesPersistService = TemporariesPersistService(temporaryClipStorage: tmpClipStorage,
-                                                                    temporaryImageStorage: tmpImageStorage,
-                                                                    clipStorage: clipStorage,
-                                                                    referenceClipStorage: referenceClipStorage,
-                                                                    imageStorage: imageStorage,
-                                                                    // Note: ImageStorage, ClipStorage は同一 Context である前提
-                                                                    commandQueue: clipStorage,
-                                                                    lock: commandLock)
+        self._clipCommandService = ClipCommandService(
+            clipStorage: clipStorage,
+            referenceClipStorage: referenceClipStorage,
+            imageStorage: imageStorage,
+            diskCache: _clipDiskCache,
+            // Note: ImageStorage, ClipStorage は同一 Context である前提
+            commandQueue: clipStorage,
+            lock: commandLock
+        )
+        self._integrityValidationService = ClipReferencesIntegrityValidationService(
+            clipStorage: clipStorage,
+            referenceClipStorage: referenceClipStorage,
+            // Note: ImageStorage, ClipStorage は同一 Context である前提
+            commandQueue: clipStorage,
+            lock: commandLock
+        )
+        self._temporariesPersistService = TemporariesPersistService(
+            temporaryClipStorage: tmpClipStorage,
+            temporaryImageStorage: tmpImageStorage,
+            clipStorage: clipStorage,
+            referenceClipStorage: referenceClipStorage,
+            imageStorage: imageStorage,
+            // Note: ImageStorage, ClipStorage は同一 Context である前提
+            commandQueue: clipStorage,
+            lock: commandLock
+        )
 
         persistentStackReloading = persistentStack
             .reloaded
@@ -285,7 +312,8 @@ public class AppDependencyContainer {
         let targetUrl: URL = {
             let directoryName = "thumbnails"
             if let directory = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) {
-                return directory
+                return
+                    directory
                     .appendingPathComponent(bundleIdentifier, isDirectory: true)
                     .appendingPathComponent(directoryName, isDirectory: true)
             } else {
@@ -306,7 +334,8 @@ public class AppDependencyContainer {
         let targetUrl: URL = {
             let directoryName: String = name
             if let directory = try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true) {
-                return directory
+                return
+                    directory
                     .appendingPathComponent(bundleIdentifier, isDirectory: true)
                     .appendingPathComponent(directoryName, isDirectory: true)
             } else {

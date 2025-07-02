@@ -53,7 +53,7 @@ class HiddenIconView: UIView {
         hiddenIconView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             hiddenIconView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            hiddenIconView.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            hiddenIconView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
         ])
 
         if !UIAccessibility.isReduceTransparencyEnabled {
@@ -66,7 +66,7 @@ class HiddenIconView: UIView {
                 blurEffectView.topAnchor.constraint(equalTo: self.topAnchor),
                 blurEffectView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
                 blurEffectView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-                blurEffectView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+                blurEffectView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             ])
             blurEffectView.layer.cornerRadius = self.bounds.width / 2.0
             blurEffectView.clipsToBounds = true
@@ -83,7 +83,7 @@ class HiddenIconView: UIView {
                 vibrancyView.trailingAnchor.constraint(equalTo: blurEffectView.trailingAnchor),
 
                 hiddenIconView.centerXAnchor.constraint(equalTo: vibrancyView.contentView.centerXAnchor),
-                hiddenIconView.centerYAnchor.constraint(equalTo: vibrancyView.contentView.centerYAnchor)
+                hiddenIconView.centerYAnchor.constraint(equalTo: vibrancyView.contentView.centerYAnchor),
             ])
         } else {
             hiddenIconView.tintColor = .systemGray

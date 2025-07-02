@@ -11,38 +11,49 @@ enum ClipItemListRootAction: Action {
 }
 
 extension ClipItemListRootAction {
-    static let mappingToList: ActionMapping<Self, ClipItemListAction> = .init(build: {
-        .list($0)
-    }, get: {
-        switch $0 {
-        case let .list(action):
-            return action
+    static let mappingToList: ActionMapping<Self, ClipItemListAction> = .init(
+        build: {
+            .list($0)
+        },
+        get: {
+            switch $0 {
+            case let .list(action):
+                return action
 
-        case let .navigationBar(action):
-            guard let event = action.mapToEvent() else { return nil }
-            return .navigationBarEventOccurred(event)
+            case let .navigationBar(action):
+                guard let event = action.mapToEvent() else { return nil }
+                return .navigationBarEventOccurred(event)
 
-        case let .toolBar(action):
-            guard let event = action.mapToEvent() else { return nil }
-            return .toolBarEventOccurred(event)
+            case let .toolBar(action):
+                guard let event = action.mapToEvent() else { return nil }
+                return .toolBarEventOccurred(event)
+            }
         }
-    })
+    )
 
-    static let mappingToToolBar: ActionMapping<Self, ClipItemListToolBarAction> = .init(build: {
-        .toolBar($0)
-    }, get: {
-        guard case let .toolBar(action) = $0 else { return nil }; return action
-    })
+    static let mappingToToolBar: ActionMapping<Self, ClipItemListToolBarAction> = .init(
+        build: {
+            .toolBar($0)
+        },
+        get: {
+            guard case let .toolBar(action) = $0 else { return nil }
+            return action
+        }
+    )
 
-    static let mappingToNavigationBar: ActionMapping<Self, ClipItemListNavigationBarAction> = .init(build: {
-        .navigationBar($0)
-    }, get: {
-        guard case let .navigationBar(action) = $0 else { return nil }; return action
-    })
+    static let mappingToNavigationBar: ActionMapping<Self, ClipItemListNavigationBarAction> = .init(
+        build: {
+            .navigationBar($0)
+        },
+        get: {
+            guard case let .navigationBar(action) = $0 else { return nil }
+            return action
+        }
+    )
 }
 
-private extension ClipItemListToolBarAction {
-    func mapToEvent() -> ClipItemListToolBarEvent? {
+extension ClipItemListToolBarAction {
+    fileprivate func mapToEvent() -> ClipItemListToolBarEvent? {
         switch self {
         case let .alertSiteUrlEditted(url):
             return .editUrl(url)
@@ -59,8 +70,8 @@ private extension ClipItemListToolBarAction {
     }
 }
 
-private extension ClipItemListNavigationBarAction {
-    func mapToEvent() -> ClipItemListNavigationBarEvent? {
+extension ClipItemListNavigationBarAction {
+    fileprivate func mapToEvent() -> ClipItemListNavigationBarEvent? {
         switch self {
         case .didTapResume:
             return .resume

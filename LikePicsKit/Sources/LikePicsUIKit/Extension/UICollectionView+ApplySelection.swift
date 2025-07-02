@@ -4,8 +4,8 @@
 
 import UIKit
 
-public extension UICollectionView {
-    func applySelection(at indices: [IndexPath]) {
+extension UICollectionView {
+    public func applySelection(at indices: [IndexPath]) {
         guard let alreadySelectedItems = self.indexPathsForSelectedItems else {
             indices.forEach { index in
                 self.selectItem(at: index, animated: false, scrollPosition: [])

@@ -6,14 +6,14 @@
 
 import UIKit
 
-public extension UIViewController {
-    func dismissAll(completion: (() -> Void)?) {
+extension UIViewController {
+    public func dismissAll(completion: (() -> Void)?) {
         dismissAllModals {
             self.dismiss(animated: true, completion: completion)
         }
     }
 
-    func dismissAllModals(completion: (() -> Void)?) {
+    public func dismissAllModals(completion: (() -> Void)?) {
         var topViewController = self
         while let presentedViewController = topViewController.presentedViewController {
             guard !presentedViewController.isBeingDismissed else { break }
@@ -30,24 +30,28 @@ public extension UIViewController {
         }
     }
 
-    private static func dismiss(_ viewController: UIViewController?,
-                                until rootViewController: UIViewController,
-                                completion: @escaping () -> Void)
-    {
+    private static func dismiss(
+        _ viewController: UIViewController?,
+        until rootViewController: UIViewController,
+        completion: @escaping () -> Void
+    ) {
         let presentingViewController = viewController?.presentingViewController
-        viewController?.dismiss(animated: true, completion: {
-            if viewController === rootViewController {
-                completion()
-                return
-            }
+        viewController?.dismiss(
+            animated: true,
+            completion: {
+                if viewController === rootViewController {
+                    completion()
+                    return
+                }
 
-            guard let viewController = presentingViewController else {
-                completion()
-                return
-            }
+                guard let viewController = presentingViewController else {
+                    completion()
+                    return
+                }
 
-            self.dismiss(viewController, until: rootViewController, completion: completion)
-        })
+                self.dismiss(viewController, until: rootViewController, completion: completion)
+            }
+        )
     }
 }
 

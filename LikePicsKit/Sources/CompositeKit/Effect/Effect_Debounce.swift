@@ -5,8 +5,8 @@
 import Combine
 import Foundation
 
-public extension Effect {
-    func debounce<S: Scheduler>(
+extension Effect {
+    public func debounce<S: Scheduler>(
         id: UUID,
         for time: S.SchedulerTimeType.Stride,
         scheduler: S,
@@ -16,9 +16,11 @@ public extension Effect {
             .delay(for: time, scheduler: scheduler, options: options)
             .flatMap { [upstream] in upstream }
             .eraseToAnyPublisher()
-        return .init(id: id,
-                     publisher: upstream,
-                     underlying: underlyingObject,
-                     completeWith: actionAtCompleted)
+        return .init(
+            id: id,
+            publisher: upstream,
+            underlying: underlyingObject,
+            completeWith: actionAtCompleted
+        )
     }
 }

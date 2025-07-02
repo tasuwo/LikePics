@@ -76,8 +76,10 @@ extension ClipCollectionViewLayout {
     }
 
     private static func createSection(environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: .fractionalHeight(1.0))
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(1.0)
+        )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
         let count: Int = {
@@ -95,8 +97,10 @@ extension ClipCollectionViewLayout {
                 return 2
             }
         }()
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .fractionalWidth(1 / CGFloat(count)))
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalWidth(1 / CGFloat(count))
+        )
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: count)
         group.interItemSpacing = .fixed(16)
 
@@ -124,11 +128,12 @@ extension ClipCollection.Layout {
 
 extension ClipCollectionViewLayout {
     @MainActor
-    static func configureDataSource(store: ClipCollectionViewController.Store,
-                                    collectionView: UICollectionView,
-                                    thumbnailProcessingQueue: ImageProcessingQueue,
-                                    imageQueryService: ImageQueryServiceProtocol) -> DataSource
-    {
+    static func configureDataSource(
+        store: ClipCollectionViewController.Store,
+        collectionView: UICollectionView,
+        thumbnailProcessingQueue: ImageProcessingQueue,
+        imageQueryService: ImageQueryServiceProtocol
+    ) -> DataSource {
         let cellRegistration = configureCell(store: store, thumbnailProcessingQueue: thumbnailProcessingQueue, imageQueryService: imageQueryService)
 
         return .init(collectionView: collectionView) { collectionView, indexPath, item in
@@ -137,10 +142,11 @@ extension ClipCollectionViewLayout {
     }
 
     @MainActor
-    private static func configureCell(store: ClipCollectionViewController.Store,
-                                      thumbnailProcessingQueue: ImageProcessingQueue,
-                                      imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<ClipCollectionViewCell, Item>
-    {
+    private static func configureCell(
+        store: ClipCollectionViewController.Store,
+        thumbnailProcessingQueue: ImageProcessingQueue,
+        imageQueryService: ImageQueryServiceProtocol
+    ) -> UICollectionView.CellRegistration<ClipCollectionViewCell, Item> {
         return .init(cellNib: ClipCollectionViewCell.nib) { [weak store, weak thumbnailProcessingQueue, weak imageQueryService] cell, _, clip in
             cell.sizeDescription = .make(by: clip.clip)
             cell.isEditing = store?.stateValue.isEditing ?? false
@@ -150,7 +156,8 @@ extension ClipCollectionViewLayout {
             cell.setClipHiding(clip.isHidden, animated: false)
 
             guard let processingQueue = thumbnailProcessingQueue,
-                  let imageQueryService = imageQueryService else { return }
+                let imageQueryService = imageQueryService
+            else { return }
 
             if let item = clip.primaryItem {
                 loadThumbnail(item: item, processingQueue: processingQueue, thumbnailView: cell.primaryThumbnailView, imageQueryService: imageQueryService)
@@ -178,11 +185,12 @@ extension ClipCollectionViewLayout {
     }
 
     @MainActor
-    private static func loadThumbnail(item: ClipItem,
-                                      processingQueue: ImageProcessingQueue,
-                                      thumbnailView: ClipCollectionThumbnailView,
-                                      imageQueryService: ImageQueryServiceProtocol)
-    {
+    private static func loadThumbnail(
+        item: ClipItem,
+        processingQueue: ImageProcessingQueue,
+        thumbnailView: ClipCollectionThumbnailView,
+        imageQueryService: ImageQueryServiceProtocol
+    ) {
         let scale = thumbnailView.traitCollection.displayScale
         let size = thumbnailView.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)
         // - SeeAlso: PreviewLoader
@@ -192,10 +200,12 @@ extension ClipCollectionViewLayout {
 
         loadImage(request, with: processingQueue, on: thumbnailView) { [weak processingQueue] response in
             guard let response = response, let diskCacheSize = response.diskCacheImageSize else { return }
-            let shouldInvalidate = ThumbnailInvalidationChecker.shouldInvalidate(originalImageSizeInPoint: item.imageSize.cgSize,
-                                                                                 thumbnailSizeInPoint: size,
-                                                                                 diskCacheSizeInPixel: diskCacheSize,
-                                                                                 displayScale: scale)
+            let shouldInvalidate = ThumbnailInvalidationChecker.shouldInvalidate(
+                originalImageSizeInPoint: item.imageSize.cgSize,
+                thumbnailSizeInPoint: size,
+                diskCacheSizeInPixel: diskCacheSize,
+                displayScale: scale
+            )
             guard shouldInvalidate else { return }
             processingQueue?.config.diskCache?.remove(forKey: request.cacheKey)
             processingQueue?.config.memoryCache.remove(forKey: request.cacheKey)
@@ -215,14 +225,16 @@ extension ClipCollectionViewLayout {
 
 extension ClipCollectionViewCellSizeDescription {
     static func make(by clip: Clip) -> Self {
-        return .init(primaryThumbnailSize: clip.primaryItem?.imageSize.cgSize ?? CGSize(width: 100, height: 100),
-                     secondaryThumbnailSize: clip.secondaryItem?.imageSize.cgSize,
-                     tertiaryThumbnailSize: clip.tertiaryItem?.imageSize.cgSize)
+        return .init(
+            primaryThumbnailSize: clip.primaryItem?.imageSize.cgSize ?? CGSize(width: 100, height: 100),
+            secondaryThumbnailSize: clip.secondaryItem?.imageSize.cgSize,
+            tertiaryThumbnailSize: clip.tertiaryItem?.imageSize.cgSize
+        )
     }
 }
 
-private extension UICollectionView {
-    var layout: ClipCollection.Layout {
+extension UICollectionView {
+    fileprivate var layout: ClipCollection.Layout {
         switch collectionViewLayout {
         case is ClipCollectionWaterfallLayout:
             return .waterfall

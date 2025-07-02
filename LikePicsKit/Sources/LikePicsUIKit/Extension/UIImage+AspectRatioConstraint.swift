@@ -4,36 +4,40 @@
 
 import UIKit
 
-public extension UIImageView {
-    func addAspectRatioConstraint(image: UIImage?) {
+extension UIImageView {
+    public func addAspectRatioConstraint(image: UIImage?) {
         if let image = image {
             removeAspectRatioConstraint()
             let aspectRatio = image.size.width / image.size.height
-            let constraint = NSLayoutConstraint(item: self,
-                                                attribute: .width,
-                                                relatedBy: .equal,
-                                                toItem: self,
-                                                attribute: .height,
-                                                multiplier: aspectRatio,
-                                                constant: 0.0)
+            let constraint = NSLayoutConstraint(
+                item: self,
+                attribute: .width,
+                relatedBy: .equal,
+                toItem: self,
+                attribute: .height,
+                multiplier: aspectRatio,
+                constant: 0.0
+            )
             addConstraint(constraint)
         }
     }
 
-    func addAspectRatioConstraint(size: CGSize) {
+    public func addAspectRatioConstraint(size: CGSize) {
         removeAspectRatioConstraint()
         let aspectRatio = size.width / size.height
-        let constraint = NSLayoutConstraint(item: self,
-                                            attribute: .width,
-                                            relatedBy: .equal,
-                                            toItem: self,
-                                            attribute: .height,
-                                            multiplier: aspectRatio,
-                                            constant: 0.0)
+        let constraint = NSLayoutConstraint(
+            item: self,
+            attribute: .width,
+            relatedBy: .equal,
+            toItem: self,
+            attribute: .height,
+            multiplier: aspectRatio,
+            constant: 0.0
+        )
         addConstraint(constraint)
     }
 
-    func removeAspectRatioConstraint() {
+    public func removeAspectRatioConstraint() {
         for constraint in self.constraints where (constraint.firstItem as? UIImageView) == self && (constraint.secondItem as? UIImageView) == self {
             removeConstraint(constraint)
         }

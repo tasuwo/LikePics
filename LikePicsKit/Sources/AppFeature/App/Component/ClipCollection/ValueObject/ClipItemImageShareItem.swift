@@ -23,9 +23,10 @@ class ClipItemImageShareItem: UIActivityItemProvider {
 
     // MARK: - Initializers
 
-    init(imageId: ImageContainer.Identity,
-         imageQueryService: ImageQueryServiceProtocol)
-    {
+    init(
+        imageId: ImageContainer.Identity,
+        imageQueryService: ImageQueryServiceProtocol
+    ) {
         self.imageId = imageId
         self.imageQueryService = imageQueryService
 

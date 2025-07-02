@@ -10,10 +10,10 @@ public protocol Identifiable {
     var identity: Identity { get }
 }
 
-public extension Identifiable where Self: Hashable & Codable {
+extension Identifiable where Self: Hashable & Codable {
     // MARK: - Hashable
 
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(self.identity)
     }
 }

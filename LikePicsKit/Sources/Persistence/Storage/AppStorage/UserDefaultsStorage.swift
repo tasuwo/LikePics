@@ -59,8 +59,12 @@ public struct UserDefaultsStorage<Value> {
 
         let publisher = CurrentValueSubject<Value, Never>(store.object(forKey: key) as? Value ?? defaultValue)
         self.publisher = publisher
-        self.observer = Observer(userDefaults: store, key: key, onUpdate: { [publisher, store, defaultValue] in
-            publisher.send(store.object(forKey: key) as? Value ?? defaultValue)
-        })
+        self.observer = Observer(
+            userDefaults: store,
+            key: key,
+            onUpdate: { [publisher, store, defaultValue] in
+                publisher.send(store.object(forKey: key) as? Value ?? defaultValue)
+            }
+        )
     }
 }

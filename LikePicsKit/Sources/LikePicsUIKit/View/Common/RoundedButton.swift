@@ -123,7 +123,9 @@ extension RoundedButton: UIPointerInteractionDelegate {
     }
 
     public func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
-        return UIPointerStyle(effect: .highlight(UITargetedPreview(view: self)),
-                              shape: .roundedRect(frame, radius: 12))
+        return UIPointerStyle(
+            effect: .highlight(UITargetedPreview(view: self)),
+            shape: .roundedRect(frame, radius: 12)
+        )
     }
 }

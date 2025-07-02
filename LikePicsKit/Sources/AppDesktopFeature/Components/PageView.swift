@@ -208,7 +208,7 @@ struct PageView<Data: Identifiable & Hashable, Content: View>: View {
         let number: Int
     }
 
-    return PageView((0 ... 10).map({ Item(number: $0) })) {
+    return PageView((0...10).map({ Item(number: $0) })) {
         Text("\($0.number)")
     }
 }

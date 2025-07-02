@@ -10,6 +10,6 @@ public protocol ClipPreviewPlayConfigurationModalRouter {
     func showClipPreviewPlayConfigurationModal(id: UUID) -> Bool
 }
 
-public extension ModalNotification.Name {
-    static let clipPreviewPlayConfigurationModalDidDismiss = ModalNotification.Name("net.tasuwo.TBox.ClipPreviewPlayConfigurationModal.didDismiss")
+extension ModalNotification.Name {
+    public static let clipPreviewPlayConfigurationModalDidDismiss = ModalNotification.Name("net.tasuwo.TBox.ClipPreviewPlayConfigurationModal.didDismiss")
 }

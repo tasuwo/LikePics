@@ -7,8 +7,8 @@ import Common
 import Erik
 import Foundation
 
-public extension WebImageProvidingService {
-    enum Twitter: WebImageProvider {
+extension WebImageProvidingService {
+    public enum Twitter: WebImageProvider {
         struct Context {
             struct DisplayElement {
                 let existsImages: Bool
@@ -132,9 +132,11 @@ public extension WebImageProvidingService {
                             return previousContext?.existsSensitiveContents ?? false
                         }()
 
-                        let displayElement = Context.DisplayElement(existsImages: existsImages,
-                                                                    numberOfSensitiveContents: sensitiveContentAlerts.count,
-                                                                    sensitiveContentRevealButton: sensitiveContentRevealButton)
+                        let displayElement = Context.DisplayElement(
+                            existsImages: existsImages,
+                            numberOfSensitiveContents: sensitiveContentAlerts.count,
+                            sensitiveContentRevealButton: sensitiveContentRevealButton
+                        )
                         let context = Context(existsSensitiveContents: existsSensitiveContents, displayElement: displayElement)
 
                         promise(.success(context))
@@ -187,17 +189,17 @@ public extension WebImageProvidingService {
     }
 }
 
-public extension WebImageProvidingService.Twitter {
+extension WebImageProvidingService.Twitter {
     // MARK: - WebImageProvider
 
-    static func isProviding(url: URL) -> Bool {
+    public static func isProviding(url: URL) -> Bool {
         guard let host = url.host else { return false }
         return host.contains("twitter") || host.contains("twimg")
     }
 
-    static func modifyUrlForProcessing(_ url: URL) -> URL {
+    public static func modifyUrlForProcessing(_ url: URL) -> URL {
         guard var components = URLComponents(string: url.absoluteString),
-              let queryItems = components.queryItems
+            let queryItems = components.queryItems
         else {
             return url
         }
@@ -208,20 +210,21 @@ public extension WebImageProvidingService.Twitter {
         return components.url ?? url
     }
 
-    static func shouldPreprocess(for url: URL) -> Bool {
+    public static func shouldPreprocess(for url: URL) -> Bool {
         return url.host?.contains("twitter") == true
     }
 
-    static func preprocess(_ browser: Erik, document: Document) -> AnyPublisher<Void, WebImageUrlScraperError> {
+    public static func preprocess(_ browser: Erik, document: Document) -> AnyPublisher<Void, WebImageUrlScraperError> {
         return StateMachine.start(on: browser)
     }
 
-    static func resolveHighQualityImageUrl(of url: URL) -> URL? {
+    public static func resolveHighQualityImageUrl(of url: URL) -> URL? {
         guard var components = URLComponents(string: url.absoluteString), let queryItems = components.queryItems else {
             return nil
         }
 
-        let newQueryItems: [URLQueryItem] = queryItems
+        let newQueryItems: [URLQueryItem] =
+            queryItems
             .compactMap { queryItem in
                 guard queryItem.name == "name" else { return queryItem }
                 return URLQueryItem(name: "name", value: "orig")
@@ -232,11 +235,11 @@ public extension WebImageProvidingService.Twitter {
         return components.url
     }
 
-    static func shouldModifyRequest(for url: URL) -> Bool {
+    public static func shouldModifyRequest(for url: URL) -> Bool {
         return false
     }
 
-    static func modifyRequest(_ request: URLRequest) -> URLRequest {
+    public static func modifyRequest(_ request: URLRequest) -> URLRequest {
         return request
     }
 }

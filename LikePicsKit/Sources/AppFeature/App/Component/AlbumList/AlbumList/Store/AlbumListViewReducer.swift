@@ -202,10 +202,12 @@ extension AlbumListViewReducer {
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
-        let nextState = performFilter(albums: query.albums.value,
-                                      searchQuery: state.searchQuery,
-                                      isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
-                                      previousState: state)
+        let nextState = performFilter(
+            albums: query.albums.value,
+            searchQuery: state.searchQuery,
+            isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
+            previousState: state
+        )
 
         return (nextState, [albumsEffect, settingsEffect])
     }
@@ -214,38 +216,48 @@ extension AlbumListViewReducer {
 // MARK: - Filter
 
 extension AlbumListViewReducer {
-    private static func performFilter(albums: [Album],
-                                      previousState: State) -> State
-    {
-        performFilter(albums: albums,
-                      searchQuery: previousState.searchQuery,
-                      isSomeItemsHidden: previousState.isSomeItemsHidden,
-                      previousState: previousState)
+    private static func performFilter(
+        albums: [Album],
+        previousState: State
+    ) -> State {
+        performFilter(
+            albums: albums,
+            searchQuery: previousState.searchQuery,
+            isSomeItemsHidden: previousState.isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
-    private static func performFilter(searchQuery: String,
-                                      previousState: State) -> State
-    {
-        performFilter(albums: previousState.albums.orderedEntities(),
-                      searchQuery: searchQuery,
-                      isSomeItemsHidden: previousState.isSomeItemsHidden,
-                      previousState: previousState)
+    private static func performFilter(
+        searchQuery: String,
+        previousState: State
+    ) -> State {
+        performFilter(
+            albums: previousState.albums.orderedEntities(),
+            searchQuery: searchQuery,
+            isSomeItemsHidden: previousState.isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
-    private static func performFilter(isSomeItemsHidden: Bool,
-                                      previousState: State) -> State
-    {
-        performFilter(albums: previousState.albums.orderedEntities(),
-                      searchQuery: previousState.searchQuery,
-                      isSomeItemsHidden: isSomeItemsHidden,
-                      previousState: previousState)
+    private static func performFilter(
+        isSomeItemsHidden: Bool,
+        previousState: State
+    ) -> State {
+        performFilter(
+            albums: previousState.albums.orderedEntities(),
+            searchQuery: previousState.searchQuery,
+            isSomeItemsHidden: isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
-    private static func performFilter(albums: [Album],
-                                      searchQuery: String,
-                                      isSomeItemsHidden: Bool,
-                                      previousState: State) -> State
-    {
+    private static func performFilter(
+        albums: [Album],
+        searchQuery: String,
+        isSomeItemsHidden: Bool,
+        previousState: State
+    ) -> State {
         var nextState = previousState
         var searchStorage = previousState.searchStorage
 
@@ -280,7 +292,8 @@ extension AlbumListViewReducer {
 extension AlbumListViewReducer {
     static func performReorder(originals: [Album.Identity], request: [Album.Identity]) -> [Album.Identity] {
         var index = 0
-        return originals
+        return
+            originals
             .map { original in
                 guard request.contains(original) else { return original }
                 index += 1
@@ -291,8 +304,8 @@ extension AlbumListViewReducer {
 
 // MARK: - Extensions
 
-private extension AlbumListViewState {
-    mutating func setEditing(_ isEditing: Bool) {
+extension AlbumListViewState {
+    fileprivate mutating func setEditing(_ isEditing: Bool) {
         self.isEditing = isEditing
         self.isDragInteractionEnabled = isEditing
         self.isAddButtonEnabled = !isEditing

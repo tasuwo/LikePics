@@ -51,8 +51,8 @@ public class AlbumListCollectionLayout: UICollectionViewFlowLayout {
         let previousIndexPath = IndexPath(row: indexPath.item - 1, section: indexPath.section)
 
         if let previousLayoutAttributes = super.layoutAttributesForItem(at: previousIndexPath),
-           layoutAttributes.frame.minY >= previousLayoutAttributes.frame.minY,
-           layoutAttributes.frame.minY < previousLayoutAttributes.frame.maxY
+            layoutAttributes.frame.minY >= previousLayoutAttributes.frame.minY,
+            layoutAttributes.frame.minY < previousLayoutAttributes.frame.maxY
         {
             return self.layoutAttributesForItem(at: previousIndexPath)
         } else {

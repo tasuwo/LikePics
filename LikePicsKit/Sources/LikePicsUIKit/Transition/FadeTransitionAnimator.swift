@@ -3,8 +3,8 @@
 //
 
 import Common
-import os.log
 import UIKit
+import os.log
 
 protocol FadeTransitionAnimatorProtocol {
     func startTransition(_ transitionContext: UIViewControllerContextTransitioning, withDuration duration: TimeInterval, isInteractive: Bool)

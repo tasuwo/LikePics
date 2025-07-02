@@ -25,10 +25,12 @@ extension ClipCollection.Source {
                 fatalError("Failed to load clips: \(error.localizedDescription)")
             }
 
-            return Stream(clips: query.clips.value,
-                          clipsStream: query.clips.eraseToAnyPublisher(),
-                          description: L10n.clipCollectionViewTitleAll,
-                          query: query)
+            return Stream(
+                clips: query.clips.value,
+                clipsStream: query.clips.eraseToAnyPublisher(),
+                description: L10n.clipCollectionViewTitleAll,
+                query: query
+            )
 
         case let .album(albumId):
             let query: AlbumQuery
@@ -40,10 +42,12 @@ extension ClipCollection.Source {
                 fatalError("Failed to load clips: \(error.localizedDescription)")
             }
 
-            return Stream(clips: query.album.value.clips,
-                          clipsStream: query.album.map(\.clips).eraseToAnyPublisher(),
-                          description: query.album.value.title,
-                          query: query)
+            return Stream(
+                clips: query.album.value.clips,
+                clipsStream: query.album.map(\.clips).eraseToAnyPublisher(),
+                description: query.album.value.title,
+                query: query
+            )
 
         case .uncategorized:
             let query: ClipListQuery
@@ -55,10 +59,12 @@ extension ClipCollection.Source {
                 fatalError("Failed to load clips: \(error.localizedDescription)")
             }
 
-            return Stream(clips: query.clips.value,
-                          clipsStream: query.clips.eraseToAnyPublisher(),
-                          description: L10n.searchResultTitleUncategorized,
-                          query: query)
+            return Stream(
+                clips: query.clips.value,
+                clipsStream: query.clips.eraseToAnyPublisher(),
+                description: L10n.searchResultTitleUncategorized,
+                query: query
+            )
 
         case let .tag(tag):
             let query: ClipListQuery
@@ -70,10 +76,12 @@ extension ClipCollection.Source {
                 fatalError("Failed to load clips: \(error.localizedDescription)")
             }
 
-            return Stream(clips: query.clips.value,
-                          clipsStream: query.clips.eraseToAnyPublisher(),
-                          description: tag.name,
-                          query: query)
+            return Stream(
+                clips: query.clips.value,
+                clipsStream: query.clips.eraseToAnyPublisher(),
+                description: tag.name,
+                query: query
+            )
 
         case let .search(searchQuery):
             let query: ClipListQuery
@@ -86,10 +94,12 @@ extension ClipCollection.Source {
                 fatalError("Failed to load clips: \(error.localizedDescription)")
             }
 
-            return Stream(clips: query.clips.value,
-                          clipsStream: query.clips.eraseToAnyPublisher(),
-                          description: searchQuery.displayTitle,
-                          query: query)
+            return Stream(
+                clips: query.clips.value,
+                clipsStream: query.clips.eraseToAnyPublisher(),
+                description: searchQuery.displayTitle,
+                query: query
+            )
         }
     }
 }

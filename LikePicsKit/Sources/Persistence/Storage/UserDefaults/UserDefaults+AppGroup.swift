@@ -4,8 +4,8 @@
 
 import Foundation
 
-public extension UserDefaults {
-    static let appGroup: UserDefaults = UserDefaultsPlaceholder()
+extension UserDefaults {
+    public static let appGroup: UserDefaults = UserDefaultsPlaceholder()
 }
 
 private class UserDefaultsPlaceholder: UserDefaults, @unchecked Sendable {

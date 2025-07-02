@@ -40,9 +40,11 @@ extension ClipCreationFeatureCore.ImageSource: @retroactive Identifiable {
     @Previewable @State var selectedIds: [UUID] = .init()
     @Previewable @State var useIndex = false
 
-    return ImageEntryListView(images: (0 ... 10).map({ _ in .init(fileURL: URL(string: "https://localhost")!) }),
-                              displayOrder: false,
-                              selectedIds: $selectedIds)
-        .frame(width: 300, height: 400)
-        .padding()
+    return ImageEntryListView(
+        images: (0...10).map({ _ in .init(fileURL: URL(string: "https://localhost")!) }),
+        displayOrder: false,
+        selectedIds: $selectedIds
+    )
+    .frame(width: 300, height: 400)
+    .padding()
 }

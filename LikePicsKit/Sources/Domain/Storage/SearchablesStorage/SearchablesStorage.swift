@@ -30,8 +30,10 @@ public struct SearchableStorage<Item: Searchable & Codable>: Equatable, Codable 
             return self.perform(comparableFilterQuery: comparableFilterQuery, to: items)
         } else if let lastResult = lastResult, comparableFilterQuery == lastResult.lastComparableFilterQuery {
             let appliedItems = Self.apply(itemByIds, to: lastResult.items)
-            self.lastResult = .init(lastComparableFilterQuery: comparableFilterQuery,
-                                    items: appliedItems)
+            self.lastResult = .init(
+                lastComparableFilterQuery: comparableFilterQuery,
+                items: appliedItems
+            )
             return appliedItems
         } else {
             return self.perform(comparableFilterQuery: comparableFilterQuery, to: items)
@@ -46,20 +48,24 @@ public struct SearchableStorage<Item: Searchable & Codable>: Equatable, Codable 
             return items
         }
 
-        let filteredItems = items
+        let filteredItems =
+            items
             .filter {
                 guard let text = $0.searchableText else { return false }
                 return text.contains(comparableFilterQuery)
             }
 
-        self.lastResult = .init(lastComparableFilterQuery: comparableFilterQuery,
-                                items: filteredItems)
+        self.lastResult = .init(
+            lastComparableFilterQuery: comparableFilterQuery,
+            items: filteredItems
+        )
 
         return filteredItems
     }
 
     private static func apply(_ itemsByIds: [Item.Identity: Item], to items: [Item]) -> [Item] {
-        return items
+        return
+            items
             .map { $0.identity }
             .compactMap { itemsByIds[$0] }
     }

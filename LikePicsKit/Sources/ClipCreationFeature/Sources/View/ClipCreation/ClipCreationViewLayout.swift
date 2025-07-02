@@ -86,12 +86,16 @@ extension ClipCreationViewLayout {
     }
 
     private static func createTagsLayoutSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(36),
-                                              heightDimension: .estimated(32))
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .estimated(36),
+            heightDimension: .estimated(32)
+        )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(32))
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .estimated(32)
+        )
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         group.interItemSpacing = .fixed(8)
 
@@ -102,9 +106,10 @@ extension ClipCreationViewLayout {
         return section
     }
 
-    private static func createAlbumsLayoutSection(trailingSwipeActionProvider: @escaping (IndexPath) -> UISwipeActionsConfiguration?,
-                                                  environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection
-    {
+    private static func createAlbumsLayoutSection(
+        trailingSwipeActionProvider: @escaping (IndexPath) -> UISwipeActionsConfiguration?,
+        environment: NSCollectionLayoutEnvironment
+    ) -> NSCollectionLayoutSection {
         var configuration = UICollectionLayoutListConfiguration(appearance: .grouped)
         configuration.backgroundColor = .clear
         configuration.trailingSwipeActionsConfigurationProvider = trailingSwipeActionProvider
@@ -119,8 +124,10 @@ extension ClipCreationViewLayout {
     }
 
     private static func createImageLayoutSection(for environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: .fractionalHeight(1.0))
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(1.0)
+        )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
         let count: Int = {
@@ -135,8 +142,10 @@ extension ClipCreationViewLayout {
                 return 3
             }
         }()
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .fractionalWidth(1 / CGFloat(count)))
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalWidth(1 / CGFloat(count))
+        )
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: count)
         group.interItemSpacing = .fixed(16)
 
@@ -156,23 +165,26 @@ extension ClipCreationViewLayout {
     }
 
     @MainActor
-    static func configureDataSource(collectionView: UICollectionView,
-                                    cellDataSource: ClipSelectionCollectionViewCellDataSource,
-                                    thumbnailProcessingQueue: ImageProcessingQueue,
-                                    imageLoader: ImageLoadable,
-                                    albumEditHandler: @escaping () -> Void,
-                                    onLoadImage: @escaping (UUID, CGSize?) -> Void) -> (Proxy, DataSource)
-    {
+    static func configureDataSource(
+        collectionView: UICollectionView,
+        cellDataSource: ClipSelectionCollectionViewCellDataSource,
+        thumbnailProcessingQueue: ImageProcessingQueue,
+        imageLoader: ImageLoadable,
+        albumEditHandler: @escaping () -> Void,
+        onLoadImage: @escaping (UUID, CGSize?) -> Void
+    ) -> (Proxy, DataSource) {
         let proxy = Proxy()
 
         let tagAdditionCellRegistration = self.configureTagAdditionCell(delegate: proxy)
         let tagCellRegistration = self.configureTagCell(delegate: proxy)
         let albumCellRegistration = self.configureAlbumCell()
         let metaCellRegistration = self.configureMetaCell(proxy: proxy)
-        let imageCellRegistration = self.configureImageCell(dataSource: cellDataSource,
-                                                            thumbnailProcessingQueue: thumbnailProcessingQueue,
-                                                            imageLoader: imageLoader,
-                                                            onLoadImage: onLoadImage)
+        let imageCellRegistration = self.configureImageCell(
+            dataSource: cellDataSource,
+            thumbnailProcessingQueue: thumbnailProcessingQueue,
+            imageLoader: imageLoader,
+            onLoadImage: onLoadImage
+        )
 
         let dataSource: DataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
             switch item {
@@ -224,9 +236,11 @@ extension ClipCreationViewLayout {
             switch Section(rawValue: indexPath.section) {
             case .album:
                 view.setRightItems([
-                    .init(title: L10n.AlbumSection.Header.addButton,
-                          action: UIAction(handler: { _ in albumEditHandler() }),
-                          font: nil)
+                    .init(
+                        title: L10n.AlbumSection.Header.addButton,
+                        action: UIAction(handler: { _ in albumEditHandler() }),
+                        font: nil
+                    )
                 ])
 
             default:
@@ -278,24 +292,34 @@ extension ClipCreationViewLayout {
                 let button = UIButton(type: .system)
                 button.isPointerInteractionEnabled = true
                 button.setTitle(title, for: .normal)
-                button.addAction(.init(handler: { [weak proxy] _ in
-                    proxy?.didTapButton(cell, at: indexPath)
-                }), for: .touchUpInside)
-                let configuration = UICellAccessory.CustomViewConfiguration(customView: button,
-                                                                            placement: .trailing(displayed: .always))
+                button.addAction(
+                    .init(handler: { [weak proxy] _ in
+                        proxy?.didTapButton(cell, at: indexPath)
+                    }),
+                    for: .touchUpInside
+                )
+                let configuration = UICellAccessory.CustomViewConfiguration(
+                    customView: button,
+                    placement: .trailing(displayed: .always)
+                )
                 cell.accessories = [.customView(configuration: configuration)]
 
             case let .switch(isOn: isOn):
                 // swiftlint:disable:next identifier_name
                 let sw = UISwitch()
                 sw.isOn = isOn
-                sw.addAction(.init(handler: { [weak proxy] action in
-                    // swiftlint:disable:next identifier_name
-                    guard let sw = action.sender as? UISwitch else { return }
-                    proxy?.didSwitchInfo(cell, at: indexPath, isOn: sw.isOn)
-                }), for: .touchUpInside)
-                let configuration = UICellAccessory.CustomViewConfiguration(customView: sw,
-                                                                            placement: .trailing(displayed: .always))
+                sw.addAction(
+                    .init(handler: { [weak proxy] action in
+                        // swiftlint:disable:next identifier_name
+                        guard let sw = action.sender as? UISwitch else { return }
+                        proxy?.didSwitchInfo(cell, at: indexPath, isOn: sw.isOn)
+                    }),
+                    for: .touchUpInside
+                )
+                let configuration = UICellAccessory.CustomViewConfiguration(
+                    customView: sw,
+                    placement: .trailing(displayed: .always)
+                )
                 cell.accessories = [.customView(configuration: configuration)]
             }
 
@@ -306,14 +330,16 @@ extension ClipCreationViewLayout {
     }
 
     @MainActor
-    private static func configureImageCell(dataSource: ClipSelectionCollectionViewCellDataSource,
-                                           thumbnailProcessingQueue: ImageProcessingQueue,
-                                           imageLoader: ImageLoadable,
-                                           onLoadImage: @escaping (UUID, CGSize?) -> Void) -> UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, UUID>
-    {
+    private static func configureImageCell(
+        dataSource: ClipSelectionCollectionViewCellDataSource,
+        thumbnailProcessingQueue: ImageProcessingQueue,
+        imageLoader: ImageLoadable,
+        onLoadImage: @escaping (UUID, CGSize?) -> Void
+    ) -> UICollectionView.CellRegistration<ClipSelectionCollectionViewCell, UUID> {
         return .init(cellNib: ClipSelectionCollectionViewCell.nib) { [weak dataSource, weak thumbnailProcessingQueue, weak imageLoader] cell, _, imageSourceId in
             guard let dataSource = dataSource,
-                  let imageSource = dataSource.imageSources[imageSourceId] else { return }
+                let imageSource = dataSource.imageSources[imageSourceId]
+            else { return }
 
             cell.displaySelectionOrder = dataSource.shouldSaveAsClip()
 
@@ -326,7 +352,7 @@ extension ClipCreationViewLayout {
             }
 
             guard let processingQueue = thumbnailProcessingQueue,
-                  let imageLoader = imageLoader
+                let imageLoader = imageLoader
             else {
                 return
             }

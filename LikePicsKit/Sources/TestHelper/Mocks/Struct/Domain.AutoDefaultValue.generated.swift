@@ -3,8 +3,8 @@
 
 @testable import Domain
 
-public extension Album {
-    static func makeDefault(
+extension Album {
+    public static func makeDefault(
         id: UUID = UUID(),
         title: String = "",
         clips: [Clip] = [],
@@ -23,8 +23,8 @@ public extension Album {
     }
 }
 
-public extension Clip {
-    static func makeDefault(
+extension Clip {
+    public static func makeDefault(
         id: UUID = UUID(),
         description: String? = nil,
         items: [ClipItem] = [],
@@ -45,8 +45,8 @@ public extension Clip {
     }
 }
 
-public extension ClipItem {
-    static func makeDefault(
+extension ClipItem {
+    public static func makeDefault(
         id: UUID = UUID(),
         url: URL? = nil,
         clipId: UUID = UUID(),
@@ -75,8 +75,8 @@ public extension ClipItem {
     }
 }
 
-public extension ClipItemRecipe {
-    static func makeDefault(
+extension ClipItemRecipe {
+    public static func makeDefault(
         id: UUID = UUID(),
         url: URL? = nil,
         clipId: UUID = UUID(),
@@ -105,8 +105,8 @@ public extension ClipItemRecipe {
     }
 }
 
-public extension ClipRecipe {
-    static func makeDefault(
+extension ClipRecipe {
+    public static func makeDefault(
         id: UUID = UUID(),
         description: String? = nil,
         items: [ClipItemRecipe] = [],
@@ -131,8 +131,8 @@ public extension ClipRecipe {
     }
 }
 
-public extension ImageSize {
-    static func makeDefault(
+extension ImageSize {
+    public static func makeDefault(
         height: Double = 0,
         width: Double = 0
     ) -> Self {
@@ -143,8 +143,8 @@ public extension ImageSize {
     }
 }
 
-public extension ListingAlbumTitle {
-    static func makeDefault(
+extension ListingAlbumTitle {
+    public static func makeDefault(
         id: UUID = UUID(),
         title: String = "",
         isHidden: Bool = false,
@@ -161,8 +161,8 @@ public extension ListingAlbumTitle {
     }
 }
 
-public extension ReferenceAlbum {
-    static func makeDefault(
+extension ReferenceAlbum {
+    public static func makeDefault(
         id: UUID = UUID(),
         title: String = "",
         isHidden: Bool = false,
@@ -181,8 +181,8 @@ public extension ReferenceAlbum {
     }
 }
 
-public extension ReferenceTag {
-    static func makeDefault(
+extension ReferenceTag {
+    public static func makeDefault(
         id: UUID = UUID(),
         name: String = "",
         isHidden: Bool = false,
@@ -199,8 +199,8 @@ public extension ReferenceTag {
     }
 }
 
-public extension Tag {
-    static func makeDefault(
+extension Tag {
+    public static func makeDefault(
         id: UUID = UUID(),
         name: String = "",
         isHidden: Bool = false,

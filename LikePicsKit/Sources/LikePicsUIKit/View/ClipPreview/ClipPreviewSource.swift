@@ -41,8 +41,10 @@ public enum ClipPreviewSource: Equatable {
     var originalSizeInPixel: CGSize {
         switch self {
         case let .image(image):
-            return .init(width: image.size.width * image.scale,
-                         height: image.size.height * image.scale)
+            return .init(
+                width: image.size.width * image.scale,
+                height: image.size.height * image.scale
+            )
 
         case let .thumbnail(_, size):
             return size

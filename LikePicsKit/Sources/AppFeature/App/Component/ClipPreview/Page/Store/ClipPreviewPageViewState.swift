@@ -34,12 +34,13 @@ struct ClipPreviewPageViewState: Equatable {
 }
 
 extension ClipPreviewPageViewState {
-    init(clips: [Clip],
-         playConfiguration: ClipPreviewPlayConfiguration,
-         query: ClipPreviewPageQuery,
-         isSomeItemsHidden: Bool,
-         indexPath: ClipCollection.IndexPath)
-    {
+    init(
+        clips: [Clip],
+        playConfiguration: ClipPreviewPlayConfiguration,
+        query: ClipPreviewPageQuery,
+        isSomeItemsHidden: Bool,
+        indexPath: ClipCollection.IndexPath
+    ) {
         self.query = query
         self.currentIndexPath = indexPath
         self.clips = .init(clips: clips, isSomeItemsHidden: isSomeItemsHidden)

@@ -13,8 +13,8 @@ public enum ClipUpdateError: Error {
     case notFound
 }
 
-public extension NSManagedObjectContext {
-    func updateClip(having id: UUID, isHidden: Bool) throws {
+extension NSManagedObjectContext {
+    public func updateClip(having id: UUID, isHidden: Bool) throws {
         let request: NSFetchRequest<Clip> = Clip.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
 
@@ -27,7 +27,7 @@ public extension NSManagedObjectContext {
         try save()
     }
 
-    func deleteClip(having id: UUID) throws {
+    public func deleteClip(having id: UUID) throws {
         let request: NSFetchRequest<Clip> = Clip.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
 

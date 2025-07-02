@@ -10,11 +10,11 @@ public protocol TagSelectionModalRouter {
     func showTagSelectionModal(id: UUID, selections: Set<Tag.Identity>) -> Bool
 }
 
-public extension ModalNotification.Name {
-    static let tagSelectionModalDidSelect = ModalNotification.Name("net.tasuwo.TBox.TagSelectionModalReducer.tagSelectionModalDidSelect")
-    static let tagSelectionModalDidDismiss = ModalNotification.Name("net.tasuwo.TBox.TagSelectionModalReducer.tagSelectionModalDidDismiss")
+extension ModalNotification.Name {
+    public static let tagSelectionModalDidSelect = ModalNotification.Name("net.tasuwo.TBox.TagSelectionModalReducer.tagSelectionModalDidSelect")
+    public static let tagSelectionModalDidDismiss = ModalNotification.Name("net.tasuwo.TBox.TagSelectionModalReducer.tagSelectionModalDidDismiss")
 }
 
-public extension ModalNotification.UserInfoKey {
-    static let selectedTags = ModalNotification.UserInfoKey("net.tasuwo.TBox.TagSelectionModalReducer.selectedTags")
+extension ModalNotification.UserInfoKey {
+    public static let selectedTags = ModalNotification.UserInfoKey("net.tasuwo.TBox.TagSelectionModalReducer.selectedTags")
 }

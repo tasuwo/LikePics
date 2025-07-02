@@ -44,8 +44,8 @@ extension RealmReferenceAlbumListQuery: ListingAlbumTitleListQuery {
     }
 }
 
-private extension Domain.ListingAlbumTitle {
-    static func make(by album: ReferenceAlbumObject) -> Self {
+extension Domain.ListingAlbumTitle {
+    fileprivate static func make(by album: ReferenceAlbumObject) -> Self {
         return .init(id: album.id, title: album.title, isHidden: album.isHidden, registeredDate: album.registeredDate, updatedDate: album.updatedDate)
     }
 }

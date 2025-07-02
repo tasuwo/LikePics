@@ -52,12 +52,20 @@ extension ShareNavigationRootViewController: ShareNavigationViewProtocol {
         }
 
         let alert = UIAlertController(title: "Error", message: errorMessage, preferredStyle: .alert)
-        alert.addAction(.init(title: "OK", style: .default, handler: { [weak self] _ in
-            let error = NSError(domain: "net.tasuwo.TBox",
-                                code: 0,
-                                userInfo: [NSLocalizedDescriptionKey: "An error description"])
-            self?.extensionContext?.cancelRequest(withError: error)
-        }))
+        alert.addAction(
+            .init(
+                title: "OK",
+                style: .default,
+                handler: { [weak self] _ in
+                    let error = NSError(
+                        domain: "net.tasuwo.TBox",
+                        code: 0,
+                        userInfo: [NSLocalizedDescriptionKey: "An error description"]
+                    )
+                    self?.extensionContext?.cancelRequest(withError: error)
+                }
+            )
+        )
         self.present(alert, animated: true, completion: nil)
     }
 

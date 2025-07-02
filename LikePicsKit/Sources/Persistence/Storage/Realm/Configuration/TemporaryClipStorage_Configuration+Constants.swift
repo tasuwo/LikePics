@@ -36,7 +36,7 @@ extension TemporaryClipStorage.Configuration {
                     ClipObject.self,
                     ClipItemObject.self,
                     TagIdObject.self,
-                    AlbumIdObject.self
+                    AlbumIdObject.self,
                 ]
             )
         }
@@ -52,7 +52,8 @@ extension TemporaryClipStorage.Configuration {
             guard let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.\(bundleIdentifier)") else {
                 fatalError("Failed to resolve images containing directory url.")
             }
-            return directory
+            return
+                directory
                 .appendingPathComponent(bundleIdentifier, isDirectory: true)
                 .appendingPathComponent(realmFileName)
         }

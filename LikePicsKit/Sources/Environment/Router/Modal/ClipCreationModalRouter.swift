@@ -11,6 +11,6 @@ public protocol ClipCreationModalRouter {
     func showClipCreationModal(id: UUID, webView: WKWebView) -> Bool
 }
 
-public extension ModalNotification.Name {
-    static let clipCreationModalDidFinish = ModalNotification.Name("net.tasuwo.TBox.ClipCreationViewReducer.ClipCreationModal")
+extension ModalNotification.Name {
+    public static let clipCreationModalDidFinish = ModalNotification.Name("net.tasuwo.TBox.ClipCreationViewReducer.ClipCreationModal")
 }

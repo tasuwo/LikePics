@@ -5,6 +5,7 @@
 import Combine
 import CoreData
 import Domain
+
 #if canImport(UIKit)
 import UIKit
 #endif
@@ -48,10 +49,12 @@ class CoreDataClipListQuery: NSObject {
         context.perform { [weak self] in
             guard let self = self else { return }
 
-            self.controller = NSFetchedResultsController(fetchRequest: self.requestFactory(),
-                                                         managedObjectContext: context,
-                                                         sectionNameKeyPath: nil,
-                                                         cacheName: nil)
+            self.controller = NSFetchedResultsController(
+                fetchRequest: self.requestFactory(),
+                managedObjectContext: context,
+                sectionNameKeyPath: nil,
+                cacheName: nil
+            )
             self.controller?.delegate = self
 
             do {
@@ -61,13 +64,17 @@ class CoreDataClipListQuery: NSObject {
             }
         }
 
-        NotificationCenter.default.removeObserver(self,
-                                                  name: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
-                                                  object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(contextDidChangeNotification(notification:)),
-                                               name: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
-                                               object: context)
+        NotificationCenter.default.removeObserver(
+            self,
+            name: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(contextDidChangeNotification(notification:)),
+            name: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
+            object: context
+        )
     }
 
     @objc
@@ -101,9 +108,10 @@ class CoreDataClipListQuery: NSObject {
 extension CoreDataClipListQuery: NSFetchedResultsControllerDelegate {
     // MARK: - NSFetchedResultsControllerDelegate
 
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
-                    didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference)
-    {
+    func controller(
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+        didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference
+    ) {
         controller.managedObjectContext.perform { [weak self] in
             guard let self = self else { return }
             let clips: [Domain.Clip] = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers

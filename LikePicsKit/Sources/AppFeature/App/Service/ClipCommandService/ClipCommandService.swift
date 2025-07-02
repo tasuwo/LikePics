@@ -5,8 +5,8 @@
 import Common
 import Domain
 import Foundation
-import os.log
 import Smoothie
+import os.log
 
 public class ClipCommandService {
     let clipStorage: ClipStorageProtocol
@@ -21,13 +21,14 @@ public class ClipCommandService {
 
     // MARK: - Lifecycle
 
-    public init(clipStorage: ClipStorageProtocol,
-                referenceClipStorage: ReferenceClipStorageProtocol,
-                imageStorage: ImageStorageProtocol,
-                diskCache: DiskCaching,
-                commandQueue: StorageCommandQueue,
-                lock: NSRecursiveLock)
-    {
+    public init(
+        clipStorage: ClipStorageProtocol,
+        referenceClipStorage: ReferenceClipStorageProtocol,
+        imageStorage: ImageStorageProtocol,
+        diskCache: DiskCaching,
+        commandQueue: StorageCommandQueue,
+        lock: NSRecursiveLock
+    ) {
         self.clipStorage = clipStorage
         self.referenceClipStorage = referenceClipStorage
         self.imageStorage = imageStorage
@@ -59,7 +60,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     // MARK: Create
 
     public func create(clip: ClipRecipe, withContainers containers: [ImageContainer], forced: Bool) -> Result<Clip.Identity, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -103,7 +105,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func create(tagWithName name: String) -> Result<Tag.Identity, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -140,7 +143,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func create(albumWithTitle title: String) -> Result<Album.Identity, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -180,7 +184,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     // MARK: Update
 
     public func updateClips(having ids: [Clip.Identity], byHiding isHidden: Bool) -> Result<Void, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -203,7 +208,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func updateClips(having clipIds: [Clip.Identity], byAddingTagsHaving tagIds: [Tag.Identity]) -> Result<Void, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -229,7 +235,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func updateClips(having clipIds: [Clip.Identity], byDeletingTagsHaving tagIds: [Tag.Identity]) -> Result<Void, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -255,7 +262,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func updateClips(having clipIds: [Clip.Identity], byReplacingTagsHaving tagIds: [Tag.Identity]) -> Result<Void, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -284,7 +292,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func updateClipItems(having ids: [ClipItem.Identity], byUpdatingSiteUrl siteUrl: URL?) -> Result<Void, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -307,7 +316,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func updateClip(having id: Clip.Identity, byReorderingItemsHaving itemIds: [ClipItem.Identity]) -> Result<Void, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -330,7 +340,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func updateAlbum(having albumId: Album.Identity, byAddingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -362,7 +373,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func updateAlbum(having albumId: Album.Identity, byDeletingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -394,7 +406,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func updateAlbum(having albumId: Album.Identity, byReorderingClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -426,7 +439,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func updateAlbum(having albumId: Album.Identity, titleTo title: String) -> Result<Void, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -458,7 +472,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func updateAlbum(having albumId: Album.Identity, byHiding isHidden: Bool) -> Result<Void, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -490,7 +505,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func updateAlbums(byReordering albumIds: [Album.Identity]) -> Result<Void, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -521,7 +537,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func updateTag(having id: Tag.Identity, nameTo name: String) -> Result<Void, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -552,7 +569,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func updateTag(having id: Tag.Identity, byHiding isHidden: Bool) -> Result<Void, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -583,7 +601,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func purgeClipItems(forClipHaving id: Domain.Clip.Identity) -> Result<Void, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -598,27 +617,31 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 let newClips: [ClipRecipe] = originalClip.items.map { item in
                     let clipId = UUID()
                     let date = Date()
-                    return ClipRecipe(id: clipId,
-                                      description: originalClip.description,
-                                      items: [
-                                          .init(id: UUID(),
-                                                url: item.url,
-                                                clipId: clipId,
-                                                clipIndex: 0,
-                                                imageId: item.imageId,
-                                                imageFileName: item.imageFileName,
-                                                imageUrl: item.imageUrl,
-                                                imageSize: item.imageSize,
-                                                imageDataSize: item.imageDataSize,
-                                                registeredDate: item.registeredDate,
-                                                updatedDate: date)
-                                      ],
-                                      tagIds: originalTags.map { $0.id },
-                                      albumIds: Set(albumIds),
-                                      isHidden: originalClip.isHidden,
-                                      dataSize: item.imageDataSize,
-                                      registeredDate: date,
-                                      updatedDate: date)
+                    return ClipRecipe(
+                        id: clipId,
+                        description: originalClip.description,
+                        items: [
+                            .init(
+                                id: UUID(),
+                                url: item.url,
+                                clipId: clipId,
+                                clipIndex: 0,
+                                imageId: item.imageId,
+                                imageFileName: item.imageFileName,
+                                imageUrl: item.imageUrl,
+                                imageSize: item.imageSize,
+                                imageDataSize: item.imageDataSize,
+                                registeredDate: item.registeredDate,
+                                updatedDate: date
+                            )
+                        ],
+                        tagIds: originalTags.map { $0.id },
+                        albumIds: Set(albumIds),
+                        isHidden: originalClip.isHidden,
+                        dataSize: item.imageDataSize,
+                        registeredDate: date,
+                        updatedDate: date
+                    )
                 }
 
                 try newClips.forEach { _ = try self.clipStorage.create(clip: $0).get() }
@@ -640,15 +663,17 @@ extension ClipCommandService: ClipCommandServiceProtocol {
         }
     }
 
-    public func mergeClipItems(itemIds: [ClipItem.Identity],
-                               tagIds: [Tag.Identity],
-                               siteUrl: URL?,
-                               isHidden: Bool,
-                               inClipsHaving clipIds: [Clip.Identity]) -> Result<Void, ClipStorageError>
-    {
+    public func mergeClipItems(
+        itemIds: [ClipItem.Identity],
+        tagIds: [Tag.Identity],
+        siteUrl: URL?,
+        isHidden: Bool,
+        inClipsHaving clipIds: [Clip.Identity]
+    ) -> Result<Void, ClipStorageError> {
         let siteUrl = (siteUrl.flatMap({ $0.absoluteString.isEmpty }) ?? true) ? nil : siteUrl
 
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -663,30 +688,35 @@ extension ClipCommandService: ClipCommandServiceProtocol {
 
                 let clipId = UUID()
                 let newItems = items.enumerated().map { index, item in
-                    return ClipItemRecipe(id: UUID(),
-                                          url: siteUrl ?? item.url,
-                                          clipId: clipId,
-                                          clipIndex: index + 1,
-                                          imageId: item.imageId,
-                                          imageFileName: item.imageFileName,
-                                          imageUrl: item.imageUrl,
-                                          imageSize: item.imageSize,
-                                          imageDataSize: item.imageDataSize,
-                                          registeredDate: item.registeredDate,
-                                          updatedDate: Date())
+                    return ClipItemRecipe(
+                        id: UUID(),
+                        url: siteUrl ?? item.url,
+                        clipId: clipId,
+                        clipIndex: index + 1,
+                        imageId: item.imageId,
+                        imageFileName: item.imageFileName,
+                        imageUrl: item.imageUrl,
+                        imageSize: item.imageSize,
+                        imageDataSize: item.imageDataSize,
+                        registeredDate: item.registeredDate,
+                        updatedDate: Date()
+                    )
                 }
-                let dataSize = newItems
+                let dataSize =
+                    newItems
                     .map { $0.imageDataSize }
                     .reduce(0, +)
-                let recipe = ClipRecipe(id: clipId,
-                                        description: nil,
-                                        items: newItems,
-                                        tagIds: tagIds,
-                                        albumIds: Set(albumIds),
-                                        isHidden: isHidden,
-                                        dataSize: dataSize,
-                                        registeredDate: Date(),
-                                        updatedDate: Date())
+                let recipe = ClipRecipe(
+                    id: clipId,
+                    description: nil,
+                    items: newItems,
+                    tagIds: tagIds,
+                    albumIds: Set(albumIds),
+                    isHidden: isHidden,
+                    dataSize: dataSize,
+                    registeredDate: Date(),
+                    updatedDate: Date()
+                )
 
                 _ = try self.clipStorage.create(clip: recipe).get()
 
@@ -710,7 +740,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     // MARK: Delete
 
     public func deleteClips(having ids: [Clip.Identity]) -> Result<Void, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -722,7 +753,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
                 let originalTags = try self.clipStorage.readTags(forClipsHaving: ids).get()
                 let clips = try self.clipStorage.deleteClips(having: ids).get()
 
-                let existsFiles = try clips
+                let existsFiles =
+                    try clips
                     .flatMap { $0.items }
                     .allSatisfy { try self.imageStorage.exists(having: $0.imageId) }
                 if existsFiles {
@@ -754,7 +786,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func deleteClipItem(_ item: ClipItem) -> Result<Void, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -794,7 +827,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func deleteAlbum(having id: Album.Identity) -> Result<Void, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -825,7 +859,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func deleteTags(having ids: [Tag.Identity]) -> Result<Void, ClipStorageError> {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else {
                 return .failure(.internalError)
@@ -856,7 +891,8 @@ extension ClipCommandService: ClipCommandServiceProtocol {
     }
 
     public func deduplicateAlbumItem(albumId: Album.Identity, clipId: Clip.Identity) {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return commandQueue.sync { [weak self] in
             guard let self = self else { return }
             do {

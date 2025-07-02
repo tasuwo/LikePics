@@ -12,8 +12,10 @@ public struct ImageSize: Codable, Equatable, Hashable, Sendable {
     public let width: Double
 
     public var cgSize: CGSize {
-        return CGSize(width: self.width,
-                      height: self.height)
+        return CGSize(
+            width: self.width,
+            height: self.height
+        )
     }
 
     public var aspectRatio: CGFloat {

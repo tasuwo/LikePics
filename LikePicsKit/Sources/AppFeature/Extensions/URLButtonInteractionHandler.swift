@@ -14,14 +14,16 @@ extension URLButtonInteractionHandler: UIContextMenuInteractionDelegate {
 
     public func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         guard let button = interaction.view as? UIButton,
-              let text = button.titleLabel?.text,
-              let url = URL(string: text)
+            let text = button.titleLabel?.text,
+            let url = URL(string: text)
         else {
             return nil
         }
-        return UIContextMenuConfiguration(identifier: nil,
-                                          previewProvider: self.makePreviewProvider(for: url),
-                                          actionProvider: self.makeActionProvider(for: url))
+        return UIContextMenuConfiguration(
+            identifier: nil,
+            previewProvider: self.makePreviewProvider(for: url),
+            actionProvider: self.makeActionProvider(for: url)
+        )
     }
 
     public func contextMenuInteraction(_ interaction: UIContextMenuInteraction, previewForHighlightingMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
@@ -52,8 +54,10 @@ extension URLButtonInteractionHandler: UIContextMenuInteractionDelegate {
         viewController.view = label
 
         let labelSize = label.sizeThatFits(baseView?.frame.size ?? .zero)
-        viewController.preferredContentSize = CGSize(width: labelSize.width + 16 * 2,
-                                                     height: labelSize.height + 16 * 2)
+        viewController.preferredContentSize = CGSize(
+            width: labelSize.width + 16 * 2,
+            height: labelSize.height + 16 * 2
+        )
 
         return { viewController }
     }

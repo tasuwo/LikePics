@@ -126,20 +126,26 @@ extension DependencyContainer: ViewControllerFactory {
             var modalNotificationCenter: ModalNotificationCenter
         }
         let imageLoader = ImageLoader()
-        let dependency = Dependency(clipRecipeFactory: ClipRecipeFactory(),
-                                    clipStore: clipStore,
-                                    imageLoader: imageLoader,
-                                    imageSourceProvider: ImageSourceForWebPageUrlResolver(url: webUrl),
-                                    userSettingsStorage: userSettingsStorage,
-                                    modalNotificationCenter: .default)
-        return ClipCreationViewController(state: .init(id: id,
-                                                       source: .webImage,
-                                                       url: webUrl,
-                                                       isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems()),
-                                          dependency: dependency,
-                                          thumbnailProcessingQueue: thumbnailProcessingQueue,
-                                          imageLoader: imageLoader,
-                                          modalRouter: self)
+        let dependency = Dependency(
+            clipRecipeFactory: ClipRecipeFactory(),
+            clipStore: clipStore,
+            imageLoader: imageLoader,
+            imageSourceProvider: ImageSourceForWebPageUrlResolver(url: webUrl),
+            userSettingsStorage: userSettingsStorage,
+            modalNotificationCenter: .default
+        )
+        return ClipCreationViewController(
+            state: .init(
+                id: id,
+                source: .webImage,
+                url: webUrl,
+                isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems()
+            ),
+            dependency: dependency,
+            thumbnailProcessingQueue: thumbnailProcessingQueue,
+            imageLoader: imageLoader,
+            modalRouter: self
+        )
     }
 
     public func makeClipTargetCollectionViewController(id: UUID, sources: [ClipCreationFeatureCore.ImageSource]) -> UIViewController {
@@ -152,20 +158,26 @@ extension DependencyContainer: ViewControllerFactory {
             var modalNotificationCenter: ModalNotificationCenter
         }
         let imageLoader = ImageLoader()
-        let dependency = Dependency(clipRecipeFactory: ClipRecipeFactory(),
-                                    clipStore: clipStore,
-                                    imageLoader: imageLoader,
-                                    imageSourceProvider: ImageSourcePassthrough(sources),
-                                    userSettingsStorage: userSettingsStorage,
-                                    modalNotificationCenter: .default)
-        return ClipCreationViewController(state: .init(id: id,
-                                                       source: .localImage,
-                                                       url: nil,
-                                                       isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems()),
-                                          dependency: dependency,
-                                          thumbnailProcessingQueue: thumbnailProcessingQueue,
-                                          imageLoader: imageLoader,
-                                          modalRouter: self)
+        let dependency = Dependency(
+            clipRecipeFactory: ClipRecipeFactory(),
+            clipStore: clipStore,
+            imageLoader: imageLoader,
+            imageSourceProvider: ImageSourcePassthrough(sources),
+            userSettingsStorage: userSettingsStorage,
+            modalNotificationCenter: .default
+        )
+        return ClipCreationViewController(
+            state: .init(
+                id: id,
+                source: .localImage,
+                url: nil,
+                isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems()
+            ),
+            dependency: dependency,
+            thumbnailProcessingQueue: thumbnailProcessingQueue,
+            imageLoader: imageLoader,
+            modalRouter: self
+        )
     }
 }
 
@@ -181,20 +193,28 @@ extension DependencyContainer: TagSelectionModalRouter {
             var tagQueryService: TagQueryServiceProtocol
             var userSettingStorage: UserSettingsStorageProtocol
         }
-        let dependency = Dependency(modalNotificationCenter: .default,
-                                    tagCommandService: commandService,
-                                    tagQueryService: tagQueryService,
-                                    userSettingStorage: userSettingsStorage)
+        let dependency = Dependency(
+            modalNotificationCenter: .default,
+            tagCommandService: commandService,
+            tagQueryService: tagQueryService,
+            userSettingStorage: userSettingsStorage
+        )
 
-        let state = TagSelectionModalState(id: id,
-                                           selections: selections,
-                                           isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems())
-        let tagAdditionAlertState = TextEditAlertState(title: L10n.tagListViewAlertForAddTitle,
-                                                       message: L10n.tagListViewAlertForAddMessage,
-                                                       placeholder: L10n.placeholderTagName)
-        let viewController = TagSelectionModalController(state: state,
-                                                         tagAdditionAlertState: tagAdditionAlertState,
-                                                         dependency: dependency)
+        let state = TagSelectionModalState(
+            id: id,
+            selections: selections,
+            isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems()
+        )
+        let tagAdditionAlertState = TextEditAlertState(
+            title: L10n.tagListViewAlertForAddTitle,
+            message: L10n.tagListViewAlertForAddMessage,
+            placeholder: L10n.placeholderTagName
+        )
+        let viewController = TagSelectionModalController(
+            state: state,
+            tagAdditionAlertState: tagAdditionAlertState,
+            dependency: dependency
+        )
 
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
@@ -221,20 +241,28 @@ extension DependencyContainer: AlbumMultiSelectionModalRouter {
             var modalNotificationCenter: Domain.ModalNotificationCenter
             var userSettingStorage: Domain.UserSettingsStorageProtocol
         }
-        let dependency = Dependency(albumCommandService: commandService,
-                                    listingAlbumTitleQueryService: albumQueryService,
-                                    modalNotificationCenter: .default,
-                                    userSettingStorage: userSettingsStorage)
+        let dependency = Dependency(
+            albumCommandService: commandService,
+            listingAlbumTitleQueryService: albumQueryService,
+            modalNotificationCenter: .default,
+            userSettingStorage: userSettingsStorage
+        )
 
-        let state = AlbumMultiSelectionModalState(id: id,
-                                                  selections: selections,
-                                                  isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems())
-        let albumAdditionAlertState = TextEditAlertState(title: L10n.albumListViewAlertForAddTitle,
-                                                         message: L10n.albumListViewAlertForAddMessage,
-                                                         placeholder: L10n.placeholderAlbumName)
-        let viewController = AlbumMultiSelectionModalController(state: state,
-                                                                albumAdditionAlertState: albumAdditionAlertState,
-                                                                dependency: dependency)
+        let state = AlbumMultiSelectionModalState(
+            id: id,
+            selections: selections,
+            isSomeItemsHidden: !userSettingsStorage.readShowHiddenItems()
+        )
+        let albumAdditionAlertState = TextEditAlertState(
+            title: L10n.albumListViewAlertForAddTitle,
+            message: L10n.albumListViewAlertForAddMessage,
+            placeholder: L10n.placeholderAlbumName
+        )
+        let viewController = AlbumMultiSelectionModalController(
+            state: state,
+            albumAdditionAlertState: albumAdditionAlertState,
+            dependency: dependency
+        )
 
         let navigationViewController = UINavigationController(rootViewController: viewController)
 

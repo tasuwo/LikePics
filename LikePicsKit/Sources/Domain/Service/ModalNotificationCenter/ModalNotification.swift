@@ -24,20 +24,20 @@ extension ModalNotification {
     }
 }
 
-public extension ModalNotification.Name {
+extension ModalNotification.Name {
     internal var notificationName: Notification.Name { .init(rawValue) }
 
-    init(_ rawValue: String) {
+    public init(_ rawValue: String) {
         self.rawValue = rawValue
     }
 
-    init(_ name: Notification.Name) {
+    public init(_ name: Notification.Name) {
         rawValue = name.rawValue
     }
 }
 
-public extension ModalNotification.UserInfoKey {
-    init(_ rawValue: String) {
+extension ModalNotification.UserInfoKey {
+    public init(_ rawValue: String) {
         self.rawValue = rawValue
     }
 }

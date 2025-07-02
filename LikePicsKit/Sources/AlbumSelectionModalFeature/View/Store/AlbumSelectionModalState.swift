@@ -32,8 +32,8 @@ public struct AlbumSelectionModalState: Equatable {
     var isDismissed: Bool
 }
 
-public extension AlbumSelectionModalState {
-    init(id: UUID, isSomeItemsHidden: Bool) {
+extension AlbumSelectionModalState {
+    public init(id: UUID, isSomeItemsHidden: Bool) {
         self.id = id
 
         searchQuery = ""
@@ -55,7 +55,8 @@ public extension AlbumSelectionModalState {
 
 extension AlbumSelectionModalState {
     var filteredOrderedAlbums: Set<Ordered<Album>> {
-        let albums = albums
+        let albums =
+            albums
             .filteredOrderedEntities()
             .map { Ordered(index: $0.index, value: isSomeItemsHidden ? $0.value.removingHiddenClips() : $0.value) }
         return Set(albums)

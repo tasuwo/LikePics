@@ -48,12 +48,13 @@ public struct PreviewingClips: Equatable {
         self.indexPathByClipItemId = indexPathByClipItemId
     }
 
-    private init(clips: [Clip],
-                 filteredClipIds: Set<Clip.Identity>,
-                 isSomeItemsHidden: Bool,
-                 indexByClipId: [Clip.Identity: Int],
-                 indexPathByClipItemId: [ClipItem.Identity: ClipCollection.IndexPath])
-    {
+    private init(
+        clips: [Clip],
+        filteredClipIds: Set<Clip.Identity>,
+        isSomeItemsHidden: Bool,
+        indexByClipId: [Clip.Identity: Int],
+        indexPathByClipItemId: [ClipItem.Identity: ClipCollection.IndexPath]
+    ) {
         self.value = clips
         self.filteredClipIds = filteredClipIds
         self.isSomeItemsHidden = isSomeItemsHidden
@@ -102,7 +103,7 @@ public struct PreviewingClips: Equatable {
 
     public func visibleIndexPath(afterClipAt clipIndex: Int) -> ClipCollection.IndexPath? {
         guard clipIndex + 1 < value.count else { return nil }
-        for clipIndex in clipIndex + 1 ... value.count - 1 {
+        for clipIndex in clipIndex + 1...value.count - 1 {
             if filteredClipIds.contains(value[clipIndex].id) {
                 return .init(clipIndex: clipIndex, itemIndex: 0)
             }
@@ -112,7 +113,7 @@ public struct PreviewingClips: Equatable {
 
     public func visibleIndexPath(beforeClipAt clipIndex: Int) -> ClipCollection.IndexPath? {
         guard clipIndex - 1 >= 0 else { return nil }
-        for clipIndex in (0 ... clipIndex - 1).reversed() {
+        for clipIndex in (0...clipIndex - 1).reversed() {
             if filteredClipIds.contains(value[clipIndex].id) {
                 return .init(clipIndex: clipIndex, itemIndex: value[clipIndex].items.count - 1)
             }
@@ -144,7 +145,8 @@ public struct PreviewingClips: Equatable {
             switch config.range {
             case .overall:
                 guard let clipId = filteredClipIds.randomElement(),
-                      let item = clip(having: clipId)?.items.randomElement() else { return nil }
+                    let item = clip(having: clipId)?.items.randomElement()
+                else { return nil }
                 return self.indexPath(ofItemHaving: item.id)
 
             case .clip:
@@ -175,11 +177,11 @@ public struct PreviewingClips: Equatable {
 
                     case .overall:
                         // 次のClipが存在すれば移動する
-                        for clipIndex in indexPath.clipIndex + 1 ... value.count - 1 {
+                        for clipIndex in indexPath.clipIndex + 1...value.count - 1 {
                             guard filteredClipIds.contains(value[clipIndex].id) else { continue }
                             return value[clipIndex].items.first
                         }
-                        for clipIndex in 0 ... indexPath.clipIndex - 1 {
+                        for clipIndex in 0...indexPath.clipIndex - 1 {
                             guard filteredClipIds.contains(value[clipIndex].id) else { continue }
                             return value[clipIndex].items.first
                         }
@@ -192,7 +194,7 @@ public struct PreviewingClips: Equatable {
 
                     case .overall:
                         // 次のClipが存在すれば移動する
-                        for clipIndex in indexPath.clipIndex + 1 ... value.count - 1 {
+                        for clipIndex in indexPath.clipIndex + 1...value.count - 1 {
                             if filteredClipIds.contains(value[clipIndex].id) {
                                 return value[clipIndex].items.first
                             }
@@ -238,7 +240,7 @@ public struct PreviewingClips: Equatable {
                         return currentClip.items.last
 
                     case .overall:
-                        for clipIndex in (0 ... indexPath.clipIndex - 1).reversed() {
+                        for clipIndex in (0...indexPath.clipIndex - 1).reversed() {
                             if filteredClipIds.contains(value[clipIndex].id) {
                                 return value[clipIndex].items.last
                             }
@@ -251,11 +253,11 @@ public struct PreviewingClips: Equatable {
                     // Clipの末尾のItemに戻す
                     return currentClip.items.last
                 } else {
-                    for clipIndex in (0 ... indexPath.clipIndex - 1).reversed() {
+                    for clipIndex in (0...indexPath.clipIndex - 1).reversed() {
                         guard filteredClipIds.contains(value[clipIndex].id) else { continue }
                         return value[clipIndex].items.last
                     }
-                    for clipIndex in (indexPath.clipIndex + 1 ... value.count - 1).reversed() {
+                    for clipIndex in (indexPath.clipIndex + 1...value.count - 1).reversed() {
                         guard filteredClipIds.contains(value[clipIndex].id) else { continue }
                         return value[clipIndex].items.last
                     }
@@ -283,28 +285,35 @@ public struct PreviewingClips: Equatable {
     // MARK: Write
 
     public func updated(isSomeItemsHidden: Bool) -> Self {
-        let newFilteredClipIds: Set<Clip.Identity> = isSomeItemsHidden
+        let newFilteredClipIds: Set<Clip.Identity> =
+            isSomeItemsHidden
             ? Set(value.filter({ !$0.isHidden }).map(\.id))
             : Set(value.map(\.id))
 
-        return .init(clips: value,
-                     filteredClipIds: newFilteredClipIds,
-                     isSomeItemsHidden: isSomeItemsHidden,
-                     indexByClipId: indexByClipId,
-                     indexPathByClipItemId: indexPathByClipItemId)
+        return .init(
+            clips: value,
+            filteredClipIds: newFilteredClipIds,
+            isSomeItemsHidden: isSomeItemsHidden,
+            indexByClipId: indexByClipId,
+            indexPathByClipItemId: indexPathByClipItemId
+        )
     }
 
     public func removedClip(atIndex index: Int) -> Self {
         var newClips = value
         newClips.remove(at: index)
-        return .init(clips: newClips,
-                     isSomeItemsHidden: isSomeItemsHidden)
+        return .init(
+            clips: newClips,
+            isSomeItemsHidden: isSomeItemsHidden
+        )
     }
 
     public func removedClipItem(atIndexPath indexPath: ClipCollection.IndexPath) -> Self {
         var newClips = value
         newClips[indexPath.clipIndex] = newClips[indexPath.clipIndex].removedItem(at: indexPath.itemIndex)
-        return .init(clips: newClips,
-                     isSomeItemsHidden: isSomeItemsHidden)
+        return .init(
+            clips: newClips,
+            isSomeItemsHidden: isSomeItemsHidden
+        )
     }
 }

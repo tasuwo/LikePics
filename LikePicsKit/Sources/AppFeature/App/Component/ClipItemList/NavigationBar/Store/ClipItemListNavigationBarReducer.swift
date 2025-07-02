@@ -35,15 +35,15 @@ struct ClipItemListNavigationBarReducer: Reducer {
         // MARK: - NavigationBar
 
         case .didTapCancel,
-             .didTapResume,
-             .didTapSelect:
+            .didTapResume,
+            .didTapSelect:
             return (state, .none)
         }
     }
 }
 
-private extension ClipItemListNavigationBarState {
-    func updatingAppearance() -> Self {
+extension ClipItemListNavigationBarState {
+    fileprivate func updatingAppearance() -> Self {
         var nextState = self
 
         nextState.leftItems = [.init(kind: .resume, isEnabled: !isEditing)]

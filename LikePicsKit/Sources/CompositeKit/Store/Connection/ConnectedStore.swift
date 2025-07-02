@@ -11,9 +11,10 @@ public class ConnectedStore<State: Equatable, Action: CompositeKit.Action, Depen
 
     // MARK: - Initializers
 
-    init(store: AnyStoring<State, Action, Dependency>,
-         connection: Connection<Action>)
-    {
+    init(
+        store: AnyStoring<State, Action, Dependency>,
+        connection: Connection<Action>
+    ) {
         self.store = store
         self.connection = connection
 
@@ -46,8 +47,8 @@ extension ConnectedStore: Storing {
     }
 }
 
-public extension Storing {
-    func connect(
+extension Storing {
+    public func connect(
         _ connection: Connection<Action>
     ) -> ConnectedStore<State, Action, Dependency> {
         return .init(store: self.eraseToAnyStoring(), connection: connection)

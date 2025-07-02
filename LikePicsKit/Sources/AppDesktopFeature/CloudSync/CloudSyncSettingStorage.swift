@@ -10,7 +10,8 @@ final class CloudSyncSettingStorage: CloudKitSyncSettingStorage {
 
     var isCloudKitSyncEnabled: AsyncStream<Bool> {
         AsyncStream { continuation in
-            let cancellable = $isCloudSyncEnabled
+            let cancellable =
+                $isCloudSyncEnabled
                 .sink { continuation.yield($0) }
 
             continuation.onTermination = { _ in

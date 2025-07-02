@@ -3,6 +3,7 @@
 //
 
 import Foundation
+
 #if canImport(MobileCoreServices)
 import MobileCoreServices
 #endif
@@ -53,8 +54,8 @@ public enum ImageType: CaseIterable {
     }
 }
 
-public extension ImageType {
-    init?(_ data: Data) {
+extension ImageType {
+    public init?(_ data: Data) {
         guard let type = Self.make(by: data) else { return nil }
         self = type
     }
@@ -72,8 +73,8 @@ public extension ImageType {
     }
 }
 
-private extension Data {
-    func starts(with numbers: [UInt8?]) -> Bool {
+extension Data {
+    fileprivate func starts(with numbers: [UInt8?]) -> Bool {
         guard self.count >= numbers.count else { return false }
         return zip(numbers.indices, numbers).allSatisfy { index, number in
             guard let number = number else { return true }

@@ -41,7 +41,7 @@ extension SearchEntrySectionFooterView {
             label.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 16),
             label.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16),
             label.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16),
-            label.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -16)
+            label.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -16),
         ])
 
         label.font = .preferredFont(forTextStyle: .caption1)

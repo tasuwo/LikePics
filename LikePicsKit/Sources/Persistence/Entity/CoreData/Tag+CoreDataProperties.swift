@@ -6,33 +6,33 @@
 import CoreData
 import Foundation
 
-public extension Tag {
+extension Tag {
     @nonobjc
-    class func fetchRequest() -> NSFetchRequest<Tag> {
+    public class func fetchRequest() -> NSFetchRequest<Tag> {
         return NSFetchRequest<Tag>(entityName: "Tag")
     }
 
-    @NSManaged var clipCount: Int64
-    @NSManaged var id: UUID?
-    @NSManaged var isHidden: Bool
-    @NSManaged var name: String?
-    @NSManaged var clips: NSSet?
+    @NSManaged public var clipCount: Int64
+    @NSManaged public var id: UUID?
+    @NSManaged public var isHidden: Bool
+    @NSManaged public var name: String?
+    @NSManaged public var clips: NSSet?
 }
 
 // MARK: Generated accessors for clips
 
-public extension Tag {
+extension Tag {
     @objc(addClipsObject:)
-    @NSManaged func addToClips(_ value: Clip)
+    @NSManaged public func addToClips(_ value: Clip)
 
     @objc(removeClipsObject:)
-    @NSManaged func removeFromClips(_ value: Clip)
+    @NSManaged public func removeFromClips(_ value: Clip)
 
     @objc(addClips:)
-    @NSManaged func addToClips(_ values: NSSet)
+    @NSManaged public func addToClips(_ values: NSSet)
 
     @objc(removeClips:)
-    @NSManaged func removeFromClips(_ values: NSSet)
+    @NSManaged public func removeFromClips(_ values: NSSet)
 }
 
 extension Tag: Identifiable {

@@ -17,7 +17,7 @@ class CoreDataTagQuery: NSObject {
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
 
         guard let tag = try context.fetch(request).first,
-              let domainTag = tag.map(to: Domain.Tag.self)
+            let domainTag = tag.map(to: Domain.Tag.self)
         else {
             return nil
         }
@@ -33,13 +33,17 @@ class CoreDataTagQuery: NSObject {
     // MARK: - Methods
 
     private func setupQuery(for context: NSManagedObjectContext) {
-        NotificationCenter.default.removeObserver(self,
-                                                  name: Notification.Name.NSManagedObjectContextObjectsDidChange,
-                                                  object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(contextDidChangeNotification(notification:)),
-                                               name: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
-                                               object: context)
+        NotificationCenter.default.removeObserver(
+            self,
+            name: Notification.Name.NSManagedObjectContextObjectsDidChange,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(contextDidChangeNotification(notification:)),
+            name: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
+            object: context
+        )
     }
 
     @objc
@@ -48,14 +52,14 @@ class CoreDataTagQuery: NSObject {
         context.perform { [weak self] in
             guard let self = self else { return }
             if let objects = notification.userInfo?[NSDeletedObjectsKey] as? Set<NSManagedObject>,
-               objects.compactMap({ $0 as? Tag }).contains(where: { $0.objectID == self.objectId })
+                objects.compactMap({ $0 as? Tag }).contains(where: { $0.objectID == self.objectId })
             {
                 self.subject.send(completion: .finished)
                 return
             }
             if let objects = notification.userInfo?[NSRefreshedObjectsKey] as? Set<NSManagedObject>,
-               let object = objects.compactMap({ $0 as? Tag }).first(where: { $0.objectID == self.objectId }),
-               let tag = object.map(to: Domain.Tag.self)
+                let object = objects.compactMap({ $0 as? Tag }).first(where: { $0.objectID == self.objectId }),
+                let tag = object.map(to: Domain.Tag.self)
             {
                 self.subject.send(tag)
                 return

@@ -66,27 +66,37 @@ final class LazyImageLoader: ObservableObject {
 
         cancel()
 
-        let request = ImageRequest(resize: .init(size: thumbnailSize, scale: context.displayScale), cacheKey: context.cacheInfo.key, diskCacheInvalidate: { [context, thumbnailSize] pixelSize in
-            if let originalImageSize = context.cacheInfo.originalImageSize {
-                return ThumbnailInvalidationChecker.shouldInvalidateDiskCache(originalImageSizeInPoint: originalImageSize,
-                                                                              thumbnailSizeInPoint: thumbnailSize,
-                                                                              diskCacheSizeInPixel: pixelSize,
-                                                                              displayScale: context.displayScale)
-            } else {
-                return false
-            }
-        }, context.data)
+        let request = ImageRequest(
+            resize: .init(size: thumbnailSize, scale: context.displayScale),
+            cacheKey: context.cacheInfo.key,
+            diskCacheInvalidate: { [context, thumbnailSize] pixelSize in
+                if let originalImageSize = context.cacheInfo.originalImageSize {
+                    return ThumbnailInvalidationChecker.shouldInvalidateDiskCache(
+                        originalImageSizeInPoint: originalImageSize,
+                        thumbnailSizeInPoint: thumbnailSize,
+                        diskCacheSizeInPixel: pixelSize,
+                        displayScale: context.displayScale
+                    )
+                } else {
+                    return false
+                }
+            },
+            context.data
+        )
         cancellable = context.imageProcessingQueue.loadImage(request) { [context, thumbnailSize, weak self] response in
             if let response {
                 guard context.cacheInfo.key == self?.context?.cacheInfo.key else { return }
 
                 if response.source == .memoryCache, let originalImageSize = context.cacheInfo.originalImageSize {
-                    if ThumbnailInvalidationChecker.shouldInvalidateMemoryCache(originalImageSizeInPoint: originalImageSize,
-                                                                                thumbnailSizeInPoint: thumbnailSize,
-                                                                                memoryCacheSizeInPixel: .init(width: response.image.size.width,
-                                                                                                              height: response.image.size.height),
-                                                                                displayScale: context.displayScale)
-                    {
+                    if ThumbnailInvalidationChecker.shouldInvalidateMemoryCache(
+                        originalImageSizeInPoint: originalImageSize,
+                        thumbnailSizeInPoint: thumbnailSize,
+                        memoryCacheSizeInPixel: .init(
+                            width: response.image.size.width,
+                            height: response.image.size.height
+                        ),
+                        displayScale: context.displayScale
+                    ) {
                         context.imageProcessingQueue.config.memoryCache.remove(forKey: context.cacheInfo.key)
                         self?.load(thumbnailSize: thumbnailSize)
                     }
@@ -126,10 +136,11 @@ public struct LazyImage<Content>: View where Content: View {
 
     private let data: () async -> Data?
 
-    public init<C, P>(data: @escaping () async -> Data?,
-                      @ViewBuilder content: @escaping (Image?) -> C,
-                      @ViewBuilder placeholder: @escaping () -> P) where C: View, P: View, Content == _ConditionalContent<C, P>
-    {
+    public init<C, P>(
+        data: @escaping () async -> Data?,
+        @ViewBuilder content: @escaping (Image?) -> C,
+        @ViewBuilder placeholder: @escaping () -> P
+    ) where C: View, P: View, Content == _ConditionalContent<C, P> {
         self.data = data
         self.content = { result in
             switch result {
@@ -167,22 +178,25 @@ public struct LazyImage<Content>: View where Content: View {
     }
 
     private func context() -> LazyImageLoader.Context {
-        return .init(data: data,
-                     cacheInfo: cacheInfo,
-                     displayScale: displayScale,
-                     imageProcessingQueue: imageProcessingQueue)
+        return .init(
+            data: data,
+            cacheInfo: cacheInfo,
+            displayScale: displayScale,
+            imageProcessingQueue: imageProcessingQueue
+        )
     }
 }
 
 @available(iOS 17, macOS 14, *)
 private enum ThumbnailInvalidationChecker {
-    fileprivate static func shouldInvalidateDiskCache(originalImageSizeInPoint: CGSize,
-                                                      thumbnailSizeInPoint: CGSize,
-                                                      diskCacheSizeInPixel: CGSize,
-                                                      displayScale: CGFloat) -> Bool
-    {
+    fileprivate static func shouldInvalidateDiskCache(
+        originalImageSizeInPoint: CGSize,
+        thumbnailSizeInPoint: CGSize,
+        diskCacheSizeInPixel: CGSize,
+        displayScale: CGFloat
+    ) -> Bool {
         if originalImageSizeInPoint.width <= thumbnailSizeInPoint.width,
-           originalImageSizeInPoint.height <= thumbnailSizeInPoint.height
+            originalImageSizeInPoint.height <= thumbnailSizeInPoint.height
         {
             return false
         }
@@ -196,13 +210,14 @@ private enum ThumbnailInvalidationChecker {
         return result
     }
 
-    fileprivate static func shouldInvalidateMemoryCache(originalImageSizeInPoint: CGSize,
-                                                        thumbnailSizeInPoint: CGSize,
-                                                        memoryCacheSizeInPixel: CGSize,
-                                                        displayScale: CGFloat) -> Bool
-    {
+    fileprivate static func shouldInvalidateMemoryCache(
+        originalImageSizeInPoint: CGSize,
+        thumbnailSizeInPoint: CGSize,
+        memoryCacheSizeInPixel: CGSize,
+        displayScale: CGFloat
+    ) -> Bool {
         if originalImageSizeInPoint.width <= thumbnailSizeInPoint.width,
-           originalImageSizeInPoint.height <= thumbnailSizeInPoint.height
+            originalImageSizeInPoint.height <= thumbnailSizeInPoint.height
         {
             return false
         }
@@ -223,8 +238,8 @@ private struct LazyImageCacheInfoKey: EnvironmentKey {
 }
 
 @available(iOS 17, macOS 14, *)
-public extension EnvironmentValues {
-    var lazyImageCacheInfo: LazyImageCacheInfo {
+extension EnvironmentValues {
+    public var lazyImageCacheInfo: LazyImageCacheInfo {
         get { self[LazyImageCacheInfoKey.self] }
         set { self[LazyImageCacheInfoKey.self] = newValue }
     }

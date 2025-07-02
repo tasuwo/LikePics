@@ -47,12 +47,13 @@ class ClipItemInformationViewController: UIViewController {
 
     // MARK: - Initializers
 
-    init(state: ClipItemInformationViewState,
-         siteUrlEditAlertState: TextEditAlertState,
-         dependency: ClipItemInformationViewDependency,
-         transitioningController: ClipItemInformationTransitioningControllable,
-         modalRouter: ModalRouter)
-    {
+    init(
+        state: ClipItemInformationViewState,
+        siteUrlEditAlertState: TextEditAlertState,
+        dependency: ClipItemInformationViewDependency,
+        transitioningController: ClipItemInformationTransitioningControllable,
+        modalRouter: ModalRouter
+    ) {
         self.store = Store(initialState: state, dependency: dependency, reducer: ClipItemInformationViewReducer())
         self.siteUrlEditAlert = .init(state: siteUrlEditAlertState)
         self.transitioningController = transitioningController
@@ -161,10 +162,12 @@ extension ClipItemInformationViewController {
             // セルの描画が崩れることがあるため、バックグラウンドスレッドから更新する
             .receive(on: snapshotQueue)
             .sink { [weak self] state in
-                let information = Layout.Information(clip: state.clip,
-                                                     tags: state.tags.orderedFilteredEntities(),
-                                                     albums: state.albums.orderedFilteredEntities(),
-                                                     item: state.item)
+                let information = Layout.Information(
+                    clip: state.clip,
+                    tags: state.tags.orderedFilteredEntities(),
+                    albums: state.albums.orderedFilteredEntities(),
+                    item: state.item
+                )
                 self?.informationView.setInfo(information, animated: true)
             }
             .store(in: &subscriptions)
@@ -208,9 +211,11 @@ extension ClipItemInformationViewController {
 
     private func presentErrorMessageAlertIfNeeded(message: String?) {
         let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        })
+        alert.addAction(
+            .init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
+                self?.store.execute(.alertDismissed)
+            }
+        )
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -399,8 +404,10 @@ extension ClipItemInformationViewController: ClipItemInformationPresenting {
     // MARK: - ClipItemInformationPresenting
 
     func clipItem(_ animator: ClipItemInformationAnimator) -> InfoViewingClipItem? {
-        return .init(clipId: store.stateValue.clipId,
-                     itemId: store.stateValue.itemId)
+        return .init(
+            clipId: store.stateValue.clipId,
+            itemId: store.stateValue.itemId
+        )
     }
 
     func clipInformationView(_ animator: ClipItemInformationAnimator) -> ClipItemInformationView? {

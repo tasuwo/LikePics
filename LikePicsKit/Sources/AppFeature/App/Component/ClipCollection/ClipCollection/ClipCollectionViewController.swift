@@ -63,18 +63,20 @@ class ClipCollectionViewController: UIViewController {
 
     // MARK: - Initializers
 
-    init(state: ClipCollectionViewRootState,
-         dependency: ClipCollectionViewRootDependency,
-         thumbnailProcessingQueue: ImageProcessingQueue,
-         menuBuilder: ClipCollectionMenuBuildable,
-         modalRouter: ModalRouter,
-         appBundle: Bundle)
-    {
+    init(
+        state: ClipCollectionViewRootState,
+        dependency: ClipCollectionViewRootDependency,
+        thumbnailProcessingQueue: ImageProcessingQueue,
+        menuBuilder: ClipCollectionMenuBuildable,
+        modalRouter: ModalRouter,
+        appBundle: Bundle
+    ) {
         self.thumbnailProcessingQueue = thumbnailProcessingQueue
         self.menuBuilder = menuBuilder
         self.imageQueryService = dependency.imageQueryService
         self.rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipCollectionViewRootReducer)
-        self.store = rootStore
+        self.store =
+            rootStore
             .proxy(RootState.clipsMapping, RootAction.clipsMapping)
             .eraseToAnyStoring()
         self.appBundle = appBundle
@@ -304,31 +306,47 @@ extension ClipCollectionViewController {
 
     private func presentErrorMessageAlertIfNeeded(message: String?) {
         let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        })
+        alert.addAction(
+            .init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
+                self?.store.execute(.alertDismissed)
+            }
+        )
         self.presentingAlert = alert
         self.present(alert, animated: true, completion: nil)
     }
 
     private func presentPurgeAlert(for clip: Clip) {
         guard let indexPath = dataSource.indexPath(for: .init(clip)),
-              let cell = collectionView.cellForItem(at: indexPath)
+            let cell = collectionView.cellForItem(at: indexPath)
         else {
             store.execute(.alertDismissed)
             return
         }
 
-        let alert = UIAlertController(title: nil,
-                                      message: L10n.clipsListAlertForPurgeMessage,
-                                      preferredStyle: .actionSheet)
+        let alert = UIAlertController(
+            title: nil,
+            message: L10n.clipsListAlertForPurgeMessage,
+            preferredStyle: .actionSheet
+        )
 
-        alert.addAction(.init(title: L10n.clipsListAlertForPurgeAction, style: .destructive, handler: { [weak self] _ in
-            self?.store.execute(.alertPurgeConfirmed)
-        }))
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        }))
+        alert.addAction(
+            .init(
+                title: L10n.clipsListAlertForPurgeAction,
+                style: .destructive,
+                handler: { [weak self] _ in
+                    self?.store.execute(.alertPurgeConfirmed)
+                }
+            )
+        )
+        alert.addAction(
+            .init(
+                title: L10n.confirmAlertCancel,
+                style: .cancel,
+                handler: { [weak self] _ in
+                    self?.store.execute(.alertDismissed)
+                }
+            )
+        )
 
         alert.popoverPresentationController?.sourceView = collectionView
         alert.popoverPresentationController?.sourceRect = cell.frame
@@ -339,23 +357,37 @@ extension ClipCollectionViewController {
 
     private func presentDeletionAlert(for clip: Clip) {
         guard let indexPath = dataSource.indexPath(for: .init(clip)),
-              let cell = collectionView.cellForItem(at: indexPath)
+            let cell = collectionView.cellForItem(at: indexPath)
         else {
             store.execute(.alertDismissed)
             return
         }
 
-        let alert = UIAlertController(title: nil,
-                                      message: L10n.clipsListAlertForDeleteMessage,
-                                      preferredStyle: .actionSheet)
+        let alert = UIAlertController(
+            title: nil,
+            message: L10n.clipsListAlertForDeleteMessage,
+            preferredStyle: .actionSheet
+        )
 
         let title = L10n.clipsListAlertForDeleteAction(1)
-        alert.addAction(.init(title: title, style: .destructive, handler: { [weak self] _ in
-            self?.store.execute(.alertDeleteConfirmed)
-        }))
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        }))
+        alert.addAction(
+            .init(
+                title: title,
+                style: .destructive,
+                handler: { [weak self] _ in
+                    self?.store.execute(.alertDeleteConfirmed)
+                }
+            )
+        )
+        alert.addAction(
+            .init(
+                title: L10n.confirmAlertCancel,
+                style: .cancel,
+                handler: { [weak self] _ in
+                    self?.store.execute(.alertDismissed)
+                }
+            )
+        )
 
         alert.popoverPresentationController?.sourceView = collectionView
         alert.popoverPresentationController?.sourceRect = cell.frame
@@ -366,23 +398,37 @@ extension ClipCollectionViewController {
 
     private func presentRemoveFromAlbumAlert(for clip: Clip) {
         guard let indexPath = dataSource.indexPath(for: .init(clip)),
-              let cell = collectionView.cellForItem(at: indexPath)
+            let cell = collectionView.cellForItem(at: indexPath)
         else {
             store.execute(.alertDismissed)
             return
         }
 
-        let alert = UIAlertController(title: nil,
-                                      message: L10n.clipsListAlertForRemoveFromAlbumMessage,
-                                      preferredStyle: .actionSheet)
+        let alert = UIAlertController(
+            title: nil,
+            message: L10n.clipsListAlertForRemoveFromAlbumMessage,
+            preferredStyle: .actionSheet
+        )
 
         let title = L10n.clipsListAlertForRemoveFromAlbumAction(1)
-        alert.addAction(.init(title: title, style: .destructive, handler: { [weak self] _ in
-            self?.store.execute(.alertRemoveFromAlbumConfirmed)
-        }))
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        }))
+        alert.addAction(
+            .init(
+                title: title,
+                style: .destructive,
+                handler: { [weak self] _ in
+                    self?.store.execute(.alertRemoveFromAlbumConfirmed)
+                }
+            )
+        )
+        alert.addAction(
+            .init(
+                title: L10n.confirmAlertCancel,
+                style: .cancel,
+                handler: { [weak self] _ in
+                    self?.store.execute(.alertDismissed)
+                }
+            )
+        )
 
         alert.popoverPresentationController?.sourceView = collectionView
         alert.popoverPresentationController?.sourceRect = cell.frame
@@ -394,7 +440,7 @@ extension ClipCollectionViewController {
     private func presentShareAlert(for clip: Clip, imageIds: [ImageContainer.Identity]) {
         let items = imageIds.map { ClipItemImageShareItem(imageId: $0, imageQueryService: imageQueryService) }
         guard let indexPath = dataSource.indexPath(for: .init(clip)),
-              let cell = collectionView.cellForItem(at: indexPath)
+            let cell = collectionView.cellForItem(at: indexPath)
         else {
             store.execute(.alertDismissed)
             return
@@ -523,12 +569,14 @@ extension ClipCollectionViewController {
 
 extension ClipCollectionViewController {
     private func configureComponents() {
-        let navigationBarStore: ClipCollectionNavigationBarController.Store = rootStore
+        let navigationBarStore: ClipCollectionNavigationBarController.Store =
+            rootStore
             .proxy(RootState.navigationBarMapping, RootAction.navigationBarMapping)
             .eraseToAnyStoring()
         navigationBarController = ClipCollectionNavigationBarController(store: navigationBarStore)
 
-        let toolBarStore: ClipCollectionToolBarController.Store = rootStore
+        let toolBarStore: ClipCollectionToolBarController.Store =
+            rootStore
             .proxy(RootState.toolBarMapping, RootAction.toolBarMapping)
             .eraseToAnyStoring()
         toolBarController = ClipCollectionToolBarController(store: toolBarStore, imageQueryService: imageQueryService)
@@ -557,13 +605,17 @@ extension ClipCollectionViewController {
 
     private func configureDataSource() {
         collectionView.delegate = self
-        dataSource = Layout.configureDataSource(store: store,
-                                                collectionView: collectionView,
-                                                thumbnailProcessingQueue: thumbnailProcessingQueue,
-                                                imageQueryService: imageQueryService)
-        selectionApplier = UICollectionViewSelectionLazyApplier(collectionView: collectionView,
-                                                                dataSource: dataSource,
-                                                                itemBuilder: { .init($0) })
+        dataSource = Layout.configureDataSource(
+            store: store,
+            collectionView: collectionView,
+            thumbnailProcessingQueue: thumbnailProcessingQueue,
+            imageQueryService: imageQueryService
+        )
+        selectionApplier = UICollectionViewSelectionLazyApplier(
+            collectionView: collectionView,
+            dataSource: dataSource,
+            itemBuilder: { .init($0) }
+        )
 
         // カスタムレイアウトとPreloadの相性が悪い？poolが解放されずに残ってしまうので、一旦無効にする
         // preLoader = .init(dataSource: dataSource, thumbnailLoader: thumbnailLoader)
@@ -627,9 +679,11 @@ extension ClipCollectionViewController {
 
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         guard let item = dataSource.itemIdentifier(for: indexPath), !isEditing else { return nil }
-        return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath,
-                                          previewProvider: nil,
-                                          actionProvider: self.makeActionProvider(for: item.clip, at: indexPath))
+        return UIContextMenuConfiguration(
+            identifier: indexPath as NSIndexPath,
+            previewProvider: nil,
+            actionProvider: self.makeActionProvider(for: item.clip, at: indexPath)
+        )
     }
 
     func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
@@ -685,61 +739,69 @@ extension ClipCollectionViewController {
     private func makeElement(from item: ClipCollection.MenuItem, for clip: Clip, at indexPath: IndexPath) -> UIMenuElement {
         switch item {
         case .addTag:
-            return UIAction(title: L10n.clipsListContextMenuAddTag,
-                            image: UIImage(systemName: "tag.fill"))
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.clipsListContextMenuAddTag,
+                image: UIImage(systemName: "tag.fill")
+            ) { [weak self] _ in
                 self?.store.execute(.tagAdditionMenuTapped(clip.id))
             }
 
         case .addToAlbum:
-            return UIAction(title: L10n.clipsListContextMenuAddToAlbum,
-                            image: UIImage(systemName: "rectangle.stack.fill.badge.plus"))
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.clipsListContextMenuAddToAlbum,
+                image: UIImage(systemName: "rectangle.stack.fill.badge.plus")
+            ) { [weak self] _ in
                 self?.store.execute(.albumAdditionMenuTapped(clip.id))
             }
 
         case .reveal:
-            return UIAction(title: L10n.clipsListContextMenuReveal,
-                            image: UIImage(systemName: "eye.fill"))
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.clipsListContextMenuReveal,
+                image: UIImage(systemName: "eye.fill")
+            ) { [weak self] _ in
                 self?.store.execute(.revealMenuTapped(clip.id))
             }
 
         case .hide:
-            return UIAction(title: L10n.clipsListContextMenuHide,
-                            image: UIImage(systemName: "eye.slash.fill"))
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.clipsListContextMenuHide,
+                image: UIImage(systemName: "eye.slash.fill")
+            ) { [weak self] _ in
                 self?.store.execute(.hideMenuTapped(clip.id))
             }
 
         case .removeFromAlbum:
-            return UIAction(title: L10n.clipsListContextMenuRemoveFromAlbum,
-                            image: UIImage(systemName: "trash.fill"),
-                            attributes: .destructive)
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.clipsListContextMenuRemoveFromAlbum,
+                image: UIImage(systemName: "trash.fill"),
+                attributes: .destructive
+            ) { [weak self] _ in
                 self?.store.execute(.removeFromAlbumMenuTapped(clip.id))
             }
 
         case .delete:
-            return UIAction(title: L10n.clipsListContextMenuDelete,
-                            image: UIImage(systemName: "trash.fill"),
-                            attributes: .destructive)
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.clipsListContextMenuDelete,
+                image: UIImage(systemName: "trash.fill"),
+                attributes: .destructive
+            ) { [weak self] _ in
                 self?.store.execute(.deleteMenuTapped(clip.id))
             }
 
         case .share:
-            return UIAction(title: L10n.clipsListContextMenuShare,
-                            image: UIImage(systemName: "square.and.arrow.up.fill"))
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.clipsListContextMenuShare,
+                image: UIImage(systemName: "square.and.arrow.up.fill")
+            ) { [weak self] _ in
                 self?.store.execute(.shareMenuTapped(clip.id))
             }
 
         case .purge:
-            return UIAction(title: L10n.clipsListContextMenuPurge,
-                            image: UIImage(systemName: "scissors"),
-                            attributes: .destructive)
-            { [weak self] _ in
+            return UIAction(
+                title: L10n.clipsListContextMenuPurge,
+                image: UIImage(systemName: "scissors"),
+                attributes: .destructive
+            ) { [weak self] _ in
                 self?.store.execute(.purgeMenuTapped(clip.id))
             }
         }
@@ -785,7 +847,8 @@ extension ClipCollectionViewController: ClipPreviewPresentingViewController {
 
     func previewingCell(id: ClipPreviewPresentableCellIdentifier, needsScroll: Bool) -> ClipPreviewPresentableCell? {
         guard let clip = store.stateValue.clips.entity(having: id.clipId),
-              let indexPath = dataSource.indexPath(for: .init(clip)) else { return nil }
+            let indexPath = dataSource.indexPath(for: .init(clip))
+        else { return nil }
 
         if needsScroll {
             // セルが画面外だとインスタンスを取り出せないので、表示する
@@ -797,7 +860,8 @@ extension ClipCollectionViewController: ClipPreviewPresentingViewController {
 
     func displayPreviewingCell(id: ClipPreviewPresentableCellIdentifier) {
         guard let clip = store.stateValue.clips.entity(having: id.clipId),
-              let indexPath = dataSource.indexPath(for: .init(clip)) else { return }
+            let indexPath = dataSource.indexPath(for: .init(clip))
+        else { return }
 
         // collectionViewのみでなくviewも再描画しないとセルの座標系がおかしくなる
         // また、scrollToItem呼び出し前に一度再描画しておかないと、正常にスクロールができないケースがある
@@ -866,12 +930,14 @@ extension ClipCollectionViewController: Restorable {
         presentingAlert?.dismiss(animated: false, completion: nil)
         toolBarController.presentingAlert?.dismiss(animated: false, completion: nil)
 
-        return ClipCollectionViewController(state: nextState,
-                                            dependency: rootStore.dependency,
-                                            thumbnailProcessingQueue: thumbnailProcessingQueue,
-                                            menuBuilder: menuBuilder,
-                                            modalRouter: modalRouter,
-                                            appBundle: appBundle)
+        return ClipCollectionViewController(
+            state: nextState,
+            dependency: rootStore.dependency,
+            thumbnailProcessingQueue: thumbnailProcessingQueue,
+            menuBuilder: menuBuilder,
+            modalRouter: modalRouter,
+            appBundle: appBundle
+        )
     }
 }
 

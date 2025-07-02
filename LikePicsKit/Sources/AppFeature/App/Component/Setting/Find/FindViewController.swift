@@ -44,11 +44,12 @@ class FindViewController: UIViewController {
 
     private let modalRouter: ModalRouter
 
-    init(webView: WKWebView,
-         state: FindViewState,
-         dependency: FindViewDependency,
-         modalRouter: ModalRouter)
-    {
+    init(
+        webView: WKWebView,
+        state: FindViewState,
+        dependency: FindViewDependency,
+        modalRouter: ModalRouter
+    ) {
         self.webView = webView
         self.store = Store(initialState: state, dependency: dependency, reducer: FindViewReducer())
         self.modalRouter = modalRouter
@@ -56,10 +57,11 @@ class FindViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
-    convenience init(state: FindViewState,
-                     dependency: FindViewDependency,
-                     modalRouter: ModalRouter)
-    {
+    convenience init(
+        state: FindViewState,
+        dependency: FindViewDependency,
+        modalRouter: ModalRouter
+    ) {
         let webView = WKWebView()
 
         // HACK: Twitterが見られなくなってしまう問題への対応
@@ -162,9 +164,12 @@ extension FindViewController {
             .bind(\.modal) { [weak self] modal in self?.presentModalIfNeeded(for: modal) }
             .store(in: &subscriptions)
 
-        let closeItem = UIBarButtonItem(systemItem: .close, primaryAction: .init(handler: { [weak self] _ in
-            self?.dismiss(animated: true)
-        }))
+        let closeItem = UIBarButtonItem(
+            systemItem: .close,
+            primaryAction: .init(handler: { [weak self] _ in
+                self?.dismiss(animated: true)
+            })
+        )
         navigationItem.setLeftBarButtonItems([closeItem], animated: false)
     }
 
@@ -208,7 +213,7 @@ extension FindViewController {
             webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            webView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            webView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
 
         webView.uiDelegate = self
@@ -219,7 +224,7 @@ extension FindViewController {
         view.addSubview(progressBar)
         NSLayoutConstraint.activate([
             progressBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            progressBar.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor)
+            progressBar.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
         ])
     }
 
@@ -230,45 +235,62 @@ extension FindViewController {
     }
 
     private func configureBarButtons() {
-        reloadButton = UIBarButtonItem(title: nil,
-                                       image: UIImage(systemName: "arrow.clockwise"),
-                                       primaryAction: .init(handler: { [weak self] _ in
-                                           self?.webView.reload()
-                                       }), menu: nil)
+        reloadButton = UIBarButtonItem(
+            title: nil,
+            image: UIImage(systemName: "arrow.clockwise"),
+            primaryAction: .init(handler: { [weak self] _ in
+                self?.webView.reload()
+            }),
+            menu: nil
+        )
 
-        cancelButton = UIBarButtonItem(title: nil,
-                                       image: UIImage(systemName: "xmark"),
-                                       primaryAction: .init(handler: { [weak self] _ in
-                                           self?.webView.stopLoading()
-                                       }), menu: nil)
+        cancelButton = UIBarButtonItem(
+            title: nil,
+            image: UIImage(systemName: "xmark"),
+            primaryAction: .init(handler: { [weak self] _ in
+                self?.webView.stopLoading()
+            }),
+            menu: nil
+        )
 
-        goForwardButton = UIBarButtonItem(title: nil,
-                                          image: UIImage(systemName: "chevron.right"),
-                                          primaryAction: .init(handler: { [weak self] _ in
-                                              self?.webView.goForward()
-                                          }), menu: nil)
+        goForwardButton = UIBarButtonItem(
+            title: nil,
+            image: UIImage(systemName: "chevron.right"),
+            primaryAction: .init(handler: { [weak self] _ in
+                self?.webView.goForward()
+            }),
+            menu: nil
+        )
 
-        goBackButton = UIBarButtonItem(title: nil,
-                                       image: UIImage(systemName: "chevron.left"),
-                                       primaryAction: .init(handler: { [weak self] _ in
-                                           self?.webView.goBack()
-                                       }), menu: nil)
+        goBackButton = UIBarButtonItem(
+            title: nil,
+            image: UIImage(systemName: "chevron.left"),
+            primaryAction: .init(handler: { [weak self] _ in
+                self?.webView.goBack()
+            }),
+            menu: nil
+        )
 
-        clipButton = UIBarButtonItem(title: nil,
-                                     image: UIImage(systemName: "paperclip"),
-                                     primaryAction: .init(handler: { [weak self] _ in self?.store.execute(.tapClip) }),
-                                     menu: nil)
+        clipButton = UIBarButtonItem(
+            title: nil,
+            image: UIImage(systemName: "paperclip"),
+            primaryAction: .init(handler: { [weak self] _ in self?.store.execute(.tapClip) }),
+            menu: nil
+        )
 
         flexibleItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 
         navigationItem.setRightBarButtonItems([reloadButton], animated: true)
-        setToolbarItems([
-            goBackButton,
-            flexibleItem,
-            clipButton,
-            flexibleItem,
-            goForwardButton
-        ], animated: false)
+        setToolbarItems(
+            [
+                goBackButton,
+                flexibleItem,
+                clipButton,
+                flexibleItem,
+                goForwardButton,
+            ],
+            animated: false
+        )
 
         navigationController?.setNavigationBarHidden(false, animated: false)
         navigationController?.setToolbarHidden(false, animated: false)
@@ -280,7 +302,7 @@ extension FindViewController: WKUIDelegate {
 
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         guard let targetFrame = navigationAction.targetFrame,
-              targetFrame.isMainFrame
+            targetFrame.isMainFrame
         else {
             webView.load(navigationAction.request)
             return nil
@@ -334,9 +356,11 @@ extension FindViewController: Restorable {
     // MARK: - Restorable
 
     func restore() -> RestorableViewController {
-        return FindViewController(webView: webView,
-                                  state: store.stateValue,
-                                  dependency: store.dependency,
-                                  modalRouter: modalRouter)
+        return FindViewController(
+            webView: webView,
+            state: store.stateValue,
+            dependency: store.dependency,
+            modalRouter: modalRouter
+        )
     }
 }

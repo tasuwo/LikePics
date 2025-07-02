@@ -80,9 +80,10 @@ class ClipPreviewPageTransitionController: NSObject,
 
     // MARK: - Initializers
 
-    init(previewTransitioningController: ClipPreviewTransitioningControllable,
-         informationTransitionController: ClipItemInformationTransitioningControllable)
-    {
+    init(
+        previewTransitioningController: ClipPreviewTransitioningControllable,
+        informationTransitionController: ClipItemInformationTransitioningControllable
+    ) {
         self.previewTransitioningController = previewTransitioningController
         self.informationTransitioningController = informationTransitionController
 
@@ -140,12 +141,12 @@ class ClipPreviewPageTransitionController: NSObject,
             context = .init(id: id, destination: .back)
 
         case (.ended, .back),
-             (.cancelled, .back),
-             (.failed, .back),
-             (.recognized, .back):
+            (.cancelled, .back),
+            (.failed, .back),
+            (.recognized, .back):
             guard let context = context,
-                  context.destination == .back,
-                  previewTransitioningController.isLocked(by: context.id)
+                context.destination == .back,
+                previewTransitioningController.isLocked(by: context.id)
             else {
                 return
             }
@@ -158,8 +159,8 @@ class ClipPreviewPageTransitionController: NSObject,
 
         case (.changed, .back):
             guard let context = context,
-                  context.destination == .back,
-                  previewTransitioningController.isLocked(by: context.id)
+                context.destination == .back,
+                previewTransitioningController.isLocked(by: context.id)
             else {
                 return
             }
@@ -175,12 +176,12 @@ class ClipPreviewPageTransitionController: NSObject,
             context = .init(id: id, destination: .information)
 
         case (.ended, .information),
-             (.cancelled, .information),
-             (.failed, .information),
-             (.recognized, .information):
+            (.cancelled, .information),
+            (.failed, .information),
+            (.recognized, .information):
             guard let context = context,
-                  context.destination == .information,
-                  previewTransitioningController.isLocked(by: context.id)
+                context.destination == .information,
+                previewTransitioningController.isLocked(by: context.id)
             else {
                 return
             }
@@ -192,8 +193,8 @@ class ClipPreviewPageTransitionController: NSObject,
 
         case (.changed, .information):
             guard let context = context,
-                  context.destination == .information,
-                  previewTransitioningController.isLocked(by: context.id)
+                context.destination == .information,
+                previewTransitioningController.isLocked(by: context.id)
             else {
                 return
             }
@@ -202,7 +203,7 @@ class ClipPreviewPageTransitionController: NSObject,
             }
 
         case (.possible, .back),
-             (.possible, .information):
+            (.possible, .information):
             break
 
         case (_, .none):

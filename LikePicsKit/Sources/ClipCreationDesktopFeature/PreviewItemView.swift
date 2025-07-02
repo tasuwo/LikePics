@@ -24,8 +24,8 @@ struct PreviewItemView: View {
     }
 }
 
-private extension String {
-    func labelBoundingRect(with font: NSFont) -> CGRect {
+extension String {
+    fileprivate func labelBoundingRect(with font: NSFont) -> CGRect {
         let attributes: [NSAttributedString.Key: Any] = [.font: font]
         let options: NSString.DrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading]
         let rect = self.boundingRect(with: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), options: options, attributes: attributes, context: nil)
@@ -33,8 +33,8 @@ private extension String {
     }
 }
 
-private extension Font {
-    var nsFont: NSFont {
+extension Font {
+    fileprivate var nsFont: NSFont {
         switch self {
         case .largeTitle: NSFont.preferredFont(forTextStyle: .largeTitle)
         case .title: NSFont.preferredFont(forTextStyle: .title1)

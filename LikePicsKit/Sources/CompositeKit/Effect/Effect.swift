@@ -40,11 +40,13 @@ public class Effect<Action: CompositeKit.Action> {
     }
 }
 
-public extension Effect {
-    func map<T: CompositeKit.Action>(_ transform: @escaping (Action?) -> T?) -> Effect<T> {
-        .init(id: id,
-              publisher: upstream.map({ transform($0) }).eraseToAnyPublisher(),
-              underlying: underlyingObject,
-              completeWith: transform(actionAtCompleted))
+extension Effect {
+    public func map<T: CompositeKit.Action>(_ transform: @escaping (Action?) -> T?) -> Effect<T> {
+        .init(
+            id: id,
+            publisher: upstream.map({ transform($0) }).eraseToAnyPublisher(),
+            underlying: underlyingObject,
+            completeWith: transform(actionAtCompleted)
+        )
     }
 }

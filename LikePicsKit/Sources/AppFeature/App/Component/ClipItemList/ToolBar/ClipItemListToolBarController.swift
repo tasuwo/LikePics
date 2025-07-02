@@ -40,10 +40,11 @@ class ClipItemListToolBarController {
 
     // MARK: - Initializers
 
-    init(store: Store,
-         siteUrlEditAlertState: TextEditAlertState,
-         imageQueryService: ImageQueryServiceProtocol)
-    {
+    init(
+        store: Store,
+        siteUrlEditAlertState: TextEditAlertState,
+        imageQueryService: ImageQueryServiceProtocol
+    ) {
         self.store = store
         self.siteUrlEditAlert = .init(state: siteUrlEditAlertState)
         self.imageQueryService = imageQueryService
@@ -97,28 +98,36 @@ extension ClipItemListToolBarController {
                 store.execute(.alertDismissed)
                 return
             }
-            siteUrlEditAlert.present(with: "",
-                                     validator: { text in
-                                         guard let text = text else { return false }
-                                         return text.isEmpty == false
-                                             && URL(string: text) != nil
-                                     },
-                                     on: viewController)
+            siteUrlEditAlert.present(
+                with: "",
+                validator: { text in
+                    guard let text = text else { return false }
+                    return text.isEmpty == false
+                        && URL(string: text) != nil
+                },
+                on: viewController
+            )
         }
     }
 
     private func presentAlertForDelete(targetCount: Int) {
-        let alert = UIAlertController(title: nil,
-                                      message: L10n.alertForDeleteClipItemsMessage,
-                                      preferredStyle: .actionSheet)
+        let alert = UIAlertController(
+            title: nil,
+            message: L10n.alertForDeleteClipItemsMessage,
+            preferredStyle: .actionSheet
+        )
 
         let title = L10n.alertForDeleteClipItemsAction(targetCount)
-        alert.addAction(.init(title: title, style: .destructive) { [weak self] _ in
-            self?.store.execute(.alertDeleteConfirmed)
-        })
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel) { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        })
+        alert.addAction(
+            .init(title: title, style: .destructive) { [weak self] _ in
+                self?.store.execute(.alertDeleteConfirmed)
+            }
+        )
+        alert.addAction(
+            .init(title: L10n.confirmAlertCancel, style: .cancel) { [weak self] _ in
+                self?.store.execute(.alertDismissed)
+            }
+        )
 
         alert.popoverPresentationController?.barButtonItem = deleteItem
 

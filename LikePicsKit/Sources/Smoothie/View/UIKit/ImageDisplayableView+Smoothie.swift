@@ -15,13 +15,13 @@ public func cancelLoadImage(on view: ImageDisplayableView) {
     ImageLoadTaskController.associatingInstance(to: view)?.cancelLoadImage()
 }
 
-public extension Smoothie where Base: UIImageView {
+extension Smoothie where Base: UIImageView {
     @MainActor
-    func loadImage(_ request: ImageRequest, with processingQueue: ImageProcessingQueue, completion: ((ImageResponse?) -> Void)? = nil) {
+    public func loadImage(_ request: ImageRequest, with processingQueue: ImageProcessingQueue, completion: ((ImageResponse?) -> Void)? = nil) {
         ImageLoadTaskController.associateInstance(to: base).loadImage(request, with: processingQueue, completion: completion)
     }
 
-    func cancelLoadImage() {
+    public func cancelLoadImage() {
         ImageLoadTaskController.associatingInstance(to: base)?.cancelLoadImage()
     }
 }

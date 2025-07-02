@@ -10,11 +10,11 @@ public protocol AlbumMultiSelectionModalRouter {
     func showAlbumMultiSelectionModal(id: UUID, selections: Set<Album.Identity>) -> Bool
 }
 
-public extension ModalNotification.Name {
-    static let albumMultiSelectionModalDidSelect = ModalNotification.Name("net.tasuwo.TBox.AlbumMultiSelectionModalReducer.albumMultiSelectionModalDidSelect")
-    static let albumMultiSelectionModalDidDismiss = ModalNotification.Name("net.tasuwo.TBox.AlbumMultiSelectionModalReducer.albumMultiSelectionModalDidDismiss")
+extension ModalNotification.Name {
+    public static let albumMultiSelectionModalDidSelect = ModalNotification.Name("net.tasuwo.TBox.AlbumMultiSelectionModalReducer.albumMultiSelectionModalDidSelect")
+    public static let albumMultiSelectionModalDidDismiss = ModalNotification.Name("net.tasuwo.TBox.AlbumMultiSelectionModalReducer.albumMultiSelectionModalDidDismiss")
 }
 
-public extension ModalNotification.UserInfoKey {
-    static let selectedAlbums = ModalNotification.UserInfoKey("net.tasuwo.TBox.AlbumMultiSelectionModalReducer.selectedAlbumIds")
+extension ModalNotification.UserInfoKey {
+    public static let selectedAlbums = ModalNotification.UserInfoKey("net.tasuwo.TBox.AlbumMultiSelectionModalReducer.selectedAlbumIds")
 }

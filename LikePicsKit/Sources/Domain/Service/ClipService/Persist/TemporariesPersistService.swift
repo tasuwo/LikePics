@@ -22,14 +22,15 @@ public class TemporariesPersistService {
 
     // MARK: - Lifecycle
 
-    public init(temporaryClipStorage: TemporaryClipStorageProtocol,
-                temporaryImageStorage: TemporaryImageStorageProtocol,
-                clipStorage: ClipStorageProtocol,
-                referenceClipStorage: ReferenceClipStorageProtocol,
-                imageStorage: ImageStorageProtocol,
-                commandQueue: StorageCommandQueue,
-                lock: NSRecursiveLock)
-    {
+    public init(
+        temporaryClipStorage: TemporaryClipStorageProtocol,
+        temporaryImageStorage: TemporaryImageStorageProtocol,
+        clipStorage: ClipStorageProtocol,
+        referenceClipStorage: ReferenceClipStorageProtocol,
+        imageStorage: ImageStorageProtocol,
+        commandQueue: StorageCommandQueue,
+        lock: NSRecursiveLock
+    ) {
         self.temporaryClipStorage = temporaryClipStorage
         self.temporaryImageStorage = temporaryImageStorage
         self.clipStorage = clipStorage

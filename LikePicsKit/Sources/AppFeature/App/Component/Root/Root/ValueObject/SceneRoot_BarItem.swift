@@ -2,8 +2,8 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-public extension SceneRoot {
-    enum BarItem: Int, CaseIterable {
+extension SceneRoot {
+    public enum BarItem: Int, CaseIterable {
         case top
         case search
         case tags

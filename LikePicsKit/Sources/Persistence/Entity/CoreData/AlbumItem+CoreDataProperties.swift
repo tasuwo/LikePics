@@ -6,16 +6,16 @@
 import CoreData
 import Foundation
 
-public extension AlbumItem {
+extension AlbumItem {
     @nonobjc
-    class func fetchRequest() -> NSFetchRequest<AlbumItem> {
+    public class func fetchRequest() -> NSFetchRequest<AlbumItem> {
         return NSFetchRequest<AlbumItem>(entityName: "AlbumItem")
     }
 
-    @NSManaged var id: UUID?
-    @NSManaged var index: Int64
-    @NSManaged var album: Album?
-    @NSManaged var clip: Clip?
+    @NSManaged public var id: UUID?
+    @NSManaged public var index: Int64
+    @NSManaged public var album: Album?
+    @NSManaged public var clip: Clip?
 }
 
 extension AlbumItem: Identifiable {

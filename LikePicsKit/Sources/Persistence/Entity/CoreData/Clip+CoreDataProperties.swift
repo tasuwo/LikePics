@@ -6,70 +6,70 @@
 import CoreData
 import Foundation
 
-public extension Clip {
+extension Clip {
     @nonobjc
-    class func fetchRequest() -> NSFetchRequest<Clip> {
+    public class func fetchRequest() -> NSFetchRequest<Clip> {
         return NSFetchRequest<Clip>(entityName: "Clip")
     }
 
-    @NSManaged var createdDate: Date?
-    @NSManaged var descriptionText: String?
-    @NSManaged var id: UUID?
-    @NSManaged var imagesSize: Int64
-    @NSManaged var isHidden: Bool
-    @NSManaged var itemsCount: Int64
-    @NSManaged var updatedDate: Date?
-    @NSManaged var albumItem: NSSet?
-    @NSManaged var clipItems: NSSet?
-    @NSManaged var tags: NSSet?
+    @NSManaged public var createdDate: Date?
+    @NSManaged public var descriptionText: String?
+    @NSManaged public var id: UUID?
+    @NSManaged public var imagesSize: Int64
+    @NSManaged public var isHidden: Bool
+    @NSManaged public var itemsCount: Int64
+    @NSManaged public var updatedDate: Date?
+    @NSManaged public var albumItem: NSSet?
+    @NSManaged public var clipItems: NSSet?
+    @NSManaged public var tags: NSSet?
 }
 
 // MARK: Generated accessors for albumItem
 
-public extension Clip {
+extension Clip {
     @objc(addAlbumItemObject:)
-    @NSManaged func addToAlbumItem(_ value: AlbumItem)
+    @NSManaged public func addToAlbumItem(_ value: AlbumItem)
 
     @objc(removeAlbumItemObject:)
-    @NSManaged func removeFromAlbumItem(_ value: AlbumItem)
+    @NSManaged public func removeFromAlbumItem(_ value: AlbumItem)
 
     @objc(addAlbumItem:)
-    @NSManaged func addToAlbumItem(_ values: NSSet)
+    @NSManaged public func addToAlbumItem(_ values: NSSet)
 
     @objc(removeAlbumItem:)
-    @NSManaged func removeFromAlbumItem(_ values: NSSet)
+    @NSManaged public func removeFromAlbumItem(_ values: NSSet)
 }
 
 // MARK: Generated accessors for clipItems
 
-public extension Clip {
+extension Clip {
     @objc(addClipItemsObject:)
-    @NSManaged func addToClipItems(_ value: Item)
+    @NSManaged public func addToClipItems(_ value: Item)
 
     @objc(removeClipItemsObject:)
-    @NSManaged func removeFromClipItems(_ value: Item)
+    @NSManaged public func removeFromClipItems(_ value: Item)
 
     @objc(addClipItems:)
-    @NSManaged func addToClipItems(_ values: NSSet)
+    @NSManaged public func addToClipItems(_ values: NSSet)
 
     @objc(removeClipItems:)
-    @NSManaged func removeFromClipItems(_ values: NSSet)
+    @NSManaged public func removeFromClipItems(_ values: NSSet)
 }
 
 // MARK: Generated accessors for tags
 
-public extension Clip {
+extension Clip {
     @objc(addTagsObject:)
-    @NSManaged func addToTags(_ value: Tag)
+    @NSManaged public func addToTags(_ value: Tag)
 
     @objc(removeTagsObject:)
-    @NSManaged func removeFromTags(_ value: Tag)
+    @NSManaged public func removeFromTags(_ value: Tag)
 
     @objc(addTags:)
-    @NSManaged func addToTags(_ values: NSSet)
+    @NSManaged public func addToTags(_ values: NSSet)
 
     @objc(removeTags:)
-    @NSManaged func removeFromTags(_ values: NSSet)
+    @NSManaged public func removeFromTags(_ values: NSSet)
 }
 
 extension Clip: Identifiable {

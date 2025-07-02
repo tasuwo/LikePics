@@ -3,10 +3,11 @@
 //
 
 import Common
+import XCTest
+
 @testable import Domain
 @testable import Persistence
 @testable import TestHelper
-import XCTest
 
 class ClipReferencesIntegrityValidationServiceTest: XCTestCase {
     var service: ClipReferencesIntegrityValidationService!
@@ -18,10 +19,12 @@ class ClipReferencesIntegrityValidationServiceTest: XCTestCase {
         clipStorage = ClipStorageProtocolMock()
         referenceClipStorage = ReferenceClipStorageProtocolMock()
         queue = StorageCommandQueueMock()
-        service = ClipReferencesIntegrityValidationService(clipStorage: clipStorage,
-                                                           referenceClipStorage: referenceClipStorage,
-                                                           commandQueue: queue,
-                                                           lock: NSRecursiveLock())
+        service = ClipReferencesIntegrityValidationService(
+            clipStorage: clipStorage,
+            referenceClipStorage: referenceClipStorage,
+            commandQueue: queue,
+            lock: NSRecursiveLock()
+        )
 
         queue.syncHandler = { $0() }
         queue.syncBlockHandler = { try $0() }
@@ -250,11 +253,14 @@ class ClipReferencesIntegrityValidationServiceTest: XCTestCase {
             return .success([])
         }
         referenceClipStorage.deleteTagsHandler = { tagIds in
-            XCTAssertEqual(Set(tagIds), Set([
-                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E50")!,
-                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
-                UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!
-            ]))
+            XCTAssertEqual(
+                Set(tagIds),
+                Set([
+                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E50")!,
+                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E52")!,
+                    UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E54")!,
+                ])
+            )
             return .success(())
         }
 

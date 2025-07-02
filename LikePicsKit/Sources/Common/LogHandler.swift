@@ -8,7 +8,7 @@ public enum LogHandler {
     public static let common = OSLog(subsystem: "net.tasuwo.TBox", category: "common")
     public static let service = OSLog(subsystem: "net.tasuwo.TBox", category: "service")
     public static let storage = OSLog(subsystem: "net.tasuwo.TBox", category: "storage")
-    public static let transition: OSLog = // 頻繁に表示されるので、検証時のみオンにする
+    public static let transition: OSLog =  // 頻繁に表示されるので、検証時のみオンにする
         // return OSLog(subsystem: "net.tasuwo.TBox", category: "transition")
         .disabled
 

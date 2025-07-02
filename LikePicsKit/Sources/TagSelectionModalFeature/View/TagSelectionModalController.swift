@@ -36,10 +36,11 @@ public class TagSelectionModalController: UIViewController {
 
     // MARK: - Initializers
 
-    public init(state: TagSelectionModalState,
-                tagAdditionAlertState: TextEditAlertState,
-                dependency: TagSelectionModalDependency)
-    {
+    public init(
+        state: TagSelectionModalState,
+        tagAdditionAlertState: TextEditAlertState,
+        dependency: TagSelectionModalDependency
+    ) {
         self.store = .init(initialState: state, dependency: dependency, reducer: TagSelectionModalReducer())
         self.tagAdditionAlert = .init(state: tagAdditionAlertState)
         super.init(nibName: nil, bundle: nil)
@@ -163,9 +164,11 @@ extension TagSelectionModalController {
 
     private func presentErrorMessageAlertIfNeeded(message: String?) {
         let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        })
+        alert.addAction(
+            .init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
+                self?.store.execute(.alertDismissed)
+            }
+        )
         self.present(alert, animated: true, completion: nil)
     }
 }
@@ -183,7 +186,7 @@ extension TagSelectionModalController {
         NSLayoutConstraint.activate([
             searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             searchBar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            searchBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+            searchBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
         ])
 
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: Layout.createLayout())
@@ -194,16 +197,18 @@ extension TagSelectionModalController {
             collectionView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
 
         emptyMessageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(emptyMessageView)
         NSLayoutConstraint.activate(emptyMessageView.constraints(fittingIn: view.safeAreaLayoutGuide))
 
-        let quickAddButton = UIButton(primaryAction: .init { [weak self] _ in
-            self?.store.execute(.quickAddButtonTapped)
-        })
+        let quickAddButton = UIButton(
+            primaryAction: .init { [weak self] _ in
+                self?.store.execute(.quickAddButtonTapped)
+            }
+        )
         var configuration = UIButton.Configuration.plain()
         configuration.title = ""
         quickAddButton.configuration = configuration
@@ -239,12 +244,20 @@ extension TagSelectionModalController {
     private func configureNavigationBar() {
         navigationItem.title = L10n.tagSelectionViewTitle
 
-        let addItem = UIBarButtonItem(systemItem: .add, primaryAction: .init(handler: { [weak self] _ in
-            self?.store.execute(.addButtonTapped)
-        }), menu: nil)
-        let saveItem = UIBarButtonItem(systemItem: .save, primaryAction: .init(handler: { [weak self] _ in
-            self?.store.execute(.saveButtonTapped)
-        }), menu: nil)
+        let addItem = UIBarButtonItem(
+            systemItem: .add,
+            primaryAction: .init(handler: { [weak self] _ in
+                self?.store.execute(.addButtonTapped)
+            }),
+            menu: nil
+        )
+        let saveItem = UIBarButtonItem(
+            systemItem: .save,
+            primaryAction: .init(handler: { [weak self] _ in
+                self?.store.execute(.saveButtonTapped)
+            }),
+            menu: nil
+        )
         [addItem, saveItem].forEach {
             // HACK: ShareExtentionだと、tintColorがテキスト色にうまく反映されないケースがあるので、ここで反映する
             $0.setTitleTextAttributes([.foregroundColor: Asset.Color.likePicsRed.color], for: .normal)
@@ -304,11 +317,13 @@ extension TagSelectionModalController: UICollectionViewDelegateFlowLayout {
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return .zero }
-        return TagCollectionViewCell.preferredSize(title: item.tag.name,
-                                                   clipCount: item.tag.clipCount,
-                                                   isHidden: item.tag.isHidden,
-                                                   visibleCountIfPossible: !store.stateValue.isSomeItemsHidden,
-                                                   visibleDeleteButton: false)
+        return TagCollectionViewCell.preferredSize(
+            title: item.tag.name,
+            clipCount: item.tag.clipCount,
+            isHidden: item.tag.isHidden,
+            visibleCountIfPossible: !store.stateValue.isSomeItemsHidden,
+            visibleDeleteButton: false
+        )
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {

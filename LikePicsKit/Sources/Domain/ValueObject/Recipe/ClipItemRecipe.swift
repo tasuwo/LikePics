@@ -21,18 +21,19 @@ public struct ClipItemRecipe {
     // MARK: - Lifecycle
 
     // sourcery: AutoDefaultValueUseThisInitializer
-    public init(id: UUID,
-                url: URL?,
-                clipId: Clip.Identity,
-                clipIndex: Int,
-                imageId: UUID,
-                imageFileName: String,
-                imageUrl: URL?,
-                imageSize: ImageSize,
-                imageDataSize: Int,
-                registeredDate: Date,
-                updatedDate: Date)
-    {
+    public init(
+        id: UUID,
+        url: URL?,
+        clipId: Clip.Identity,
+        clipIndex: Int,
+        imageId: UUID,
+        imageFileName: String,
+        imageUrl: URL?,
+        imageSize: ImageSize,
+        imageDataSize: Int,
+        registeredDate: Date,
+        updatedDate: Date
+    ) {
         self.id = id
         self.url = url
         self.clipId = clipId

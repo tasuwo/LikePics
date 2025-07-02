@@ -68,8 +68,10 @@ extension SearchResultViewLayout {
     }
 
     private static func createSearchResultsSection(environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: .fractionalHeight(1.0))
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(1.0)
+        )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
         let count: Int = {
@@ -84,8 +86,10 @@ extension SearchResultViewLayout {
                 return 5
             }
         }()
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .fractionalWidth(1 / CGFloat(count)))
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalWidth(1 / CGFloat(count))
+        )
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: count)
         group.interItemSpacing = .fixed(12)
 
@@ -106,14 +110,17 @@ extension SearchResultViewLayout {
 
 extension SearchResultViewLayout {
     @MainActor
-    static func createDataSource(_ collectionView: UICollectionView,
-                                 _ thumbnailProcessingQueue: ImageProcessingQueue,
-                                 _ imageQueryService: ImageQueryServiceProtocol,
-                                 seeAllButtonHandler: @escaping () -> Void) -> DataSource
-    {
+    static func createDataSource(
+        _ collectionView: UICollectionView,
+        _ thumbnailProcessingQueue: ImageProcessingQueue,
+        _ imageQueryService: ImageQueryServiceProtocol,
+        seeAllButtonHandler: @escaping () -> Void
+    ) -> DataSource {
         let candidateCellRegistration = self.configureCandidateCell()
-        let resultCellRegistration = self.configureResultCell(thumbnailProcessingQueue: thumbnailProcessingQueue,
-                                                              imageQueryService: imageQueryService)
+        let resultCellRegistration = self.configureResultCell(
+            thumbnailProcessingQueue: thumbnailProcessingQueue,
+            imageQueryService: imageQueryService
+        )
 
         let dataSource: DataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
             switch item {
@@ -159,8 +166,10 @@ extension SearchResultViewLayout {
             seeAllButton.setTitle(L10n.searchResultSeeAllButton, for: .normal)
             seeAllButton.addAction(.init(handler: { _ in seeAllButtonHandler() }), for: .touchUpInside)
 
-            let seeMoreButtonConfiguration = UICellAccessory.CustomViewConfiguration(customView: seeAllButton,
-                                                                                     placement: .trailing(displayed: .always))
+            let seeMoreButtonConfiguration = UICellAccessory.CustomViewConfiguration(
+                customView: seeAllButton,
+                placement: .trailing(displayed: .always)
+            )
 
             cell.accessories = [
                 .customView(configuration: seeMoreButtonConfiguration)
@@ -173,13 +182,14 @@ extension SearchResultViewLayout {
     }
 
     @MainActor
-    private static func configureResultCell(thumbnailProcessingQueue: ImageProcessingQueue,
-                                            imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<SearchResultClipCell, Clip>
-    {
+    private static func configureResultCell(
+        thumbnailProcessingQueue: ImageProcessingQueue,
+        imageQueryService: ImageQueryServiceProtocol
+    ) -> UICollectionView.CellRegistration<SearchResultClipCell, Clip> {
         return .init(cellNib: SearchResultClipCell.nib) { [weak thumbnailProcessingQueue, weak imageQueryService] cell, _, clip in
             guard let processingQueue = thumbnailProcessingQueue,
-                  let imageQueryService = imageQueryService,
-                  let item = clip.primaryItem
+                let imageQueryService = imageQueryService,
+                let item = clip.primaryItem
             else {
                 cell.imageView.image = nil
                 return

@@ -69,22 +69,25 @@ class ClipPreviewPageViewController: UIPageViewController {
 
     // MARK: - Initializers
 
-    init(state: ClipPreviewPageViewRootState,
-         dependency: ClipPreviewPageViewRootDependency,
-         factory: ViewControllerFactory,
-         previewPrefetcher: PreviewPrefetchable,
-         transitionDispatcher: ClipPreviewPageTransitionDispatcherType,
-         itemListTransitionController: ClipItemListTransitioningControllable,
-         modalRouter: ModalRouter,
-         appBundle: Bundle)
-    {
+    init(
+        state: ClipPreviewPageViewRootState,
+        dependency: ClipPreviewPageViewRootDependency,
+        factory: ViewControllerFactory,
+        previewPrefetcher: PreviewPrefetchable,
+        transitionDispatcher: ClipPreviewPageTransitionDispatcherType,
+        itemListTransitionController: ClipItemListTransitioningControllable,
+        modalRouter: ModalRouter,
+        appBundle: Bundle
+    ) {
         let rootStore = RootStore(initialState: state, dependency: dependency, reducer: clipPreviewPageViewRootReducer)
         self.rootStore = rootStore
 
-        self.store = rootStore
+        self.store =
+            rootStore
             .proxy(RootState.mappingToPage, RootAction.pageMapping)
             .eraseToAnyStoring()
-        let barStore: ClipPreviewPageBarController.Store = rootStore
+        let barStore: ClipPreviewPageBarController.Store =
+            rootStore
             .proxy(RootState.mappingToBar, RootAction.barMapping)
             .eraseToAnyStoring()
         self.barController = ClipPreviewPageBarController(store: barStore, imageQueryService: dependency.imageQueryService)
@@ -240,16 +243,21 @@ extension ClipPreviewPageViewController {
 
     private func changePageIfNeeded(for state: ClipPreviewPageViewState) {
         guard let nextItem = state.currentItem,
-              currentViewController?.itemId != nextItem.id,
-              let viewController = factory.makeClipPreviewViewController(for: nextItem)
+            currentViewController?.itemId != nextItem.id,
+            let viewController = factory.makeClipPreviewViewController(for: nextItem)
         else {
             return
         }
         let direction = state.pageChange?.navigationDirection ?? .forward
 
-        setViewControllers([viewController], direction: direction, animated: state.isPageAnimated, completion: { _ in
-            self.didChangePage(to: viewController)
-        })
+        setViewControllers(
+            [viewController],
+            direction: direction,
+            animated: state.isPageAnimated,
+            completion: { _ in
+                self.didChangePage(to: viewController)
+            }
+        )
     }
 
     private func didChangePage(to viewController: ClipPreviewViewController) {
@@ -284,9 +292,11 @@ extension ClipPreviewPageViewController {
 
     private func presentErrorMessageAlertIfNeeded(message: String?) {
         let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        })
+        alert.addAction(
+            .init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
+                self?.store.execute(.alertDismissed)
+            }
+        )
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -323,10 +333,12 @@ extension ClipPreviewPageViewController {
             }
             .store(in: &modalSubscriptions)
 
-        let succeeded = modalRouter.showClipItemListModal(id: id,
-                                                          clipId: clip.id,
-                                                          clipItems: clip.items,
-                                                          transitioningController: itemListTransitionController)
+        let succeeded = modalRouter.showClipItemListModal(
+            id: id,
+            clipId: clip.id,
+            clipItems: clip.items,
+            transitioningController: itemListTransitionController
+        )
         if !succeeded {
             modalSubscriptions.removeAll()
             store.execute(.modalCompleted(false))
@@ -494,11 +506,14 @@ extension ClipPreviewPageViewController: ClipPreviewPresenting {
 
     func previewingClipItem(_ animator: ClipPreviewAnimator) -> PreviewingClipItem? {
         guard let clip = store.stateValue.currentClip,
-              let item = store.stateValue.currentItem else { return nil }
-        return .init(clipId: clip.id,
-                     itemId: item.id,
-                     imageSize: item.imageSize,
-                     isItemPrimary: clip.items.first == item)
+            let item = store.stateValue.currentItem
+        else { return nil }
+        return .init(
+            clipId: clip.id,
+            itemId: item.id,
+            imageSize: item.imageSize,
+            isItemPrimary: clip.items.first == item
+        )
     }
 
     func previewView(_ animator: ClipPreviewAnimator) -> ClipPreviewView? {
@@ -520,11 +535,14 @@ extension ClipPreviewPageViewController: ClipItemListPresentable {
 
     func previewingClipItem(_ animator: ClipItemListAnimator) -> PreviewingClipItem? {
         guard let clip = store.stateValue.currentClip,
-              let item = store.stateValue.currentItem else { return nil }
-        return .init(clipId: clip.id,
-                     itemId: item.id,
-                     imageSize: item.imageSize,
-                     isItemPrimary: clip.items.first == item)
+            let item = store.stateValue.currentItem
+        else { return nil }
+        return .init(
+            clipId: clip.id,
+            itemId: item.id,
+            imageSize: item.imageSize,
+            isItemPrimary: clip.items.first == item
+        )
     }
 
     func previewView(_ animator: ClipItemListAnimator) -> ClipPreviewView? {

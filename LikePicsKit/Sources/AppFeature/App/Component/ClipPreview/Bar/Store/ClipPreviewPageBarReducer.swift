@@ -58,12 +58,12 @@ struct ClipPreviewPageBarReducer: Reducer {
         // MARK: Bar Button
 
         case .backButtonTapped,
-             .listButtonTapped,
-             .infoButtonTapped,
-             .browseButtonTapped,
-             .playButtonTapped,
-             .pauseButtonTapped,
-             .playConfigButtonTapped:
+            .listButtonTapped,
+            .infoButtonTapped,
+            .browseButtonTapped,
+            .playButtonTapped,
+            .pauseButtonTapped,
+            .playConfigButtonTapped:
             // 画面遷移中であった場合、ボタン操作は無視する
             guard dependency.transitionLock.isFree else { return (nextState, .none) }
             return (nextState, .none)
@@ -95,11 +95,11 @@ struct ClipPreviewPageBarReducer: Reducer {
         // MARK: Alert Completion
 
         case .alertDeleteClipConfirmed,
-             .alertDeleteClipItemConfirmed,
-             .alertTagAdditionConfirmed,
-             .alertAlbumAdditionConfirmed,
-             .alertShareDismissed,
-             .alertDismissed:
+            .alertDeleteClipItemConfirmed,
+            .alertTagAdditionConfirmed,
+            .alertAlbumAdditionConfirmed,
+            .alertShareDismissed,
+            .alertDismissed:
             nextState.alert = nil
             return (nextState, .none)
 
@@ -119,8 +119,8 @@ struct ClipPreviewPageBarReducer: Reducer {
     }
 }
 
-private extension ClipPreviewPageBarState {
-    func updatingAppearance() -> Self {
+extension ClipPreviewPageBarState {
+    fileprivate func updatingAppearance() -> Self {
         var nextState = self
 
         if nextState.isFullscreen {
@@ -150,7 +150,7 @@ private extension ClipPreviewPageBarState {
                 .init(kind: .add, isEnabled: true),
                 .init(kind: .list, isEnabled: true),
                 .init(kind: .share, isEnabled: true),
-                .init(kind: .delete, isEnabled: true)
+                .init(kind: .delete, isEnabled: true),
             ]
         } else {
             nextState.toolBarItems = [
@@ -158,7 +158,7 @@ private extension ClipPreviewPageBarState {
                 .init(kind: .add, isEnabled: true),
                 .init(kind: .list, isEnabled: true),
                 .init(kind: .share, isEnabled: true),
-                .init(kind: .delete, isEnabled: true)
+                .init(kind: .delete, isEnabled: true),
             ]
             nextState.leftBarButtonItems = [
                 .init(kind: .back, isEnabled: true)
@@ -169,7 +169,7 @@ private extension ClipPreviewPageBarState {
         nextState.optionMenuItems = [
             .info,
             existsUrlAtCurrentItem ? .browse : nil,
-            .playConfig
+            .playConfig,
         ].compactMap { $0 }
 
         return nextState

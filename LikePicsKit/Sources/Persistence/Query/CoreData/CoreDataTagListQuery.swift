@@ -5,6 +5,7 @@
 import Combine
 import CoreData
 import Domain
+
 #if canImport(UIKit)
 import UIKit
 #endif
@@ -46,10 +47,12 @@ class CoreDataTagListQuery: NSObject {
         context.perform { [weak self] in
             guard let self = self else { return }
 
-            self.controller = NSFetchedResultsController(fetchRequest: self.requestFactory(),
-                                                         managedObjectContext: context,
-                                                         sectionNameKeyPath: nil,
-                                                         cacheName: nil)
+            self.controller = NSFetchedResultsController(
+                fetchRequest: self.requestFactory(),
+                managedObjectContext: context,
+                sectionNameKeyPath: nil,
+                cacheName: nil
+            )
             self.controller?.delegate = self
 
             do {
@@ -64,9 +67,10 @@ class CoreDataTagListQuery: NSObject {
 extension CoreDataTagListQuery: NSFetchedResultsControllerDelegate {
     // MARK: - NSFetchedResultsControllerDelegate
 
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
-                    didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference)
-    {
+    func controller(
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+        didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference
+    ) {
         controller.managedObjectContext.perform { [weak self] in
             guard let self = self else { return }
             let tags: [Domain.Tag] = (snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>).itemIdentifiers

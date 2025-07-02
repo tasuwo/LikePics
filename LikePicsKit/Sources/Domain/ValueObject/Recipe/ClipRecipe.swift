@@ -19,16 +19,17 @@ public struct ClipRecipe {
     // MARK: - Lifecycle
 
     // sourcery: AutoDefaultValueUseThisInitializer
-    public init(id: UUID,
-                description: String?,
-                items: [ClipItemRecipe],
-                tagIds: [Tag.Identity],
-                albumIds: Set<Album.Identity>,
-                isHidden: Bool,
-                dataSize: Int,
-                registeredDate: Date,
-                updatedDate: Date)
-    {
+    public init(
+        id: UUID,
+        description: String?,
+        items: [ClipItemRecipe],
+        tagIds: [Tag.Identity],
+        albumIds: Set<Album.Identity>,
+        isHidden: Bool,
+        dataSize: Int,
+        registeredDate: Date,
+        updatedDate: Date
+    ) {
         self.id = id
         self.description = description
         self.items = items

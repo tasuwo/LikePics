@@ -5,6 +5,7 @@
 import ClipCreationFeatureCore
 import Foundation
 import UniformTypeIdentifiers
+
 #if canImport(UIKit)
 import UIKit
 #endif
@@ -19,13 +20,13 @@ extension NSItemProvider {
         }
 
         if hasItemConformingToTypeIdentifier(UTType.url.identifier),
-           let url = try await loadItem(forTypeIdentifier: UTType.url.identifier) as? URL
+            let url = try await loadItem(forTypeIdentifier: UTType.url.identifier) as? URL
         {
             return url.lastPathComponent
         }
 
         if hasItemConformingToTypeIdentifier(UTType.text.identifier),
-           let text = try await loadItem(forTypeIdentifier: UTType.text.identifier) as? String
+            let text = try await loadItem(forTypeIdentifier: UTType.text.identifier) as? String
         {
             return text
         }
@@ -35,13 +36,13 @@ extension NSItemProvider {
 
     public func sharedItem() async throws -> SharedItem? {
         if hasItemConformingToTypeIdentifier(UTType.fileURL.identifier),
-           let url = try await loadItem(forTypeIdentifier: UTType.fileURL.identifier) as? URL
+            let url = try await loadItem(forTypeIdentifier: UTType.fileURL.identifier) as? URL
         {
             return .fileURL(url)
         }
 
         if hasItemConformingToTypeIdentifier(UTType.url.identifier),
-           let url = try await loadItem(forTypeIdentifier: UTType.url.identifier) as? URL
+            let url = try await loadItem(forTypeIdentifier: UTType.url.identifier) as? URL
         {
             switch url.scheme {
             case "file": return .fileURL(url)

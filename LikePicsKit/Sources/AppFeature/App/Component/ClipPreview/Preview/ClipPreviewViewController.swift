@@ -31,12 +31,13 @@ public class ClipPreviewViewController: UIViewController {
 
     // MARK: - Initializers
 
-    public init(state: ClipPreviewViewState,
-                imageQueryService: ImageQueryServiceProtocol,
-                thumbnailMemoryCache: MemoryCaching,
-                thumbnailDiskCache: DiskCaching,
-                processingQueue: ImageProcessingQueue)
-    {
+    public init(
+        state: ClipPreviewViewState,
+        imageQueryService: ImageQueryServiceProtocol,
+        thumbnailMemoryCache: MemoryCaching,
+        thumbnailDiskCache: DiskCaching,
+        processingQueue: ImageProcessingQueue
+    ) {
         self.imageQueryService = imageQueryService
         self.thumbnailMemoryCache = thumbnailMemoryCache
         self.thumbnailDiskCache = thumbnailDiskCache

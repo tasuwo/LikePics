@@ -12,10 +12,11 @@ enum SceneRootViewLayout {
 // MARK: - Initializers
 
 extension SceneRootViewLayout {
-    init(horizontalSizeClass: UIUserInterfaceSizeClass,
-         intent: Intent?,
-         factory: ViewControllerFactory)
-    {
+    init(
+        horizontalSizeClass: UIUserInterfaceSizeClass,
+        intent: Intent?,
+        factory: ViewControllerFactory
+    ) {
         switch horizontalSizeClass {
         case .compact:
             self = .compact(.init(intent: intent, factory: factory))

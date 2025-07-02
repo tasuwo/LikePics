@@ -33,7 +33,7 @@ public class ListSectionBackgroundDecorationView: UICollectionReusableView {
             backgroundView.rightAnchor.constraint(equalTo: rightAnchor),
             backgroundView.leftAnchor.constraint(equalTo: leftAnchor),
             backgroundView.topAnchor.constraint(equalTo: topAnchor),
-            backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
 }

@@ -23,10 +23,11 @@ struct SplitViewHierarchy {
         self.factory = factory
     }
 
-    private init(item: SceneRoot.SideBarItem,
-                 detailViewControllers: [SceneRoot.SideBarItem: RestorableViewController],
-                 factory: ViewControllerFactory)
-    {
+    private init(
+        item: SceneRoot.SideBarItem,
+        detailViewControllers: [SceneRoot.SideBarItem: RestorableViewController],
+        factory: ViewControllerFactory
+    ) {
         self.currentItem = item
         self.detailViewControllers = detailViewControllers
         self.factory = factory
@@ -40,13 +41,16 @@ extension SplitViewHierarchy {
     static func build(from viewHierarchy: TabBarViewHierarchy, by factory: ViewControllerFactory) -> Self {
         let viewControllers = SceneRoot.TabBarItem.allCases.reduce(into: [SceneRoot.SideBarItem: RestorableViewController]()) { dict, item in
             let sideBarItem = item.map(to: SceneRoot.SideBarItem.self)
-            let viewController = viewHierarchy.resolveViewController(at: item)?.restore()
+            let viewController =
+                viewHierarchy.resolveViewController(at: item)?.restore()
                 ?? sideBarItem.makeViewController(from: nil, by: factory)
             dict[sideBarItem] = viewController
         }
-        return .init(item: viewHierarchy.resolveCurrentTabBarItem().map(to: SceneRoot.SideBarItem.self),
-                     detailViewControllers: viewControllers,
-                     factory: factory)
+        return .init(
+            item: viewHierarchy.resolveCurrentTabBarItem().map(to: SceneRoot.SideBarItem.self),
+            detailViewControllers: viewControllers,
+            factory: factory
+        )
     }
 
     func currentDetailViewController() -> UIViewController {
@@ -62,8 +66,10 @@ extension SplitViewHierarchy {
             nextDetailViewControllers[item] = viewController
         }
 
-        return .init(item: item,
-                     detailViewControllers: nextDetailViewControllers,
-                     factory: factory)
+        return .init(
+            item: item,
+            detailViewControllers: nextDetailViewControllers,
+            factory: factory
+        )
     }
 }

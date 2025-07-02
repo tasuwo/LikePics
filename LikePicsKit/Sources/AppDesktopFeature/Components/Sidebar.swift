@@ -27,12 +27,16 @@ struct Sidebar: View {
 
     init(selectedItem: Binding<SidebarItem?>, showHiddenItems: Bool) {
         self._selectedItem = selectedItem
-        _tags = .init(sortDescriptors: [.init(keyPath: \Persistence.Tag.name, ascending: true)],
-                      predicate: showHiddenItems ? nil : NSPredicate(format: "isHidden == false"),
-                      animation: .default)
-        _albums = .init(sortDescriptors: [.init(keyPath: \Persistence.Album.index, ascending: true)],
-                        predicate: showHiddenItems ? nil : NSPredicate(format: "isHidden == false"),
-                        animation: .default)
+        _tags = .init(
+            sortDescriptors: [.init(keyPath: \Persistence.Tag.name, ascending: true)],
+            predicate: showHiddenItems ? nil : NSPredicate(format: "isHidden == false"),
+            animation: .default
+        )
+        _albums = .init(
+            sortDescriptors: [.init(keyPath: \Persistence.Album.index, ascending: true)],
+            predicate: showHiddenItems ? nil : NSPredicate(format: "isHidden == false"),
+            animation: .default
+        )
     }
 
     var body: some View {
@@ -160,16 +164,21 @@ struct Sidebar: View {
                         .nsContextMenu {
                             var items: [NSMenuItem] = []
 
-                            let title = tag.isHidden
+                            let title =
+                                tag.isHidden
                                 ? String(localized: "Show Tag", bundle: .module, comment: "Context Menu")
                                 : String(localized: "Hide Tag", bundle: .module, comment: "Context Menu")
-                            items.append(NSMenuItem(title: title) {
-                                tagEditableViewModel.updateTag(having: tag.id, isHidden: !tag.isHidden, in: context)
-                            })
+                            items.append(
+                                NSMenuItem(title: title) {
+                                    tagEditableViewModel.updateTag(having: tag.id, isHidden: !tag.isHidden, in: context)
+                                }
+                            )
 
-                            items.append(NSMenuItem(title: String(localized: "Delete Tag", bundle: .module, comment: "Context Menu")) {
-                                tagEditableViewModel.requestToDeleteTag(id: tag.id, clipsCount: tag.clipCount ?? 1, in: context)
-                            })
+                            items.append(
+                                NSMenuItem(title: String(localized: "Delete Tag", bundle: .module, comment: "Context Menu")) {
+                                    tagEditableViewModel.requestToDeleteTag(id: tag.id, clipsCount: tag.clipCount ?? 1, in: context)
+                                }
+                            )
 
                             return items
                         }
@@ -206,14 +215,14 @@ struct Sidebar: View {
 
         container.loadPersistentStores { _, _ in }
 
-        (0 ... 20).forEach { index in
+        (0...20).forEach { index in
             let tag = Persistence.Tag(context: container.viewContext)
             tag.id = UUID()
             tag.name = randomTagName()
             tag.isHidden = index % 2 == 0
         }
 
-        (0 ... 6).forEach { index in
+        (0...6).forEach { index in
             let album = Persistence.Album(context: container.viewContext)
             album.id = UUID()
             album.title = randomAlbumName()
@@ -241,12 +250,12 @@ struct Sidebar: View {
 
     func randomTagName() -> String {
         let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        return String((0 ..< Int.random(in: 3 ... 15)).map { _ in letters.randomElement()! })
+        return String((0..<Int.random(in: 3...15)).map { _ in letters.randomElement()! })
     }
 
     func randomAlbumName() -> String {
         let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        return String((0 ..< Int.random(in: 8 ... 15)).map { _ in letters.randomElement()! })
+        return String((0..<Int.random(in: 8...15)).map { _ in letters.randomElement()! })
     }
 
     return PreviewView()

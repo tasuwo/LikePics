@@ -42,8 +42,10 @@ struct AlbumView: View {
                     GeometryReader { geometry in
                         let markSize = min(geometry.size.width / 5, 40)
                         HiddenMark(size: markSize)
-                            .offset(x: geometry.frame(in: .local).maxX - markSize - 12,
-                                    y: geometry.frame(in: .local).maxY - markSize - 12)
+                            .offset(
+                                x: geometry.frame(in: .local).maxX - markSize - 12,
+                                y: geometry.frame(in: .local).maxY - markSize - 12
+                            )
                     }
                     .opacity(album.isHidden ? 1 : 0)
                 }
@@ -103,32 +105,40 @@ struct AlbumView: View {
     }
     UserDefaults.appGroup = UserDefaults(suiteName: "net.tasuwo.TBox.preview")!
 
-    return AlbumView(album: Album(id: UUID(),
-                                  title: "Test Album",
-                                  clips: [
-                                      .init(id: UUID(),
-                                            description: "",
-                                            items: [
-                                                .init(id: UUID(),
-                                                      url: nil,
-                                                      clipId: UUID(),
-                                                      clipIndex: 0,
-                                                      imageId: UUID(),
-                                                      imageFileName: "",
-                                                      imageUrl: nil,
-                                                      imageSize: .init(height: 150, width: 100),
-                                                      imageDataSize: 0,
-                                                      registeredDate: Date(),
-                                                      updatedDate: Date()),
-                                            ],
-                                            isHidden: false,
-                                            dataSize: 0,
-                                            registeredDate: Date(),
-                                            updatedDate: Date())
-                                  ],
-                                  isHidden: false,
-                                  registeredDate: Date(),
-                                  updatedDate: Date()))
-        .padding()
-        .environment(\.imageQueryService, _ImageQueryService())
+    return AlbumView(
+        album: Album(
+            id: UUID(),
+            title: "Test Album",
+            clips: [
+                .init(
+                    id: UUID(),
+                    description: "",
+                    items: [
+                        .init(
+                            id: UUID(),
+                            url: nil,
+                            clipId: UUID(),
+                            clipIndex: 0,
+                            imageId: UUID(),
+                            imageFileName: "",
+                            imageUrl: nil,
+                            imageSize: .init(height: 150, width: 100),
+                            imageDataSize: 0,
+                            registeredDate: Date(),
+                            updatedDate: Date()
+                        )
+                    ],
+                    isHidden: false,
+                    dataSize: 0,
+                    registeredDate: Date(),
+                    updatedDate: Date()
+                )
+            ],
+            isHidden: false,
+            registeredDate: Date(),
+            updatedDate: Date()
+        )
+    )
+    .padding()
+    .environment(\.imageQueryService, _ImageQueryService())
 }

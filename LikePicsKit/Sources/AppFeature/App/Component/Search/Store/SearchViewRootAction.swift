@@ -10,15 +10,23 @@ enum SearchViewRootAction: Action {
 }
 
 extension SearchViewRootAction {
-    static let entryMapping: ActionMapping<Self, SearchEntryViewAction> = .init(build: {
-        .entry($0)
-    }, get: {
-        guard case let .entry(action) = $0 else { return nil }; return action
-    })
+    static let entryMapping: ActionMapping<Self, SearchEntryViewAction> = .init(
+        build: {
+            .entry($0)
+        },
+        get: {
+            guard case let .entry(action) = $0 else { return nil }
+            return action
+        }
+    )
 
-    static let resultMapping: ActionMapping<Self, SearchResultViewAction> = .init(build: {
-        .result($0)
-    }, get: {
-        guard case let .result(action) = $0 else { return nil }; return action
-    })
+    static let resultMapping: ActionMapping<Self, SearchResultViewAction> = .init(
+        build: {
+            .result($0)
+        },
+        get: {
+            guard case let .result(action) = $0 else { return nil }
+            return action
+        }
+    )
 }

@@ -55,7 +55,7 @@ extension ClipItemEditContentView {
             baseView.topAnchor.constraint(equalTo: self.topAnchor),
             baseView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             baseView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            baseView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+            baseView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
         ])
     }
 
@@ -118,17 +118,23 @@ extension ClipItemEditContentView {
             thumbnailHeightConstraint.constant = thumbnailWidthConstraint.constant * 4 / 3
         }
 
-        let siteUrlEditAction = UIAction(identifier: .init("siteUrlEditAction"), handler: { [weak self] _ in
-            guard let self = self, let text = self.siteUrlButton.titleLabel?.text else { return }
-            configuration.delegate?.didTapSiteUrlEditButton(URL(string: text), sender: self)
-        })
+        let siteUrlEditAction = UIAction(
+            identifier: .init("siteUrlEditAction"),
+            handler: { [weak self] _ in
+                guard let self = self, let text = self.siteUrlButton.titleLabel?.text else { return }
+                configuration.delegate?.didTapSiteUrlEditButton(URL(string: text), sender: self)
+            }
+        )
         siteUrlEditButton.removeAction(identifiedBy: .init("siteUrlEditAction"), for: .touchUpInside)
         siteUrlEditButton.addAction(siteUrlEditAction, for: .touchUpInside)
 
-        let siteUrlTapAction = UIAction(identifier: .init("siteUrlTapAction"), handler: { [weak self] _ in
-            guard let self = self, let text = self.siteUrlButton.titleLabel?.text else { return }
-            configuration.delegate?.didTapSiteUrl(URL(string: text), sender: self)
-        })
+        let siteUrlTapAction = UIAction(
+            identifier: .init("siteUrlTapAction"),
+            handler: { [weak self] _ in
+                guard let self = self, let text = self.siteUrlButton.titleLabel?.text else { return }
+                configuration.delegate?.didTapSiteUrl(URL(string: text), sender: self)
+            }
+        )
         siteUrlButton.removeAction(identifiedBy: .init("siteUrlTapAction"), for: .touchUpInside)
         siteUrlButton.addAction(siteUrlTapAction, for: .touchUpInside)
     }

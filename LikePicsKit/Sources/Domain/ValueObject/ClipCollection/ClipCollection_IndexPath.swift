@@ -2,8 +2,8 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-public extension ClipCollection {
-    struct IndexPath: Equatable, Codable {
+extension ClipCollection {
+    public struct IndexPath: Equatable, Codable {
         public let clipIndex: Int
         public let itemIndex: Int
 

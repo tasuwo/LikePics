@@ -47,36 +47,45 @@ extension ClipCollectionViewRootState {
 extension ClipCollectionViewRootState {
     static let clipsMapping: StateMapping<Self, ClipCollectionState> = .init(keyPath: \Self.clipCollectionState)
 
-    static let navigationBarMapping: StateMapping<Self, ClipCollectionNavigationBarState> = .init(get: { parent in
-                                                                                                      .init(source: parent.clipCollectionState.source,
-                                                                                                            layout: parent.clipCollectionState.layout,
-                                                                                                            operation: parent.clipCollectionState.operation,
-                                                                                                            rightItems: parent.navigationBarRightItems,
-                                                                                                            leftItems: parent.navigationBarLeftItems,
-                                                                                                            clipCount: parent.clipCollectionState.clips.filteredIds.count,
-                                                                                                            selectionCount: parent.clipCollectionState.clips.selectedIds.count)
-                                                                                                  },
-                                                                                                  set: { state, parent in
-                                                                                                      var nextParent = parent
-                                                                                                      nextParent.navigationBarRightItems = state.rightItems
-                                                                                                      nextParent.navigationBarLeftItems = state.leftItems
-                                                                                                      return nextParent
-                                                                                                  })
+    static let navigationBarMapping: StateMapping<Self, ClipCollectionNavigationBarState> = .init(
+        get: { parent in
+            .init(
+                source: parent.clipCollectionState.source,
+                layout: parent.clipCollectionState.layout,
+                operation: parent.clipCollectionState.operation,
+                rightItems: parent.navigationBarRightItems,
+                leftItems: parent.navigationBarLeftItems,
+                clipCount: parent.clipCollectionState.clips.filteredIds.count,
+                selectionCount: parent.clipCollectionState.clips.selectedIds.count
+            )
+        },
+        set: { state, parent in
+            var nextParent = parent
+            nextParent.navigationBarRightItems = state.rightItems
+            nextParent.navigationBarLeftItems = state.leftItems
+            return nextParent
+        }
+    )
 
-    static let toolBarMapping: StateMapping<Self, ClipCollectionToolBarState> = .init(get: { parent in
-        .init(source: parent.clipCollectionState.source,
-              operation: parent.clipCollectionState.operation,
-              items: parent.toolBarItems,
-              isHidden: parent.isToolBarHidden,
-              parentState: parent.clipCollectionState,
-              alert: parent.toolBarAlert)
-    }, set: { state, parent in
-        var nextParent = parent
-        nextParent.toolBarItems = state.items
-        nextParent.isToolBarHidden = state.isHidden
-        nextParent.toolBarAlert = state.alert
-        return nextParent
-    })
+    static let toolBarMapping: StateMapping<Self, ClipCollectionToolBarState> = .init(
+        get: { parent in
+            .init(
+                source: parent.clipCollectionState.source,
+                operation: parent.clipCollectionState.operation,
+                items: parent.toolBarItems,
+                isHidden: parent.isToolBarHidden,
+                parentState: parent.clipCollectionState,
+                alert: parent.toolBarAlert
+            )
+        },
+        set: { state, parent in
+            var nextParent = parent
+            nextParent.toolBarItems = state.items
+            nextParent.isToolBarHidden = state.isHidden
+            nextParent.toolBarAlert = state.alert
+            return nextParent
+        }
+    )
 }
 
 // MARK: - Codable

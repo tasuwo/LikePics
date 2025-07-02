@@ -120,11 +120,13 @@ extension AlbumMultiSelectionModalReducer {
             .map { Action.settingUpdated(isSomeItemsHidden: !$0) as Action? }
         let settingsEffect = Effect(settingsStream)
 
-        let nextState = performFilter(albums: query.albums.value,
-                                      searchQuery: state.searchQuery,
-                                      isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
-                                      previousState: state,
-                                      isInitial: true)
+        let nextState = performFilter(
+            albums: query.albums.value,
+            searchQuery: state.searchQuery,
+            isSomeItemsHidden: !dependency.userSettingStorage.readShowHiddenItems(),
+            previousState: state,
+            isInitial: true
+        )
 
         return (nextState, [albumsEffect, settingsEffect])
     }
@@ -133,39 +135,49 @@ extension AlbumMultiSelectionModalReducer {
 // MARK: - Filter
 
 extension AlbumMultiSelectionModalReducer {
-    private static func performFilter(albums: [ListingAlbumTitle],
-                                      previousState: State) -> State
-    {
-        performFilter(albums: albums,
-                      searchQuery: previousState.searchQuery,
-                      isSomeItemsHidden: previousState.isSomeItemsHidden,
-                      previousState: previousState)
+    private static func performFilter(
+        albums: [ListingAlbumTitle],
+        previousState: State
+    ) -> State {
+        performFilter(
+            albums: albums,
+            searchQuery: previousState.searchQuery,
+            isSomeItemsHidden: previousState.isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
-    private static func performFilter(searchQuery: String,
-                                      previousState: State) -> State
-    {
-        performFilter(albums: previousState.albums.orderedEntities(),
-                      searchQuery: searchQuery,
-                      isSomeItemsHidden: previousState.isSomeItemsHidden,
-                      previousState: previousState)
+    private static func performFilter(
+        searchQuery: String,
+        previousState: State
+    ) -> State {
+        performFilter(
+            albums: previousState.albums.orderedEntities(),
+            searchQuery: searchQuery,
+            isSomeItemsHidden: previousState.isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
-    private static func performFilter(isSomeItemsHidden: Bool,
-                                      previousState: State) -> State
-    {
-        performFilter(albums: previousState.albums.orderedEntities(),
-                      searchQuery: previousState.searchQuery,
-                      isSomeItemsHidden: isSomeItemsHidden,
-                      previousState: previousState)
+    private static func performFilter(
+        isSomeItemsHidden: Bool,
+        previousState: State
+    ) -> State {
+        performFilter(
+            albums: previousState.albums.orderedEntities(),
+            searchQuery: previousState.searchQuery,
+            isSomeItemsHidden: isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
-    private static func performFilter(albums: [ListingAlbumTitle],
-                                      searchQuery: String,
-                                      isSomeItemsHidden: Bool,
-                                      previousState: State,
-                                      isInitial: Bool = false) -> State
-    {
+    private static func performFilter(
+        albums: [ListingAlbumTitle],
+        searchQuery: String,
+        isSomeItemsHidden: Bool,
+        previousState: State,
+        isInitial: Bool = false
+    ) -> State {
         var nextState = previousState
         var searchStorage = previousState.searchStorage
 

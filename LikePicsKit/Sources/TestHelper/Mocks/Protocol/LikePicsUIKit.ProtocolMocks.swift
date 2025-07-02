@@ -7,13 +7,14 @@ import Common
 import CoreGraphics
 import Domain
 import Foundation
-@testable import LikePicsUIKit
-import os
 import Smoothie
 import UIKit
+import os
+
+@testable import LikePicsUIKit
 
 public class HasTextValidatorMock: HasTextValidator {
-    public init() { }
+    public init() {}
     public init(textValidator: @escaping (String?) -> Bool) {
         self._textValidator = textValidator
     }
@@ -27,7 +28,7 @@ public class HasTextValidatorMock: HasTextValidator {
 }
 
 public class HasTransitionLockMock: HasTransitionLock {
-    public init() { }
+    public init() {}
     public init(transitionLock: TransitionLock) {
         self._transitionLock = transitionLock
     }

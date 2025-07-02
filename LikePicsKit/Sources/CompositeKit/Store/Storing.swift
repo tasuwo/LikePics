@@ -14,8 +14,8 @@ public protocol Storing {
     func execute(_ action: Action)
 }
 
-public extension Storing {
-    func eraseToAnyStoring() -> AnyStoring<State, Action, Dependency> {
+extension Storing {
+    public func eraseToAnyStoring() -> AnyStoring<State, Action, Dependency> {
         return .init(self)
     }
 }

@@ -119,9 +119,10 @@ extension TagCollectionViewLayout {
         }
     }
 
-    static func configureDataSource(collectionView: UICollectionView,
-                                    uncategorizedCellDelegate: UncategorizedCellDelegate) -> DataSource
-    {
+    static func configureDataSource(
+        collectionView: UICollectionView,
+        uncategorizedCellDelegate: UncategorizedCellDelegate
+    ) -> DataSource {
         let tagCellRegistration = self.configureTagCell()
         let uncategorizedCellRegistration = self.configureUncategorizedCell(delegate: uncategorizedCellDelegate)
 

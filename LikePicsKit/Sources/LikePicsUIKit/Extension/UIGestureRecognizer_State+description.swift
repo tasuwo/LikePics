@@ -4,8 +4,8 @@
 
 import UIKit
 
-public extension UIGestureRecognizer.State {
-    var description: String {
+extension UIGestureRecognizer.State {
+    public var description: String {
         switch self {
         case .possible:
             return "possible"

@@ -4,8 +4,8 @@
 
 import UIKit
 
-public extension UICollectionView {
-    func indexPath(for supplementaryView: UICollectionReusableView?, ofKind kind: String = UICollectionView.elementKindSectionHeader) -> IndexPath? {
+extension UICollectionView {
+    public func indexPath(for supplementaryView: UICollectionReusableView?, ofKind kind: String = UICollectionView.elementKindSectionHeader) -> IndexPath? {
         let elements = self.visibleSupplementaryViews(ofKind: kind)
         let indexPaths = self.indexPathsForVisibleSupplementaryElements(ofKind: kind)
 

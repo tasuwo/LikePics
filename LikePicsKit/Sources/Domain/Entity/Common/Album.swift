@@ -19,13 +19,14 @@ public struct Album: Codable, Equatable, Hashable {
     // MARK: - Lifecycle
 
     // sourcery: AutoDefaultValueUseThisInitializer
-    public init(id: UUID,
-                title: String,
-                clips: [Clip],
-                isHidden: Bool,
-                registeredDate: Date,
-                updatedDate: Date)
-    {
+    public init(
+        id: UUID,
+        title: String,
+        clips: [Clip],
+        isHidden: Bool,
+        registeredDate: Date,
+        updatedDate: Date
+    ) {
         self.id = id
         self.title = title
         self.clips = clips
@@ -39,30 +40,36 @@ public struct Album: Codable, Equatable, Hashable {
     // MARK: - Methods
 
     public func removingHiddenClips() -> Album {
-        return .init(id: self.id,
-                     title: self.title,
-                     clips: self.clips.filter({ !$0.isHidden }),
-                     isHidden: self.isHidden,
-                     registeredDate: self.registeredDate,
-                     updatedDate: self.updatedDate)
+        return .init(
+            id: self.id,
+            title: self.title,
+            clips: self.clips.filter({ !$0.isHidden }),
+            isHidden: self.isHidden,
+            registeredDate: self.registeredDate,
+            updatedDate: self.updatedDate
+        )
     }
 
     public func updatingTitle(to title: String) -> Self {
-        return .init(id: self.id,
-                     title: title,
-                     clips: self.clips,
-                     isHidden: self.isHidden,
-                     registeredDate: self.registeredDate,
-                     updatedDate: self.updatedDate)
+        return .init(
+            id: self.id,
+            title: title,
+            clips: self.clips,
+            isHidden: self.isHidden,
+            registeredDate: self.registeredDate,
+            updatedDate: self.updatedDate
+        )
     }
 
     public func updatingClips(to clips: [Clip]) -> Self {
-        return .init(id: self.id,
-                     title: self.title,
-                     clips: clips,
-                     isHidden: self.isHidden,
-                     registeredDate: self.registeredDate,
-                     updatedDate: self.updatedDate)
+        return .init(
+            id: self.id,
+            title: self.title,
+            clips: clips,
+            isHidden: self.isHidden,
+            registeredDate: self.registeredDate,
+            updatedDate: self.updatedDate
+        )
     }
 }
 

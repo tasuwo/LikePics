@@ -30,7 +30,7 @@ extension TagCollectionMenuBuilder: TagCollectionMenuBuildable {
             tag.isHidden
                 ? .reveal
                 : .hide(immediately: storage.readShowHiddenItems()),
-            .delete
+            .delete,
         ]
     }
 }

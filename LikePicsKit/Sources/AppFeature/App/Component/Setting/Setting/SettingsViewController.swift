@@ -135,9 +135,11 @@ extension SettingsViewController {
     }
 
     private func presentICloudTurnOffConfirmation() {
-        let alertController = UIAlertController(title: L10n.settingsConfirmIcloudSyncOffTitle,
-                                                message: L10n.settingsConfirmIcloudSyncOffMessage,
-                                                preferredStyle: .alert)
+        let alertController = UIAlertController(
+            title: L10n.settingsConfirmIcloudSyncOffTitle,
+            message: L10n.settingsConfirmIcloudSyncOffMessage,
+            preferredStyle: .alert
+        )
         let okAction = UIAlertAction(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
             self?.store.execute(.iCloudTurnOffConfirmed)
         }
@@ -151,9 +153,11 @@ extension SettingsViewController {
     }
 
     private func presentICloudSettingForceTurnOffConfirmation() {
-        let alertController = UIAlertController(title: L10n.errorIcloudUnavailableTitle,
-                                                message: L10n.errorIcloudUnavailableMessage,
-                                                preferredStyle: .alert)
+        let alertController = UIAlertController(
+            title: L10n.errorIcloudUnavailableTitle,
+            message: L10n.errorIcloudUnavailableMessage,
+            preferredStyle: .alert
+        )
         let okAction = UIAlertAction(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
             self?.store.execute(.alertDismissed)
         }
@@ -167,9 +171,11 @@ extension SettingsViewController {
     }
 
     private func presentICloudSettingForceTurnOnConfirmation() {
-        let alertController = UIAlertController(title: L10n.errorIcloudUnavailableTitle,
-                                                message: L10n.errorIcloudUnavailableMessage,
-                                                preferredStyle: .alert)
+        let alertController = UIAlertController(
+            title: L10n.errorIcloudUnavailableTitle,
+            message: L10n.errorIcloudUnavailableMessage,
+            preferredStyle: .alert
+        )
         let okAction = UIAlertAction(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
             self?.store.execute(.alertDismissed)
         }
@@ -183,9 +189,11 @@ extension SettingsViewController {
     }
 
     private func presentClearAllCacheConfirmation() {
-        let alertController = UIAlertController(title: L10n.settingsConfirmClearCacheTitle,
-                                                message: L10n.settingsConfirmClearCacheMessage,
-                                                preferredStyle: .alert)
+        let alertController = UIAlertController(
+            title: L10n.settingsConfirmClearCacheTitle,
+            message: L10n.settingsConfirmClearCacheMessage,
+            preferredStyle: .alert
+        )
         let okAction = UIAlertAction(title: L10n.confirmAlertOk, style: .destructive) { [weak self] _ in
             self?.store.execute(.clearAllCacheConfirmed)
         }
@@ -234,9 +242,11 @@ extension SettingsViewController: Restorable {
 
         // swiftlint:disable:next force_cast
         let viewController = storyBoard.instantiateViewController(identifier: "SettingsViewController") as! SettingsViewController
-        let store = Store(initialState: store.stateValue,
-                          dependency: store.dependency,
-                          reducer: SettingsViewReducer())
+        let store = Store(
+            initialState: store.stateValue,
+            dependency: store.dependency,
+            reducer: SettingsViewReducer()
+        )
         viewController.store = store
         viewController.router = router
         viewController.userSettingsStorage = userSettingsStorage

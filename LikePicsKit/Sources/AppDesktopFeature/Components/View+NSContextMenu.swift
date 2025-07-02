@@ -127,7 +127,7 @@ extension NSMenuItem {
                 },
                 NSMenuItem(title: "Menu 3") {
                     print("Tapped menu 3")
-                }
+                },
             ]
         }
         .padding()

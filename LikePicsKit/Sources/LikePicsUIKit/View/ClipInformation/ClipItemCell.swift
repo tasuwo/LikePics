@@ -22,11 +22,15 @@ extension ClipItemCell: ThumbnailPresentable {
         let baseWidth = frame.width
         if let originalSize = originalPixelSize {
             if originalSize.width < originalSize.height {
-                return .init(width: baseWidth,
-                             height: baseWidth * (originalSize.height / originalSize.width))
+                return .init(
+                    width: baseWidth,
+                    height: baseWidth * (originalSize.height / originalSize.width)
+                )
             } else {
-                return .init(width: baseWidth * (originalSize.width / originalSize.height),
-                             height: baseWidth)
+                return .init(
+                    width: baseWidth * (originalSize.width / originalSize.height),
+                    height: baseWidth
+                )
             }
         } else {
             return .init(width: baseWidth, height: baseWidth)

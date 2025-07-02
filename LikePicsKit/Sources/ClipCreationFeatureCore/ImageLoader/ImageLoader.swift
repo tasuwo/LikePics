@@ -20,7 +20,7 @@ public class ImageLoader {
     private static func image(from url: URL) async throws -> LoadedImage {
         let request: URLRequest
         if let provider = WebImageProviderPreset.resolveProvider(by: url),
-           provider.shouldModifyRequest(for: url)
+            provider.shouldModifyRequest(for: url)
         {
             request = provider.modifyRequest(URLRequest(url: url))
         } else {
@@ -32,7 +32,7 @@ public class ImageLoader {
 
     private static func image(for request: URLRequest, delaySeconds: TimeInterval? = nil, retryCount: Int = 0) async throws -> LoadedImage {
         if let delaySeconds {
-            try await Task.sleep(nanoseconds: UInt64(1000000000 * delaySeconds))
+            try await Task.sleep(nanoseconds: UInt64(1_000_000_000 * delaySeconds))
         }
 
         let (data, response) = try await URLSession.shared.data(for: request)
@@ -41,8 +41,8 @@ public class ImageLoader {
             throw ImageLoaderError.internalError
         }
 
-        guard 200 ..< 300 ~= response.statusCode else {
-            if response.statusCode == 429 || 500 ..< 600 ~= response.statusCode {
+        guard 200..<300 ~= response.statusCode else {
+            if response.statusCode == 429 || 500..<600 ~= response.statusCode {
                 guard retryCount < 5 else {
                     throw ImageLoaderError.tooManyRequest
                 }
@@ -53,7 +53,7 @@ public class ImageLoader {
                 if let retryAfter = response.value(forHTTPHeaderField: "Retry-After").flatMap({ TimeInterval($0) }) {
                     delaySeconds = retryAfter
                 } else {
-                    delaySeconds = pow(2, TimeInterval(nextRetryCount)) + (TimeInterval.random(in: 0 ..< 1000) / 1000)
+                    delaySeconds = pow(2, TimeInterval(nextRetryCount)) + (TimeInterval.random(in: 0..<1000) / 1000)
                 }
 
                 return try await image(for: request, delaySeconds: delaySeconds, retryCount: nextRetryCount)
@@ -63,10 +63,12 @@ public class ImageLoader {
         }
 
         let fileName = resolveFileName(mimeType: response.mimeType, url: request.url!)
-        return LoadedImage(usedUrl: request.url!,
-                           mimeType: response.mimeType,
-                           fileName: fileName,
-                           data: data)
+        return LoadedImage(
+            usedUrl: request.url!,
+            mimeType: response.mimeType,
+            fileName: fileName,
+            data: data
+        )
     }
 
     private static func resolveFileName(mimeType: String?, url: URL) -> String? {
@@ -110,19 +112,23 @@ extension ImageLoader: ImageLoadable {
                 throw ImageLoaderError.internalError
             }
             let fileName = await lazyData.fileName()
-            return .init(usedUrl: nil,
-                         mimeType: nil,
-                         fileName: fileName,
-                         data: data)
+            return .init(
+                usedUrl: nil,
+                mimeType: nil,
+                fileName: fileName,
+                data: data
+            )
 
         case let .fileURL(url):
             guard let data = try? Data(contentsOf: url) else {
                 throw ImageLoaderError.internalError
             }
-            return .init(usedUrl: nil,
-                         mimeType: nil,
-                         fileName: url.lastPathComponent,
-                         data: data)
+            return .init(
+                usedUrl: nil,
+                mimeType: nil,
+                fileName: url.lastPathComponent,
+                data: data
+            )
 
         case let .webURL(urlSet):
             if let alternativeUrl = urlSet.alternativeUrl, let image = try? await Self.image(for: URLRequest(url: alternativeUrl)) {
@@ -142,10 +148,16 @@ extension ImageLoader: ImageLoadable {
                         return
                     }
                     lazyData.resolveFilename { filename in
-                        promise(.success(LoadedImage(usedUrl: nil,
-                                                     mimeType: nil,
-                                                     fileName: filename,
-                                                     data: data)))
+                        promise(
+                            .success(
+                                LoadedImage(
+                                    usedUrl: nil,
+                                    mimeType: nil,
+                                    fileName: filename,
+                                    data: data
+                                )
+                            )
+                        )
                     }
                 }
             }

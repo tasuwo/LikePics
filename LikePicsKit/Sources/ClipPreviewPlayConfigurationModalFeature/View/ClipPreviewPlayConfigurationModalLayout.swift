@@ -39,11 +39,12 @@ extension ClipPreviewPlayConfigurationModalLayout {
 // MARK: - DataSource
 
 extension ClipPreviewPlayConfigurationModalLayout {
-    static func configureDataSource(collectionView: UICollectionView,
-                                    storage: ClipPreviewPlayConfigurationStorageProtocol,
-                                    onUpdateLoop: @escaping (Bool) -> Void,
-                                    onIntervalEdit: @escaping () -> Void) -> DataSource
-    {
+    static func configureDataSource(
+        collectionView: UICollectionView,
+        storage: ClipPreviewPlayConfigurationStorageProtocol,
+        onUpdateLoop: @escaping (Bool) -> Void,
+        onIntervalEdit: @escaping () -> Void
+    ) -> DataSource {
         let cellRegistration = configureCell(storage: storage, onUpdateLoop: onUpdateLoop, onIntervalEdit: onIntervalEdit)
 
         let dataSource: DataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
@@ -53,10 +54,11 @@ extension ClipPreviewPlayConfigurationModalLayout {
         return dataSource
     }
 
-    private static func configureCell(storage: ClipPreviewPlayConfigurationStorageProtocol,
-                                      onUpdateLoop: @escaping (Bool) -> Void,
-                                      onIntervalEdit: @escaping () -> Void) -> UICollectionView.CellRegistration<UICollectionViewListCell, Item>
-    {
+    private static func configureCell(
+        storage: ClipPreviewPlayConfigurationStorageProtocol,
+        onUpdateLoop: @escaping (Bool) -> Void,
+        onIntervalEdit: @escaping () -> Void
+    ) -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
         return UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, _, item in
             var contentConfiguration = UIListContentConfiguration.valueCell()
             contentConfiguration.text = item.displayText
@@ -82,10 +84,13 @@ extension ClipPreviewPlayConfigurationModalLayout {
             case .loop:
                 let `switch` = UISwitch()
                 `switch`.isOn = storage.fetchLoopEnabled()
-                `switch`.addAction(.init(handler: { action in
-                    guard let `switch` = action.sender as? UISwitch else { return }
-                    onUpdateLoop(`switch`.isOn)
-                }), for: .touchUpInside)
+                `switch`.addAction(
+                    .init(handler: { action in
+                        guard let `switch` = action.sender as? UISwitch else { return }
+                        onUpdateLoop(`switch`.isOn)
+                    }),
+                    for: .touchUpInside
+                )
                 let configuration = UICellAccessory.CustomViewConfiguration(customView: `switch`, placement: .trailing(displayed: .always))
                 cell.accessories = [.customView(configuration: configuration)]
 

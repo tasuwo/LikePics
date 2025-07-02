@@ -16,10 +16,12 @@ class ReferenceTagObject: Object {
 
 extension ReferenceTag {
     static func make(by managedObject: ReferenceTagObject) -> ReferenceTag {
-        return .init(id: managedObject.id,
-                     name: managedObject.name,
-                     isHidden: managedObject.isHidden,
-                     clipCount: managedObject.clipCount,
-                     isDirty: managedObject.isDirty)
+        return .init(
+            id: managedObject.id,
+            name: managedObject.name,
+            isHidden: managedObject.isHidden,
+            clipCount: managedObject.clipCount,
+            isDirty: managedObject.isDirty
+        )
     }
 }

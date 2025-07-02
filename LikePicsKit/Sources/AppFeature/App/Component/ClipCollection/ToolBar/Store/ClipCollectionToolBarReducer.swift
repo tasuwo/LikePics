@@ -62,21 +62,21 @@ struct ClipCollectionToolBarReducer: Reducer {
             return (nextState, .none)
 
         case .alertAddToAlbumConfirmed,
-             .alertAddTagsConfirmed,
-             .alertHideConfirmed,
-             .alertRevealConfirmed,
-             .alertRemoveFromAlbumConfirmed,
-             .alertDeleteConfirmed,
-             .alertDismissed,
-             .alertShareConfirmed:
+            .alertAddTagsConfirmed,
+            .alertHideConfirmed,
+            .alertRevealConfirmed,
+            .alertRemoveFromAlbumConfirmed,
+            .alertDeleteConfirmed,
+            .alertDismissed,
+            .alertShareConfirmed:
             nextState.alert = nil
             return (nextState, .none)
         }
     }
 }
 
-private extension ClipCollectionToolBarState {
-    func updatingAppearance() -> Self {
+extension ClipCollectionToolBarState {
+    fileprivate func updatingAppearance() -> Self {
         var nextState = self
         let isEnabled = !parentState.clips.selectedIds.isEmpty
 
@@ -86,7 +86,7 @@ private extension ClipCollectionToolBarState {
             Item(kind: .changeVisibility, isEnabled: isEnabled),
             Item(kind: .share, isEnabled: isEnabled),
             Item(kind: .delete, isEnabled: isEnabled),
-            Item(kind: .merge, isEnabled: isEnabled && parentState.clips.selectedIds.count > 1)
+            Item(kind: .merge, isEnabled: isEnabled && parentState.clips.selectedIds.count > 1),
         ]
 
         return nextState

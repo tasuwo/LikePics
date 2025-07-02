@@ -38,23 +38,28 @@ enum SearchEntryViewLayout {
 extension SearchEntryViewLayout {
     static func createLayout(historyDeletionHandler: @escaping (IndexPath) -> UISwipeActionsConfiguration?) -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { _, environment -> NSCollectionLayoutSection? in
-            return Self.createHistoriesSection(historyDeletionHandler: historyDeletionHandler,
-                                               environment: environment)
+            return Self.createHistoriesSection(
+                historyDeletionHandler: historyDeletionHandler,
+                environment: environment
+            )
         }
         return layout
     }
 
-    private static func createHistoriesSection(historyDeletionHandler: @escaping (IndexPath) -> UISwipeActionsConfiguration?,
-                                               environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection
-    {
+    private static func createHistoriesSection(
+        historyDeletionHandler: @escaping (IndexPath) -> UISwipeActionsConfiguration?,
+        environment: NSCollectionLayoutEnvironment
+    ) -> NSCollectionLayoutSection {
         var configuration = UICollectionLayoutListConfiguration(appearance: .plain)
         configuration.backgroundColor = .clear
         configuration.trailingSwipeActionsConfigurationProvider = historyDeletionHandler
         configuration.showsSeparators = false
         let layout = NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
 
-        let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(44))
+        let titleSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .estimated(44)
+        )
         layout.boundarySupplementaryItems = [
             .init(layoutSize: titleSize, elementKind: ElementKind.historyFooter.rawValue, alignment: .bottom)
         ]
@@ -66,9 +71,10 @@ extension SearchEntryViewLayout {
 // MARK: - DataSource
 
 extension SearchEntryViewLayout {
-    static func createDataSource(collectionView: UICollectionView,
-                                 removeAllHistoriesHandler: @escaping () -> Void) -> DataSource
-    {
+    static func createDataSource(
+        collectionView: UICollectionView,
+        removeAllHistoriesHandler: @escaping () -> Void
+    ) -> DataSource {
         let emptyCellRegistration = configureEmptyCell()
         let historyHeaderRegistration = self.configureHistoryHeader(removeAllHistoriesHandler: removeAllHistoriesHandler)
         let historyCellRegistration = configureHistoryCell()
@@ -129,10 +135,12 @@ extension SearchEntryViewLayout {
 
     private static func configureHistoryCell() -> UICollectionView.CellRegistration<ClipSearchHistoryContentCell, SearchHistoryWrapper> {
         return .init { cell, _, history in
-            cell.searchHistory = .init(title: history.query.displayTitle,
-                                       sortName: history.query.sort.displayTitle,
-                                       displaySettingName: history.query.displaySettingDisplayTitle,
-                                       isDisplaySettingHidden: history.isSomeItemsHidden)
+            cell.searchHistory = .init(
+                title: history.query.displayTitle,
+                sortName: history.query.sort.displayTitle,
+                displaySettingName: history.query.displaySettingDisplayTitle,
+                isDisplaySettingHidden: history.isSomeItemsHidden
+            )
 
             var backgroundConfiguration = UIBackgroundConfiguration.listPlainCell()
             backgroundConfiguration.backgroundColor = Asset.Color.secondaryBackground.color

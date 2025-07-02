@@ -8,16 +8,17 @@ public struct Lens<Parent, Child> {
     public let get: (Parent) -> Child
     public let set: (Child, Parent) -> Parent
 
-    public init(get: @escaping (Parent) -> Child,
-                set: @escaping (Child, Parent) -> Parent)
-    {
+    public init(
+        get: @escaping (Parent) -> Child,
+        set: @escaping (Child, Parent) -> Parent
+    ) {
         self.get = get
         self.set = set
     }
 }
 
-public extension StateMapping {
-    init(keyPath: WritableKeyPath<Parent, Child>) {
+extension StateMapping {
+    public init(keyPath: WritableKeyPath<Parent, Child>) {
         get = { $0[keyPath: keyPath] }
         set = {
             var state = $1
@@ -28,6 +29,8 @@ public extension StateMapping {
 }
 
 public func compose<Parent, Child, GrandChild>(lMap: StateMapping<Parent, Child>, rMap: StateMapping<Child, GrandChild>) -> Lens<Parent, GrandChild> {
-    return .init(get: { rMap.get(lMap.get($0)) },
-                 set: { lMap.set(rMap.set($0, lMap.get($1)), $1) })
+    return .init(
+        get: { rMap.get(lMap.get($0)) },
+        set: { lMap.set(rMap.set($0, lMap.get($1)), $1) }
+    )
 }

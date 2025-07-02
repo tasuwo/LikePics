@@ -18,9 +18,10 @@ public class SceneDependencyContainer {
 
     // MARK: - Initializer
 
-    public init(sceneResolver: SceneResolvable,
-                container: AppDependencyContaining)
-    {
+    public init(
+        sceneResolver: SceneResolvable,
+        container: AppDependencyContaining
+    ) {
         self.sceneResolver = sceneResolver
         self.container = container
     }

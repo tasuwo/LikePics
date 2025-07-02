@@ -16,14 +16,19 @@ class SceneRootViewLayoutProvider {
 
     // MARK: - Initializers
 
-    init(horizontalSizeClass: UIUserInterfaceSizeClass,
-         intent: Intent?,
-         factory: ViewControllerFactory)
-    {
+    init(
+        horizontalSizeClass: UIUserInterfaceSizeClass,
+        intent: Intent?,
+        factory: ViewControllerFactory
+    ) {
         self.factory = factory
-        _layout = .init(.init(horizontalSizeClass: horizontalSizeClass,
-                              intent: intent,
-                              factory: factory))
+        _layout = .init(
+            .init(
+                horizontalSizeClass: horizontalSizeClass,
+                intent: intent,
+                factory: factory
+            )
+        )
     }
 }
 

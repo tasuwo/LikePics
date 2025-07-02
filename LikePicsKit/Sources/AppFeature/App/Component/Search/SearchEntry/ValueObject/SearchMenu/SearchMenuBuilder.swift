@@ -8,11 +8,12 @@ import UIKit
 struct SearchMenuBuilder: Equatable {
     typealias Action = SearchMenuAction
 
-    func build(_ state: SearchMenuState,
-               isSomeItemsHiddenByUserSetting: Bool,
-               displaySettingChangeHandler: @escaping (Bool?) -> Void,
-               sortChangeHandler: @escaping (ClipSearchSort) -> Void) -> UIMenu
-    {
+    func build(
+        _ state: SearchMenuState,
+        isSomeItemsHiddenByUserSetting: Bool,
+        displaySettingChangeHandler: @escaping (Bool?) -> Void,
+        sortChangeHandler: @escaping (ClipSearchSort) -> Void
+    ) -> UIMenu {
         var menus: [UIMenu] = []
 
         if !isSomeItemsHiddenByUserSetting {
@@ -24,13 +25,14 @@ struct SearchMenuBuilder: Equatable {
         return UIMenu(title: "", children: menus)
     }
 
-    private static func buildHiddenMenu(_ state: SearchMenuState,
-                                        changeHandler: @escaping (Bool?) -> Void) -> UIMenu
-    {
+    private static func buildHiddenMenu(
+        _ state: SearchMenuState,
+        changeHandler: @escaping (Bool?) -> Void
+    ) -> UIMenu {
         let actions: [SearchMenuDisplaySettingAction] = [
             .init(kind: .unspecified, isSelected: state.shouldSearchOnlyHiddenClip == nil),
             .init(kind: .hidden, isSelected: state.shouldSearchOnlyHiddenClip == true),
-            .init(kind: .revealed, isSelected: state.shouldSearchOnlyHiddenClip == false)
+            .init(kind: .revealed, isSelected: state.shouldSearchOnlyHiddenClip == false),
         ]
 
         let uiActions = actions.map { action -> UIAction in
@@ -55,13 +57,14 @@ struct SearchMenuBuilder: Equatable {
         return UIMenu(title: "", options: .displayInline, children: uiActions)
     }
 
-    private static func buildSortMenu(_ state: SearchMenuState,
-                                      changeHandler: @escaping (ClipSearchSort) -> Void) -> UIMenu
-    {
+    private static func buildSortMenu(
+        _ state: SearchMenuState,
+        changeHandler: @escaping (ClipSearchSort) -> Void
+    ) -> UIMenu {
         let actions: [SearchMenuSortAction] = [
             .init(kind: .createdDate, order: state.sort.createdDateSort?.actionOrder),
             .init(kind: .updatedDate, order: state.sort.updateDateOrder?.actionOrder),
-            .init(kind: .dataSize, order: state.sort.sizeOrder?.actionOrder)
+            .init(kind: .dataSize, order: state.sort.sizeOrder?.actionOrder),
         ]
 
         let uiActions = actions.map { action -> UIAction in
@@ -98,8 +101,8 @@ struct SearchMenuBuilder: Equatable {
     }
 }
 
-private extension SearchMenuSortAction.Order {
-    var searchOrder: ClipSearchSort.Order {
+extension SearchMenuSortAction.Order {
+    fileprivate var searchOrder: ClipSearchSort.Order {
         switch self {
         case .ascend:
             return .ascend
@@ -110,8 +113,8 @@ private extension SearchMenuSortAction.Order {
     }
 }
 
-private extension ClipSearchSort.Order {
-    var actionOrder: SearchMenuSortAction.Order {
+extension ClipSearchSort.Order {
+    fileprivate var actionOrder: SearchMenuSortAction.Order {
         switch self {
         case .ascend:
             return .ascend
@@ -122,18 +125,18 @@ private extension ClipSearchSort.Order {
     }
 }
 
-private extension ClipSearchSort {
-    var createdDateSort: Order? {
+extension ClipSearchSort {
+    fileprivate var createdDateSort: Order? {
         guard case .createdDate = kind else { return nil }
         return order
     }
 
-    var updateDateOrder: Order? {
+    fileprivate var updateDateOrder: Order? {
         guard case .updatedDate = kind else { return nil }
         return order
     }
 
-    var sizeOrder: Order? {
+    fileprivate var sizeOrder: Order? {
         guard case .size = kind else { return nil }
         return order
     }

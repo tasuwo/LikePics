@@ -66,14 +66,17 @@ public class TextEditAlert: NSObject {
 
     // MARK: - Methods
 
-    public func present(withText text: String?,
-                        on baseView: UIViewController,
-                        validator: Validator? = nil,
-                        completion: @escaping (Action) -> Void)
-    {
-        let alert = UIAlertController(title: self.configuration.title,
-                                      message: self.configuration.message,
-                                      preferredStyle: .alert)
+    public func present(
+        withText text: String?,
+        on baseView: UIViewController,
+        validator: Validator? = nil,
+        completion: @escaping (Action) -> Void
+    ) {
+        let alert = UIAlertController(
+            title: self.configuration.title,
+            message: self.configuration.message,
+            preferredStyle: .alert
+        )
 
         let saveAction = UIAlertAction(title: L10n.addingAlertActionSave, style: .default) { [weak self] _ in
             guard let text = self?.context?.text else {
@@ -84,9 +87,13 @@ public class TextEditAlert: NSObject {
         }
         saveAction.isEnabled = false
 
-        let cancelAction = UIAlertAction(title: L10n.addingAlertActionCancel, style: .cancel, handler: { _ in
-            completion(.cancelled)
-        })
+        let cancelAction = UIAlertAction(
+            title: L10n.addingAlertActionCancel,
+            style: .cancel,
+            handler: { _ in
+                completion(.cancelled)
+            }
+        )
 
         alert.addAction(saveAction)
         alert.addAction(cancelAction)

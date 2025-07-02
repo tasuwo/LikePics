@@ -46,24 +46,24 @@ struct ClipItemListToolBarReducer: Reducer {
         // MARK: Alert Completion
 
         case .alertDismissed,
-             .alertDeleteConfirmed,
-             .alertShareConfirmed,
-             .alertSiteUrlEditted:
+            .alertDeleteConfirmed,
+            .alertShareConfirmed,
+            .alertSiteUrlEditted:
             nextState.alert = nil
             return (nextState, .none)
         }
     }
 }
 
-private extension ClipItemListToolBarState {
-    func updatingAppearance() -> Self {
+extension ClipItemListToolBarState {
+    fileprivate func updatingAppearance() -> Self {
         var nextState = self
         let isEnabled = !selectedItems.isEmpty
 
         nextState.items = [
             Item(kind: .editUrl, isEnabled: isEnabled),
             Item(kind: .share, isEnabled: isEnabled),
-            Item(kind: .delete, isEnabled: isEnabled)
+            Item(kind: .delete, isEnabled: isEnabled),
         ]
 
         return nextState

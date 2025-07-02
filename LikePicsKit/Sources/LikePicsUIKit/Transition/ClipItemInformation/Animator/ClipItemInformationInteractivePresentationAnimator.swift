@@ -3,8 +3,8 @@
 //
 
 import Common
-import os.log
 import UIKit
+import os.log
 
 class ClipItemInformationInteractivePresentationAnimator: NSObject {
     struct InnerContext {
@@ -226,7 +226,8 @@ extension ClipItemInformationInteractivePresentationAnimator: UIViewControllerIn
     // MARK: - UIViewControllerInteractiveTransitioning
 
     func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning) {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
 
         logger.debug("Start transition for ClipItemInformationView presentation")
 
@@ -249,12 +250,12 @@ extension ClipItemInformationInteractivePresentationAnimator: UIViewControllerIn
         /*
          アニメーション時、画像を Tab/Navigation Bar の裏側に回り込ませることで、自然なアニメーションを実現する
          このために、以下のような構成を取る
-
+        
          ポイントは以下
          - ToViewはFromViewの裏に配置する
          - ToViewが見えるよう、FromViewの背景色をclearに設定する
          - containerViewの背景色は、ToViewの背景色と合わせておく
-
+        
          +-+            +-+  +-+
          | |       +-+  | |  | |
          +-+       | |  | |  | |
@@ -325,9 +326,11 @@ extension ClipItemInformationInteractivePresentationAnimator: UIViewControllerIn
 
         if self.shouldEndImmediately {
             self.shouldEndImmediately = false
-            let params = FinishAnimationParameters(from: from,
-                                                   to: to,
-                                                   innerContext: innerContext)
+            let params = FinishAnimationParameters(
+                from: from,
+                to: to,
+                innerContext: innerContext
+            )
             lock.unlock()
             logger.debug("Immediately ended transition for ClipItemInformationView presentation")
             startEndAnimation(params: params)

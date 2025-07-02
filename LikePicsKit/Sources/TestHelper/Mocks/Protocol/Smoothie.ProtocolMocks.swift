@@ -3,8 +3,10 @@
 ///
 
 import Foundation
-@testable import Smoothie
 import UIKit
+
+@testable import Smoothie
+
 #if canImport(AppKit)
 import AppKit
 #endif
@@ -13,7 +15,7 @@ import UIKit
 #endif
 
 public class DiskCachingMock: DiskCaching {
-    public init() { }
+    public init() {}
 
     public private(set) var storeCallCount = 0
     public var storeHandler: ((Data?, String) -> Void)?
@@ -62,12 +64,12 @@ public class DiskCachingMock: DiskCaching {
             }
             return nil
         }
-        set { }
+        set {}
     }
 }
 
 public class MemoryCachingMock: MemoryCaching {
-    public init() { }
+    public init() {}
 
     public private(set) var removeCallCount = 0
     public var removeHandler: ((String) -> Void)?
@@ -108,7 +110,7 @@ public class MemoryCachingMock: MemoryCaching {
             }
             return nil
         }
-        set { }
+        set {}
     }
     #endif
     #if canImport(AppKit)
@@ -132,7 +134,7 @@ public class MemoryCachingMock: MemoryCaching {
             }
             return nil
         }
-        set { }
+        set {}
     }
     #endif
 }

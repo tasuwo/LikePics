@@ -29,7 +29,7 @@ extension ClipQueryService: ClipQueryServiceProtocol {
             let request: NSFetchRequest<Clip> = Clip.fetchRequest()
             request.sortDescriptors = [query.sort.sortDescriptor]
             request.predicate = query.predicate
-            request.fetchLimit = 12 // TODO:
+            request.fetchLimit = 12  // TODO:
             let clips = try self.context.fetch(request)
             return .success(clips.compactMap { $0.map(to: Domain.Clip.self) })
         } catch {
@@ -50,7 +50,7 @@ extension ClipQueryService: ClipQueryServiceProtocol {
             if let transformed = searchText.applyingTransform(.hiraganaToKatakana, reverse: false), transformed != searchText {
                 predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
                     NSPredicate(format: "title CONTAINS[cd] %@", transformed as CVarArg),
-                    NSPredicate(format: "title CONTAINS[cd] %@", searchText as CVarArg)
+                    NSPredicate(format: "title CONTAINS[cd] %@", searchText as CVarArg),
                 ])
             } else {
                 predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchText as CVarArg)
@@ -59,7 +59,7 @@ extension ClipQueryService: ClipQueryServiceProtocol {
             if !includesHiddenItems {
                 predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
                     predicate,
-                    NSPredicate(format: "isHidden == false")
+                    NSPredicate(format: "isHidden == false"),
                 ])
             }
 
@@ -85,7 +85,7 @@ extension ClipQueryService: ClipQueryServiceProtocol {
             if let transformed = searchText.applyingTransform(.hiraganaToKatakana, reverse: false), transformed != searchText {
                 predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
                     NSPredicate(format: "name CONTAINS[cd] %@", transformed as CVarArg),
-                    NSPredicate(format: "name CONTAINS[cd] %@", searchText as CVarArg)
+                    NSPredicate(format: "name CONTAINS[cd] %@", searchText as CVarArg),
                 ])
             } else {
                 predicate = NSPredicate(format: "name CONTAINS[cd] %@", searchText as CVarArg)
@@ -94,7 +94,7 @@ extension ClipQueryService: ClipQueryServiceProtocol {
             if !includesHiddenItems {
                 predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
                     predicate,
-                    NSPredicate(format: "isHidden == false")
+                    NSPredicate(format: "isHidden == false"),
                 ])
             }
 
@@ -121,7 +121,8 @@ extension ClipQueryService: ClipQueryServiceProtocol {
                 if let clip = clip.map(to: Domain.Clip.self) {
                     resultClips.append(clip)
                 }
-                let tags = clip.tags?.allObjects
+                let tags =
+                    clip.tags?.allObjects
                     .compactMap { $0 as? Tag }
                     .compactMap { $0.map(to: Domain.Tag.self) } ?? []
                 resultTags += tags

@@ -17,12 +17,13 @@ public struct ListingAlbumTitle: Codable, Equatable, Hashable {
     // MARK: - Lifecycle
 
     // sourcery: AutoDefaultValueUseThisInitializer
-    public init(id: UUID,
-                title: String,
-                isHidden: Bool,
-                registeredDate: Date,
-                updatedDate: Date)
-    {
+    public init(
+        id: UUID,
+        title: String,
+        isHidden: Bool,
+        registeredDate: Date,
+        updatedDate: Date
+    ) {
         self.id = id
         self.title = title
         self.isHidden = isHidden

@@ -13,10 +13,11 @@ final class SuggestionListWindowController<Item: SuggestionItem>: NSWindowContro
     private var localMouseDownEventMonitor: Any?
     private var lostFocusObserver: Any?
 
-    init(_ model: SuggestionListModel<Item>,
-         onTap: @escaping (SuggestionListModel<Item>.Selection) -> Void,
-         fallbackItemTitle: @escaping (String) -> String)
-    {
+    init(
+        _ model: SuggestionListModel<Item>,
+        onTap: @escaping (SuggestionListModel<Item>.Selection) -> Void,
+        fallbackItemTitle: @escaping (String) -> String
+    ) {
         self.model = model
         self.onTap = onTap
         self.fallbackItemTitle = fallbackItemTitle
@@ -86,9 +87,13 @@ final class SuggestionListWindowController<Item: SuggestionItem>: NSWindowContro
                 }
 
                 let locationTest = contentView.convert(event.locationInWindow, from: nil)
-                let hitView = contentView.hitTest(.init(x: locationTest.x,
-                                                        // タイトルバー分の高さを除く
-                                                        y: locationTest.y - (contentView.frame.height - parentWindow.contentLayoutRect.size.height)))
+                let hitView = contentView.hitTest(
+                    .init(
+                        x: locationTest.x,
+                        // タイトルバー分の高さを除く
+                        y: locationTest.y - (contentView.frame.height - parentWindow.contentLayoutRect.size.height)
+                    )
+                )
 
                 let fieldEditor: NSText? = parentTextField.currentEditor()
                 if hitView != parentTextField, let fieldEditor, hitView != fieldEditor {

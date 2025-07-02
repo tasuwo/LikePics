@@ -93,9 +93,13 @@ public class ClipItemInformationView: UIView {
         let layout = Layout.createLayout(albumTrailingSwipeActionProvider: { [weak self] indexPath in
             guard let self = self else { return nil }
             guard case let .album(album) = self.collectionViewDataSource.itemIdentifier(for: indexPath) else { return nil }
-            let deleteAction = UIContextualAction(style: .destructive, title: L10n.clipInformationViewAlbumSwipeActionDelete, handler: { _, _, completion in
-                self.delegate?.clipItemInformationView(self, didRequestDeleteAlbum: album, completion: completion)
-            })
+            let deleteAction = UIContextualAction(
+                style: .destructive,
+                title: L10n.clipInformationViewAlbumSwipeActionDelete,
+                handler: { _, _, completion in
+                    self.delegate?.clipItemInformationView(self, didRequestDeleteAlbum: album, completion: completion)
+                }
+            )
             return UISwipeActionsConfiguration(actions: [deleteAction])
         })
         self.collectionView.collectionViewLayout = layout
@@ -133,9 +137,13 @@ public class ClipItemInformationView: UIView {
         guard let image = imageView.image else { return .zero }
         let scale = image.size.scale(fittingIn: size)
         let resizedImageSize = image.size.scaled(by: scale)
-        return CGRect(origin: .init(x: (frame.size.width - resizedImageSize.width) / 2,
-                                    y: -resizedImageSize.height + self.safeAreaInsets.top + Self.topImageHeight),
-                      size: resizedImageSize)
+        return CGRect(
+            origin: .init(
+                x: (frame.size.width - resizedImageSize.width) / 2,
+                y: -resizedImageSize.height + self.safeAreaInsets.top + Self.topImageHeight
+            ),
+            size: resizedImageSize
+        )
     }
 }
 
@@ -187,14 +195,16 @@ extension ClipItemInformationView: UIContextMenuInteractionDelegate {
 
     public func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         guard let button = interaction.view as? UIButton,
-              let text = button.titleLabel?.text,
-              let url = URL(string: text)
+            let text = button.titleLabel?.text,
+            let url = URL(string: text)
         else {
             return nil
         }
-        return UIContextMenuConfiguration(identifier: nil,
-                                          previewProvider: self.makePreviewProvider(for: url),
-                                          actionProvider: self.makeActionProvider(for: url))
+        return UIContextMenuConfiguration(
+            identifier: nil,
+            previewProvider: self.makePreviewProvider(for: url),
+            actionProvider: self.makeActionProvider(for: url)
+        )
     }
 
     private func makePreviewProvider(for url: URL) -> (() -> UIViewController) {
@@ -227,7 +237,8 @@ extension ClipItemInformationView: ClipItemInformationLayoutDelegate {
 
     func didTapTagDeletionButton(_ cell: UICollectionViewCell) {
         guard let indexPath = self.collectionView.indexPath(for: cell),
-              case let .tag(tag) = self.collectionViewDataSource.itemIdentifier(for: indexPath) else { return }
+            case let .tag(tag) = self.collectionViewDataSource.itemIdentifier(for: indexPath)
+        else { return }
         guard let cell = collectionView.cellForItem(at: indexPath) else { return }
         self.delegate?.clipItemInformationView(self, didTapDeleteButtonForTag: tag, at: cell)
     }
@@ -241,8 +252,8 @@ extension ClipItemInformationView: ClipItemInformationLayoutDelegate {
     }
 }
 
-private extension CGSize {
-    func scaled(by scale: CGFloat) -> Self {
+extension CGSize {
+    fileprivate func scaled(by scale: CGFloat) -> Self {
         return .init(width: self.width * scale, height: self.height * scale)
     }
 }

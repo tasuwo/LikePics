@@ -4,8 +4,8 @@
 
 import Common
 import MobileTransition
-import os.log
 import UIKit
+import os.log
 
 public class ClipPreviewTransitioningController: NSObject {
     private let lock: TransitionLock
@@ -57,10 +57,11 @@ extension ClipPreviewTransitioningController: AnimatorDelegate {
 extension ClipPreviewTransitioningController: UIViewControllerTransitioningDelegate {
     // MARK: - UIViewControllerTransitioningDelegate
 
-    public func animationController(forPresented presented: UIViewController,
-                                    presenting: UIViewController,
-                                    source: UIViewController) -> UIViewControllerAnimatedTransitioning?
-    {
+    public func animationController(
+        forPresented presented: UIViewController,
+        presenting: UIViewController,
+        source: UIViewController
+    ) -> UIViewControllerAnimatedTransitioning? {
         switch self.transitionMode {
         case .custom:
             let fallback = FadeTransitionAnimator()
@@ -105,11 +106,12 @@ extension ClipPreviewTransitioningController: UIViewControllerTransitioningDeleg
 extension ClipPreviewTransitioningController: UINavigationControllerDelegate {
     // MARK: - UINavigationControllerDelegate
 
-    public func navigationController(_ navigationController: UINavigationController,
-                                     animationControllerFor operation: UINavigationController.Operation,
-                                     from fromVC: UIViewController,
-                                     to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning?
-    {
+    public func navigationController(
+        _ navigationController: UINavigationController,
+        animationControllerFor operation: UINavigationController.Operation,
+        from fromVC: UIViewController,
+        to toVC: UIViewController
+    ) -> UIViewControllerAnimatedTransitioning? {
         switch (operation, self.transitionMode) {
         case (.push, .custom):
             let fallback = FadeTransitionAnimator()
@@ -130,9 +132,10 @@ extension ClipPreviewTransitioningController: UINavigationControllerDelegate {
         }
     }
 
-    public func navigationController(_ navigationController: UINavigationController,
-                                     interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning?
-    {
+    public func navigationController(
+        _ navigationController: UINavigationController,
+        interactionControllerFor animationController: UIViewControllerAnimatedTransitioning
+    ) -> UIViewControllerInteractiveTransitioning? {
         switch self.transitionMode {
         case .custom(interactive: true):
             guard animationController is ClipPreviewDismissalAnimator else {

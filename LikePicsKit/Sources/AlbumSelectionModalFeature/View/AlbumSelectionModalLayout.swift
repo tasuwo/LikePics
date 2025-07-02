@@ -41,12 +41,15 @@ extension AlbumSelectionModalLayout {
 
 extension AlbumSelectionModalLayout {
     @MainActor
-    static func createDataSource(_ collectionView: UICollectionView,
-                                 _ thumbnailProcessingQueue: ImageProcessingQueue,
-                                 _ imageQueryService: ImageQueryServiceProtocol) -> DataSource
-    {
-        let cellRegistration = self.configureCell(thumbnailProcessingQueue: thumbnailProcessingQueue,
-                                                  imageQueryService: imageQueryService)
+    static func createDataSource(
+        _ collectionView: UICollectionView,
+        _ thumbnailProcessingQueue: ImageProcessingQueue,
+        _ imageQueryService: ImageQueryServiceProtocol
+    ) -> DataSource {
+        let cellRegistration = self.configureCell(
+            thumbnailProcessingQueue: thumbnailProcessingQueue,
+            imageQueryService: imageQueryService
+        )
 
         let dataSource: DataSource = .init(collectionView: collectionView) { collectionView, indexPath, item in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
@@ -56,16 +59,17 @@ extension AlbumSelectionModalLayout {
     }
 
     @MainActor
-    private static func configureCell(thumbnailProcessingQueue: ImageProcessingQueue,
-                                      imageQueryService: ImageQueryServiceProtocol) -> UICollectionView.CellRegistration<AlbumSelectionCell, Album>
-    {
+    private static func configureCell(
+        thumbnailProcessingQueue: ImageProcessingQueue,
+        imageQueryService: ImageQueryServiceProtocol
+    ) -> UICollectionView.CellRegistration<AlbumSelectionCell, Album> {
         return .init(cellNib: AlbumSelectionCell.nib) { [weak thumbnailProcessingQueue, weak imageQueryService] cell, _, album in
             cell.title = album.title
             cell.clipCount = album.clips.count
 
             guard let processingQueue = thumbnailProcessingQueue,
-                  let imageQueryService = imageQueryService,
-                  let thumbnailTarget = album.clips.first?.items.first
+                let imageQueryService = imageQueryService,
+                let thumbnailTarget = album.clips.first?.items.first
             else {
                 cell.thumbnailImageView.smt.cancelLoadImage()
                 return

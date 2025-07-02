@@ -42,9 +42,10 @@ class ClipCollectionToolBarController {
 
     // MARK: - Initializers
 
-    init(store: Store,
-         imageQueryService: ImageQueryServiceProtocol)
-    {
+    init(
+        store: Store,
+        imageQueryService: ImageQueryServiceProtocol
+    ) {
         self.store = store
         self.imageQueryService = imageQueryService
 
@@ -115,17 +116,23 @@ extension ClipCollectionToolBarController {
     private func presentAlertForAddition() {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-        alert.addAction(.init(title: L10n.clipsListAlertForAddToAlbum, style: .default) { [weak self] _ in
-            self?.store.execute(.alertAddToAlbumConfirmed)
-        })
+        alert.addAction(
+            .init(title: L10n.clipsListAlertForAddToAlbum, style: .default) { [weak self] _ in
+                self?.store.execute(.alertAddToAlbumConfirmed)
+            }
+        )
 
-        alert.addAction(.init(title: L10n.clipsListAlertForAddTag, style: .default) { [weak self] _ in
-            self?.store.execute(.alertAddTagsConfirmed)
-        })
+        alert.addAction(
+            .init(title: L10n.clipsListAlertForAddTag, style: .default) { [weak self] _ in
+                self?.store.execute(.alertAddTagsConfirmed)
+            }
+        )
 
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel) { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        })
+        alert.addAction(
+            .init(title: L10n.confirmAlertCancel, style: .cancel) { [weak self] _ in
+                self?.store.execute(.alertDismissed)
+            }
+        )
 
         alert.popoverPresentationController?.barButtonItem = addItem
 
@@ -134,19 +141,27 @@ extension ClipCollectionToolBarController {
     }
 
     private func presentAlertForChangeVisibility(targetCount: Int) {
-        let alert = UIAlertController(title: nil,
-                                      message: L10n.clipsListAlertForChangeVisibilityMessage,
-                                      preferredStyle: .actionSheet)
+        let alert = UIAlertController(
+            title: nil,
+            message: L10n.clipsListAlertForChangeVisibilityMessage,
+            preferredStyle: .actionSheet
+        )
 
-        alert.addAction(.init(title: L10n.clipsListAlertForChangeVisibilityHideAction(targetCount), style: .destructive) { [weak self] _ in
-            self?.store.execute(.alertHideConfirmed)
-        })
-        alert.addAction(.init(title: L10n.clipsListAlertForChangeVisibilityRevealAction(targetCount), style: .destructive) { [weak self] _ in
-            self?.store.execute(.alertRevealConfirmed)
-        })
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel) { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        })
+        alert.addAction(
+            .init(title: L10n.clipsListAlertForChangeVisibilityHideAction(targetCount), style: .destructive) { [weak self] _ in
+                self?.store.execute(.alertHideConfirmed)
+            }
+        )
+        alert.addAction(
+            .init(title: L10n.clipsListAlertForChangeVisibilityRevealAction(targetCount), style: .destructive) { [weak self] _ in
+                self?.store.execute(.alertRevealConfirmed)
+            }
+        )
+        alert.addAction(
+            .init(title: L10n.confirmAlertCancel, style: .cancel) { [weak self] _ in
+                self?.store.execute(.alertDismissed)
+            }
+        )
 
         alert.popoverPresentationController?.barButtonItem = changeVisibilityItem
 
@@ -155,17 +170,23 @@ extension ClipCollectionToolBarController {
     }
 
     private func presentAlertForDelete(targetCount: Int) {
-        let alert = UIAlertController(title: nil,
-                                      message: L10n.clipsListAlertForDeleteMessage,
-                                      preferredStyle: .actionSheet)
+        let alert = UIAlertController(
+            title: nil,
+            message: L10n.clipsListAlertForDeleteMessage,
+            preferredStyle: .actionSheet
+        )
 
         let title = L10n.clipsListAlertForDeleteAction(targetCount)
-        alert.addAction(.init(title: title, style: .destructive) { [weak self] _ in
-            self?.store.execute(.alertDeleteConfirmed)
-        })
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel) { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        })
+        alert.addAction(
+            .init(title: title, style: .destructive) { [weak self] _ in
+                self?.store.execute(.alertDeleteConfirmed)
+            }
+        )
+        alert.addAction(
+            .init(title: L10n.confirmAlertCancel, style: .cancel) { [weak self] _ in
+                self?.store.execute(.alertDismissed)
+            }
+        )
 
         alert.popoverPresentationController?.barButtonItem = deleteItem
 
@@ -174,19 +195,27 @@ extension ClipCollectionToolBarController {
     }
 
     private func presentAlertForChooseDeletionType() {
-        let alert = UIAlertController(title: nil,
-                                      message: L10n.clipsListAlertForDeleteInAlbumMessage,
-                                      preferredStyle: .actionSheet)
+        let alert = UIAlertController(
+            title: nil,
+            message: L10n.clipsListAlertForDeleteInAlbumMessage,
+            preferredStyle: .actionSheet
+        )
 
-        alert.addAction(.init(title: L10n.clipsListAlertForDeleteInAlbumActionRemoveFromAlbum, style: .destructive) { [weak self] _ in
-            self?.store.execute(.alertRemoveFromAlbumConfirmed)
-        })
-        alert.addAction(.init(title: L10n.clipsListAlertForDeleteInAlbumActionDelete, style: .destructive) { [weak self] _ in
-            self?.store.execute(.alertDeleteSelected)
-        })
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel) { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        })
+        alert.addAction(
+            .init(title: L10n.clipsListAlertForDeleteInAlbumActionRemoveFromAlbum, style: .destructive) { [weak self] _ in
+                self?.store.execute(.alertRemoveFromAlbumConfirmed)
+            }
+        )
+        alert.addAction(
+            .init(title: L10n.clipsListAlertForDeleteInAlbumActionDelete, style: .destructive) { [weak self] _ in
+                self?.store.execute(.alertDeleteSelected)
+            }
+        )
+        alert.addAction(
+            .init(title: L10n.confirmAlertCancel, style: .cancel) { [weak self] _ in
+                self?.store.execute(.alertDismissed)
+            }
+        )
 
         alert.popoverPresentationController?.barButtonItem = deleteItem
 

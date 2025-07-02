@@ -6,8 +6,8 @@ import Combine
 
 public typealias Connection<Action: CompositeKit.Action> = AnyPublisher<Action?, Never>
 
-public extension Storing {
-    func connection<
+extension Storing {
+    public func connection<
         Property: Equatable,
         Action: CompositeKit.Action
     >(

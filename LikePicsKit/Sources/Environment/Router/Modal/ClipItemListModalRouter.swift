@@ -8,16 +8,18 @@ import MobileTransition
 
 public protocol ClipItemListModalRouter {
     @discardableResult
-    func showClipItemListModal(id: UUID,
-                               clipId: Clip.Identity,
-                               clipItems: [ClipItem],
-                               transitioningController: ClipItemListTransitioningControllable) -> Bool
+    func showClipItemListModal(
+        id: UUID,
+        clipId: Clip.Identity,
+        clipItems: [ClipItem],
+        transitioningController: ClipItemListTransitioningControllable
+    ) -> Bool
 }
 
-public extension ModalNotification.Name {
-    static let clipItemList = ModalNotification.Name("net.tasuwo.TBox.ClipItemListReducer.clipItemList")
+extension ModalNotification.Name {
+    public static let clipItemList = ModalNotification.Name("net.tasuwo.TBox.ClipItemListReducer.clipItemList")
 }
 
-public extension ModalNotification.UserInfoKey {
-    static let selectedPreviewItem = ModalNotification.UserInfoKey("net.tasuwo.TBox.ClipItemListReducer.selectedPreviewItem")
+extension ModalNotification.UserInfoKey {
+    public static let selectedPreviewItem = ModalNotification.UserInfoKey("net.tasuwo.TBox.ClipItemListReducer.selectedPreviewItem")
 }

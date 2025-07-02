@@ -20,8 +20,8 @@ import WebKit
 extension SceneDependencyContainer {
     private var rootViewController: SceneRootViewController? {
         guard let windowScene = sceneResolver.resolveScene(),
-              let sceneDelegate = windowScene.delegate as? UIWindowSceneDelegate,
-              let rootViewController = sceneDelegate.window??.rootViewController as? SceneRootViewController
+            let sceneDelegate = windowScene.delegate as? UIWindowSceneDelegate,
+            let rootViewController = sceneDelegate.window??.rootViewController as? SceneRootViewController
         else {
             return nil
         }
@@ -82,24 +82,28 @@ extension SceneDependencyContainer {
         }
     }
 
-    private func dismiss(_ viewController: UIViewController?,
-                         until rootViewController: UIViewController,
-                         completion: @escaping () -> Void)
-    {
+    private func dismiss(
+        _ viewController: UIViewController?,
+        until rootViewController: UIViewController,
+        completion: @escaping () -> Void
+    ) {
         let presentingViewController = viewController?.presentingViewController
-        viewController?.dismiss(animated: true, completion: {
-            if viewController === rootViewController {
-                completion()
-                return
-            }
+        viewController?.dismiss(
+            animated: true,
+            completion: {
+                if viewController === rootViewController {
+                    completion()
+                    return
+                }
 
-            guard let viewController = presentingViewController else {
-                completion()
-                return
-            }
+                guard let viewController = presentingViewController else {
+                    completion()
+                    return
+                }
 
-            self.dismiss(viewController, until: rootViewController, completion: completion)
-        })
+                self.dismiss(viewController, until: rootViewController, completion: completion)
+            }
+        )
     }
 }
 
@@ -140,33 +144,43 @@ extension SceneDependencyContainer: Router {
         return true
     }
 
-    public func showClipPreviewView(clips: [Clip],
-                                    query: ClipPreviewPageQuery,
-                                    indexPath: ClipCollection.IndexPath) -> Bool
-    {
-        let viewController = makeClipPreviewPageViewController(clips: clips,
-                                                               query: query,
-                                                               indexPath: indexPath)
+    public func showClipPreviewView(
+        clips: [Clip],
+        query: ClipPreviewPageQuery,
+        indexPath: ClipCollection.IndexPath
+    ) -> Bool {
+        let viewController = makeClipPreviewPageViewController(
+            clips: clips,
+            query: query,
+            indexPath: indexPath
+        )
         guard let detailViewController = rootViewController?.currentViewController else { return false }
         detailViewController.present(viewController, animated: true, completion: nil)
         return true
     }
 
-    public func showClipInformationView(clipId: Clip.Identity,
-                                        itemId: ClipItem.Identity,
-                                        transitioningController: ClipItemInformationTransitioningControllable) -> Bool
-    {
-        let state = ClipItemInformationViewState(clipId: clipId,
-                                                 itemId: itemId,
-                                                 isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
-        let siteUrlEditAlertState = TextEditAlertState(title: L10n.alertForEditSiteUrlTitle,
-                                                       message: L10n.alertForEditSiteUrlMessage,
-                                                       placeholder: L10n.placeholderUrl)
-        let viewController = ClipItemInformationViewController(state: state,
-                                                               siteUrlEditAlertState: siteUrlEditAlertState,
-                                                               dependency: self,
-                                                               transitioningController: transitioningController,
-                                                               modalRouter: self)
+    public func showClipInformationView(
+        clipId: Clip.Identity,
+        itemId: ClipItem.Identity,
+        transitioningController: ClipItemInformationTransitioningControllable
+    ) -> Bool {
+        let state = ClipItemInformationViewState(
+            clipId: clipId,
+            itemId: itemId,
+            isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems()
+        )
+        let siteUrlEditAlertState = TextEditAlertState(
+            title: L10n.alertForEditSiteUrlTitle,
+            message: L10n.alertForEditSiteUrlMessage,
+            placeholder: L10n.placeholderUrl
+        )
+        let viewController = ClipItemInformationViewController(
+            state: state,
+            siteUrlEditAlertState: siteUrlEditAlertState,
+            dependency: self,
+            transitioningController: transitioningController,
+            modalRouter: self
+        )
         viewController.transitioningDelegate = transitioningController
         viewController.modalPresentationStyle = .fullScreen
 
@@ -195,9 +209,12 @@ extension SceneDependencyContainer: Router {
             guard let rootViewController = self.topViewController else { return }
             (rootViewController as? UINavigationController)?.popToRootViewController(animated: false)
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100), execute: {
-                _ = self.showClipCollectionView(for: tag)
-            })
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + .milliseconds(100),
+                execute: {
+                    _ = self.showClipCollectionView(for: tag)
+                }
+            )
         }
     }
 
@@ -211,9 +228,12 @@ extension SceneDependencyContainer: Router {
             guard let rootViewController = self.topViewController else { return }
             (rootViewController as? UINavigationController)?.popToRootViewController(animated: false)
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100), execute: {
-                _ = self.showClipCollectionView(for: albumId)
-            })
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + .milliseconds(100),
+                execute: {
+                    _ = self.showClipCollectionView(for: albumId)
+                }
+            )
         }
     }
 }
@@ -224,15 +244,21 @@ extension SceneDependencyContainer: AlbumMultiSelectionModalRouter {
     public func showAlbumMultiSelectionModal(id: UUID, selections: Set<Album.Identity>) -> Bool {
         guard isPresentingModal(having: id) == false else { return true }
 
-        let state = AlbumMultiSelectionModalState(id: id,
-                                                  selections: selections,
-                                                  isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
-        let albumAdditionAlertState = TextEditAlertState(title: L10n.albumListViewAlertForAddTitle,
-                                                         message: L10n.albumListViewAlertForAddMessage,
-                                                         placeholder: L10n.placeholderAlbumName)
-        let viewController = AlbumMultiSelectionModalController(state: state,
-                                                                albumAdditionAlertState: albumAdditionAlertState,
-                                                                dependency: self)
+        let state = AlbumMultiSelectionModalState(
+            id: id,
+            selections: selections,
+            isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems()
+        )
+        let albumAdditionAlertState = TextEditAlertState(
+            title: L10n.albumListViewAlertForAddTitle,
+            message: L10n.albumListViewAlertForAddMessage,
+            placeholder: L10n.placeholderAlbumName
+        )
+        let viewController = AlbumMultiSelectionModalController(
+            state: state,
+            albumAdditionAlertState: albumAdditionAlertState,
+            dependency: self
+        )
 
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
@@ -254,14 +280,18 @@ extension SceneDependencyContainer: AlbumSelectionModalRouter {
         guard isPresentingModal(having: id) == false else { return true }
 
         let state = AlbumSelectionModalState(id: id, isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
-        let albumAdditionAlertState = TextEditAlertState(title: L10n.albumListViewAlertForAddTitle,
-                                                         message: L10n.albumListViewAlertForAddMessage,
-                                                         placeholder: L10n.placeholderAlbumName)
-        let viewController = AlbumSelectionModalController(state: state,
-                                                           albumAdditionAlertState: albumAdditionAlertState,
-                                                           dependency: self,
-                                                           thumbnailProcessingQueue: container.temporaryThumbnailProcessingQueue,
-                                                           imageQueryService: container.imageQueryService)
+        let albumAdditionAlertState = TextEditAlertState(
+            title: L10n.albumListViewAlertForAddTitle,
+            message: L10n.albumListViewAlertForAddMessage,
+            placeholder: L10n.placeholderAlbumName
+        )
+        let viewController = AlbumSelectionModalController(
+            state: state,
+            albumAdditionAlertState: albumAdditionAlertState,
+            dependency: self,
+            thumbnailProcessingQueue: container.temporaryThumbnailProcessingQueue,
+            imageQueryService: container.imageQueryService
+        )
 
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
@@ -292,21 +322,27 @@ extension SceneDependencyContainer: ClipCreationModalRouter {
             var modalNotificationCenter: ModalNotificationCenter
         }
         let imageLoader = ImageLoader()
-        let dependency = Dependency(clipRecipeFactory: ClipRecipeFactory(),
-                                    clipStore: container.clipStore,
-                                    imageLoader: imageLoader,
-                                    imageSourceProvider: ImageSourceOnWebViewResolver(webView: webView),
-                                    userSettingsStorage: container.userSettingStorage,
-                                    modalNotificationCenter: .default)
+        let dependency = Dependency(
+            clipRecipeFactory: ClipRecipeFactory(),
+            clipStore: container.clipStore,
+            imageLoader: imageLoader,
+            imageSourceProvider: ImageSourceOnWebViewResolver(webView: webView),
+            userSettingsStorage: container.userSettingStorage,
+            modalNotificationCenter: .default
+        )
 
-        let viewController = ClipCreationViewController(state: .init(id: id,
-                                                                     source: .webPageImage,
-                                                                     url: currentUrl,
-                                                                     isSomeItemsHidden: container.userSettingStorage.readShowHiddenItems()),
-                                                        dependency: dependency,
-                                                        thumbnailProcessingQueue: container.temporaryThumbnailProcessingQueue,
-                                                        imageLoader: imageLoader,
-                                                        modalRouter: self)
+        let viewController = ClipCreationViewController(
+            state: .init(
+                id: id,
+                source: .webPageImage,
+                url: currentUrl,
+                isSomeItemsHidden: container.userSettingStorage.readShowHiddenItems()
+            ),
+            dependency: dependency,
+            thumbnailProcessingQueue: container.temporaryThumbnailProcessingQueue,
+            imageLoader: imageLoader,
+            modalRouter: self
+        )
 
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
@@ -324,23 +360,32 @@ extension SceneDependencyContainer: ClipCreationModalRouter {
 extension SceneDependencyContainer: ClipItemListModalRouter {
     // MARK: - ClipItemListModalRouter
 
-    public func showClipItemListModal(id: UUID,
-                                      clipId: Clip.Identity,
-                                      clipItems: [ClipItem],
-                                      transitioningController: ClipItemListTransitioningControllable) -> Bool
-    {
-        let state = ClipItemListState(id: id,
-                                      clipId: clipId,
-                                      clipItems: clipItems,
-                                      isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
-        let viewController = ClipItemListViewController(state: .init(listState: state,
-                                                                     navigationBarState: .init(),
-                                                                     toolBarState: .init()),
-                                                        siteUrlEditAlertState: .init(title: L10n.alertForEditSiteUrlTitle,
-                                                                                     message: L10n.alertForEditClipItemsSiteUrlMessage,
-                                                                                     placeholder: L10n.placeholderUrl),
-                                                        dependency: self,
-                                                        thumbnailProcessingQueue: container.clipItemThumbnailProcessingQueue)
+    public func showClipItemListModal(
+        id: UUID,
+        clipId: Clip.Identity,
+        clipItems: [ClipItem],
+        transitioningController: ClipItemListTransitioningControllable
+    ) -> Bool {
+        let state = ClipItemListState(
+            id: id,
+            clipId: clipId,
+            clipItems: clipItems,
+            isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems()
+        )
+        let viewController = ClipItemListViewController(
+            state: .init(
+                listState: state,
+                navigationBarState: .init(),
+                toolBarState: .init()
+            ),
+            siteUrlEditAlertState: .init(
+                title: L10n.alertForEditSiteUrlTitle,
+                message: L10n.alertForEditClipItemsSiteUrlMessage,
+                placeholder: L10n.placeholderUrl
+            ),
+            dependency: self,
+            thumbnailProcessingQueue: container.clipItemThumbnailProcessingQueue
+        )
         viewController.transitioningDelegate = transitioningController
         viewController.modalPresentationStyle = .fullScreen
 
@@ -358,11 +403,13 @@ extension SceneDependencyContainer: ClipMergeModalRouter {
         guard isPresentingModal(having: id) == false else { return true }
 
         let state = ClipMergeViewState(id: id, clips: clips)
-        let viewController = ClipMergeViewController(state: state,
-                                                     dependency: self,
-                                                     thumbnailProcessingQueue: container.temporaryThumbnailProcessingQueue,
-                                                     imageQueryService: container.imageQueryService,
-                                                     modalRouter: self)
+        let viewController = ClipMergeViewController(
+            state: state,
+            dependency: self,
+            thumbnailProcessingQueue: container.temporaryThumbnailProcessingQueue,
+            imageQueryService: container.imageQueryService,
+            modalRouter: self
+        )
 
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
@@ -383,15 +430,21 @@ extension SceneDependencyContainer: TagSelectionModalRouter {
     public func showTagSelectionModal(id: UUID, selections: Set<Tag.Identity>) -> Bool {
         guard isPresentingModal(having: id) == false else { return true }
 
-        let state = TagSelectionModalState(id: id,
-                                           selections: selections,
-                                           isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems())
-        let tagAdditionAlertState = TextEditAlertState(title: L10n.tagListViewAlertForAddTitle,
-                                                       message: L10n.tagListViewAlertForAddMessage,
-                                                       placeholder: L10n.placeholderTagName)
-        let viewController = TagSelectionModalController(state: state,
-                                                         tagAdditionAlertState: tagAdditionAlertState,
-                                                         dependency: self)
+        let state = TagSelectionModalState(
+            id: id,
+            selections: selections,
+            isSomeItemsHidden: !container.userSettingStorage.readShowHiddenItems()
+        )
+        let tagAdditionAlertState = TextEditAlertState(
+            title: L10n.tagListViewAlertForAddTitle,
+            message: L10n.tagListViewAlertForAddMessage,
+            placeholder: L10n.placeholderTagName
+        )
+        let viewController = TagSelectionModalController(
+            state: state,
+            tagAdditionAlertState: tagAdditionAlertState,
+            dependency: self
+        )
 
         let navigationViewController = UINavigationController(rootViewController: viewController)
 
@@ -412,9 +465,11 @@ extension SceneDependencyContainer: ClipPreviewPlayConfigurationModalRouter {
     public func showClipPreviewPlayConfigurationModal(id: UUID) -> Bool {
         guard isPresentingModal(having: id) == false else { return true }
 
-        let viewController = ClipPreviewPlayConfigurationModalController(id: id,
-                                                                         modalNotificationCenter: container.modalNotificationCenter,
-                                                                         storage: container.clipPreviewPlayConfigurationStorage)
+        let viewController = ClipPreviewPlayConfigurationModalController(
+            id: id,
+            modalNotificationCenter: container.modalNotificationCenter,
+            storage: container.clipPreviewPlayConfigurationStorage
+        )
 
         let navigationViewController = UINavigationController(rootViewController: viewController)
 

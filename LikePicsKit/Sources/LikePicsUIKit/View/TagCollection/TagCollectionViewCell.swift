@@ -42,7 +42,8 @@ public class TagCollectionViewCell: UICollectionViewCell {
         }
         set {
             self.deleteButtonContainer.isHidden = !newValue
-            self.labelMaxWidthConstraint.constant = newValue
+            self.labelMaxWidthConstraint.constant =
+                newValue
                 ? 220 - self.deleteButtonWidthConstraint.constant
                 : 220
         }
@@ -143,7 +144,8 @@ public class TagCollectionViewCell: UICollectionViewCell {
             self.checkMarkContainer.isHidden = false
             self.hashTagContainer.isHidden = true
 
-            self.titleLabel.textColor = isHiddenTag
+            self.titleLabel.textColor =
+                isHiddenTag
                 ? UIColor.white.withAlphaComponent(0.8)
                 : .white
 
@@ -155,10 +157,12 @@ public class TagCollectionViewCell: UICollectionViewCell {
             self.checkMarkContainer.isHidden = true
             self.hashTagContainer.isHidden = isHiddenTag ? true : false
 
-            self.hashTagLabel.textColor = isHiddenTag
+            self.hashTagLabel.textColor =
+                isHiddenTag
                 ? UIColor.label.withAlphaComponent(0.8)
                 : .label
-            self.titleLabel.textColor = isHiddenTag
+            self.titleLabel.textColor =
+                isHiddenTag
                 ? UIColor.label.withAlphaComponent(0.8)
                 : .label
         }
@@ -178,12 +182,13 @@ public class TagCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    public static func preferredSize(title: String,
-                                     clipCount: Int?,
-                                     isHidden: Bool,
-                                     visibleCountIfPossible: Bool,
-                                     visibleDeleteButton: Bool) -> CGSize
-    {
+    public static func preferredSize(
+        title: String,
+        clipCount: Int?,
+        isHidden: Bool,
+        visibleCountIfPossible: Bool,
+        visibleDeleteButton: Bool
+    ) -> CGSize {
         let label = UILabel()
         if let count = clipCount, visibleCountIfPossible {
             label.text = "\(title) (\(count))"

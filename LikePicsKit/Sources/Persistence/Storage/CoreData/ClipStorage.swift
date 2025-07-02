@@ -241,7 +241,8 @@ extension ClipStorage: ClipStorageProtocol {
         do {
             guard case let .success(clips) = try self.fetchClips(for: clipIds) else { return .failure(.notFound) }
 
-            let albumIds = clips
+            let albumIds =
+                clips
                 .map { $0.albumItem }
                 .compactMap { $0?.allObjects }
                 .flatMap { $0 }
@@ -319,7 +320,8 @@ extension ClipStorage: ClipStorageProtocol {
 
                 let albumItems = album.mutableSetValue(forKey: "items")
 
-                let maxIndex = albumItems
+                let maxIndex =
+                    albumItems
                     .compactMap { $0 as? AlbumItem }
                     .max(by: { $0.index < $1.index })?
                     .index ?? 0
@@ -550,7 +552,8 @@ extension ClipStorage: ClipStorageProtocol {
                 let album = try self.fetchAlbum(for: albumId).get()
                 let albumItems = album.mutableSetValue(forKey: "items")
 
-                let maxIndex = albumItems
+                let maxIndex =
+                    albumItems
                     .compactMap { $0 as? AlbumItem }
                     .max(by: { $0.index < $1.index })?
                     .index ?? 0
@@ -586,7 +589,8 @@ extension ClipStorage: ClipStorageProtocol {
                 return .failure(.notFound)
             }
 
-            let clipItemIds = clip.clipItems?
+            let clipItemIds =
+                clip.clipItems?
                 .allObjects
                 .compactMap { $0 as? Item }
                 .compactMap { $0.id } ?? []
@@ -636,9 +640,11 @@ extension ClipStorage: ClipStorageProtocol {
 
             let albumItems = album.mutableSetValue(forKey: "items")
 
-            let targetClips = clips
+            let targetClips =
+                clips
                 .filter { clip in
-                    let alreadyAdded = albumItems
+                    let alreadyAdded =
+                        albumItems
                         .compactMap { $0 as? AlbumItem }
                         .map { $0.clip }
                         .contains(clip)
@@ -646,7 +652,8 @@ extension ClipStorage: ClipStorageProtocol {
                 }
             guard !targetClips.isEmpty else { return .failure(.duplicated) }
 
-            let maxIndex = albumItems
+            let maxIndex =
+                albumItems
                 .compactMap { $0 as? AlbumItem }
                 .max(by: { $0.index < $1.index })?
                 .index ?? 0
@@ -673,9 +680,11 @@ extension ClipStorage: ClipStorageProtocol {
 
             let albumItems = album.mutableSetValue(forKey: "items")
 
-            guard clips.allSatisfy({ clip in
-                return albumItems.compactMap({ $0 as? AlbumItem }).contains(where: { $0.clip == clip })
-            }) else { return .failure(.notFound) }
+            guard
+                clips.allSatisfy({ clip in
+                    return albumItems.compactMap({ $0 as? AlbumItem }).contains(where: { $0.clip == clip })
+                })
+            else { return .failure(.notFound) }
 
             var currentIndex: Int64 = 1
             albumItems
@@ -709,7 +718,8 @@ extension ClipStorage: ClipStorageProtocol {
                 return .failure(.notFound)
             }
 
-            let itemIds = album.items?
+            let itemIds =
+                album.items?
                 .allObjects
                 .compactMap { $0 as? AlbumItem }
                 .compactMap { $0.clip?.id } ?? []
@@ -943,8 +953,8 @@ extension ClipStorage: ClipStorageProtocol {
         request.predicate = NSPredicate(format: "name == %@", name as CVarArg)
 
         guard var duplicates = try? context.fetch(request),
-              duplicates.count > 1,
-              let winner = duplicates.first
+            duplicates.count > 1,
+            let winner = duplicates.first
         else {
             return []
         }
@@ -989,12 +999,12 @@ extension ClipStorage: ClipStorageProtocol {
         request.sortDescriptors = [NSSortDescriptor(keyPath: \AlbumItem.id, ascending: true)]
         request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
             NSPredicate(format: "album.id == %@", albumId as CVarArg),
-            NSPredicate(format: "clip.id == %@", clipId as CVarArg)
+            NSPredicate(format: "clip.id == %@", clipId as CVarArg),
         ])
 
         guard var duplicates = try? context.fetch(request),
-              duplicates.count > 1,
-              let winner = duplicates.first
+            duplicates.count > 1,
+            let winner = duplicates.first
         else {
             return
         }
@@ -1023,12 +1033,12 @@ extension ClipStorage: ClipStorageProtocol {
         request.sortDescriptors = [NSSortDescriptor(keyPath: \AlbumItem.id, ascending: true)]
         request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
             NSPredicate(format: "album.id == %@", albumId as CVarArg),
-            NSPredicate(format: "clip.id == %@", clipId as CVarArg)
+            NSPredicate(format: "clip.id == %@", clipId as CVarArg),
         ])
 
         guard var duplicates = try? context.fetch(request),
-              duplicates.count > 1,
-              let winner = duplicates.first
+            duplicates.count > 1,
+            let winner = duplicates.first
         else {
             return
         }

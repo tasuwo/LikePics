@@ -15,7 +15,8 @@ public func contramap<
     _ stateMap: StateMapping<ParentState, ChildState>,
     _ transform: @escaping (ParentDependency) -> ChildDependency
 ) -> (ChildReducer) -> PureReducer<ParentAction, ParentState, ParentDependency>
-    where ChildReducer.Action == ChildAction,
+where
+    ChildReducer.Action == ChildAction,
     ChildReducer.State == ChildState,
     ChildReducer.Dependency == ChildDependency
 {

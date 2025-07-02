@@ -15,7 +15,7 @@ enum ClipItemListMenuBuilder: ClipItemListMenuBuildable {
         return [
             item.imageUrl == nil ? nil : .copyImageUrl,
             item.imageUrl == nil ? nil : .openImageUrl,
-            .delete
+            .delete,
         ].compactMap { $0 }
     }
 }

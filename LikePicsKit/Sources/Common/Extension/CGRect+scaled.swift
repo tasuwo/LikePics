@@ -7,12 +7,16 @@
 import CoreGraphics
 import UIKit
 
-public extension CGRect {
-    func scaled(_ scale: CGFloat) -> CGRect {
-        self.inset(by: UIEdgeInsets(top: (height - height * scale) / 2,
-                                    left: (width - width * scale) / 2,
-                                    bottom: (height - height * scale) / 2,
-                                    right: (width - width * scale) / 2))
+extension CGRect {
+    public func scaled(_ scale: CGFloat) -> CGRect {
+        self.inset(
+            by: UIEdgeInsets(
+                top: (height - height * scale) / 2,
+                left: (width - width * scale) / 2,
+                bottom: (height - height * scale) / 2,
+                right: (width - width * scale) / 2
+            )
+        )
     }
 }
 

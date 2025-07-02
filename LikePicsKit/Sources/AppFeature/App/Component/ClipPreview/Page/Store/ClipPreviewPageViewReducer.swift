@@ -66,12 +66,14 @@ struct ClipPreviewPageViewReducer: Reducer {
         case .clipInformationViewPresented:
             nextState.playingAt = nil
             if let currentClipId = state.currentClip?.id,
-               let currentItemId = state.currentItem?.id,
-               let transitioningController = dependency.clipItemInformationTransitioningController
+                let currentItemId = state.currentItem?.id,
+                let transitioningController = dependency.clipItemInformationTransitioningController
             {
-                dependency.router.showClipInformationView(clipId: currentClipId,
-                                                          itemId: currentItemId,
-                                                          transitioningController: transitioningController)
+                dependency.router.showClipInformationView(
+                    clipId: currentClipId,
+                    itemId: currentItemId,
+                    transitioningController: transitioningController
+                )
             }
             return (nextState, .none)
 
@@ -82,7 +84,7 @@ struct ClipPreviewPageViewReducer: Reducer {
             nextState.pageChange = state.playConfiguration.animation.pageChange
 
             guard let nextIndexPath = state.clips.pickNextVisibleItem(from: indexPath, by: state.playConfiguration),
-                  let item = state.clips.clipItem(atIndexPath: nextIndexPath)
+                let item = state.clips.clipItem(atIndexPath: nextIndexPath)
             else {
                 nextState.playingAt = nil
                 return (nextState, .none)
@@ -108,7 +110,8 @@ struct ClipPreviewPageViewReducer: Reducer {
             nextState.modal = nil
 
             guard let currentClipId = state.currentClip?.id,
-                  let tagIds = tagIds else { return (nextState, .none) }
+                let tagIds = tagIds
+            else { return (nextState, .none) }
 
             switch dependency.clipCommandService.updateClips(having: [currentClipId], byReplacingTagsHaving: Array(tagIds)) {
             case .success: ()
@@ -123,7 +126,8 @@ struct ClipPreviewPageViewReducer: Reducer {
             nextState.modal = nil
 
             guard let currentClipId = state.currentClip?.id,
-                  let albumId = albumId else { return (nextState, .none) }
+                let albumId = albumId
+            else { return (nextState, .none) }
 
             switch dependency.clipCommandService.updateAlbum(having: albumId, byAddingClipsHaving: [currentClipId]) {
             case .success: ()
@@ -153,23 +157,25 @@ struct ClipPreviewPageViewReducer: Reducer {
             nextState.alert = nil
             return (nextState, .none)
 
-       // MARK: Key Binding
+        // MARK: Key Binding
 
         case .inputUpArrow:
             if let currentClipId = state.currentClip?.id,
-               let currentItemId = state.currentItem?.id,
-               let transitioningController = dependency.clipItemInformationTransitioningController
+                let currentItemId = state.currentItem?.id,
+                let transitioningController = dependency.clipItemInformationTransitioningController
             {
-                dependency.router.showClipInformationView(clipId: currentClipId,
-                                                          itemId: currentItemId,
-                                                          transitioningController: transitioningController)
+                dependency.router.showClipInformationView(
+                    clipId: currentClipId,
+                    itemId: currentItemId,
+                    transitioningController: transitioningController
+                )
             }
             return (nextState, .none)
 
         case .inputRightArrow:
             guard let currentItemId = state.currentItem?.id,
-                  let nextItem = state.clips.pickNextVisibleItem(ofItemHaving: currentItemId)?.id,
-                  let nextIndexPath = state.clips.indexPath(ofItemHaving: nextItem)
+                let nextItem = state.clips.pickNextVisibleItem(ofItemHaving: currentItemId)?.id,
+                let nextIndexPath = state.clips.indexPath(ofItemHaving: nextItem)
             else {
                 return (nextState, .none)
             }
@@ -182,8 +188,8 @@ struct ClipPreviewPageViewReducer: Reducer {
 
         case .inputLeftArrow:
             guard let currentItemId = state.currentItem?.id,
-                  let nextItem = state.clips.pickPreviousVisibleItem(ofItemHaving: currentItemId)?.id,
-                  let nextIndexPath = state.clips.indexPath(ofItemHaving: nextItem)
+                let nextItem = state.clips.pickPreviousVisibleItem(ofItemHaving: currentItemId)?.id,
+                let nextIndexPath = state.clips.indexPath(ofItemHaving: nextItem)
             else {
                 return (nextState, .none)
             }
@@ -237,33 +243,42 @@ extension ClipPreviewPageViewReducer {
 // MARK: - Filter
 
 extension ClipPreviewPageViewReducer {
-    private static func performFilter(clips: [Clip],
-                                      previousState: State) -> (State, [Effect<Action>])
-    {
-        performFilter(clips: clips,
-                      isSomeItemsHidden: previousState.clips.isSomeItemsHidden,
-                      previousState: previousState)
+    private static func performFilter(
+        clips: [Clip],
+        previousState: State
+    ) -> (State, [Effect<Action>]) {
+        performFilter(
+            clips: clips,
+            isSomeItemsHidden: previousState.clips.isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
-    private static func performFilter(isSomeItemsHidden: Bool,
-                                      previousState: State) -> (State, [Effect<Action>])
-    {
-        performFilter(clips: previousState.clips.value,
-                      isSomeItemsHidden: isSomeItemsHidden,
-                      previousState: previousState)
+    private static func performFilter(
+        isSomeItemsHidden: Bool,
+        previousState: State
+    ) -> (State, [Effect<Action>]) {
+        performFilter(
+            clips: previousState.clips.value,
+            isSomeItemsHidden: isSomeItemsHidden,
+            previousState: previousState
+        )
     }
 
-    private static func performFilter(clips: [Clip],
-                                      isSomeItemsHidden: Bool,
-                                      previousState: State) -> (State, [Effect<Action>])
-    {
+    private static func performFilter(
+        clips: [Clip],
+        isSomeItemsHidden: Bool,
+        previousState: State
+    ) -> (State, [Effect<Action>]) {
         var nextState = previousState
 
         let newClips = PreviewingClips(clips: clips, isSomeItemsHidden: isSomeItemsHidden)
-        let result = ClipPreviewIndexCoordinator.coordinate(previousIndexPath: previousState.currentIndexPath,
-                                                            previousSelectedClip: previousState.currentClip,
-                                                            previousSelectedItem: previousState.currentItem,
-                                                            newPreviewingClips: newClips)
+        let result = ClipPreviewIndexCoordinator.coordinate(
+            previousIndexPath: previousState.currentIndexPath,
+            previousSelectedClip: previousState.currentClip,
+            previousSelectedItem: previousState.currentItem,
+            newPreviewingClips: newClips
+        )
         nextState.clips = newClips
         nextState = nextState.updated(by: result)
 
@@ -274,10 +289,11 @@ extension ClipPreviewPageViewReducer {
 // MARK: - Bar Event
 
 extension ClipPreviewPageViewReducer {
-    private static func execute(action: ClipPreviewPageBarEvent,
-                                state: State,
-                                dependency: Dependency) -> (State, [Effect<Action>]?)
-    {
+    private static func execute(
+        action: ClipPreviewPageBarEvent,
+        state: State,
+        dependency: Dependency
+    ) -> (State, [Effect<Action>]?) {
         var nextState = state
 
         nextState.playingAt = nil
@@ -296,18 +312,20 @@ extension ClipPreviewPageViewReducer {
 
         case .infoRequested:
             if let currentClipId = state.currentClip?.id,
-               let currentItemId = state.currentItem?.id,
-               let transitioningController = dependency.clipItemInformationTransitioningController
+                let currentItemId = state.currentItem?.id,
+                let transitioningController = dependency.clipItemInformationTransitioningController
             {
-                dependency.router.showClipInformationView(clipId: currentClipId,
-                                                          itemId: currentItemId,
-                                                          transitioningController: transitioningController)
+                dependency.router.showClipInformationView(
+                    clipId: currentClipId,
+                    itemId: currentItemId,
+                    transitioningController: transitioningController
+                )
             }
             return (nextState, .none)
 
         case .played:
             guard let nextIndexPath = state.clips.pickNextVisibleItem(from: state.currentIndexPath, by: state.playConfiguration),
-                  let item = state.clips.clipItem(atIndexPath: nextIndexPath)
+                let item = state.clips.clipItem(atIndexPath: nextIndexPath)
             else {
                 return (nextState, .none)
             }
@@ -368,10 +386,12 @@ extension ClipPreviewPageViewReducer {
             switch dependency.clipCommandService.deleteClips(having: [currentClipId]) {
             case .success:
                 let newClips = nextState.clips.removedClip(atIndex: state.currentIndexPath.clipIndex)
-                let result = ClipPreviewIndexCoordinator.coordinate(previousIndexPath: state.currentIndexPath,
-                                                                    previousSelectedClip: state.currentClip,
-                                                                    previousSelectedItem: state.currentItem,
-                                                                    newPreviewingClips: newClips)
+                let result = ClipPreviewIndexCoordinator.coordinate(
+                    previousIndexPath: state.currentIndexPath,
+                    previousSelectedClip: state.currentClip,
+                    previousSelectedItem: state.currentItem,
+                    newPreviewingClips: newClips
+                )
                 nextState.clips = newClips
                 nextState = nextState.updated(by: result)
 
@@ -388,10 +408,12 @@ extension ClipPreviewPageViewReducer {
             switch dependency.clipCommandService.deleteClipItem(item) {
             case .success:
                 let newClips = nextState.clips.removedClipItem(atIndexPath: state.currentIndexPath)
-                let result = ClipPreviewIndexCoordinator.coordinate(previousIndexPath: state.currentIndexPath,
-                                                                    previousSelectedClip: state.currentClip,
-                                                                    previousSelectedItem: state.currentItem,
-                                                                    newPreviewingClips: newClips)
+                let result = ClipPreviewIndexCoordinator.coordinate(
+                    previousIndexPath: state.currentIndexPath,
+                    previousSelectedClip: state.currentClip,
+                    previousSelectedItem: state.currentItem,
+                    newPreviewingClips: newClips
+                )
                 nextState.clips = newClips
                 nextState = nextState.updated(by: result)
 
@@ -407,8 +429,8 @@ extension ClipPreviewPageViewReducer {
     }
 }
 
-private extension ClipPreviewPlayConfiguration.Animation {
-    var pageChange: ClipPreviewTransitionDirection {
+extension ClipPreviewPlayConfiguration.Animation {
+    fileprivate var pageChange: ClipPreviewTransitionDirection {
         switch self {
         case .forward, .off:
             return .forward

@@ -71,7 +71,7 @@ class DummyContainer: AppDependencyContaining {
             let query = TagListQueryMock()
             query.tags = .init([
                 .makeDefault(name: NSLocalizedString("tag_06", comment: "")),
-                .makeDefault(name: NSLocalizedString("tag_02", comment: ""))
+                .makeDefault(name: NSLocalizedString("tag_02", comment: "")),
             ])
             return .success(query)
         }

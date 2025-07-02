@@ -6,14 +6,14 @@
 import CoreData
 import Foundation
 
-public extension Image {
+extension Image {
     @nonobjc
-    class func fetchRequest() -> NSFetchRequest<Image> {
+    public class func fetchRequest() -> NSFetchRequest<Image> {
         return NSFetchRequest<Image>(entityName: "Image")
     }
 
-    @NSManaged var data: Data?
-    @NSManaged var id: UUID?
+    @NSManaged public var data: Data?
+    @NSManaged public var id: UUID?
 }
 
 extension Image: Identifiable {

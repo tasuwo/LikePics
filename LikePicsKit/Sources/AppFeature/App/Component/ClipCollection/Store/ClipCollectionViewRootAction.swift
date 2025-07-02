@@ -11,38 +11,49 @@ enum ClipCollectionViewRootAction: Action {
 }
 
 extension ClipCollectionViewRootAction {
-    static let clipsMapping: ActionMapping<Self, ClipCollectionAction> = .init(build: {
-        .clipCollection($0)
-    }, get: {
-        switch $0 {
-        case let .clipCollection(action):
-            return action
+    static let clipsMapping: ActionMapping<Self, ClipCollectionAction> = .init(
+        build: {
+            .clipCollection($0)
+        },
+        get: {
+            switch $0 {
+            case let .clipCollection(action):
+                return action
 
-        case let .toolBar(action):
-            guard let event = action.mapToEvent() else { return nil }
-            return .toolBarEventOccurred(event)
+            case let .toolBar(action):
+                guard let event = action.mapToEvent() else { return nil }
+                return .toolBarEventOccurred(event)
 
-        case let .navigationBar(action):
-            guard let event = action.mapToEvent() else { return nil }
-            return .navigationBarEventOccurred(event)
+            case let .navigationBar(action):
+                guard let event = action.mapToEvent() else { return nil }
+                return .navigationBarEventOccurred(event)
+            }
         }
-    })
+    )
 
-    static let toolBarMapping: ActionMapping<Self, ClipCollectionToolBarAction> = .init(build: {
-        .toolBar($0)
-    }, get: {
-        guard case let .toolBar(action) = $0 else { return nil }; return action
-    })
+    static let toolBarMapping: ActionMapping<Self, ClipCollectionToolBarAction> = .init(
+        build: {
+            .toolBar($0)
+        },
+        get: {
+            guard case let .toolBar(action) = $0 else { return nil }
+            return action
+        }
+    )
 
-    static let navigationBarMapping: ActionMapping<Self, ClipCollectionNavigationBarAction> = .init(build: {
-        .navigationBar($0)
-    }, get: {
-        guard case let .navigationBar(action) = $0 else { return nil }; return action
-    })
+    static let navigationBarMapping: ActionMapping<Self, ClipCollectionNavigationBarAction> = .init(
+        build: {
+            .navigationBar($0)
+        },
+        get: {
+            guard case let .navigationBar(action) = $0 else { return nil }
+            return action
+        }
+    )
 }
 
-private extension ClipCollectionNavigationBarAction {
-    func mapToEvent() -> ClipCollectionNavigationBarEvent? {
+extension ClipCollectionNavigationBarAction {
+    fileprivate func mapToEvent() -> ClipCollectionNavigationBarEvent? {
         switch self {
         case .didTapCancel:
             return .cancel
@@ -65,8 +76,8 @@ private extension ClipCollectionNavigationBarAction {
     }
 }
 
-private extension ClipCollectionToolBarAction {
-    func mapToEvent() -> ClipCollectionToolBarEvent? {
+extension ClipCollectionToolBarAction {
+    fileprivate func mapToEvent() -> ClipCollectionToolBarEvent? {
         switch self {
         case .alertAddToAlbumConfirmed:
             return .addToAlbum

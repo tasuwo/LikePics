@@ -65,10 +65,11 @@ public class TextEditAlertController: NSObject {
 
     // MARK: - Methods
 
-    public func present(with text: String,
-                        validator: @escaping (String?) -> Bool,
-                        on viewController: UIViewController)
-    {
+    public func present(
+        with text: String,
+        validator: @escaping (String?) -> Bool,
+        on viewController: UIViewController
+    ) {
         guard presentingAlert == nil else {
             return
         }
@@ -76,9 +77,11 @@ public class TextEditAlertController: NSObject {
         dependency._textValidator = validator
         store.execute(.textChanged(text: text))
 
-        let alert = AlertController(title: store.stateValue.title,
-                                    message: store.stateValue.message,
-                                    preferredStyle: .alert)
+        let alert = AlertController(
+            title: store.stateValue.title,
+            message: store.stateValue.message,
+            preferredStyle: .alert
+        )
 
         let saveAction = UIAlertAction(title: L10n.alertSave, style: .default) { [weak self] _ in
             self?.store.execute(.saveActionTapped)
@@ -138,8 +141,8 @@ extension TextEditAlertController: UITextFieldDelegate {
 
 // MARK: - Bind
 
-public extension TextEditAlertController {
-    func bind() {
+extension TextEditAlertController {
+    public func bind() {
         store.state
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in

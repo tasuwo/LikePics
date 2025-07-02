@@ -5,8 +5,8 @@
 import Foundation
 import RealmSwift
 
-public extension ReferenceClipStorage.Configuration {
-    static func resolve(for bundle: Bundle) -> ReferenceClipStorage.Configuration {
+extension ReferenceClipStorage.Configuration {
+    public static func resolve(for bundle: Bundle) -> ReferenceClipStorage.Configuration {
         let realmFileName = "reference-clips.realm"
 
         var configuration = Realm.Configuration(
@@ -15,7 +15,7 @@ public extension ReferenceClipStorage.Configuration {
             deleteRealmIfMigrationNeeded: false,
             objectTypes: [
                 ReferenceTagObject.self,
-                ReferenceAlbumObject.self
+                ReferenceAlbumObject.self,
             ]
         )
 
@@ -24,7 +24,8 @@ public extension ReferenceClipStorage.Configuration {
         }
 
         if let directory = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.\(bundleIdentifier)") {
-            configuration.fileURL = directory
+            configuration.fileURL =
+                directory
                 .appendingPathComponent(bundleIdentifier, isDirectory: true)
                 .appendingPathComponent(realmFileName)
         } else {

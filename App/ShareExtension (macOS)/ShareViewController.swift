@@ -2,8 +2,8 @@
 //  Copyright © 2024 Tasuku Tozawa. All rights reserved.
 //
 
-import SwiftUI
 import ShareExtensionDesktopFeature
+import SwiftUI
 
 let bundleIdentifier = {
     guard var components = Bundle.main.bundleIdentifier?.components(separatedBy: ".") else { fatalError() }
@@ -30,7 +30,7 @@ final class ShareViewController: NSViewController {
             view.topAnchor.constraint(equalTo: contentView.topAnchor),
             view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+            view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
         ])
     }
 }

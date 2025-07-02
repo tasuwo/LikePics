@@ -38,17 +38,22 @@ public class ClipPreviewPlayConfigurationModalController: UIViewController {
 
     // MARK: - Initializers
 
-    public init(id: UUID,
-                modalNotificationCenter: ModalNotificationCenter,
-                storage: ClipPreviewPlayConfigurationStorageProtocol)
-    {
+    public init(
+        id: UUID,
+        modalNotificationCenter: ModalNotificationCenter,
+        storage: ClipPreviewPlayConfigurationStorageProtocol
+    ) {
         self.id = id
         self.modalNotificationCenter = modalNotificationCenter
         self.storage = storage
-        self.intervalEditAlert = .init(state: .init(title: L10n.Root.IntervalAlert.title,
-                                                    message: L10n.Root.IntervalAlert.message(Self.minInterval, Self.maxInterval),
-                                                    placeholder: "",
-                                                    keyboardType: .asciiCapableNumberPad))
+        self.intervalEditAlert = .init(
+            state: .init(
+                title: L10n.Root.IntervalAlert.title,
+                message: L10n.Root.IntervalAlert.message(Self.minInterval, Self.maxInterval),
+                placeholder: "",
+                keyboardType: .asciiCapableNumberPad
+            )
+        )
         super.init(nibName: nil, bundle: nil)
 
         intervalEditAlert.textEditAlertDelegate = self
@@ -140,9 +145,9 @@ extension ClipPreviewPlayConfigurationModalController {
             .sink { [weak self] loopEnabled in
                 guard let self = self, let dataSource = self.dataSource else { return }
                 if let indexPath = dataSource.indexPath(for: .loop),
-                   let cell = self.collectionView.cellForItem(at: indexPath) as? UICollectionViewListCell,
-                   let `switch` = cell.accessories.pickSwitch(),
-                   `switch`.isOn != loopEnabled
+                    let cell = self.collectionView.cellForItem(at: indexPath) as? UICollectionViewListCell,
+                    let `switch` = cell.accessories.pickSwitch(),
+                    `switch`.isOn != loopEnabled
                 {
                     `switch`.setOnSmoothly(loopEnabled)
                 }
@@ -168,11 +173,15 @@ extension ClipPreviewPlayConfigurationModalController {
     private func configureNavigationBar() {
         navigationItem.title = L10n.Root.title
 
-        let addItem = UIBarButtonItem(systemItem: .done, primaryAction: .init(handler: { [weak self] _ in
-            guard let self = self else { return }
-            self.modalNotificationCenter.post(id: self.id, name: .clipPreviewPlayConfigurationModalDidDismiss, userInfo: nil)
-            self.dismissAll(completion: nil)
-        }), menu: nil)
+        let addItem = UIBarButtonItem(
+            systemItem: .done,
+            primaryAction: .init(handler: { [weak self] _ in
+                guard let self = self else { return }
+                self.modalNotificationCenter.post(id: self.id, name: .clipPreviewPlayConfigurationModalDidDismiss, userInfo: nil)
+                self.dismissAll(completion: nil)
+            }),
+            menu: nil
+        )
 
         navigationItem.rightBarButtonItem = addItem
     }
@@ -182,12 +191,14 @@ extension ClipPreviewPlayConfigurationModalController {
             self?.storage.set(loopEnabled: $0)
         } onIntervalEdit: { [weak self] in
             guard let self = self else { return }
-            self.intervalEditAlert.present(with: "\(self.storage.fetchInterval())",
-                                           validator: { text in
-                                               guard let txt = text, let interval = Int(txt) else { return false }
-                                               return interval >= Self.minInterval && interval <= Self.maxInterval
-                                           },
-                                           on: self)
+            self.intervalEditAlert.present(
+                with: "\(self.storage.fetchInterval())",
+                validator: { text in
+                    guard let txt = text, let interval = Int(txt) else { return false }
+                    return interval >= Self.minInterval && interval <= Self.maxInterval
+                },
+                on: self
+            )
         }
 
         var snapshot = Layout.Snapshot()
@@ -241,11 +252,12 @@ extension ClipPreviewPlayConfigurationModalController: UIAdaptivePresentationCon
 
 extension ClipPreviewPlayConfigurationModalController: ModalController {}
 
-private extension Array where Element == UICellAccessory {
-    func pickSwitch() -> UISwitch? {
+extension Array where Element == UICellAccessory {
+    fileprivate func pickSwitch() -> UISwitch? {
         for accessory in self {
             guard case let .customView(view) = accessory.accessoryType,
-                  let `switch` = view as? UISwitch else { continue }
+                let `switch` = view as? UISwitch
+            else { continue }
             return `switch`
         }
         return nil

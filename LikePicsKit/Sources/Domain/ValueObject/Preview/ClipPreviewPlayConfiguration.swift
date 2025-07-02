@@ -5,11 +5,13 @@
 import Foundation
 
 public struct ClipPreviewPlayConfiguration: Equatable, Sendable {
-    public static let `default`: Self = .init(animation: .default,
-                                              order: .default,
-                                              range: .default,
-                                              loopEnabled: false,
-                                              interval: 5)
+    public static let `default`: Self = .init(
+        animation: .default,
+        order: .default,
+        range: .default,
+        loopEnabled: false,
+        interval: 5
+    )
 
     public enum Animation: String, Sendable {
         public static let `default`: Self = .forward

@@ -46,14 +46,16 @@ public class NewTagCollectionBrickworkLayout: UICollectionViewLayout {
     override public func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         guard let cache = cache else { return nil }
 
-        let startRow: Int = rect.minY <= (cache.uncategorizedItemHeight + Self.interSectionSpacing)
+        let startRow: Int =
+            rect.minY <= (cache.uncategorizedItemHeight + Self.interSectionSpacing)
             ? 1
             : 1 + Int(ceil((rect.minY - (cache.uncategorizedItemHeight + Self.interSectionSpacing)) / cache.tagItemHeight))
-        let endRow: Int = rect.maxY <= (cache.uncategorizedItemHeight + Self.interSectionSpacing)
+        let endRow: Int =
+            rect.maxY <= (cache.uncategorizedItemHeight + Self.interSectionSpacing)
             ? 1
             : 1 + Int(ceil((rect.maxY - (cache.uncategorizedItemHeight + Self.interSectionSpacing)) / cache.tagItemHeight))
 
-        return (startRow ... endRow)
+        return (startRow...endRow)
             .compactMap { cache.indicesByRow[$0] }
             .reduce(into: Set<IndexPath>(), { $0 = $0.union($1) })
             .compactMap { cache.attributesByIndex[$0] }
@@ -84,9 +86,9 @@ extension NewTagCollectionBrickworkLayout {
 
     private func setupAttributes() {
         guard cache == nil,
-              let delegate = delegate,
-              let collectionView = collectionView,
-              collectionView.numberOfSections > 0
+            let delegate = delegate,
+            let collectionView = collectionView,
+            collectionView.numberOfSections > 0
         else {
             return
         }
@@ -104,16 +106,20 @@ extension NewTagCollectionBrickworkLayout {
         let uncategorizedItemHeight = delegate.heightOfUncategorizedCell(collectionView)
         let tagCellHeight = delegate.heightOfTagCell(collectionView)
         let tagItemHeight = tagCellHeight + Self.heightPadding * 2
-        var cache = Cache(uncategorizedItemHeight: uncategorizedItemHeight,
-                          tagItemHeight: tagItemHeight)
+        var cache = Cache(
+            uncategorizedItemHeight: uncategorizedItemHeight,
+            tagItemHeight: tagItemHeight
+        )
 
-        (0 ..< collectionView.numberOfItems(inSection: 0)).forEach { row in
+        (0..<collectionView.numberOfItems(inSection: 0)).forEach { row in
             let indexPath = IndexPath(row: row, section: 0)
 
-            let frame = CGRect(x: Self.widthPadding + initialXOffset,
-                               y: initialYOffset,
-                               width: contentWidth - Self.contentPadding * 2 - Self.widthPadding * 2,
-                               height: uncategorizedItemHeight)
+            let frame = CGRect(
+                x: Self.widthPadding + initialXOffset,
+                y: initialYOffset,
+                width: contentWidth - Self.contentPadding * 2 - Self.widthPadding * 2,
+                height: uncategorizedItemHeight
+            )
             let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
             attributes.frame = frame
 
@@ -128,7 +134,7 @@ extension NewTagCollectionBrickworkLayout {
 
         currentYOffset += Self.interSectionSpacing
 
-        (0 ..< collectionView.numberOfItems(inSection: 1)).forEach { row in
+        (0..<collectionView.numberOfItems(inSection: 1)).forEach { row in
             let indexPath = IndexPath(row: row, section: 1)
 
             let tagCellWidth = delegate.collectionView(collectionView, widthAtIndexPath: indexPath)
@@ -140,10 +146,12 @@ extension NewTagCollectionBrickworkLayout {
                 cache.numberOfRows += 1
             }
 
-            let frame = CGRect(x: Self.widthPadding + currentXOffset,
-                               y: Self.heightPadding + currentYOffset,
-                               width: tagCellWidth,
-                               height: tagCellHeight)
+            let frame = CGRect(
+                x: Self.widthPadding + currentXOffset,
+                y: Self.heightPadding + currentYOffset,
+                width: tagCellWidth,
+                height: tagCellHeight
+            )
             let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
             attributes.frame = frame
 

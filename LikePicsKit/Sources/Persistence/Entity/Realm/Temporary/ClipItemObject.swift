@@ -23,17 +23,21 @@ class ClipItemObject: Object {
 
 extension ClipItemRecipe {
     static func make(by managedObject: ClipItemObject) -> ClipItemRecipe {
-        return .init(id: managedObject.id,
-                     url: managedObject.url,
-                     clipId: managedObject.clipId,
-                     clipIndex: managedObject.clipIndex,
-                     imageId: managedObject.imageId,
-                     imageFileName: managedObject.imageFileName,
-                     imageUrl: managedObject.imageUrl,
-                     imageSize: ImageSize(height: managedObject.imageHeight,
-                                          width: managedObject.imageWidth),
-                     imageDataSize: managedObject.imageDataSize,
-                     registeredDate: managedObject.registeredAt,
-                     updatedDate: managedObject.updatedAt)
+        return .init(
+            id: managedObject.id,
+            url: managedObject.url,
+            clipId: managedObject.clipId,
+            clipIndex: managedObject.clipIndex,
+            imageId: managedObject.imageId,
+            imageFileName: managedObject.imageFileName,
+            imageUrl: managedObject.imageUrl,
+            imageSize: ImageSize(
+                height: managedObject.imageHeight,
+                width: managedObject.imageWidth
+            ),
+            imageDataSize: managedObject.imageDataSize,
+            registeredDate: managedObject.registeredAt,
+            updatedDate: managedObject.updatedAt
+        )
     }
 }

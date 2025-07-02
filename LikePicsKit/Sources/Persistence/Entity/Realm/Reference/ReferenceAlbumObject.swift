@@ -18,11 +18,13 @@ class ReferenceAlbumObject: Object {
 
 extension ReferenceAlbum {
     static func make(by managedObject: ReferenceAlbumObject) -> ReferenceAlbum {
-        return .init(id: managedObject.id,
-                     title: managedObject.title,
-                     isHidden: managedObject.isHidden,
-                     registeredDate: managedObject.registeredDate,
-                     updatedDate: managedObject.updatedDate,
-                     isDirty: managedObject.isDirty)
+        return .init(
+            id: managedObject.id,
+            title: managedObject.title,
+            isHidden: managedObject.isHidden,
+            registeredDate: managedObject.registeredDate,
+            updatedDate: managedObject.updatedDate,
+            isDirty: managedObject.isDirty
+        )
     }
 }

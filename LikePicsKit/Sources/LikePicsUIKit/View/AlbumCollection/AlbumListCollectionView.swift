@@ -26,8 +26,10 @@ public class AlbumListCollectionView: UICollectionView {
     // MARK: - Methods
 
     private func registerCell() {
-        self.register(AlbumListCollectionViewCell.nib,
-                      forCellWithReuseIdentifier: Self.cellIdentifier)
+        self.register(
+            AlbumListCollectionViewCell.nib,
+            forCellWithReuseIdentifier: Self.cellIdentifier
+        )
     }
 
     private func setupAppearance() {

@@ -38,14 +38,15 @@ public struct Clip: Codable, Equatable, Hashable {
     // MARK: - Lifecycle
 
     // sourcery: AutoDefaultValueUseThisInitializer
-    public init(id: UUID,
-                description: String?,
-                items: [ClipItem],
-                isHidden: Bool,
-                dataSize: Int,
-                registeredDate: Date,
-                updatedDate: Date)
-    {
+    public init(
+        id: UUID,
+        description: String?,
+        items: [ClipItem],
+        isHidden: Bool,
+        dataSize: Int,
+        registeredDate: Date,
+        updatedDate: Date
+    ) {
         self.id = id
         self.description = description
         self.items = items.sorted(by: { $0.clipIndex < $1.clipIndex })
@@ -60,13 +61,15 @@ public struct Clip: Codable, Equatable, Hashable {
     public func removedItem(at index: Int) -> Self {
         var newItems = self.items
         newItems.remove(at: index)
-        return .init(id: self.id,
-                     description: self.description,
-                     items: newItems,
-                     isHidden: self.isHidden,
-                     dataSize: self.dataSize,
-                     registeredDate: self.registeredDate,
-                     updatedDate: self.updatedDate)
+        return .init(
+            id: self.id,
+            description: self.description,
+            items: newItems,
+            isHidden: self.isHidden,
+            dataSize: self.dataSize,
+            registeredDate: self.registeredDate,
+            updatedDate: self.updatedDate
+        )
     }
 }
 

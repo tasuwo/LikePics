@@ -18,13 +18,16 @@ public final class Container: ObservableObject {
 
         // MARK: CoreData
 
-        var persistentStackConf = PersistentStack.Configuration(author: "share-extension",
-                                                                persistentContainerName: "Model",
-                                                                managedObjectModelUrl: ManagedObjectModelUrl)
+        var persistentStackConf = PersistentStack.Configuration(
+            author: "share-extension",
+            persistentContainerName: "Model",
+            managedObjectModelUrl: ManagedObjectModelUrl
+        )
         persistentStackConf.persistentContainerUrl = FileManager.default
             .containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier)!
             .appending(path: "likepics.sqlite", directoryHint: .notDirectory)
-        persistentStackConf.persistentHistoryTokenSaveDirectory = NSPersistentContainer
+        persistentStackConf.persistentHistoryTokenSaveDirectory =
+            NSPersistentContainer
             .defaultDirectoryURL()
             .appendingPathComponent("LikePics", isDirectory: true)
         persistentStackConf.persistentHistoryTokenFileName = "share-extension-token.data"

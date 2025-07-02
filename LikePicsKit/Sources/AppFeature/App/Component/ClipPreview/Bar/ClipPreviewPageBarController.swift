@@ -45,9 +45,10 @@ class ClipPreviewPageBarController {
 
     // MARK: - Initializers
 
-    init(store: Store,
-         imageQueryService: ImageQueryServiceProtocol)
-    {
+    init(
+        store: Store,
+        imageQueryService: ImageQueryServiceProtocol
+    ) {
         self.store = store
         self.imageQueryService = imageQueryService
     }
@@ -194,28 +195,42 @@ extension ClipPreviewPageBarController {
 
     private func presentErrorMessageAlertIfNeeded(message: String?) {
         let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        })
+        alert.addAction(
+            .init(title: L10n.confirmAlertOk, style: .default) { [weak self] _ in
+                self?.store.execute(.alertDismissed)
+            }
+        )
         alertHostingViewController?.present(alert, animated: true, completion: nil)
     }
 
     private func presentDeleteAlert(includesRemoveFromClip: Bool) {
-        let alert = UIAlertController(title: nil,
-                                      message: L10n.clipPreviewViewAlertForDeleteMessage,
-                                      preferredStyle: .actionSheet)
+        let alert = UIAlertController(
+            title: nil,
+            message: L10n.clipPreviewViewAlertForDeleteMessage,
+            preferredStyle: .actionSheet
+        )
 
         if includesRemoveFromClip {
-            alert.addAction(.init(title: L10n.clipPreviewViewAlertForDeleteClipItemAction, style: .destructive) { [weak self] _ in
-                self?.store.execute(.alertDeleteClipItemConfirmed)
-            })
+            alert.addAction(
+                .init(title: L10n.clipPreviewViewAlertForDeleteClipItemAction, style: .destructive) { [weak self] _ in
+                    self?.store.execute(.alertDeleteClipItemConfirmed)
+                }
+            )
         }
-        alert.addAction(.init(title: L10n.clipPreviewViewAlertForDeleteClipAction, style: .destructive) { [weak self] _ in
-            self?.store.execute(.alertDeleteClipConfirmed)
-        })
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        }))
+        alert.addAction(
+            .init(title: L10n.clipPreviewViewAlertForDeleteClipAction, style: .destructive) { [weak self] _ in
+                self?.store.execute(.alertDeleteClipConfirmed)
+            }
+        )
+        alert.addAction(
+            .init(
+                title: L10n.confirmAlertCancel,
+                style: .cancel,
+                handler: { [weak self] _ in
+                    self?.store.execute(.alertDismissed)
+                }
+            )
+        )
 
         alert.popoverPresentationController?.barButtonItem = deleteItem
 
@@ -225,15 +240,25 @@ extension ClipPreviewPageBarController {
     private func presentAddAlert() {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-        alert.addAction(.init(title: L10n.clipPreviewViewAlertForAddToAlbum, style: .default) { [weak self] _ in
-            self?.store.execute(.alertAlbumAdditionConfirmed)
-        })
-        alert.addAction(.init(title: L10n.clipPreviewViewAlertForAddTag, style: .default) { [weak self] _ in
-            self?.store.execute(.alertTagAdditionConfirmed)
-        })
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        }))
+        alert.addAction(
+            .init(title: L10n.clipPreviewViewAlertForAddToAlbum, style: .default) { [weak self] _ in
+                self?.store.execute(.alertAlbumAdditionConfirmed)
+            }
+        )
+        alert.addAction(
+            .init(title: L10n.clipPreviewViewAlertForAddTag, style: .default) { [weak self] _ in
+                self?.store.execute(.alertTagAdditionConfirmed)
+            }
+        )
+        alert.addAction(
+            .init(
+                title: L10n.confirmAlertCancel,
+                style: .cancel,
+                handler: { [weak self] _ in
+                    self?.store.execute(.alertDismissed)
+                }
+            )
+        )
         alert.popoverPresentationController?.barButtonItem = addItem
 
         alertHostingViewController?.present(alert, animated: true, completion: nil)
@@ -243,15 +268,25 @@ extension ClipPreviewPageBarController {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
         let title = L10n.clipsListAlertForShareItemsAction(targetCount)
-        alert.addAction(.init(title: title, style: .destructive) { [weak self] _ in
-            self?.store.execute(.alertShareClipConfirmed)
-        })
-        alert.addAction(.init(title: L10n.clipsListAlertForShareItemAction, style: .destructive) { [weak self] _ in
-            self?.store.execute(.alertShareItemConfirmed)
-        })
-        alert.addAction(.init(title: L10n.confirmAlertCancel, style: .cancel, handler: { [weak self] _ in
-            self?.store.execute(.alertDismissed)
-        }))
+        alert.addAction(
+            .init(title: title, style: .destructive) { [weak self] _ in
+                self?.store.execute(.alertShareClipConfirmed)
+            }
+        )
+        alert.addAction(
+            .init(title: L10n.clipsListAlertForShareItemAction, style: .destructive) { [weak self] _ in
+                self?.store.execute(.alertShareItemConfirmed)
+            }
+        )
+        alert.addAction(
+            .init(
+                title: L10n.confirmAlertCancel,
+                style: .cancel,
+                handler: { [weak self] _ in
+                    self?.store.execute(.alertDismissed)
+                }
+            )
+        )
 
         alert.popoverPresentationController?.barButtonItem = shareItem
 
@@ -350,8 +385,10 @@ extension ClipPreviewPageBarController {
         listItem.accessibilityIdentifier = "\(String(describing: Self.self)).listItem"
 
         backItem = UIBarButtonItem(
-            image: UIImage(systemName: "chevron.left",
-                           withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)),
+            image: UIImage(
+                systemName: "chevron.left",
+                withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)
+            ),
             primaryAction: .init(handler: { [weak self] _ in
                 self?.store.execute(.backButtonTapped)
             }),
@@ -384,13 +421,13 @@ extension ClipPreviewPageBarController {
             label.topAnchor.constraint(equalTo: container.topAnchor, constant: 8),
             label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -16),
             label.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
-            label.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -8)
+            label.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -8),
         ])
 
         view.addSubview(container)
         NSLayoutConstraint.activate([
             container.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            container.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
+            container.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
         ])
 
         pageLabelContainer = container

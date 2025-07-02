@@ -26,8 +26,10 @@ struct ClipView: View {
                                 GeometryReader { geometry in
                                     let markSize = min(geometry.size.width / 5, 40)
                                     HiddenMark(size: markSize)
-                                        .offset(x: geometry.frame(in: .local).maxX - markSize - 12,
-                                                y: geometry.frame(in: .local).maxY - markSize - 12)
+                                        .offset(
+                                            x: geometry.frame(in: .local).maxX - markSize - 12,
+                                            y: geometry.frame(in: .local).maxY - markSize - 12
+                                        )
                                 }
                                 .opacity(clip.isHidden ? 1 : 0)
                             }
@@ -96,8 +98,10 @@ struct ClipView: View {
                                 }
 
                                 Color.clear
-                                    .frame(width: geometry.size.width,
-                                           height: geometry.size.height + (clip.secondaryItem != nil ? (clip.tertiaryItem != nil ? 32 : 16) : 0))
+                                    .frame(
+                                        width: geometry.size.width,
+                                        height: geometry.size.height + (clip.secondaryItem != nil ? (clip.tertiaryItem != nil ? 32 : 16) : 0)
+                                    )
                                     .fixedSize()
                             }
                             .clipShape(RoundedRectangle(cornerRadius: Self.cornerRadius, style: .continuous))
@@ -121,46 +125,56 @@ struct ClipView: View {
         func read(having id: Domain.ImageContainer.Identity) throws -> Data? { nil }
     }
 
-    return ClipView(clip: .init(id: UUID(),
-                                description: "",
-                                items: [
-                                    .init(id: UUID(),
-                                          url: nil,
-                                          clipId: UUID(),
-                                          clipIndex: 0,
-                                          imageId: UUID(),
-                                          imageFileName: "",
-                                          imageUrl: nil,
-                                          imageSize: .init(height: 150, width: 100),
-                                          imageDataSize: 0,
-                                          registeredDate: Date(),
-                                          updatedDate: Date()),
-                                    .init(id: UUID(),
-                                          url: nil,
-                                          clipId: UUID(),
-                                          clipIndex: 0,
-                                          imageId: UUID(),
-                                          imageFileName: "",
-                                          imageUrl: nil,
-                                          imageSize: .init(height: 100, width: 150),
-                                          imageDataSize: 0,
-                                          registeredDate: Date(),
-                                          updatedDate: Date()),
-                                    .init(id: UUID(),
-                                          url: nil,
-                                          clipId: UUID(),
-                                          clipIndex: 0,
-                                          imageId: UUID(),
-                                          imageFileName: "",
-                                          imageUrl: nil,
-                                          imageSize: .init(height: 1000, width: 150),
-                                          imageDataSize: 0,
-                                          registeredDate: Date(),
-                                          updatedDate: Date())
-                                ],
-                                isHidden: false,
-                                dataSize: 0,
-                                registeredDate: Date(),
-                                updatedDate: Date()))
-        .environment(\.imageQueryService, _ImageQueryService())
+    return ClipView(
+        clip: .init(
+            id: UUID(),
+            description: "",
+            items: [
+                .init(
+                    id: UUID(),
+                    url: nil,
+                    clipId: UUID(),
+                    clipIndex: 0,
+                    imageId: UUID(),
+                    imageFileName: "",
+                    imageUrl: nil,
+                    imageSize: .init(height: 150, width: 100),
+                    imageDataSize: 0,
+                    registeredDate: Date(),
+                    updatedDate: Date()
+                ),
+                .init(
+                    id: UUID(),
+                    url: nil,
+                    clipId: UUID(),
+                    clipIndex: 0,
+                    imageId: UUID(),
+                    imageFileName: "",
+                    imageUrl: nil,
+                    imageSize: .init(height: 100, width: 150),
+                    imageDataSize: 0,
+                    registeredDate: Date(),
+                    updatedDate: Date()
+                ),
+                .init(
+                    id: UUID(),
+                    url: nil,
+                    clipId: UUID(),
+                    clipIndex: 0,
+                    imageId: UUID(),
+                    imageFileName: "",
+                    imageUrl: nil,
+                    imageSize: .init(height: 1000, width: 150),
+                    imageDataSize: 0,
+                    registeredDate: Date(),
+                    updatedDate: Date()
+                ),
+            ],
+            isHidden: false,
+            dataSize: 0,
+            registeredDate: Date(),
+            updatedDate: Date()
+        )
+    )
+    .environment(\.imageQueryService, _ImageQueryService())
 }
