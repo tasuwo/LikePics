@@ -279,12 +279,7 @@ let package = Package(
 
         // MARK: - Helper
 
-        .target(
-            name: "CompositeKit",
-            swiftSettings: [
-                .swiftLanguageMode(.v5)
-            ]
-        ),
+        .target(name: "CompositeKit"),
         .target(
             name: "Smoothie",
             dependencies: [

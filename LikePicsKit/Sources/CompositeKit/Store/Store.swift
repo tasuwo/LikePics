@@ -5,7 +5,7 @@
 import Combine
 import Foundation
 
-public class Store<State: Equatable, Action: CompositeKit.Action, Dependency>: Storing {
+public class Store<State: Equatable, Action: CompositeKit.Action, Dependency>: Storing, @unchecked Sendable {
     public var stateValue: State { _state.value }
     public var state: AnyPublisher<State, Never> { _state.eraseToAnyPublisher() }
 

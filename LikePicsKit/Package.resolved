@@ -1,4 +1,5 @@
 {
+  "originHash" : "490811ef8094449fbaee46cc3ed5cc3c6b4ee072610c39897b9a4bac3649e8f7",
   "pins" : [
     {
       "identity" : "brightfutures",
@@ -41,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tasuwo/MasonryGrid",
       "state" : {
-        "revision" : "a0225d6a039fe5fe5809167d86289bcaeed99957",
-        "version" : "0.0.1-alpha.1"
+        "revision" : "998634ad071424e72e34b9965706e993d9943acc",
+        "version" : "0.0.1-alpha.6"
       }
     },
     {
@@ -50,44 +51,26 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tasuwo/PersistentStack",
       "state" : {
-        "revision" : "7f0cb13994ba323dd5ec5c8de7437debe0c33bf0",
-        "version" : "0.7.1"
-      }
-    },
-    {
-      "identity" : "realm-cocoa",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/realm/realm-cocoa",
-      "state" : {
-        "revision" : "fd199ce07edb4db69e862f74151b95602aad3b43",
-        "version" : "10.44.0"
+        "revision" : "904c20b963ea2844b917cc343e001e9d5eabce0f",
+        "version" : "0.9.1"
       }
     },
     {
       "identity" : "realm-core",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/realm/realm-core",
+      "location" : "https://github.com/realm/realm-core.git",
       "state" : {
-        "revision" : "c569bec4d04da84030d94f376437bc4efda3686b",
-        "version" : "13.23.1"
+        "revision" : "cccb3ca9e26ec452a29f2f0d4050d1e38b8a3d43",
+        "version" : "14.14.0"
       }
     },
     {
-      "identity" : "swift",
+      "identity" : "realm-swift",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/tasuwo/swift",
+      "location" : "https://github.com/realm/realm-swift",
       "state" : {
-        "revision" : "4cd4072ffb9aa6e9da5c1b5d205152b9fdaf36d7",
-        "version" : "0.8.1"
-      }
-    },
-    {
-      "identity" : "swift-argument-parser",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-argument-parser",
-      "state" : {
-        "revision" : "8f4d2753f0e4778c76d5f05ad16c74f707390531",
-        "version" : "1.2.3"
+        "revision" : "54eebd2b5e7a4a8055a7a8b55ac859a48462d722",
+        "version" : "10.54.5"
       }
     },
     {
@@ -95,8 +78,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-async-algorithms",
       "state" : {
-        "revision" : "cb417003f962f9de3fc7852c1b735a1f1152a89a",
-        "version" : "1.0.0-beta.1"
+        "revision" : "042e1c4d9d19748c9c228f8d4ebc97bb1e339b0b",
+        "version" : "1.0.4"
       }
     },
     {
@@ -104,10 +87,10 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections.git",
       "state" : {
-        "revision" : "a902f1823a7ff3c9ab2fba0f992396b948eda307",
-        "version" : "1.0.5"
+        "revision" : "c1805596154bb3a265fd91b8ac0c4433b4348fb0",
+        "version" : "1.2.0"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

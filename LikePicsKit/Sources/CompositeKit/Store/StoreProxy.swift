@@ -4,14 +4,14 @@
 
 import Combine
 
-public class StoreProxy<
-    ChildState: Equatable,
+public final class StoreProxy<
+    ChildState: Equatable & Sendable,
     ChildAction: CompositeKit.Action,
     Dependency,
-    ParentState: Equatable,
+    ParentState: Equatable & Sendable,
     ParentAction: CompositeKit.Action,
     ParentDependency
-> {
+>: Sendable {
     private let store: Store<ParentState, ParentAction, ParentDependency>
     private let stateMapping: StateMapping<ParentState, ChildState>
     private let actionMapping: ActionMapping<ParentAction, ChildAction>

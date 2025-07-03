@@ -4,13 +4,13 @@
 
 public typealias ActionMapping = Prism
 
-public struct Prism<Parent, Child> {
-    public let build: (Child) -> Parent
-    public let get: (Parent) -> Child?
+public struct Prism<Parent: Sendable, Child: Sendable>: Sendable {
+    public let build: @Sendable (Child) -> Parent
+    public let get: @Sendable (Parent) -> Child?
 
     public init(
-        build: @escaping (Child) -> Parent,
-        get: @escaping (Parent) -> Child?
+        build: @Sendable @escaping (Child) -> Parent,
+        get: @Sendable @escaping (Parent) -> Child?
     ) {
         self.build = build
         self.get = get
