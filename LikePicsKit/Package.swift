@@ -271,9 +271,6 @@ let package = Package(
                 "Common",
                 "CompositeKit",
                 "MobileTransition",
-            ],
-            swiftSettings: [
-                .swiftLanguageMode(.v5)
             ]
         ),
 

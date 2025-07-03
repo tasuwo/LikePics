@@ -4,6 +4,7 @@
 
 import CoreGraphics
 
+@MainActor
 public protocol ThumbnailPresentable {
     func calcThumbnailPointSize(originalPixelSize: CGSize?) -> CGSize
 }

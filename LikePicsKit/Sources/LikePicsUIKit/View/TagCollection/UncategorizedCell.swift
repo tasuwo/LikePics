@@ -24,7 +24,9 @@ public class UncategorizedCell: UICollectionViewCell {
     override public func awakeFromNib() {
         super.awakeFromNib()
 
-        self.setupAppearance()
+        MainActor.assumeIsolated {
+            self.setupAppearance()
+        }
     }
 
     // MARK: - Methods

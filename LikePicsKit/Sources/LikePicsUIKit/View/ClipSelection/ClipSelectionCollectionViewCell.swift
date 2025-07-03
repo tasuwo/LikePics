@@ -45,7 +45,9 @@ public class ClipSelectionCollectionViewCell: UICollectionViewCell {
 
     override public func awakeFromNib() {
         super.awakeFromNib()
-        self.setupAppearance()
+        MainActor.assumeIsolated {
+            self.setupAppearance()
+        }
     }
 
     override public func prepareForReuse() {

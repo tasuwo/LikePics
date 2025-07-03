@@ -88,7 +88,9 @@ extension AlbumMultiSelectionModalController {
                 snapshot.appendSections([.main])
                 snapshot.appendItems(state.orderedFilteredAlbums)
                 self.dataSource.apply(snapshot, animatingDifferences: true)
-                self.selectionApplier.didApplyDataSource(snapshot: state.albums)
+                Task {
+                    await self.selectionApplier.didApplyDataSource(snapshot: state.albums)
+                }
             }
             .store(in: &subscriptions)
 
@@ -105,7 +107,11 @@ extension AlbumMultiSelectionModalController {
 
         store.state
             .removeDuplicates(by: \.albums.selectedIds)
-            .sink { [weak self] state in self?.selectionApplier.applySelection(snapshot: state.albums) }
+            .sink { [weak self] state in
+                Task {
+                    await self?.selectionApplier.applySelection(snapshot: state.albums)
+                }
+            }
             .store(in: &subscriptions)
 
         store.state

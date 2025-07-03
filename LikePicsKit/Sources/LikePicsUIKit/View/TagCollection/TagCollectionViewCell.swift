@@ -4,6 +4,7 @@
 
 import UIKit
 
+@MainActor
 public protocol TagCollectionViewCellDelegate: AnyObject {
     func didTapDeleteButton(_ cell: TagCollectionViewCell)
 }
@@ -90,7 +91,9 @@ public class TagCollectionViewCell: UICollectionViewCell {
     override public func awakeFromNib() {
         super.awakeFromNib()
 
-        self.setupAppearance()
+        MainActor.assumeIsolated {
+            self.setupAppearance()
+        }
     }
 
     override public func layoutSubviews() {

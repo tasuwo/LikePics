@@ -32,7 +32,7 @@ public enum Asset {
 
 // MARK: - Implementation Details
 
-public final class ColorAsset {
+public final class ColorAsset: @unchecked Sendable {
     public fileprivate(set) var name: String
 
     #if os(macOS)

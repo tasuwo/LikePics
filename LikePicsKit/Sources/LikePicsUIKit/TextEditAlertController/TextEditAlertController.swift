@@ -65,6 +65,7 @@ public class TextEditAlertController: NSObject {
 
     // MARK: - Methods
 
+    @MainActor
     public func present(
         with text: String,
         validator: @escaping (String?) -> Bool,
@@ -112,14 +113,15 @@ public class TextEditAlertController: NSObject {
         }
     }
 
+    @MainActor
     public func dismiss(animated: Bool, completion: (() -> Void)?) {
         presentingAlert?.dismiss(animated: animated, completion: completion)
     }
 
     @objc
     private func textFieldDidChange(sender: UITextField) {
-        RunLoop.main.perform { [weak self] in
-            self?.store.execute(.textChanged(text: sender.text ?? ""))
+        Task { @MainActor [store] in
+            store.execute(.textChanged(text: sender.text ?? ""))
         }
     }
 }
@@ -132,8 +134,8 @@ extension TextEditAlertController: UITextFieldDelegate {
     }
 
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        RunLoop.main.perform { [weak self] in
-            self?.store.execute(.textChanged(text: textField.text ?? ""))
+        Task { @MainActor [store] in
+            store.execute(.textChanged(text: textField.text ?? ""))
         }
         return true
     }
@@ -145,8 +147,12 @@ extension TextEditAlertController {
     public func bind() {
         store.state
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] state in
-                self?.presentingSaveAction?.isEnabled = state.shouldReturn
+            .sink { [weak presentingSaveAction] state in
+                let shouldReturn = state.shouldReturn
+                let action = presentingSaveAction
+                MainActor.assumeIsolated {
+                    action?.isEnabled = shouldReturn
+                }
             }
             .store(in: &subscriptions)
     }

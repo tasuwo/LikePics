@@ -4,6 +4,7 @@
 
 import UIKit
 
+@MainActor
 public protocol ListCellDelegate: AnyObject {
     func listCell(_ cell: ListCell, didSwitchRightAccessory switch: UISwitch)
     func listCell(_ cell: ListCell, didTapRightAccessory button: UIButton)
@@ -72,7 +73,9 @@ public class ListCell: UICollectionViewCell {
     override public func awakeFromNib() {
         super.awakeFromNib()
 
-        self.setupAppearance()
+        MainActor.assumeIsolated {
+            self.setupAppearance()
+        }
     }
 
     // MARK: - IBActions

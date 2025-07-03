@@ -111,8 +111,10 @@ class ClipPreviewPageTransitionController: NSObject,
         self.beginDismissal
             .sink { [weak self] _ in
                 guard let self = self else { return }
-                guard self.previewTransitioningController.beginTransition(id: UUID(), mode: .custom(interactive: false)) else { return }
-                self.baseViewController?.dismiss(animated: true, completion: nil)
+                MainActor.assumeIsolated {
+                    guard self.previewTransitioningController.beginTransition(id: UUID(), mode: .custom(interactive: false)) else { return }
+                    self.baseViewController?.dismiss(animated: true, completion: nil)
+                }
             }
             .store(in: &self.subscriptions)
 
@@ -125,6 +127,7 @@ class ClipPreviewPageTransitionController: NSObject,
             .store(in: &self.subscriptions)
     }
 
+    @MainActor
     @objc
     func didPan(_ sender: UIPanGestureRecognizer) {
         if sender.state == .began {

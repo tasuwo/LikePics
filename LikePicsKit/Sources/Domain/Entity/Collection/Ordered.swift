@@ -2,7 +2,7 @@
 //  Copyright © 2021 Tasuku Tozawa. All rights reserved.
 //
 
-public struct Ordered<Value: Codable & Hashable>: Codable, Hashable {
+public struct Ordered<Value: Codable & Hashable & Sendable>: Codable, Hashable, Sendable {
     // MARK: - Properties
 
     public let index: Int

@@ -8,6 +8,7 @@ import UIKit
 
 @objc
 public protocol ImageDisplayable {
+    @MainActor
     @objc
     func smt_display(_ image: UIImage?)
 }
@@ -62,7 +63,9 @@ final class ImageLoadTaskController {
     func cancelLoadImage() {
         cancellable?.cancel()
         cancellable = nil
-        view?.smt_display(nil)
+        Task { @MainActor [view] in
+            view?.smt_display(nil)
+        }
     }
 }
 

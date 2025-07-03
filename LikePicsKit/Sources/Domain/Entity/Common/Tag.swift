@@ -5,7 +5,7 @@
 import Foundation
 
 // sourcery: AutoDefaultValue, AutoDefaultValueUsePublic
-public struct Tag: Codable, Equatable, Hashable {
+public struct Tag: Codable, Equatable, Hashable, Sendable {
     public let id: UUID
     public let name: String
     public let isHidden: Bool

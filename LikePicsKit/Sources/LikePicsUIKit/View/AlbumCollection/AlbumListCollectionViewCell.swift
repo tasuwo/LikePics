@@ -70,7 +70,9 @@ public class AlbumListCollectionViewCell: UICollectionViewCell {
 
     override public func awakeFromNib() {
         super.awakeFromNib()
-        self.setupAppearance()
+        MainActor.assumeIsolated {
+            self.setupAppearance()
+        }
     }
 
     override public func dragStateDidChange(_ dragState: UICollectionViewCell.DragState) {

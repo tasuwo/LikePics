@@ -76,7 +76,9 @@ public class ClipCollectionViewCell: UICollectionViewCell {
 
     override public func awakeFromNib() {
         super.awakeFromNib()
-        setupAppearance()
+        MainActor.assumeIsolated {
+            setupAppearance()
+        }
     }
 
     // MARK: - Methods

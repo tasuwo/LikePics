@@ -191,7 +191,9 @@ extension ClipCollectionViewController {
                 self?.dataSource.apply(snapshot, animatingDifferences: true) {
                     self?.updateHiddenIconAppearance()
                 }
-                self?.selectionApplier.didApplyDataSource(snapshot: state.clips)
+                Task {
+                    await self?.selectionApplier.didApplyDataSource(snapshot: state.clips)
+                }
             }
             .store(in: &subscriptions)
 
@@ -233,7 +235,11 @@ extension ClipCollectionViewController {
         store.state
             .removeDuplicates(by: \.clips.selectedIds)
             .throttle(for: 0.5, scheduler: RunLoop.main, latest: true)
-            .sink { [weak self] state in self?.selectionApplier.applySelection(snapshot: state.clips) }
+            .sink { [weak self] state in
+                Task {
+                    await self?.selectionApplier.applySelection(snapshot: state.clips)
+                }
+            }
             .store(in: &subscriptions)
 
         store.state

@@ -122,7 +122,9 @@ extension ClipItemListViewController {
                 let snapshot = Self.createSnapshot(items: state.items.orderedFilteredEntities())
                 self.dataSource.apply(snapshot, animatingDifferences: self.isViewAppeared)
                 self.updateCellAppearance()
-                self.selectionApplier.didApplyDataSource(snapshot: state.items)
+                Task {
+                    await self.selectionApplier.didApplyDataSource(snapshot: state.items)
+                }
             }
             .store(in: &subscriptions)
 
@@ -130,7 +132,9 @@ extension ClipItemListViewController {
             .removeDuplicates(by: \.items.selectedIds)
             .throttle(for: 0.1, scheduler: RunLoop.main, latest: true)
             .sink { [weak self] state in
-                self?.selectionApplier.applySelection(snapshot: state.items)
+                Task {
+                    await self?.selectionApplier.applySelection(snapshot: state.items)
+                }
                 self?.navigationBarController.store.execute(.updatedSelectionCount(state.items.selectedIds.count))
                 self?.toolBarController.store.execute(.selected(state.items.selectedEntities()))
             }

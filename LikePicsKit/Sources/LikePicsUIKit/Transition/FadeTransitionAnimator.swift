@@ -6,6 +6,7 @@ import Common
 import UIKit
 import os.log
 
+@MainActor
 protocol FadeTransitionAnimatorProtocol {
     func startTransition(_ transitionContext: UIViewControllerContextTransitioning, withDuration duration: TimeInterval, isInteractive: Bool)
 }

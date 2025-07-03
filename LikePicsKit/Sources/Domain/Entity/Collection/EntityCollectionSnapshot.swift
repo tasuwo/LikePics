@@ -4,7 +4,7 @@
 
 // swiftlint:disable identifier_name
 
-public struct EntityCollectionSnapshot<Entity: Identifiable & Codable & Hashable>: Equatable, Codable {
+public struct EntityCollectionSnapshot<Entity: Identifiable & Codable & Hashable & Sendable>: Equatable, Codable, Sendable where Entity.Identity: Sendable {
     private let order: [Entity.Identity]
 
     private let _entities: [Entity.Identity: Ordered<Entity>]

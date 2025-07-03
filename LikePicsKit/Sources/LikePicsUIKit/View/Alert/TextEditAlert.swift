@@ -4,6 +4,7 @@
 
 import UIKit
 
+@MainActor
 public class TextEditAlert: NSObject {
     public typealias Validator = (String?) -> Bool
 
@@ -25,6 +26,7 @@ public class TextEditAlert: NSObject {
         }
     }
 
+    @MainActor
     private class Context {
         weak var alert: UIAlertController?
         weak var saveAction: UIAlertAction?
@@ -113,8 +115,8 @@ public class TextEditAlert: NSObject {
 
     @objc
     private func textFieldDidChange() {
-        RunLoop.main.perform { [weak self] in
-            self?.context?.performValidation()
+        Task { @MainActor [context] in
+            context?.performValidation()
         }
     }
 }
@@ -127,8 +129,8 @@ extension TextEditAlert: UITextFieldDelegate {
     }
 
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        RunLoop.main.perform { [weak self] in
-            self?.context?.performValidation()
+        Task { @MainActor [context] in
+            context?.performValidation()
         }
         return true
     }

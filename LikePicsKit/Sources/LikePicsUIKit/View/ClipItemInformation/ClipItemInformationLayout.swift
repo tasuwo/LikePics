@@ -5,6 +5,7 @@
 import Domain
 import UIKit
 
+@MainActor
 protocol ClipItemInformationLayoutDelegate: AnyObject {
     func didSwitchHiding(_ cell: UICollectionViewCell, at indexPath: IndexPath, isOn: Bool)
     func didTapTagDeletionButton(_ cell: UICollectionViewCell)
@@ -22,7 +23,7 @@ public enum ClipItemInformationLayout {
         case clipInfo
     }
 
-    enum Item: Hashable, Equatable {
+    enum Item: Hashable, Equatable, Sendable {
         case tag(Tag)
         case album(ListingAlbumTitle)
         case meta(Info)
@@ -75,6 +76,7 @@ public enum ClipItemInformationLayout {
 // MARK: - Layout
 
 extension ClipItemInformationLayout {
+    @MainActor
     static func createLayout(albumTrailingSwipeActionProvider: @escaping (IndexPath) -> UISwipeActionsConfiguration?) -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, environment -> NSCollectionLayoutSection? in
             switch Section(rawValue: sectionIndex) {
@@ -91,6 +93,7 @@ extension ClipItemInformationLayout {
         return layout
     }
 
+    @MainActor
     private static func createTagsLayoutSection() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .estimated(36),
@@ -121,6 +124,7 @@ extension ClipItemInformationLayout {
         return section
     }
 
+    @MainActor
     private static func createAlbumLayoutSection(
         trailingSwipeActionProvider: @escaping (IndexPath) -> UISwipeActionsConfiguration?,
         environment: NSCollectionLayoutEnvironment
@@ -141,6 +145,7 @@ extension ClipItemInformationLayout {
         return section
     }
 
+    @MainActor
     private static func createPlainLayoutSection(environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
         var configuration = UICollectionLayoutListConfiguration(appearance: .grouped)
         configuration.backgroundColor = .clear
@@ -161,6 +166,7 @@ extension ClipItemInformationLayout {
 // MARK: - Snapshot
 
 extension ClipItemInformationLayout {
+    @MainActor
     static func makeSnapshot(for info: Information?) -> NSDiffableDataSourceSnapshot<Section, Item> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
 
@@ -319,8 +325,9 @@ extension ClipItemInformationLayout {
         weak var interactionDelegate: UIContextMenuInteractionDelegate?
     }
 
-    static var font = UIFont.preferredFont(forTextStyle: .callout)
+    static let font = UIFont.preferredFont(forTextStyle: .callout)
 
+    @MainActor
     static func makeDataSource(
         for collectionView: UICollectionView,
         tagAdditionHandler: @escaping () -> Void,
@@ -366,6 +373,7 @@ extension ClipItemInformationLayout {
         return (dataSource, proxy)
     }
 
+    @MainActor
     private static func configureHeader(
         tagAdditionHandler: @escaping () -> Void,
         albumAdditionHandler: @escaping () -> Void
@@ -417,6 +425,7 @@ extension ClipItemInformationLayout {
         }
     }
 
+    @MainActor
     private static func configureTagCell(delegate: TagCollectionViewCellDelegate) -> UICollectionView.CellRegistration<TagCollectionViewCell, Tag> {
         return UICollectionView.CellRegistration<TagCollectionViewCell, Tag>(cellNib: TagCollectionViewCell.nib) { [weak delegate] cell, _, tag in
             cell.title = tag.name
@@ -428,6 +437,7 @@ extension ClipItemInformationLayout {
         }
     }
 
+    @MainActor
     private static func configureAlbumCell() -> UICollectionView.CellRegistration<UICollectionViewListCell, ListingAlbumTitle> {
         return UICollectionView.CellRegistration<UICollectionViewListCell, ListingAlbumTitle> { cell, _, album in
             var contentConfiguration = UIListContentConfiguration.valueCell()
@@ -442,6 +452,7 @@ extension ClipItemInformationLayout {
         }
     }
 
+    @MainActor
     private static func configureMetaCell(proxy: Proxy) -> UICollectionView.CellRegistration<UICollectionViewListCell, Info> {
         return UICollectionView.CellRegistration<UICollectionViewListCell, Info> { cell, indexPath, info in
             var contentConfiguration = UIListContentConfiguration.valueCell()
@@ -475,6 +486,7 @@ extension ClipItemInformationLayout {
         }
     }
 
+    @MainActor
     private static func configureUrlCell(proxy: Proxy) -> UICollectionView.CellRegistration<ListCell, UrlSetting> {
         return UICollectionView.CellRegistration<ListCell, UrlSetting>(cellNib: ListCell.nib) { cell, _, setting in
             cell.backgroundColor = Asset.Color.secondaryBackground.color

@@ -213,6 +213,7 @@ extension ClipCollectionViewLayout {
         thumbnailView.processingQueue = processingQueue
     }
 
+    @MainActor
     private static func makeRequest(item: ClipItem, view: ClipCollectionThumbnailView, imageQueryService: ImageQueryServiceProtocol) -> ImageRequest {
         let scale = view.traitCollection.displayScale
         let size = view.calcThumbnailPointSize(originalPixelSize: item.imageSize.cgSize)

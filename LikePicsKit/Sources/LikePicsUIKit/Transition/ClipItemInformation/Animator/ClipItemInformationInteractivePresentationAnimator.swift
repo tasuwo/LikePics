@@ -6,6 +6,7 @@ import Common
 import UIKit
 import os.log
 
+@MainActor
 class ClipItemInformationInteractivePresentationAnimator: NSObject {
     struct InnerContext {
         let transitionContext: UIViewControllerContextTransitioning

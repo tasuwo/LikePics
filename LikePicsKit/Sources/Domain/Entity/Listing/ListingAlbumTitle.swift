@@ -5,7 +5,7 @@
 import Foundation
 
 // sourcery: AutoDefaultValue, AutoDefaultValueUsePublic
-public struct ListingAlbumTitle: Codable, Equatable, Hashable {
+public struct ListingAlbumTitle: Codable, Equatable, Hashable, Sendable {
     public let id: UUID
     public let title: String
     public let isHidden: Bool

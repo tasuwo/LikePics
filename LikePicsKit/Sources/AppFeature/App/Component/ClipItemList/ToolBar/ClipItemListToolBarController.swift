@@ -76,7 +76,9 @@ extension ClipItemListToolBarController {
         store.state
             .bind(\.alert) { [weak self] alert in
                 guard let alert = alert else { return }
-                self?.presentAlertIfNeeded(for: alert)
+                MainActor.assumeIsolated {
+                    self?.presentAlertIfNeeded(for: alert)
+                }
             }
             .store(in: &subscriptions)
     }
@@ -85,6 +87,7 @@ extension ClipItemListToolBarController {
 // MARK: - Alert Presentation
 
 extension ClipItemListToolBarController {
+    @MainActor
     private func presentAlertIfNeeded(for alert: ClipItemListToolBarState.Alert) {
         switch alert {
         case let .deletion(targetCount: targetCount):
