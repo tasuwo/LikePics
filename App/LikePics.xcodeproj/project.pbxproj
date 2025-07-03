@@ -366,7 +366,6 @@
 			);
 			mainGroup = 6482BC1857E1777CE6D884FA;
 			packageReferences = (
-				2C157FE22B1C002B00B96EBB /* XCRemoteSwiftPackageReference "swift" */,
 			);
 			projectDirPath = "";
 			projectRoot = "";
@@ -1381,17 +1380,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		2C157FE22B1C002B00B96EBB /* XCRemoteSwiftPackageReference "swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/tasuwo/swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.7.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		2C16355627E877EC006C2C24 /* AppFeature */ = {
