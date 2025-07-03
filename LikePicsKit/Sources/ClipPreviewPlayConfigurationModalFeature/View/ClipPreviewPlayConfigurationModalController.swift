@@ -232,12 +232,14 @@ extension ClipPreviewPlayConfigurationModalController: UICollectionViewDelegate 
 extension ClipPreviewPlayConfigurationModalController: TextEditAlertDelegate {
     // MARK: - TextEditAlertDelegate
 
-    public func textEditAlert(_ id: UUID, didTapSaveWithText text: String) {
+    public nonisolated func textEditAlert(_ id: UUID, didTapSaveWithText text: String) {
         guard let interval = Int(text) else { return }
-        storage.set(interval: interval)
+        Task { @MainActor in
+            storage.set(interval: interval)
+        }
     }
 
-    public func textEditAlertDidCancel(_ id: UUID) {
+    public nonisolated func textEditAlertDidCancel(_ id: UUID) {
         // NOP
     }
 }

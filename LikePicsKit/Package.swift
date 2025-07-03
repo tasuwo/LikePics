@@ -205,9 +205,6 @@ let package = Package(
                 "Environment",
                 "Common",
                 "CompositeKit",
-            ],
-            swiftSettings: [
-                .swiftLanguageMode(.v5)
             ]
         ),
 

@@ -26,6 +26,7 @@ enum ClipPreviewPlayConfigurationModalLayout {
 // MARK: - Layout
 
 extension ClipPreviewPlayConfigurationModalLayout {
+    @MainActor
     static func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { _, environment -> NSCollectionLayoutSection? in
             var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
@@ -39,6 +40,7 @@ extension ClipPreviewPlayConfigurationModalLayout {
 // MARK: - DataSource
 
 extension ClipPreviewPlayConfigurationModalLayout {
+    @MainActor
     static func configureDataSource(
         collectionView: UICollectionView,
         storage: ClipPreviewPlayConfigurationStorageProtocol,
@@ -54,6 +56,7 @@ extension ClipPreviewPlayConfigurationModalLayout {
         return dataSource
     }
 
+    @MainActor
     private static func configureCell(
         storage: ClipPreviewPlayConfigurationStorageProtocol,
         onUpdateLoop: @escaping (Bool) -> Void,

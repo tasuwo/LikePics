@@ -94,6 +94,7 @@ extension ClipPreviewRangeSelectionViewController: UICollectionViewDelegate {
 // MARK: - Layout
 
 extension ClipPreviewRangeSelectionViewController {
+    @MainActor
     enum Layout {
         typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
         typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>

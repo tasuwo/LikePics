@@ -94,6 +94,7 @@ extension ClipPreviewOrderSelectionViewController: UICollectionViewDelegate {
 // MARK: - Layout
 
 extension ClipPreviewOrderSelectionViewController {
+    @MainActor
     enum Layout {
         typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
         typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
